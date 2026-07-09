@@ -73,7 +73,7 @@ questory
 deploy/portainer/stack.yml
 ```
 
-Der Build-Kontext in der Stack-Datei ist `.` und erwartet, dass Portainer das Repository als Arbeitsverzeichnis verwendet.
+Der Build-Kontext in der Stack-Datei ist `../..`, weil Portainer relative Pfade vom Ordner der Compose-Datei `deploy/portainer/` aus aufloest. Damit zeigen die Docker-Builds auf den Repository-Root.
 
 9. Environment Variables setzen.
 10. Stack deployen.

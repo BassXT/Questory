@@ -37,6 +37,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Stack-Datei unter `deploy/portainer/stack.yml` angelegt.
 - `DEPLOYMENT.md` fuer Proxmox-LXC, Docker und Portainer angelegt.
 - Dockerfiles auf reproduzierbare Builds mit `npm ci` und `package-lock.json` angepasst.
+- Portainer-Build-Kontext auf `../..` korrigiert, weil Portainer relative Pfade vom Compose-Dateiordner aus aufloest.
 
 ## Offene Aufgaben
 
@@ -46,11 +47,11 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Authentifizierungs- und Rollenmodell implementieren.
 - Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Repository fuer Portainer erreichbar machen, zum Beispiel ueber GitHub, Gitea oder GitLab.
+- Portainer-Stack erneut deployen und Build auf dem LXC pruefen.
 
 ## Naechster Schritt
 
-Als naechstes das Repository fuer Portainer erreichbar machen und den Stack `deploy/portainer/stack.yml` im Portainer-LXC deployen. Danach Health-Check und Frontend auf dem LXC pruefen.
+Als naechstes den Stack `deploy/portainer/stack.yml` in Portainer erneut deployen. Danach Health-Check und Frontend auf dem LXC pruefen.
 
 ## Architekturentscheidungen
 

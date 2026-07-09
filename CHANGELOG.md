@@ -29,6 +29,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Stack-Datei unter `deploy/portainer/stack.yml` erstellt.
 - `DEPLOYMENT.md` fuer Proxmox-LXC, Docker und Portainer erstellt.
 - Dockerfiles auf `npm ci` und `package-lock.json` umgestellt.
+- Portainer-Build-Kontext auf den Repository-Root korrigiert.
 
 ### Verified
 
