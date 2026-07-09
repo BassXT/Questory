@@ -52,6 +52,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Backup-Strategie mit manuellem Aufruf, Cron-Beispiel, Retention und Restore-Hinweis in `DEPLOYMENT.md` dokumentiert.
 - Erster PostgreSQL-Backup-Test auf dem Docker-LXC erfolgreich: `/opt/questory/backups/questory-postgres-20260709-164536.dump`.
 - Cron-Vorlage `deploy/portainer/questory-backup.cron.example` fuer taegliche Backups um 03:15 Uhr angelegt.
+- Taeglicher Backup-Cronjob auf dem Docker-LXC unter `/etc/cron.d/questory-backup` eingerichtet und laufend.
 
 ## Offene Aufgaben
 
@@ -60,12 +61,12 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Authentifizierungs- und Rollenmodell implementieren.
 - Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Cronjob fuer taegliche Backups auf dem Docker-LXC einrichten.
+- Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 - Danach erste fachliche Backend-Module fuer Auth/Familien/User planen.
 
 ## Naechster Schritt
 
-Als naechstes einen taeglichen Cronjob fuer PostgreSQL-Backups auf dem Docker-LXC einrichten. Anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
+Als naechstes nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen. Anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
 
 ## Architekturentscheidungen
 

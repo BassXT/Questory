@@ -192,6 +192,8 @@ Der erste Backup-Test auf dem Docker-LXC war erfolgreich:
 /opt/questory/backups/questory-postgres-20260709-164536.dump
 ```
 
+Der taegliche Cronjob wurde auf dem Docker-LXC unter `/etc/cron.d/questory-backup` eingerichtet und laeuft.
+
 Restore-Grundform fuer spaeter:
 
 ```bash
@@ -252,5 +254,5 @@ Die Backend-Logs bestaetigen, dass Prisma die Migration `20260709120000_init` er
 
 ## Naechste Deployment-Schritte
 
-1. Cronjob fuer taegliche Backups einrichten.
+1. Nach dem ersten automatischen Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 2. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.

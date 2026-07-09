@@ -38,6 +38,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `.gitattributes` ergaenzt, damit Shell-Scripts mit LF-Line-Endings versioniert werden.
 - Erster PostgreSQL-Backup-Test auf dem Docker-LXC erfolgreich ausgefuehrt.
 - Cron-Vorlage `deploy/portainer/questory-backup.cron.example` fuer taegliche Backups erstellt.
+- Taeglicher Backup-Cronjob auf dem Docker-LXC eingerichtet.
 
 ### Verified
 
