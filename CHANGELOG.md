@@ -88,6 +88,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Quest-Zuweisungs-Slice erfolgreich.
 - LXC-API-Tests fuer Quest-Zuweisung, Kinder-Zuweisungsliste und doppelte Quest-Zuweisung erfolgreich ausgefuehrt.
 - Backend- und Frontend-Build nach Quest-Abschluss-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Quest-Abschluss-Slice erfolgreich.
+- LXC-API-Tests fuer Quest-Abschluss-Einreichung, `SUBMITTED` Status, noch nicht vergebene XP/Muenzen und doppelte Einreichung erfolgreich ausgefuehrt.
 
 ### Known Issues
 
