@@ -46,6 +46,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Families-Modul mit `GET /api/families/current` erstellt.
 - Users-Modul mit `GET /api/users` erstellt.
 - Passwort-Hashing mit Node `crypto.scrypt` implementiert.
+- Rollenbasierter `RolesGuard` und `@Roles()` Decorator erstellt.
+- `POST /api/users` fuer neue Eltern- und Kinderbenutzer erstellt.
+- Children-Modul mit `GET /api/children`, `POST /api/children` und `GET /api/children/:childId` erstellt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -70,6 +73,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend-Build nach Auth/Families/Users-Implementierung erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach Auth/Families/Users-Slice erfolgreich.
 - LXC-API-Tests fuer Registrierung, Login, `auth/me`, aktuelle Familie und Benutzerliste erfolgreich ausgefuehrt.
+- Prisma Client nach User-/Children-Slice erfolgreich generiert.
+- Prisma-Schema nach User-/Children-Slice erfolgreich validiert.
+- Backend- und Frontend-Build nach User-/Children-Slice erfolgreich ausgefuehrt.
 
 ### Known Issues
 

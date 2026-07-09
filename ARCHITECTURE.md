@@ -57,6 +57,10 @@ Aktuell vorhanden:
 - `AppController`
 - `AppService`
 - `GET /api/health`
+- `AuthModule` mit Registrierung, Login, JWT und Guards
+- `FamiliesModule` fuer den aktuellen Familienkontext
+- `UsersModule` fuer Benutzerliste und neue Eltern-/Kinderbenutzer
+- `ChildrenModule` fuer Kinderprofile
 - Prisma-Schema unter `apps/backend/prisma/schema.prisma`
 - Prisma-CLI-Konfiguration unter `apps/backend/prisma.config.ts`
 
@@ -141,6 +145,13 @@ Geplante Rollen:
 - `CHILD`
 
 Kinderkonten koennen langfristig andere Login-Mechanismen erhalten als Elternkonten, zum Beispiel PIN oder familieninterne Auswahl. Fuer das MVP wird zunaechst ein einfaches, sicheres Rollenmodell vorbereitet.
+
+Aktueller Stand:
+
+- `JwtAuthGuard` prueft Bearer Tokens und haengt den aktuellen Benutzer an den Request.
+- `RolesGuard` wertet `@Roles()` Metadata aus und begrenzt Aktionen auf erlaubte Rollen.
+- Weitere Eltern und Kinderbenutzer koennen von `ADMIN` oder `PARENT` angelegt werden.
+- Reine Kinderprofile ohne Login sind ebenfalls moeglich, damit Familien schon Fortschritt und Aufgaben modellieren koennen, bevor ein eigener Kinder-Login existiert.
 
 ## Docker
 

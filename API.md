@@ -123,9 +123,41 @@ Auth: Bearer Token erforderlich.
 
 ### `POST /api/users`
 
-Erstellt einen Eltern-, Kinder- oder Administrationsbenutzer.
+Erstellt einen Eltern- oder Kinderbenutzer in der aktuellen Familie.
 
-Status: geplant.
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- `role` darf aktuell nur `PARENT` oder `CHILD` sein.
+- Bei `PARENT` ist `password` erforderlich.
+- Bei `CHILD` wird automatisch ein verknuepftes Kinderprofil angelegt. Kinder-Login/PIN wird spaeter separat gestaltet.
+
+Request fuer Eltern:
+
+```json
+{
+  "displayName": "Anna",
+  "email": "anna@example.com",
+  "role": "PARENT",
+  "password": "mindestens-8-zeichen"
+}
+```
+
+Request fuer Kinder:
+
+```json
+{
+  "displayName": "Mia",
+  "email": "mia@example.com",
+  "role": "CHILD",
+  "avatarKey": "starter-fox"
+}
+```
 
 ### `GET /api/users/{userId}`
 
@@ -145,13 +177,36 @@ Deaktiviert oder loescht einen Benutzer. Das genaue Verhalten wird vor Implement
 
 Listet Kinderprofile der Familie.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
 ### `POST /api/children`
 
-Erstellt ein Kinderprofil.
+Erstellt ein Kinderprofil ohne eigenes Login-Konto.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Request:
+
+```json
+{
+  "displayName": "Mia",
+  "avatarKey": "starter-fox"
+}
+```
 
 ### `GET /api/children/{childId}`
 
 Gibt ein Kinderprofil inklusive Fortschritt zurueck.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
 
 ### `PATCH /api/children/{childId}`
 

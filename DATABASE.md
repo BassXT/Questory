@@ -9,6 +9,7 @@ Initiale Kernbeziehungen:
 ```text
 Family 1--n User
 Family 1--n ChildProfile
+User 0..1--0..1 ChildProfile
 ChildProfile 1--n QuestAssignment
 Quest 1--n QuestAssignment
 QuestAssignment 1--n QuestCompletion
@@ -32,7 +33,7 @@ Felder:
 
 ### User
 
-Repraesentiert anmeldbare Benutzer wie Administratoren und Eltern. Kinder koennen fuer das MVP ebenfalls als User abgebildet werden, erhalten aber ein eigenes `ChildProfile`.
+Repraesentiert anmeldbare Benutzer wie Administratoren und Eltern. Kinder koennen fuer das MVP ebenfalls als User abgebildet werden und erhalten dann ein verknuepftes `ChildProfile`.
 
 Felder:
 
@@ -54,6 +55,8 @@ Rollen:
 ### ChildProfile
 
 Repraesentiert den spielbaren Kinderfortschritt innerhalb einer Familie.
+
+Ein Kinderprofil kann entweder ohne Login-Konto existieren oder optional mit einem `User` der Rolle `CHILD` verknuepft sein.
 
 Felder:
 
