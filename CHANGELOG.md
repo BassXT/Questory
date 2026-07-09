@@ -48,6 +48,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Prisma Client mit `npm run prisma:generate` erfolgreich generiert.
 - Portainer Stack nach Einfuehrung der ersten Prisma-Migration erneut deployed.
 - LXC-Frontend und LXC-Backend-Health-Check nach Redeploy erneut erfolgreich geprueft.
+- Portainer-Backend-Logs bestaetigen, dass Migration `20260709120000_init` erfolgreich angewendet wurde und die NestJS API gestartet ist.
 
 ### Known Issues
 

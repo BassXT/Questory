@@ -193,8 +193,9 @@ Der Stack wurde nach Einfuehrung der ersten Prisma-Migration erneut deployed. Da
 - Backend Health-Check: `http://192.168.1.98:3001/api/health`
 - Frontend: `http://192.168.1.98:5173`
 
+Die Backend-Logs bestaetigen, dass Prisma die Migration `20260709120000_init` erfolgreich angewendet hat und die NestJS API danach gestartet ist.
+
 ## Naechste Deployment-Schritte
 
-1. Backend-Logs in Portainer auf erfolgreiche Prisma-Migration pruefen und bei Bedarf dokumentieren.
-2. Backup-Strategie fuer PostgreSQL definieren.
-3. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.
+1. Backup-Strategie fuer PostgreSQL definieren.
+2. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.
