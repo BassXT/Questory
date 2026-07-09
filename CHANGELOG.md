@@ -46,6 +46,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Backend-Health-Check unter `http://192.168.1.98:3001/api/health` erfolgreich geprueft.
 - Prisma-Schema mit `prisma validate` erfolgreich validiert.
 - Prisma Client mit `npm run prisma:generate` erfolgreich generiert.
+- Portainer Stack nach Einfuehrung der ersten Prisma-Migration erneut deployed.
+- LXC-Frontend und LXC-Backend-Health-Check nach Redeploy erneut erfolgreich geprueft.
 
 ### Known Issues
 

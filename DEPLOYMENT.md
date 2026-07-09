@@ -188,10 +188,13 @@ Grund: Auf der aktuellen Windows-Entwicklungsumgebung ist `docker` nicht als Bef
 
 Auf dem Proxmox Docker-LXC wurde der Portainer Stack erfolgreich deployed und per HTTP geprueft.
 
+Der Stack wurde nach Einfuehrung der ersten Prisma-Migration erneut deployed. Danach waren Backend Health-Check und Frontend weiterhin erreichbar:
+
+- Backend Health-Check: `http://192.168.1.98:3001/api/health`
+- Frontend: `http://192.168.1.98:5173`
+
 ## Naechste Deployment-Schritte
 
-1. Stack in Portainer erneut deployen, damit die erste Migration auf dem LXC angewendet wird.
-2. Backend-Logs auf erfolgreiche Prisma-Migration pruefen.
-3. Health-Check nach dem Redeploy pruefen.
-4. Frontend nach dem Redeploy pruefen.
-5. Backup-Strategie fuer PostgreSQL definieren.
+1. Backend-Logs in Portainer auf erfolgreiche Prisma-Migration pruefen und bei Bedarf dokumentieren.
+2. Backup-Strategie fuer PostgreSQL definieren.
+3. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.

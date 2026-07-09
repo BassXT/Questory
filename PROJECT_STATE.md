@@ -45,6 +45,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Erste Prisma-Migration `20260709120000_init` erzeugt.
 - Backend-Docker-Start fuehrt vor dem API-Start automatisch `prisma migrate deploy` aus.
 - Prisma CLI und `dotenv` als Production-Dependencies verfuegbar gemacht, damit Migrationen im Runtime-Container laufen.
+- Portainer Stack nach Einfuehrung der ersten Migration erneut deployed.
+- Backend Health-Check und Frontend nach Redeploy erneut erfolgreich geprueft.
 
 ## Offene Aufgaben
 
@@ -54,13 +56,13 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Authentifizierungs- und Rollenmodell implementieren.
 - Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Portainer-Stack erneut deployen, damit die erste Prisma-Migration im LXC angewendet wird.
-- Backend-Logs nach Redeploy auf erfolgreiche Migration pruefen.
+- Backend-Logs in Portainer auf erfolgreiche Prisma-Migration pruefen und bei Bedarf dokumentieren.
+- Backup-Strategie fuer PostgreSQL definieren.
 - Danach erste fachliche Backend-Module fuer Auth/Familien/User planen.
 
 ## Naechster Schritt
 
-Als naechstes den Portainer-Stack erneut deployen, damit die erste Prisma-Migration auf der LXC-Datenbank angewendet wird. Danach Backend-Logs, Health-Check und Frontend pruefen.
+Als naechstes in Portainer die Backend-Logs auf die erfolgreiche Prisma-Migration pruefen. Danach die Backup-Strategie fuer PostgreSQL definieren und anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
 
 ## Architekturentscheidungen
 
