@@ -48,21 +48,23 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer Stack nach Einfuehrung der ersten Migration erneut deployed.
 - Backend Health-Check und Frontend nach Redeploy erneut erfolgreich geprueft.
 - Portainer-Backend-Logs bestaetigen, dass Migration `20260709120000_init` erfolgreich angewendet wurde und die NestJS API danach gestartet ist.
+- Backup-Script `deploy/portainer/backup-postgres.sh` fuer PostgreSQL-Dumps auf dem Docker-LXC angelegt.
+- Backup-Strategie mit manuellem Aufruf, Cron-Beispiel, Retention und Restore-Hinweis in `DEPLOYMENT.md` dokumentiert.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
-- Erste Datenbankmigration fuer MVP-Entities erstellen.
 - Authentifizierungs- und Rollenmodell implementieren.
 - Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Backup-Strategie fuer PostgreSQL definieren.
+- Backup-Script auf dem Docker-LXC ausfuehren und ersten Dump pruefen.
+- Cronjob fuer taegliche Backups auf dem Docker-LXC einrichten.
 - Danach erste fachliche Backend-Module fuer Auth/Familien/User planen.
 
 ## Naechster Schritt
 
-Als naechstes die Backup-Strategie fuer PostgreSQL definieren und anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
+Als naechstes das Backup-Script auf dem Docker-LXC ausfuehren, den ersten Dump pruefen und danach einen taeglichen Cronjob einrichten. Anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
 
 ## Architekturentscheidungen
 
@@ -83,6 +85,7 @@ Als naechstes die Backup-Strategie fuer PostgreSQL definieren und anschliessend 
 - Fuer den Homelab-Start wird Portainer als Stack-Verwaltung genutzt.
 - Portainer baut Questory aus dem Git-Repository mit `deploy/portainer/stack.yml`.
 - Migrationen werden im Docker-Deployment beim Backend-Start mit `prisma migrate deploy` angewendet.
+- Datenbank-Backups werden als PostgreSQL Custom Dumps aus dem laufenden `db`-Container erzeugt und standardmaessig unter `/opt/questory/backups` abgelegt.
 
 ## Bekannte Probleme
 

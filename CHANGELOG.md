@@ -33,6 +33,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Erste Prisma-Migration `20260709120000_init` erstellt.
 - Backend-Docker-Start fuehrt vor dem API-Start automatisch `prisma migrate deploy` aus.
 - Prisma CLI und `dotenv` als Production-Dependencies fuer Runtime-Migrationen eingeordnet.
+- PostgreSQL-Backup-Script fuer Portainer/LXC unter `deploy/portainer/backup-postgres.sh` erstellt.
+- Backup-Strategie mit manuellem Aufruf, Cron-Beispiel, Retention und Restore-Hinweis dokumentiert.
+- `.gitattributes` ergaenzt, damit Shell-Scripts mit LF-Line-Endings versioniert werden.
 
 ### Verified
 

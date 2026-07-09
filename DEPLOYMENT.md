@@ -137,13 +137,43 @@ PostgreSQL-Daten liegen im Docker Volume:
 questory-postgres-data
 ```
 
-Backups muessen spaeter separat eingerichtet werden. Fuer den Familienbetrieb ist mindestens ein regelmaessiger Datenbankdump sinnvoll.
+Fuer den Familienbetrieb wird ein regelmaessiger PostgreSQL-Dump empfohlen. Das Repository enthaelt dafuer ein Script:
 
-Beispiel fuer spaeter:
+```text
+deploy/portainer/backup-postgres.sh
+```
+
+Das Script sucht den PostgreSQL-Container des Portainer-Stacks ueber Docker-Compose-Labels, erstellt einen `pg_dump` im Custom-Format und loescht alte Dumps nach einer einstellbaren Aufbewahrungszeit.
+
+Manuelle Ausfuehrung auf dem Docker-LXC:
 
 ```bash
-docker exec <postgres-container> pg_dump -U questory questory > questory-backup.sql
+mkdir -p /opt/questory
+git clone https://github.com/BassXT/Questory.git /opt/questory/repo
+cd /opt/questory/repo
+chmod +x deploy/portainer/backup-postgres.sh
+BACKUP_DIR=/opt/questory/backups RETENTION_DAYS=14 ./deploy/portainer/backup-postgres.sh
 ```
+
+Beispiel fuer einen taeglichen Cronjob um 03:15 Uhr:
+
+```cron
+15 3 * * * cd /opt/questory/repo && git pull --ff-only && BACKUP_DIR=/opt/questory/backups RETENTION_DAYS=14 ./deploy/portainer/backup-postgres.sh >> /var/log/questory-backup.log 2>&1
+```
+
+Backups werden standardmaessig hier abgelegt:
+
+```text
+/opt/questory/backups
+```
+
+Restore-Grundform fuer spaeter:
+
+```bash
+docker exec -i <postgres-container> pg_restore -U questory -d questory --clean --if-exists < /opt/questory/backups/<backup-file>.dump
+```
+
+Ein Restore sollte erst an einer Testdatenbank oder mit bewusstem Wartungsfenster geprobt werden.
 
 ## Migrationen
 
@@ -197,5 +227,6 @@ Die Backend-Logs bestaetigen, dass Prisma die Migration `20260709120000_init` er
 
 ## Naechste Deployment-Schritte
 
-1. Backup-Strategie fuer PostgreSQL definieren.
-2. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.
+1. Backup-Script auf dem Docker-LXC ausfuehren und ersten Dump pruefen.
+2. Cronjob fuer taegliche Backups einrichten.
+3. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.
