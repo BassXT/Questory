@@ -38,10 +38,13 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `npm run build` erfolgreich ausgefuehrt.
 - Backend lokal gestartet und `GET /api/health` erfolgreich geprueft.
 - Frontend lokal gestartet und per HTTP mit Status `200` geprueft.
+- Portainer Stack auf dem Docker-LXC erfolgreich deployed.
+- LXC-Frontend unter `http://192.168.1.98:5173` erfolgreich geprueft.
+- LXC-Backend-Health-Check unter `http://192.168.1.98:3001/api/health` erfolgreich geprueft.
 
 ### Known Issues
 
 - `docker compose config` konnte nicht verifiziert werden, weil die Docker-CLI lokal nicht verfuegbar ist.
 - `npm audit` meldet 3 moderate Findings ueber eine transitive Prisma-Dev-Abhaengigkeit; automatisches Force-Fixing wuerde Prisma downgraden.
 - `npm ci` meldet eine Node-Engine-Warnung fuer eine transitive Prisma-Abhaengigkeit, obwohl Build und Generate mit Node `20.19.6` funktionieren.
-- Portainer-Deployment ist vorbereitet, aber noch nicht im LXC ausgefuehrt.
+- Port `3000` ist auf dem LXC bereits belegt; das Questory-Backend nutzt aktuell `3001`.

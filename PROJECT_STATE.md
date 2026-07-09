@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Docker ist lokal weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -38,6 +38,10 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - `DEPLOYMENT.md` fuer Proxmox-LXC, Docker und Portainer angelegt.
 - Dockerfiles auf reproduzierbare Builds mit `npm ci` und `package-lock.json` angepasst.
 - Portainer-Build-Kontext auf `../..` korrigiert, weil Portainer relative Pfade vom Compose-Dateiordner aus aufloest.
+- Portainer Stack auf dem Docker-LXC erfolgreich deployed.
+- Frontend auf `http://192.168.1.98:5173` erfolgreich geprueft.
+- Backend Health-Check auf `http://192.168.1.98:3001/api/health` erfolgreich geprueft.
+- Backend-Port im LXC auf `3001` gesetzt, weil `3000` bereits belegt war.
 
 ## Offene Aufgaben
 
@@ -47,11 +51,11 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Authentifizierungs- und Rollenmodell implementieren.
 - Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Portainer-Stack erneut deployen und Build auf dem LXC pruefen.
+- Erste Prisma-Migration fuer MVP-Entities erstellen und Datenbank-Migrationsfluss fuer Portainer klaeren.
 
 ## Naechster Schritt
 
-Als naechstes den Stack `deploy/portainer/stack.yml` in Portainer erneut deployen. Danach Health-Check und Frontend auf dem LXC pruefen.
+Als naechstes die erste Prisma-Migration fuer die MVP-Entities erstellen und klaeren, wie Migrationen beim Portainer-Deployment ausgefuehrt werden.
 
 ## Architekturentscheidungen
 
@@ -81,7 +85,7 @@ Als naechstes den Stack `deploy/portainer/stack.yml` in Portainer erneut deploye
 - Noch keine Tests vorhanden.
 - Noch keine CI-Konfiguration vorhanden.
 - Noch keine Prisma-Migration vorhanden.
-- Portainer-Deployment ist vorbereitet, aber noch nicht auf dem LXC ausgefuehrt.
+- Port `3000` ist auf dem LXC bereits belegt; Questory nutzt fuer das Backend aktuell `3001`.
 
 ## Ideen fuer spaeter
 

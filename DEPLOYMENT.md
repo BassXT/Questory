@@ -94,7 +94,22 @@ VITE_API_BASE_URL=http://192.168.1.98:3000/api
 
 Fuer Produktion oder dauerhaften Familienbetrieb muessen `POSTGRES_PASSWORD` und `JWT_SECRET` starke, eindeutige Werte sein.
 
-## URLs nach Deployment
+## Aktuelles LXC-Deployment
+
+Der erste Portainer-Deploy auf dem Docker-LXC ist erfolgreich. Da Port `3000` auf dem LXC bereits belegt war, nutzt Questory aktuell:
+
+```text
+BACKEND_PORT=3001
+FRONTEND_PORT=5173
+VITE_API_BASE_URL=http://192.168.1.98:3001/api
+```
+
+Gepruefte URLs:
+
+- Frontend: `http://192.168.1.98:5173`
+- Backend Health-Check: `http://192.168.1.98:3001/api/health`
+
+## Standard-URLs nach Deployment
 
 Wenn die Standardports verwendet werden:
 
@@ -149,12 +164,12 @@ docker compose up --build
 
 Grund: Auf der aktuellen Windows-Entwicklungsumgebung ist `docker` nicht als Befehl verfuegbar.
 
+Auf dem Proxmox Docker-LXC wurde der Portainer Stack erfolgreich deployed und per HTTP geprueft.
+
 ## Naechste Deployment-Schritte
 
-1. Repository fuer Portainer erreichbar machen.
-2. Portainer Stack mit `deploy/portainer/stack.yml` anlegen.
-3. Environment Variables setzen.
-4. Stack deployen.
-5. Health-Check pruefen.
-6. Frontend pruefen.
-7. Prisma-Migrationen fuer das MVP einfuehren.
+1. Prisma-Migrationen fuer das MVP einfuehren.
+2. Festlegen, wie Migrationen im Portainer-Deployment ausgefuehrt werden.
+3. Health-Check nach jedem Redeploy pruefen.
+4. Frontend nach jedem Redeploy pruefen.
+5. Backup-Strategie fuer PostgreSQL definieren.
