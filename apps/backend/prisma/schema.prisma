@@ -1,0 +1,181 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  PARENT
+  CHILD
+}
+
+enum QuestType {
+  ONE_TIME
+  RECURRING
+}
+
+enum QuestFrequency {
+  NONE
+  DAILY
+  WEEKLY
+  CUSTOM
+}
+
+enum QuestCompletionStatus {
+  SUBMITTED
+  APPROVED
+  REJECTED
+}
+
+enum RewardRedemptionStatus {
+  REQUESTED
+  APPROVED
+  REJECTED
+  REDEEMED
+}
+
+model Family {
+  id        String         @id @default(uuid())
+  name      String
+  users     User[]
+  children  ChildProfile[]
+  quests    Quest[]
+  rewards   Reward[]
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
+model User {
+  id                        String             @id @default(uuid())
+  familyId                  String
+  family                    Family             @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  email                     String             @unique
+  passwordHash              String
+  displayName               String
+  role                      Role
+  childProfile              ChildProfile?
+  createdQuests             Quest[]            @relation("QuestCreatedBy")
+  approvedQuestCompletions  QuestCompletion[]  @relation("QuestCompletionApprovedBy")
+  approvedRewardRedemptions RewardRedemption[] @relation("RewardRedemptionApprovedBy")
+  createdAt                 DateTime           @default(now())
+  updatedAt                 DateTime           @updatedAt
+
+  @@index([familyId])
+}
+
+model ChildProfile {
+  id                String             @id @default(uuid())
+  familyId          String
+  family            Family             @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  userId            String?            @unique
+  user              User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
+  displayName       String
+  avatarKey         String?
+  level             Int                @default(1)
+  xp                Int                @default(0)
+  coins             Int                @default(0)
+  questAssignments  QuestAssignment[]
+  rewardRedemptions RewardRedemption[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  @@index([familyId])
+}
+
+model Quest {
+  id               String            @id @default(uuid())
+  familyId         String
+  family           Family            @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  title            String
+  description      String?
+  type             QuestType
+  frequency        QuestFrequency     @default(NONE)
+  xpReward         Int
+  coinReward       Int
+  requiresApproval Boolean           @default(true)
+  isActive         Boolean           @default(true)
+  createdByUserId  String?
+  createdBy        User?             @relation("QuestCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
+  assignments      QuestAssignment[]
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  @@index([familyId])
+  @@index([createdByUserId])
+}
+
+model QuestAssignment {
+  id             String            @id @default(uuid())
+  questId        String
+  quest          Quest             @relation(fields: [questId], references: [id], onDelete: Cascade)
+  childProfileId String
+  childProfile   ChildProfile      @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  dueAt          DateTime?
+  completions    QuestCompletion[]
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([questId])
+  @@index([childProfileId])
+}
+
+model QuestCompletion {
+  id                String                @id @default(uuid())
+  questAssignmentId String
+  questAssignment   QuestAssignment       @relation(fields: [questAssignmentId], references: [id], onDelete: Cascade)
+  status            QuestCompletionStatus @default(SUBMITTED)
+  submittedAt       DateTime              @default(now())
+  approvedAt        DateTime?
+  approvedByUserId  String?
+  approvedBy        User?                 @relation("QuestCompletionApprovedBy", fields: [approvedByUserId], references: [id], onDelete: SetNull)
+  rejectedAt        DateTime?
+  rejectionReason   String?
+  xpGranted         Int                   @default(0)
+  coinsGranted      Int                   @default(0)
+
+  @@index([questAssignmentId])
+  @@index([approvedByUserId])
+}
+
+model Reward {
+  id               String             @id @default(uuid())
+  familyId         String
+  family           Family             @relation(fields: [familyId], references: [id], onDelete: Cascade)
+  name             String
+  description      String?
+  imageUrl         String?
+  category         String?
+  price            Int
+  isActive         Boolean            @default(true)
+  requiresApproval Boolean            @default(true)
+  maxRedemptions   Int?
+  redemptions      RewardRedemption[]
+  createdAt        DateTime           @default(now())
+  updatedAt        DateTime           @updatedAt
+
+  @@index([familyId])
+}
+
+model RewardRedemption {
+  id               String                 @id @default(uuid())
+  rewardId         String
+  reward           Reward                 @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  childProfileId   String
+  childProfile     ChildProfile           @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  status           RewardRedemptionStatus @default(REQUESTED)
+  requestedAt      DateTime               @default(now())
+  approvedAt       DateTime?
+  approvedByUserId String?
+  approvedBy       User?                  @relation("RewardRedemptionApprovedBy", fields: [approvedByUserId], references: [id], onDelete: SetNull)
+  redeemedAt       DateTime?
+  rejectedAt       DateTime?
+  rejectionReason  String?
+  coinCost         Int
+
+  @@index([rewardId])
+  @@index([childProfileId])
+  @@index([approvedByUserId])
+}

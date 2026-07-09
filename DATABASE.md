@@ -1,0 +1,212 @@
+# DATABASE.md
+
+Dieses Dokument beschreibt den initialen Datenmodell-Entwurf fuer Questory. Das konkrete Prisma-Schema liegt unter `apps/backend/prisma/schema.prisma`; die Prisma-7-Konfiguration liegt unter `apps/backend/prisma.config.ts`.
+
+## Entity Relationship
+
+Initiale Kernbeziehungen:
+
+```text
+Family 1--n User
+Family 1--n ChildProfile
+ChildProfile 1--n QuestAssignment
+Quest 1--n QuestAssignment
+QuestAssignment 1--n QuestCompletion
+Family 1--n Reward
+ChildProfile 1--n RewardRedemption
+Reward 1--n RewardRedemption
+```
+
+## Tabellen
+
+### Family
+
+Repraesentiert eine Familie oder einen Haushalt.
+
+Felder:
+
+- `id`
+- `name`
+- `createdAt`
+- `updatedAt`
+
+### User
+
+Repraesentiert anmeldbare Benutzer wie Administratoren und Eltern. Kinder koennen fuer das MVP ebenfalls als User abgebildet werden, erhalten aber ein eigenes `ChildProfile`.
+
+Felder:
+
+- `id`
+- `familyId`
+- `email`
+- `passwordHash`
+- `displayName`
+- `role`
+- `createdAt`
+- `updatedAt`
+
+Rollen:
+
+- `ADMIN`
+- `PARENT`
+- `CHILD`
+
+### ChildProfile
+
+Repraesentiert den spielbaren Kinderfortschritt innerhalb einer Familie.
+
+Felder:
+
+- `id`
+- `familyId`
+- `userId`
+- `displayName`
+- `avatarKey`
+- `level`
+- `xp`
+- `coins`
+- `createdAt`
+- `updatedAt`
+
+### Quest
+
+Repraesentiert eine Aufgabe oder Quest-Vorlage.
+
+Felder:
+
+- `id`
+- `familyId`
+- `title`
+- `description`
+- `type`
+- `frequency`
+- `xpReward`
+- `coinReward`
+- `requiresApproval`
+- `isActive`
+- `createdByUserId`
+- `createdAt`
+- `updatedAt`
+
+Typen:
+
+- `ONE_TIME`
+- `RECURRING`
+
+Frequenz:
+
+- `NONE`
+- `DAILY`
+- `WEEKLY`
+- `CUSTOM`
+
+### QuestAssignment
+
+Verknuepft eine Quest mit einem Kind.
+
+Felder:
+
+- `id`
+- `questId`
+- `childProfileId`
+- `dueAt`
+- `createdAt`
+- `updatedAt`
+
+### QuestCompletion
+
+Repraesentiert einen Abschlussversuch oder bestaetigten Abschluss einer Quest.
+
+Felder:
+
+- `id`
+- `questAssignmentId`
+- `status`
+- `submittedAt`
+- `approvedAt`
+- `approvedByUserId`
+- `rejectedAt`
+- `rejectionReason`
+- `xpGranted`
+- `coinsGranted`
+
+Status:
+
+- `SUBMITTED`
+- `APPROVED`
+- `REJECTED`
+
+### Reward
+
+Repraesentiert eine Belohnung im Shop.
+
+Felder:
+
+- `id`
+- `familyId`
+- `name`
+- `description`
+- `imageUrl`
+- `category`
+- `price`
+- `isActive`
+- `requiresApproval`
+- `maxRedemptions`
+- `createdAt`
+- `updatedAt`
+
+### RewardRedemption
+
+Repraesentiert eine beantragte oder eingeloeste Belohnung.
+
+Felder:
+
+- `id`
+- `rewardId`
+- `childProfileId`
+- `status`
+- `requestedAt`
+- `approvedAt`
+- `approvedByUserId`
+- `redeemedAt`
+- `rejectedAt`
+- `rejectionReason`
+- `coinCost`
+
+Status:
+
+- `REQUESTED`
+- `APPROVED`
+- `REJECTED`
+- `REDEEMED`
+
+## Migrationen
+
+Es wurde noch keine Prisma-Migration erzeugt. `npm run prisma:generate` wurde erfolgreich geprueft. Der naechste Datenbank-Schritt ist:
+
+```bash
+npm run prisma:migrate
+```
+
+## Level-Berechnung
+
+Die konkrete Formel wird spaeter festgelegt. Fuer das MVP soll sie deterministisch, einfach testbar und serverseitig berechnet sein.
+
+Moegliche Startformel:
+
+```text
+level = floor(sqrt(totalXp / 100)) + 1
+```
+
+Diese Formel ist noch keine finale Architekturentscheidung.
+
+## Erweiterungen fuer spaeter
+
+- Badge
+- Streak
+- AvatarItem
+- Collectible
+- AdventureArea
+- SeasonalEvent
+- FamilyChallenge
+- DisplayDevice

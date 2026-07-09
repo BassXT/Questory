@@ -1,0 +1,188 @@
+# ARCHITECTURE.md
+
+Dieses Dokument beschreibt das Architekturzielbild von Questory. Details werden mit der Implementierung fortlaufend ergaenzt.
+
+## Gesamtuebersicht
+
+Questory wird als self-hosted Webanwendung aufgebaut. Die Anwendung besteht aus einem React-Frontend, einer NestJS REST API und einer PostgreSQL-Datenbank.
+
+Geplante Struktur:
+
+```text
+questory/
+  apps/
+    backend/
+      prisma/
+      src/
+    frontend/
+      public/
+      src/
+  docker-compose.yml
+  .env.example
+  README.md
+  AGENTS.md
+  PROJECT_STATE.md
+  CHANGELOG.md
+  ARCHITECTURE.md
+  DATABASE.md
+  API.md
+```
+
+Die Dokumentationsdateien bleiben im Repository-Root, damit sie nach einem Reset sofort gefunden werden.
+
+## Backend
+
+Technologien:
+
+- Node.js
+- NestJS
+- TypeScript
+- Prisma
+- PostgreSQL
+- JWT
+
+Geplante Schichten:
+
+- Controller: REST-Endpunkte, Request/Response-Grenze
+- DTOs: Validierung und Datenform der API
+- Services: Businesslogik
+- Repositories oder Prisma Services: Datenzugriff
+- Guards: Authentifizierung und Autorisierung
+- Modules: fachliche Kapselung
+
+Aktuell vorhanden:
+
+- `AppModule`
+- `AppController`
+- `AppService`
+- `GET /api/health`
+- Prisma-Schema unter `apps/backend/prisma/schema.prisma`
+- Prisma-CLI-Konfiguration unter `apps/backend/prisma.config.ts`
+
+Geplante Backend-Module:
+
+- `auth`: Login, JWT, Passwort-Hashing, Rollen
+- `users`: Eltern, Kinder, Administratoren
+- `families`: Familienkontext und Mitgliedschaften
+- `quests`: Aufgaben, wiederkehrende Aufgaben, Abschluesse
+- `rewards`: Belohnungen, Shop, Einloeseanfragen
+- `progression`: XP, Muenzen, Level
+- `stats`: Dashboard- und Statistikdaten
+- `display`: spaetere Display-API fuer externe Geraete
+
+## Frontend
+
+Technologien:
+
+- React
+- TypeScript
+- Vite
+- Material UI
+
+Ziel:
+
+Das Frontend soll sich wie eine hochwertige, moderne Familien-Spieloberflaeche anfuehlen. Es soll freundlich und farbenfroh sein, ohne kleinkindlich zu wirken.
+
+Geplante Bereiche:
+
+- Login
+- Familien-Dashboard
+- Kinderprofil
+- Quest-Board
+- Aufgabenabschluss
+- Eltern-Bestaetigung
+- Reward-Shop
+- Einloeseanfragen
+- Statistiken
+- Einstellungen
+
+Aktuell vorhanden:
+
+- Vite-App unter `apps/frontend`
+- Material-UI-Theme unter `apps/frontend/src/theme.ts`
+- Erste responsive Startseite unter `apps/frontend/src/App.tsx`
+
+## Datenbank
+
+Primaere Datenbank: PostgreSQL.
+
+ORM: Prisma.
+
+Das Prisma-Schema startet mit Familien, Benutzern, Kindern, Aufgaben, Aufgabenabschluessen, Belohnungen und Einloesungen. Erweiterungen wie Badges, Streaks und Sammelobjekte werden spaeter modular ergaenzt.
+
+Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Deshalb enthaelt `schema.prisma` nur den Provider, nicht die Connection URL.
+
+Details stehen in `DATABASE.md`.
+
+## API
+
+Die API wird als REST API umgesetzt.
+
+Konventionen:
+
+- Basis-Prefix: `/api`
+- JSON als Request- und Response-Format
+- JWT Bearer Token fuer geschuetzte Endpunkte
+- Rollenbasierte Autorisierung
+- Konsistente Fehlerformate
+- Pagination fuer Listen, sobald Listen wachsen koennen
+
+Details stehen in `API.md`.
+
+## Authentifizierung
+
+Questory nutzt JWT-basierte Authentifizierung.
+
+Geplante Rollen:
+
+- `ADMIN`
+- `PARENT`
+- `CHILD`
+
+Kinderkonten koennen langfristig andere Login-Mechanismen erhalten als Elternkonten, zum Beispiel PIN oder familieninterne Auswahl. Fuer das MVP wird zunaechst ein einfaches, sicheres Rollenmodell vorbereitet.
+
+## Docker
+
+Docker Compose ist der primaere Startpfad.
+
+Geplante Services:
+
+- `db`: PostgreSQL
+- `backend`: NestJS API
+- `frontend`: React/Vite App
+- optional `nginx`: Reverse Proxy
+
+Aktuell umgesetzt:
+
+- `db` nutzt `postgres:17-alpine`
+- `backend` wird aus `apps/backend/Dockerfile` gebaut
+- `frontend` wird aus `apps/frontend/Dockerfile` gebaut und ueber nginx ausgeliefert
+- Portainer-Stack liegt unter `deploy/portainer/stack.yml`
+
+Die lokale Entwicklung soll mit einem Befehl startbar sein:
+
+```bash
+docker compose up --build
+```
+
+## Deployment
+
+Ziel ist ein einfaches self-hosted Deployment auf einem privaten Server oder Homelab.
+
+Das bevorzugte Ziel-Deployment ist ein Proxmox-LXC mit Docker und Portainer. Details stehen in `DEPLOYMENT.md`.
+
+Vorgesehene Eigenschaften:
+
+- Konfiguration ueber `.env`
+- persistentes PostgreSQL-Volume
+- reproduzierbarer Docker-Build
+- optionaler nginx Reverse Proxy
+- spaeter PWA-Unterstuetzung
+
+## Architekturprinzipien
+
+- Modularitaet vor frueher Optimierung.
+- Fachliche Module statt technischer Sammelordner.
+- Businesslogik testbar halten.
+- API, Datenmodell und Architektur werden gemeinsam versioniert.
+- Erweiterungen wie Badges oder Abenteuerwelt duerfen das MVP nicht verkomplizieren.
