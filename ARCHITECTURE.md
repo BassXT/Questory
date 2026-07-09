@@ -156,7 +156,7 @@ Geplante Services:
 Aktuell umgesetzt:
 
 - `db` nutzt `postgres:17-alpine`
-- `backend` wird aus `apps/backend/Dockerfile` gebaut und nutzt Node Debian-slim Images
+- `backend` wird aus `apps/backend/Dockerfile` gebaut, nutzt Node Debian-slim Images, installiert OpenSSL und generiert Prisma Client im Runtime-Image
 - `frontend` wird aus `apps/frontend/Dockerfile` gebaut und ueber nginx ausgeliefert
 - Portainer-Stack liegt unter `deploy/portainer/stack.yml`
 
