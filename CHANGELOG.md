@@ -52,6 +52,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Quests-Modul mit `GET /api/quests`, `POST /api/quests` und `GET /api/quests/:questId` erstellt.
 - QuestAssignments-Modul mit `POST /api/quest-assignments` und `GET /api/children/:childId/quest-assignments` erstellt.
 - Quest-Abschluss-Endpunkt `POST /api/quest-assignments/:assignmentId/complete` erstellt.
+- Quest-Bestaetigungs-Endpunkt `POST /api/quest-completions/:completionId/approve` mit XP-/Muenzen-Vergabe und Level-Neuberechnung erstellt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -90,6 +91,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend- und Frontend-Build nach Quest-Abschluss-Implementierung erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach Quest-Abschluss-Slice erfolgreich.
 - LXC-API-Tests fuer Quest-Abschluss-Einreichung, `SUBMITTED` Status, noch nicht vergebene XP/Muenzen und doppelte Einreichung erfolgreich ausgefuehrt.
+- Backend- und Frontend-Build nach Quest-Bestaetigungs-Implementierung erfolgreich ausgefuehrt.
 
 ### Known Issues
 

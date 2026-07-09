@@ -337,6 +337,21 @@ Hinweise:
 
 Eltern bestaetigen eine erledigte Quest. XP und Muenzen werden vergeben.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Nur Abschluesse mit Status `SUBMITTED` koennen bestaetigt werden.
+- Der Abschluss wird auf `APPROVED` gesetzt.
+- `xpGranted` und `coinsGranted` werden aus der Quest-Vorlage uebernommen.
+- Das Kinderprofil erhaelt XP und Muenzen atomar in derselben Transaktion.
+- Das Level wird nach der aktuellen Formel neu berechnet: `floor(sqrt(totalXp / 100)) + 1`.
+- Wiederholtes Bestaetigen desselben Abschlusses wird mit `409 Conflict` abgelehnt.
+
 ### `POST /api/quest-completions/{completionId}/reject`
 
 Eltern lehnen einen Abschluss ab.

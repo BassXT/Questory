@@ -29,4 +29,10 @@ export class QuestAssignmentsController {
   completeAssignment(@CurrentUser() user: AuthenticatedUser, @Param('assignmentId') assignmentId: string) {
     return this.questAssignmentsService.completeAssignment(user, assignmentId);
   }
+
+  @Post('quest-completions/:completionId/approve')
+  @Roles(Role.ADMIN, Role.PARENT)
+  approveCompletion(@CurrentUser() user: AuthenticatedUser, @Param('completionId') completionId: string) {
+    return this.questAssignmentsService.approveCompletion(user, completionId);
+  }
 }

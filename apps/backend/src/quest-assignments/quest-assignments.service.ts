@@ -57,6 +57,46 @@ const questCompletionSelect = {
   }
 };
 
+const approvedQuestCompletionSelect = {
+  id: true,
+  questAssignmentId: true,
+  status: true,
+  submittedAt: true,
+  approvedAt: true,
+  approvedByUserId: true,
+  rejectedAt: true,
+  rejectionReason: true,
+  xpGranted: true,
+  coinsGranted: true,
+  questAssignment: {
+    select: {
+      id: true,
+      childProfileId: true,
+      childProfile: {
+        select: {
+          id: true,
+          displayName: true,
+          level: true,
+          xp: true,
+          coins: true
+        }
+      },
+      quest: {
+        select: {
+          id: true,
+          title: true,
+          xpReward: true,
+          coinReward: true
+        }
+      }
+    }
+  }
+};
+
+function calculateLevel(totalXp: number): number {
+  return Math.floor(Math.sqrt(totalXp / 100)) + 1;
+}
+
 @Injectable()
 export class QuestAssignmentsService {
   constructor(private readonly prisma: PrismaService) {}
@@ -207,6 +247,93 @@ export class QuestAssignmentsService {
         status: QuestCompletionStatus.SUBMITTED
       },
       select: questCompletionSelect
+    });
+  }
+
+  async approveCompletion(user: AuthenticatedUser, completionId: string) {
+    const completion = await this.prisma.questCompletion.findFirst({
+      where: {
+        id: completionId,
+        questAssignment: {
+          childProfile: {
+            familyId: user.familyId
+          }
+        }
+      },
+      select: {
+        id: true,
+        status: true,
+        questAssignment: {
+          select: {
+            childProfileId: true,
+            childProfile: {
+              select: {
+                id: true
+              }
+            },
+            quest: {
+              select: {
+                xpReward: true,
+                coinReward: true
+              }
+            }
+          }
+        }
+      }
+    });
+
+    if (!completion) {
+      throw new NotFoundException('Quest completion not found.');
+    }
+
+    if (completion.status !== QuestCompletionStatus.SUBMITTED) {
+      throw new ConflictException('Only submitted quest completions can be approved.');
+    }
+
+    const xpGranted = completion.questAssignment.quest.xpReward;
+    const coinsGranted = completion.questAssignment.quest.coinReward;
+
+    return this.prisma.$transaction(async (tx) => {
+      const updateResult = await tx.questCompletion.updateMany({
+        where: {
+          id: completionId,
+          status: QuestCompletionStatus.SUBMITTED
+        },
+        data: {
+          status: QuestCompletionStatus.APPROVED,
+          approvedAt: new Date(),
+          approvedByUserId: user.sub,
+          xpGranted,
+          coinsGranted
+        }
+      });
+
+      if (updateResult.count !== 1) {
+        throw new ConflictException('Only submitted quest completions can be approved.');
+      }
+
+      const updatedChildProfile = await tx.childProfile.update({
+        where: { id: completion.questAssignment.childProfileId },
+        data: {
+          xp: { increment: xpGranted },
+          coins: { increment: coinsGranted }
+        },
+        select: {
+          xp: true
+        }
+      });
+
+      await tx.childProfile.update({
+        where: { id: completion.questAssignment.childProfileId },
+        data: {
+          level: calculateLevel(updatedChildProfile.xp)
+        }
+      });
+
+      return tx.questCompletion.findUniqueOrThrow({
+        where: { id: completionId },
+        select: approvedQuestCompletionSelect
+      });
     });
   }
 }

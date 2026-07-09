@@ -201,15 +201,15 @@ Damit werden vorhandene Migrationen gegen die PostgreSQL-Datenbank angewendet.
 
 ## Level-Berechnung
 
-Die konkrete Formel wird spaeter festgelegt. Fuer das MVP soll sie deterministisch, einfach testbar und serverseitig berechnet sein.
+Die Level-Berechnung ist fuer das MVP serverseitig, deterministisch und einfach testbar.
 
-Moegliche Startformel:
+Aktuelle Startformel:
 
 ```text
 level = floor(sqrt(totalXp / 100)) + 1
 ```
 
-Diese Formel ist noch keine finale Architekturentscheidung.
+Die Formel wird bei der Eltern-Bestaetigung eines Quest-Abschlusses nach Vergabe der XP neu angewendet.
 
 ## Erweiterungen fuer spaeter
 
