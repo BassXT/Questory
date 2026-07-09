@@ -38,6 +38,7 @@ Technologien:
 - NestJS
 - TypeScript
 - Prisma
+- `@prisma/adapter-pg` fuer Prisma 7 PostgreSQL Runtime-Verbindungen
 - PostgreSQL
 - JWT
 
@@ -110,7 +111,7 @@ ORM: Prisma.
 
 Das Prisma-Schema startet mit Familien, Benutzern, Kindern, Aufgaben, Aufgabenabschluessen, Belohnungen und Einloesungen. Erweiterungen wie Badges, Streaks und Sammelobjekte werden spaeter modular ergaenzt.
 
-Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Deshalb enthaelt `schema.prisma` nur den Provider, nicht die Connection URL.
+Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Deshalb enthaelt `schema.prisma` nur den Provider, nicht die Connection URL. Zur Laufzeit konstruiert der NestJS `PrismaService` den Client mit `PrismaPg` aus `@prisma/adapter-pg`.
 
 Details stehen in `DATABASE.md`.
 

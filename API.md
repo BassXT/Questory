@@ -40,21 +40,72 @@ Beispiel:
 
 ### `POST /api/auth/register`
 
-Erstellt initiale Benutzer oder Familienkonten. Der genaue Registrierungsfluss wird noch definiert.
+Erstellt eine Familie und das erste Elternkonto.
+
+Status: implementiert.
+
+Request:
+
+```json
+{
+  "familyName": "Familie Beispiel",
+  "displayName": "Thomas",
+  "email": "thomas@example.com",
+  "password": "mindestens-8-zeichen"
+}
+```
+
+Response:
+
+```json
+{
+  "accessToken": "<jwt>",
+  "user": {
+    "id": "<user-id>",
+    "familyId": "<family-id>",
+    "email": "thomas@example.com",
+    "displayName": "Thomas",
+    "role": "PARENT",
+    "createdAt": "2026-07-09T00:00:00.000Z",
+    "updatedAt": "2026-07-09T00:00:00.000Z"
+  }
+}
+```
 
 ### `POST /api/auth/login`
 
 Meldet einen Benutzer an und gibt ein JWT zurueck.
 
+Status: implementiert.
+
+Request:
+
+```json
+{
+  "email": "thomas@example.com",
+  "password": "mindestens-8-zeichen"
+}
+```
+
+Response: wie `POST /api/auth/register`.
+
 ### `GET /api/auth/me`
 
 Gibt den aktuell angemeldeten Benutzer zurueck.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
 
 ## Families
 
 ### `GET /api/families/current`
 
 Gibt den aktuellen Familienkontext zurueck.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
 
 ### `PATCH /api/families/current`
 
@@ -66,9 +117,15 @@ Aktualisiert Familieninformationen.
 
 Listet Benutzer der Familie.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
 ### `POST /api/users`
 
 Erstellt einen Eltern-, Kinder- oder Administrationsbenutzer.
+
+Status: geplant.
 
 ### `GET /api/users/{userId}`
 

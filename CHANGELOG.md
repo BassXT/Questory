@@ -39,6 +39,13 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Erster PostgreSQL-Backup-Test auf dem Docker-LXC erfolgreich ausgefuehrt.
 - Cron-Vorlage `deploy/portainer/questory-backup.cron.example` fuer taegliche Backups erstellt.
 - Taeglicher Backup-Cronjob auf dem Docker-LXC eingerichtet.
+- Prisma-Service fuer NestJS erstellt.
+- Prisma-Service fuer Prisma 7 mit PostgreSQL Driver Adapter `@prisma/adapter-pg` eingerichtet.
+- Auth-Modul mit Registrierung, Login und `GET /api/auth/me` erstellt.
+- JWT Guard fuer geschuetzte Endpunkte erstellt.
+- Families-Modul mit `GET /api/families/current` erstellt.
+- Users-Modul mit `GET /api/users` erstellt.
+- Passwort-Hashing mit Node `crypto.scrypt` implementiert.
 
 ### Verified
 
@@ -56,6 +63,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Frontend und LXC-Backend-Health-Check nach Redeploy erneut erfolgreich geprueft.
 - Portainer-Backend-Logs bestaetigen, dass Migration `20260709120000_init` erfolgreich angewendet wurde und die NestJS API gestartet ist.
 - Backup-Datei `/opt/questory/backups/questory-postgres-20260709-164536.dump` erfolgreich erstellt.
+- Backend-Build nach Auth/Families/Users-Implementierung erfolgreich ausgefuehrt.
 
 ### Known Issues
 

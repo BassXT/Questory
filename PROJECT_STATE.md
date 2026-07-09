@@ -53,20 +53,28 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Erster PostgreSQL-Backup-Test auf dem Docker-LXC erfolgreich: `/opt/questory/backups/questory-postgres-20260709-164536.dump`.
 - Cron-Vorlage `deploy/portainer/questory-backup.cron.example` fuer taegliche Backups um 03:15 Uhr angelegt.
 - Taeglicher Backup-Cronjob auf dem Docker-LXC unter `/etc/cron.d/questory-backup` eingerichtet und laufend.
+- Prisma-Service fuer NestJS angelegt.
+- Prisma-Service nutzt wegen Prisma 7 den PostgreSQL Driver Adapter `@prisma/adapter-pg`.
+- Auth-Modul mit Registrierung, Login und `GET /api/auth/me` angelegt.
+- Passwort-Hashing mit Node `crypto.scrypt` ohne zusaetzliche Passwortbibliothek implementiert.
+- JWT Guard fuer geschuetzte Endpunkte angelegt.
+- Families-Modul mit `GET /api/families/current` angelegt.
+- Users-Modul mit `GET /api/users` fuer Benutzer der aktuellen Familie angelegt.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
-- Authentifizierungs- und Rollenmodell implementieren.
-- Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
+- Rollenbasierte Guards fuer Eltern/Admin/Kinder implementieren.
+- User-Erstellung fuer weitere Eltern/Kinder implementieren.
+- Kinderprofile anlegen und listen.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 - Danach erste fachliche Backend-Module fuer Auth/Familien/User planen.
 
 ## Naechster Schritt
 
-Als naechstes nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen. Anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
+Als naechstes nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen. Danach die neuen Auth-Endpunkte nach Redeploy testen und anschliessend User-Erstellung sowie Kinderprofile implementieren.
 
 ## Architekturentscheidungen
 
@@ -88,6 +96,9 @@ Als naechstes nach dem ersten automatischen Backup-Lauf `/var/log/questory-backu
 - Portainer baut Questory aus dem Git-Repository mit `deploy/portainer/stack.yml`.
 - Migrationen werden im Docker-Deployment beim Backend-Start mit `prisma migrate deploy` angewendet.
 - Datenbank-Backups werden als PostgreSQL Custom Dumps aus dem laufenden `db`-Container erzeugt und standardmaessig unter `/opt/questory/backups` abgelegt.
+- Der erste Auth-Slice erzeugt beim Registrieren eine Familie und ein Elternkonto mit Rolle `PARENT`.
+- Passwort-Hashing nutzt `scrypt` aus Node `crypto`; dadurch wird vorerst keine zusaetzliche Hashing-Bibliothek benoetigt.
+- Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
 
 ## Bekannte Probleme
 
