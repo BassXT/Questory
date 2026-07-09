@@ -46,6 +46,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Families-Modul mit `GET /api/families/current` erstellt.
 - Users-Modul mit `GET /api/users` erstellt.
 - Passwort-Hashing mit Node `crypto.scrypt` implementiert.
+- Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 
 ### Verified
 

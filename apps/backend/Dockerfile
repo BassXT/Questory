@@ -1,4 +1,4 @@
-FROM node:20-alpine AS dependencies
+FROM node:20-bookworm-slim AS dependencies
 WORKDIR /app
 COPY package.json package-lock.json ./
 COPY apps/backend/package.json apps/backend/package.json
@@ -10,7 +10,7 @@ COPY apps/backend apps/backend
 RUN npm run prisma:generate -w apps/backend
 RUN npm run build -w apps/backend
 
-FROM node:20-alpine AS runtime
+FROM node:20-bookworm-slim AS runtime
 WORKDIR /app
 ENV NODE_ENV=production
 COPY package.json package-lock.json ./

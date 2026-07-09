@@ -60,6 +60,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - JWT Guard fuer geschuetzte Endpunkte angelegt.
 - Families-Modul mit `GET /api/families/current` angelegt.
 - Users-Modul mit `GET /api/users` fuer Benutzer der aktuellen Familie angelegt.
+- Node-Docker-Build-Images von Alpine auf `node:20-bookworm-slim` umgestellt, um native npm-Abhaengigkeiten im Portainer-Build robuster zu installieren.
 
 ## Offene Aufgaben
 
@@ -99,6 +100,7 @@ Als naechstes nach dem ersten automatischen Backup-Lauf `/var/log/questory-backu
 - Der erste Auth-Slice erzeugt beim Registrieren eine Familie und ein Elternkonto mit Rolle `PARENT`.
 - Passwort-Hashing nutzt `scrypt` aus Node `crypto`; dadurch wird vorerst keine zusaetzliche Hashing-Bibliothek benoetigt.
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
+- Docker-Builds nutzen Debian-slim Node-Images statt Alpine fuer Node-Stages, weil Vite/Rolldown und andere native npm-Abhaengigkeiten damit im Portainer-Build weniger an musl/Alpine-Bindings haengen.
 
 ## Bekannte Probleme
 
