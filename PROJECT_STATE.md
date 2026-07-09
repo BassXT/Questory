@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs und Quest-Vorlagen-APIs sind auf dem LXC implementiert und getestet. Quest-Zuweisungen sind lokal implementiert. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs und Quest-Zuweisungen sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -79,20 +79,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Tests fuer `POST /api/users` mit `PARENT`, `POST /api/users` mit `CHILD`, `POST /api/children`, `GET /api/children` und `GET /api/children/:childId` erfolgreich.
 - Portainer-Redeploy nach Quest-Slice erfolgreich.
 - LXC-Tests fuer `POST /api/quests`, `GET /api/quests`, `GET /api/quests/:questId` und ungueltige Quest-Frequenz-Kombination erfolgreich.
+- Portainer-Redeploy nach Quest-Zuweisungs-Slice erfolgreich.
+- LXC-Tests fuer `POST /api/quest-assignments`, `GET /api/children/:childId/quest-assignments` und doppelte Quest-Zuweisung erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Quest-Zuweisungs-Slice im Portainer-Deployment redeployen und auf dem LXC per HTTP testen.
 - Quest-Abschluss durch Kinder als naechsten MVP-Slice implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Portainer Stack redeployen und `POST /api/quest-assignments` sowie `GET /api/children/:childId/quest-assignments` auf dem LXC testen. Danach Quest-Abschluss durch Kinder implementieren.
+Als naechstes Quest-Abschluss durch Kinder implementieren: `POST /api/quest-assignments/:assignmentId/complete` oder die bereits dokumentierte Variante `POST /api/quest-assignments/{assignmentId}/complete` finalisieren und danach Eltern-Bestaetigung vorbereiten.
 
 ## Architekturentscheidungen
 

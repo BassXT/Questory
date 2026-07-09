@@ -84,6 +84,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Quest-Slice erfolgreich.
 - LXC-API-Tests fuer Quest-Erstellung, Quest-Liste, Quest-Einzelabruf und ungueltige Quest-Frequenz-Kombination erfolgreich ausgefuehrt.
 - Backend- und Frontend-Build nach Quest-Zuweisungs-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Quest-Zuweisungs-Slice erfolgreich.
+- LXC-API-Tests fuer Quest-Zuweisung, Kinder-Zuweisungsliste und doppelte Quest-Zuweisung erfolgreich ausgefuehrt.
 
 ### Known Issues
 
