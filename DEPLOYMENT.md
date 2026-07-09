@@ -161,10 +161,35 @@ Beispiel fuer einen taeglichen Cronjob um 03:15 Uhr:
 15 3 * * * cd /opt/questory/repo && git pull --ff-only && BACKUP_DIR=/opt/questory/backups RETENTION_DAYS=14 ./deploy/portainer/backup-postgres.sh >> /var/log/questory-backup.log 2>&1
 ```
 
+Alternativ liegt eine Cron-Datei als Vorlage im Repository:
+
+```text
+deploy/portainer/questory-backup.cron.example
+```
+
+Installation auf dem Docker-LXC:
+
+```bash
+cp /opt/questory/repo/deploy/portainer/questory-backup.cron.example /etc/cron.d/questory-backup
+chmod 0644 /etc/cron.d/questory-backup
+```
+
+Log pruefen:
+
+```bash
+tail -n 100 /var/log/questory-backup.log
+```
+
 Backups werden standardmaessig hier abgelegt:
 
 ```text
 /opt/questory/backups
+```
+
+Der erste Backup-Test auf dem Docker-LXC war erfolgreich:
+
+```text
+/opt/questory/backups/questory-postgres-20260709-164536.dump
 ```
 
 Restore-Grundform fuer spaeter:
@@ -227,6 +252,5 @@ Die Backend-Logs bestaetigen, dass Prisma die Migration `20260709120000_init` er
 
 ## Naechste Deployment-Schritte
 
-1. Backup-Script auf dem Docker-LXC ausfuehren und ersten Dump pruefen.
-2. Cronjob fuer taegliche Backups einrichten.
-3. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.
+1. Cronjob fuer taegliche Backups einrichten.
+2. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.

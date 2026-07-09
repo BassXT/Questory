@@ -50,6 +50,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Backend-Logs bestaetigen, dass Migration `20260709120000_init` erfolgreich angewendet wurde und die NestJS API danach gestartet ist.
 - Backup-Script `deploy/portainer/backup-postgres.sh` fuer PostgreSQL-Dumps auf dem Docker-LXC angelegt.
 - Backup-Strategie mit manuellem Aufruf, Cron-Beispiel, Retention und Restore-Hinweis in `DEPLOYMENT.md` dokumentiert.
+- Erster PostgreSQL-Backup-Test auf dem Docker-LXC erfolgreich: `/opt/questory/backups/questory-postgres-20260709-164536.dump`.
+- Cron-Vorlage `deploy/portainer/questory-backup.cron.example` fuer taegliche Backups um 03:15 Uhr angelegt.
 
 ## Offene Aufgaben
 
@@ -58,13 +60,12 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Authentifizierungs- und Rollenmodell implementieren.
 - Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Backup-Script auf dem Docker-LXC ausfuehren und ersten Dump pruefen.
 - Cronjob fuer taegliche Backups auf dem Docker-LXC einrichten.
 - Danach erste fachliche Backend-Module fuer Auth/Familien/User planen.
 
 ## Naechster Schritt
 
-Als naechstes das Backup-Script auf dem Docker-LXC ausfuehren, den ersten Dump pruefen und danach einen taeglichen Cronjob einrichten. Anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
+Als naechstes einen taeglichen Cronjob fuer PostgreSQL-Backups auf dem Docker-LXC einrichten. Anschliessend mit den ersten fachlichen Backend-Modulen fuer Auth, Familien und Benutzer beginnen.
 
 ## Architekturentscheidungen
 

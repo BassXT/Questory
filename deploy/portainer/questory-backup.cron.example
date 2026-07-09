@@ -1,0 +1,4 @@
+SHELL=/bin/sh
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+
+15 3 * * * root cd /opt/questory/repo && git pull --ff-only && BACKUP_DIR=/opt/questory/backups RETENTION_DAYS=14 ./deploy/portainer/backup-postgres.sh >> /var/log/questory-backup.log 2>&1

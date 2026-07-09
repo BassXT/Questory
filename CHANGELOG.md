@@ -36,6 +36,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - PostgreSQL-Backup-Script fuer Portainer/LXC unter `deploy/portainer/backup-postgres.sh` erstellt.
 - Backup-Strategie mit manuellem Aufruf, Cron-Beispiel, Retention und Restore-Hinweis dokumentiert.
 - `.gitattributes` ergaenzt, damit Shell-Scripts mit LF-Line-Endings versioniert werden.
+- Erster PostgreSQL-Backup-Test auf dem Docker-LXC erfolgreich ausgefuehrt.
+- Cron-Vorlage `deploy/portainer/questory-backup.cron.example` fuer taegliche Backups erstellt.
 
 ### Verified
 
@@ -52,6 +54,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer Stack nach Einfuehrung der ersten Prisma-Migration erneut deployed.
 - LXC-Frontend und LXC-Backend-Health-Check nach Redeploy erneut erfolgreich geprueft.
 - Portainer-Backend-Logs bestaetigen, dass Migration `20260709120000_init` erfolgreich angewendet wurde und die NestJS API gestartet ist.
+- Backup-Datei `/opt/questory/backups/questory-postgres-20260709-164536.dump` erfolgreich erstellt.
 
 ### Known Issues
 
