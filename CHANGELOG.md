@@ -80,6 +80,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach User-/Children-Slice erfolgreich.
 - LXC-API-Tests fuer neue Eltern, Kinderbenutzer, Kinderprofile, Kinderliste und Kinderprofil-Einzelabruf erfolgreich ausgefuehrt.
 - Backend- und Frontend-Build nach Quest-Modul-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Quest-Slice erfolgreich.
+- LXC-API-Tests fuer Quest-Erstellung, Quest-Liste, Quest-Einzelabruf und ungueltige Quest-Frequenz-Kombination erfolgreich ausgefuehrt.
 
 ### Known Issues
 
