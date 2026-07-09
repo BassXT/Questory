@@ -64,6 +64,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert den Prisma Client im Runtime-Image, damit `node_modules/.prisma/client` vorhanden ist.
 - `JwtAuthGuard` im AuthModule als Provider exportiert und in Families/Users importiert, damit geschuetzte Feature-Module `JwtService` aufloesen koennen.
 - `JwtModule` aus dem AuthModule exportiert, damit `JwtService` fuer Guards in importierenden Feature-Modulen verfuegbar ist.
+- Portainer-Redeploy nach Auth/Families/Users-Slice erfolgreich.
+- LXC-Tests fuer `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, `GET /api/families/current` und `GET /api/users` erfolgreich.
 
 ## Offene Aufgaben
 
@@ -72,13 +74,14 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Rollenbasierte Guards fuer Eltern/Admin/Kinder implementieren.
 - User-Erstellung fuer weitere Eltern/Kinder implementieren.
 - Kinderprofile anlegen und listen.
+- Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 - Danach erste fachliche Backend-Module fuer Auth/Familien/User planen.
 
 ## Naechster Schritt
 
-Als naechstes nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen. Danach die neuen Auth-Endpunkte nach Redeploy testen und anschliessend User-Erstellung sowie Kinderprofile implementieren.
+Als naechstes nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen. Danach User-Erstellung fuer weitere Eltern/Kinder und Kinderprofile implementieren.
 
 ## Architekturentscheidungen
 

@@ -68,6 +68,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Backend-Logs bestaetigen, dass Migration `20260709120000_init` erfolgreich angewendet wurde und die NestJS API gestartet ist.
 - Backup-Datei `/opt/questory/backups/questory-postgres-20260709-164536.dump` erfolgreich erstellt.
 - Backend-Build nach Auth/Families/Users-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Auth/Families/Users-Slice erfolgreich.
+- LXC-API-Tests fuer Registrierung, Login, `auth/me`, aktuelle Familie und Benutzerliste erfolgreich ausgefuehrt.
 
 ### Known Issues
 
