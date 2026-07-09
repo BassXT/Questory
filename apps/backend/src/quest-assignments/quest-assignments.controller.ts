@@ -1,0 +1,26 @@
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Role } from '@prisma/client';
+import { CurrentUser } from '../auth/authenticated-user.decorator';
+import { Roles } from '../auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { RolesGuard } from '../auth/guards/roles.guard';
+import { AuthenticatedUser } from '../auth/types/authenticated-user';
+import { CreateQuestAssignmentDto } from './dto/create-quest-assignment.dto';
+import { QuestAssignmentsService } from './quest-assignments.service';
+
+@Controller()
+@UseGuards(JwtAuthGuard, RolesGuard)
+export class QuestAssignmentsController {
+  constructor(private readonly questAssignmentsService: QuestAssignmentsService) {}
+
+  @Post('quest-assignments')
+  @Roles(Role.ADMIN, Role.PARENT)
+  createAssignment(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateQuestAssignmentDto) {
+    return this.questAssignmentsService.createAssignment(user, dto);
+  }
+
+  @Get('children/:childId/quest-assignments')
+  listAssignmentsForChild(@CurrentUser() user: AuthenticatedUser, @Param('childId') childId: string) {
+    return this.questAssignmentsService.listAssignmentsForChild(user, childId);
+  }
+}

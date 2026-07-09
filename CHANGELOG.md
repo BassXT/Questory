@@ -50,6 +50,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `POST /api/users` fuer neue Eltern- und Kinderbenutzer erstellt.
 - Children-Modul mit `GET /api/children`, `POST /api/children` und `GET /api/children/:childId` erstellt.
 - Quests-Modul mit `GET /api/quests`, `POST /api/quests` und `GET /api/quests/:questId` erstellt.
+- QuestAssignments-Modul mit `POST /api/quest-assignments` und `GET /api/children/:childId/quest-assignments` erstellt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -82,6 +83,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend- und Frontend-Build nach Quest-Modul-Implementierung erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach Quest-Slice erfolgreich.
 - LXC-API-Tests fuer Quest-Erstellung, Quest-Liste, Quest-Einzelabruf und ungueltige Quest-Frequenz-Kombination erfolgreich ausgefuehrt.
+- Backend- und Frontend-Build nach Quest-Zuweisungs-Implementierung erfolgreich ausgefuehrt.
 
 ### Known Issues
 

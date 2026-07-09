@@ -276,9 +276,37 @@ Deaktiviert oder loescht eine Quest. Das genaue Verhalten wird vor Implementieru
 
 Listet zugewiesene Quests fuer ein Kind.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Hinweis: Die Antwort enthaelt die Zuweisung und eingebettete Quest-Daten.
+
 ### `POST /api/quest-assignments`
 
 Weist eine Quest einem Kind zu.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Quest und Kinderprofil muessen zur aktuellen Familie gehoeren.
+- Inaktive Quests koennen nicht zugewiesen werden.
+- Dieselbe Quest kann einem Kind aktuell nur einmal zugewiesen werden.
+
+Request:
+
+```json
+{
+  "questId": "<quest-id>",
+  "childProfileId": "<child-profile-id>",
+  "dueAt": "2026-07-10T18:00:00.000Z"
+}
+```
 
 ### `PATCH /api/quest-assignments/{assignmentId}`
 
