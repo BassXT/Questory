@@ -3,6 +3,7 @@ import { QuestCompletionStatus, QuestType, Role } from '@prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateQuestAssignmentDto } from './dto/create-quest-assignment.dto';
+import { RejectQuestCompletionDto } from './dto/reject-quest-completion.dto';
 
 const questAssignmentSelect = {
   id: true,
@@ -333,6 +334,56 @@ export class QuestAssignmentsService {
       return tx.questCompletion.findUniqueOrThrow({
         where: { id: completionId },
         select: approvedQuestCompletionSelect
+      });
+    });
+  }
+
+  async rejectCompletion(user: AuthenticatedUser, completionId: string, dto: RejectQuestCompletionDto) {
+    const completion = await this.prisma.questCompletion.findFirst({
+      where: {
+        id: completionId,
+        questAssignment: {
+          childProfile: {
+            familyId: user.familyId
+          }
+        }
+      },
+      select: {
+        id: true,
+        status: true
+      }
+    });
+
+    if (!completion) {
+      throw new NotFoundException('Quest completion not found.');
+    }
+
+    if (completion.status !== QuestCompletionStatus.SUBMITTED) {
+      throw new ConflictException('Only submitted quest completions can be rejected.');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const updateResult = await tx.questCompletion.updateMany({
+        where: {
+          id: completionId,
+          status: QuestCompletionStatus.SUBMITTED
+        },
+        data: {
+          status: QuestCompletionStatus.REJECTED,
+          rejectedAt: new Date(),
+          rejectionReason: dto.rejectionReason?.trim() || null,
+          xpGranted: 0,
+          coinsGranted: 0
+        }
+      });
+
+      if (updateResult.count !== 1) {
+        throw new ConflictException('Only submitted quest completions can be rejected.');
+      }
+
+      return tx.questCompletion.findUniqueOrThrow({
+        where: { id: completionId },
+        select: questCompletionSelect
       });
     });
   }

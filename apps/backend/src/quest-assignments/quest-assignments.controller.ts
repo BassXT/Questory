@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { CreateQuestAssignmentDto } from './dto/create-quest-assignment.dto';
+import { RejectQuestCompletionDto } from './dto/reject-quest-completion.dto';
 import { QuestAssignmentsService } from './quest-assignments.service';
 
 @Controller()
@@ -34,5 +35,15 @@ export class QuestAssignmentsController {
   @Roles(Role.ADMIN, Role.PARENT)
   approveCompletion(@CurrentUser() user: AuthenticatedUser, @Param('completionId') completionId: string) {
     return this.questAssignmentsService.approveCompletion(user, completionId);
+  }
+
+  @Post('quest-completions/:completionId/reject')
+  @Roles(Role.ADMIN, Role.PARENT)
+  rejectCompletion(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('completionId') completionId: string,
+    @Body() dto: RejectQuestCompletionDto
+  ) {
+    return this.questAssignmentsService.rejectCompletion(user, completionId, dto);
   }
 }

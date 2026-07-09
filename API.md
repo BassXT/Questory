@@ -356,6 +356,29 @@ Hinweise:
 
 Eltern lehnen einen Abschluss ab.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Nur Abschluesse mit Status `SUBMITTED` koennen abgelehnt werden.
+- Der Abschluss wird auf `REJECTED` gesetzt.
+- `rejectedAt` wird gesetzt.
+- `rejectionReason` ist optional und auf 1000 Zeichen begrenzt.
+- XP und Muenzen werden nicht vergeben.
+- Nach einer Ablehnung kann dieselbe Zuweisung erneut eingereicht werden.
+
+Request:
+
+```json
+{
+  "rejectionReason": "Bitte noch das Bett machen."
+}
+```
+
 ## Rewards
 
 ### `GET /api/rewards`
