@@ -76,6 +76,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Prisma Client nach User-/Children-Slice erfolgreich generiert.
 - Prisma-Schema nach User-/Children-Slice erfolgreich validiert.
 - Backend- und Frontend-Build nach User-/Children-Slice erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach User-/Children-Slice erfolgreich.
+- LXC-API-Tests fuer neue Eltern, Kinderbenutzer, Kinderprofile, Kinderliste und Kinderprofil-Einzelabruf erfolgreich ausgefuehrt.
 
 ### Known Issues
 

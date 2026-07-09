@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards und erste Kinderprofil-APIs sind lokal implementiert. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards und erste Kinderprofil-APIs sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -71,12 +71,13 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - `JwtModule` aus dem AuthModule exportiert, damit `JwtService` fuer Guards in importierenden Feature-Modulen verfuegbar ist.
 - Portainer-Redeploy nach Auth/Families/Users-Slice erfolgreich.
 - LXC-Tests fuer `POST /api/auth/register`, `POST /api/auth/login`, `GET /api/auth/me`, `GET /api/families/current` und `GET /api/users` erfolgreich.
+- Portainer-Redeploy nach User-/Children-Slice erfolgreich.
+- LXC-Tests fuer `POST /api/users` mit `PARENT`, `POST /api/users` mit `CHILD`, `POST /api/children`, `GET /api/children` und `GET /api/children/:childId` erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
-- User-/Children-Slice im Portainer-Deployment redeployen und auf dem LXC per HTTP testen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
 - Quest-Modul fuer Aufgaben/Quests als naechsten MVP-Fachbereich implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
@@ -84,7 +85,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes den Portainer Stack redeployen und die neuen Endpunkte `POST /api/users`, `GET /api/children`, `POST /api/children` und `GET /api/children/:childId` auf dem LXC testen. Danach das Quest-Modul fuer Aufgaben/Quests beginnen.
+Als naechstes das Quest-Modul fuer Aufgaben/Quests beginnen: Datenzugriff, DTOs und REST-Endpunkte fuer `GET /api/quests`, `POST /api/quests`, `GET /api/quests/:questId` und spaeter Zuweisungen an Kinder.
 
 ## Architekturentscheidungen
 
