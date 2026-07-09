@@ -318,6 +318,21 @@ Aktualisiert eine Quest-Zuweisung.
 
 Kind markiert eine Quest als erledigt.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`, `CHILD`
+
+Hinweise:
+
+- Der Endpunkt erstellt einen `QuestCompletion` mit Status `SUBMITTED`.
+- XP und Muenzen werden noch nicht vergeben; das passiert spaeter bei der Eltern-Bestaetigung.
+- Kinder mit eigenem Login duerfen nur ihre eigenen Zuweisungen abschliessen.
+- Eltern/Admin duerfen bis zum finalen Kinder-Login-Flow stellvertretend einreichen.
+- Eine Zuweisung darf nur eine offene Einreichung mit Status `SUBMITTED` haben.
+- Einmalige Quests koennen nach einer bestaetigten Einreichung nicht erneut eingereicht werden.
+
 ### `POST /api/quest-completions/{completionId}/approve`
 
 Eltern bestaetigen eine erledigte Quest. XP und Muenzen werden vergeben.

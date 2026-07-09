@@ -23,4 +23,10 @@ export class QuestAssignmentsController {
   listAssignmentsForChild(@CurrentUser() user: AuthenticatedUser, @Param('childId') childId: string) {
     return this.questAssignmentsService.listAssignmentsForChild(user, childId);
   }
+
+  @Post('quest-assignments/:assignmentId/complete')
+  @Roles(Role.ADMIN, Role.PARENT, Role.CHILD)
+  completeAssignment(@CurrentUser() user: AuthenticatedUser, @Param('assignmentId') assignmentId: string) {
+    return this.questAssignmentsService.completeAssignment(user, assignmentId);
+  }
 }
