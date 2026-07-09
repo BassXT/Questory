@@ -48,6 +48,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Passwort-Hashing mit Node `crypto.scrypt` implementiert.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
+- `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
 
 ### Verified
 

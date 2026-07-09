@@ -62,6 +62,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Users-Modul mit `GET /api/users` fuer Benutzer der aktuellen Familie angelegt.
 - Node-Docker-Build-Images von Alpine auf `node:20-bookworm-slim` umgestellt, um native npm-Abhaengigkeiten im Portainer-Build robuster zu installieren.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert den Prisma Client im Runtime-Image, damit `node_modules/.prisma/client` vorhanden ist.
+- `JwtAuthGuard` im AuthModule als Provider exportiert und in Families/Users importiert, damit geschuetzte Feature-Module `JwtService` aufloesen koennen.
 
 ## Offene Aufgaben
 
