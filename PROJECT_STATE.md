@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen und Quest-Abschluss-Einreichungen sind auf dem LXC implementiert und getestet. Eltern-Bestaetigung mit XP-/Muenzen-Vergabe ist lokal implementiert. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen und Eltern-Bestaetigung mit XP-/Muenzen-Vergabe sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -87,20 +87,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Tests fuer `POST /api/quest-assignments`, `GET /api/children/:childId/quest-assignments` und doppelte Quest-Zuweisung erfolgreich.
 - Portainer-Redeploy nach Quest-Abschluss-Slice erfolgreich.
 - LXC-Tests fuer `POST /api/quest-assignments/:assignmentId/complete`, Status `SUBMITTED`, XP/Muenzen `0` und doppelte Einreichung erfolgreich.
+- Portainer-Redeploy nach Quest-Bestaetigungs-Slice erfolgreich.
+- LXC-Tests fuer `POST /api/quest-completions/:completionId/approve`, XP-/Muenzen-Vergabe, Level-Neuberechnung und doppelte Bestaetigung erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Quest-Bestaetigungs-Slice im Portainer-Deployment redeployen und auf dem LXC per HTTP testen.
 - Ablehnung fuer Quest-Abschluesse als naechsten MVP-Slice implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Portainer Stack redeployen und `POST /api/quest-completions/:completionId/approve` auf dem LXC testen. Danach Ablehnung fuer Quest-Abschluesse implementieren.
+Als naechstes Ablehnung fuer Quest-Abschluesse implementieren: `POST /api/quest-completions/:completionId/reject` mit Ablehnungsgrund und Status `REJECTED`.
 
 ## Architekturentscheidungen
 
