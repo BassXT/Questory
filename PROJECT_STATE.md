@@ -42,6 +42,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Frontend auf `http://192.168.1.98:5173` erfolgreich geprueft.
 - Backend Health-Check auf `http://192.168.1.98:3001/api/health` erfolgreich geprueft.
 - Backend-Port im LXC auf `3001` gesetzt, weil `3000` bereits belegt war.
+- Erste Prisma-Migration `20260709120000_init` erzeugt.
+- Backend-Docker-Start fuehrt vor dem API-Start automatisch `prisma migrate deploy` aus.
+- Prisma CLI und `dotenv` als Production-Dependencies verfuegbar gemacht, damit Migrationen im Runtime-Container laufen.
 
 ## Offene Aufgaben
 
@@ -51,11 +54,13 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Authentifizierungs- und Rollenmodell implementieren.
 - Erste API-Endpunkte fuer Familien, Benutzer und Kinder implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Erste Prisma-Migration fuer MVP-Entities erstellen und Datenbank-Migrationsfluss fuer Portainer klaeren.
+- Portainer-Stack erneut deployen, damit die erste Prisma-Migration im LXC angewendet wird.
+- Backend-Logs nach Redeploy auf erfolgreiche Migration pruefen.
+- Danach erste fachliche Backend-Module fuer Auth/Familien/User planen.
 
 ## Naechster Schritt
 
-Als naechstes die erste Prisma-Migration fuer die MVP-Entities erstellen und klaeren, wie Migrationen beim Portainer-Deployment ausgefuehrt werden.
+Als naechstes den Portainer-Stack erneut deployen, damit die erste Prisma-Migration auf der LXC-Datenbank angewendet wird. Danach Backend-Logs, Health-Check und Frontend pruefen.
 
 ## Architekturentscheidungen
 
@@ -75,6 +80,7 @@ Als naechstes die erste Prisma-Migration fuer die MVP-Entities erstellen und kla
 - Ziel-Deployment ist ein Proxmox-LXC. Die konkrete Betriebsart wird spaeter dokumentiert, voraussichtlich mit Docker/Podman im LXC oder Compose auf einer passenden Container-/VM-Umgebung.
 - Fuer den Homelab-Start wird Portainer als Stack-Verwaltung genutzt.
 - Portainer baut Questory aus dem Git-Repository mit `deploy/portainer/stack.yml`.
+- Migrationen werden im Docker-Deployment beim Backend-Start mit `prisma migrate deploy` angewendet.
 
 ## Bekannte Probleme
 
@@ -84,8 +90,8 @@ Als naechstes die erste Prisma-Migration fuer die MVP-Entities erstellen und kla
 - `npm ci` zeigt eine Engine-Warnung fuer `@prisma/streams-local`, weil diese transitive Prisma-Abhaengigkeit Node `>=22` erwartet. Build und Generate funktionieren unter Node `20.19.6`.
 - Noch keine Tests vorhanden.
 - Noch keine CI-Konfiguration vorhanden.
-- Noch keine Prisma-Migration vorhanden.
 - Port `3000` ist auf dem LXC bereits belegt; Questory nutzt fuer das Backend aktuell `3001`.
+- Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
 
 ## Ideen fuer spaeter
 

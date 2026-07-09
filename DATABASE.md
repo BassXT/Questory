@@ -182,11 +182,19 @@ Status:
 
 ## Migrationen
 
-Es wurde noch keine Prisma-Migration erzeugt. `npm run prisma:generate` wurde erfolgreich geprueft. Der naechste Datenbank-Schritt ist:
+Die erste Prisma-Migration wurde erzeugt:
+
+```text
+apps/backend/prisma/migrations/20260709120000_init/migration.sql
+```
+
+`npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:
 
 ```bash
-npm run prisma:migrate
+npm run prisma:deploy -w apps/backend
 ```
+
+Damit werden vorhandene Migrationen gegen die PostgreSQL-Datenbank angewendet.
 
 ## Level-Berechnung
 

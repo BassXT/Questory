@@ -145,6 +145,28 @@ Beispiel fuer spaeter:
 docker exec <postgres-container> pg_dump -U questory questory > questory-backup.sql
 ```
 
+## Migrationen
+
+Prisma-Migrationen liegen unter:
+
+```text
+apps/backend/prisma/migrations
+```
+
+Der Backend-Container fuehrt beim Start automatisch aus:
+
+```bash
+npm run prisma:deploy -w apps/backend
+```
+
+Erst danach startet die NestJS API. Wenn eine Migration fehlschlaegt, startet der Backend-Container nicht erfolgreich. In Portainer sind dann die Backend-Logs die erste Stelle fuer die Fehlersuche.
+
+Aktuelle erste Migration:
+
+```text
+20260709120000_init
+```
+
 ## Aktueller Status
 
 Lokal wurden erfolgreich geprueft:
@@ -168,8 +190,8 @@ Auf dem Proxmox Docker-LXC wurde der Portainer Stack erfolgreich deployed und pe
 
 ## Naechste Deployment-Schritte
 
-1. Prisma-Migrationen fuer das MVP einfuehren.
-2. Festlegen, wie Migrationen im Portainer-Deployment ausgefuehrt werden.
-3. Health-Check nach jedem Redeploy pruefen.
-4. Frontend nach jedem Redeploy pruefen.
+1. Stack in Portainer erneut deployen, damit die erste Migration auf dem LXC angewendet wird.
+2. Backend-Logs auf erfolgreiche Prisma-Migration pruefen.
+3. Health-Check nach dem Redeploy pruefen.
+4. Frontend nach dem Redeploy pruefen.
 5. Backup-Strategie fuer PostgreSQL definieren.

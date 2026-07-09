@@ -30,6 +30,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `DEPLOYMENT.md` fuer Proxmox-LXC, Docker und Portainer erstellt.
 - Dockerfiles auf `npm ci` und `package-lock.json` umgestellt.
 - Portainer-Build-Kontext auf den Repository-Root korrigiert.
+- Erste Prisma-Migration `20260709120000_init` erstellt.
+- Backend-Docker-Start fuehrt vor dem API-Start automatisch `prisma migrate deploy` aus.
+- Prisma CLI und `dotenv` als Production-Dependencies fuer Runtime-Migrationen eingeordnet.
 
 ### Verified
 
@@ -41,6 +44,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer Stack auf dem Docker-LXC erfolgreich deployed.
 - LXC-Frontend unter `http://192.168.1.98:5173` erfolgreich geprueft.
 - LXC-Backend-Health-Check unter `http://192.168.1.98:3001/api/health` erfolgreich geprueft.
+- Prisma-Schema mit `prisma validate` erfolgreich validiert.
+- Prisma Client mit `npm run prisma:generate` erfolgreich generiert.
 
 ### Known Issues
 
@@ -48,3 +53,4 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `npm audit` meldet 3 moderate Findings ueber eine transitive Prisma-Dev-Abhaengigkeit; automatisches Force-Fixing wuerde Prisma downgraden.
 - `npm ci` meldet eine Node-Engine-Warnung fuer eine transitive Prisma-Abhaengigkeit, obwohl Build und Generate mit Node `20.19.6` funktionieren.
 - Port `3000` ist auf dem LXC bereits belegt; das Questory-Backend nutzt aktuell `3001`.
+- Lokaler Migration-Drift-Vergleich aus dem Migrationsordner benoetigt eine Shadow-Datenbank und wurde deshalb noch nicht ausgefuehrt.
