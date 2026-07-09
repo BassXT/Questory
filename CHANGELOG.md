@@ -49,6 +49,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Rollenbasierter `RolesGuard` und `@Roles()` Decorator erstellt.
 - `POST /api/users` fuer neue Eltern- und Kinderbenutzer erstellt.
 - Children-Modul mit `GET /api/children`, `POST /api/children` und `GET /api/children/:childId` erstellt.
+- Quests-Modul mit `GET /api/quests`, `POST /api/quests` und `GET /api/quests/:questId` erstellt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -78,6 +79,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend- und Frontend-Build nach User-/Children-Slice erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach User-/Children-Slice erfolgreich.
 - LXC-API-Tests fuer neue Eltern, Kinderbenutzer, Kinderprofile, Kinderliste und Kinderprofil-Einzelabruf erfolgreich ausgefuehrt.
+- Backend- und Frontend-Build nach Quest-Modul-Implementierung erfolgreich ausgefuehrt.
 
 ### Known Issues
 

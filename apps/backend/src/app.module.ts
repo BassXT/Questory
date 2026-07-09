@@ -6,6 +6,7 @@ import { AuthModule } from './auth/auth.module';
 import { ChildrenModule } from './children/children.module';
 import { FamiliesModule } from './families/families.module';
 import { PrismaModule } from './prisma/prisma.module';
+import { QuestsModule } from './quests/quests.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -17,6 +18,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     ChildrenModule,
     FamiliesModule,
+    QuestsModule,
     UsersModule
   ],
   controllers: [AppController],

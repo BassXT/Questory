@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards und erste Kinderprofil-APIs sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards und erste Kinderprofil-APIs sind auf dem LXC implementiert und getestet. Das Quest-Modul fuer Quest-Vorlagen ist lokal implementiert. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -65,6 +65,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Kinderbenutzer erzeugen automatisch ein verknuepftes `ChildProfile`.
 - Children-Modul mit `GET /api/children`, `POST /api/children` und `GET /api/children/:childId` angelegt.
 - `POST /api/children` erzeugt Kinderprofile ohne eigenes Login-Konto.
+- Quests-Modul mit `GET /api/quests`, `POST /api/quests` und `GET /api/quests/:questId` angelegt.
+- Quest-Erstellung validiert Typ/Frequenz-Regeln, XP und Muenzen.
 - Node-Docker-Build-Images von Alpine auf `node:20-bookworm-slim` umgestellt, um native npm-Abhaengigkeiten im Portainer-Build robuster zu installieren.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert den Prisma Client im Runtime-Image, damit `node_modules/.prisma/client` vorhanden ist.
 - `JwtAuthGuard` im AuthModule als Provider exportiert und in Families/Users importiert, damit geschuetzte Feature-Module `JwtService` aufloesen koennen.
@@ -79,13 +81,14 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Quest-Modul fuer Aufgaben/Quests als naechsten MVP-Fachbereich implementieren.
+- Quest-Slice im Portainer-Deployment redeployen und auf dem LXC per HTTP testen.
+- Quest-Zuweisungen an Kinder als naechsten MVP-Slice implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes das Quest-Modul fuer Aufgaben/Quests beginnen: Datenzugriff, DTOs und REST-Endpunkte fuer `GET /api/quests`, `POST /api/quests`, `GET /api/quests/:questId` und spaeter Zuweisungen an Kinder.
+Als naechstes den Portainer Stack redeployen und die neuen Quest-Endpunkte `POST /api/quests`, `GET /api/quests` und `GET /api/quests/:questId` auf dem LXC testen. Danach Quest-Zuweisungen an Kinder implementieren.
 
 ## Architekturentscheidungen
 
@@ -111,6 +114,7 @@ Als naechstes das Quest-Modul fuer Aufgaben/Quests beginnen: Datenzugriff, DTOs 
 - Passwort-Hashing nutzt `scrypt` aus Node `crypto`; dadurch wird vorerst keine zusaetzliche Hashing-Bibliothek benoetigt.
 - Rollenbasierte Autorisierung wird ueber `@Roles()` und `RolesGuard` umgesetzt. Feature-Module importieren dafuer das `AuthModule`.
 - Kinder koennen aktuell auf zwei Wegen abgebildet werden: als reines `ChildProfile` ohne Login oder als `User` mit Rolle `CHILD` plus verknuepftem `ChildProfile`. Der konkrete Kinder-Login/PIN-Flow wird spaeter entschieden.
+- Quest-Vorlagen gehoeren immer zu genau einer Familie. Einmalige Quests nutzen `QuestFrequency.NONE`; wiederkehrende Quests nutzen `DAILY`, `WEEKLY` oder `CUSTOM`.
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
 - Docker-Builds nutzen Debian-slim Node-Images statt Alpine fuer Node-Stages, weil Vite/Rolldown und andere native npm-Abhaengigkeiten damit im Portainer-Build weniger an musl/Alpine-Bindings haengen.
 - Prisma Client wird im Backend-Runtime-Image nach `npm ci --omit=dev` erneut generiert, weil der generierte Client nicht automatisch Teil einer frischen Production-Installation ist.

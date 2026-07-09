@@ -218,13 +218,49 @@ Aktualisiert ein Kinderprofil.
 
 Listet Quest-Vorlagen.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
 ### `POST /api/quests`
 
 Erstellt eine Quest.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- `type` ist `ONE_TIME` oder `RECURRING`.
+- Einmalige Quests muessen `frequency: "NONE"` verwenden oder `frequency` weglassen.
+- Wiederkehrende Quests muessen `DAILY`, `WEEKLY` oder `CUSTOM` verwenden.
+- `xpReward` und `coinReward` muessen Zahlen zwischen `0` und `10000` sein.
+
+Request:
+
+```json
+{
+  "title": "Zimmer aufraeumen",
+  "description": "Spielzeug sortieren und Boden frei machen.",
+  "type": "RECURRING",
+  "frequency": "DAILY",
+  "xpReward": 25,
+  "coinReward": 5,
+  "requiresApproval": true,
+  "isActive": true
+}
+```
+
 ### `GET /api/quests/{questId}`
 
 Gibt eine Quest zurueck.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
 
 ### `PATCH /api/quests/{questId}`
 

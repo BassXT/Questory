@@ -61,6 +61,7 @@ Aktuell vorhanden:
 - `FamiliesModule` fuer den aktuellen Familienkontext
 - `UsersModule` fuer Benutzerliste und neue Eltern-/Kinderbenutzer
 - `ChildrenModule` fuer Kinderprofile
+- `QuestsModule` fuer Quest-Vorlagen
 - Prisma-Schema unter `apps/backend/prisma/schema.prisma`
 - Prisma-CLI-Konfiguration unter `apps/backend/prisma.config.ts`
 
