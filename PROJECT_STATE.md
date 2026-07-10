@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung und Reward-Verwaltung sind auf dem LXC implementiert und getestet. Reward-Shop ist lokal implementiert. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung und Reward-Shop sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -99,20 +99,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Tests fuer `POST /api/quest-completions/:completionId/reject`, Status `REJECTED`, Ablehnungsgrund, keine XP-/Muenzen-Vergabe, erneute Einreichung und doppelte Ablehnung erfolgreich.
 - Portainer-Redeploy nach Reward-Slice erfolgreich.
 - LXC-Tests fuer `POST /api/rewards`, `GET /api/rewards`, `GET /api/rewards/:rewardId` und ungueltige Reward-Eingaben erfolgreich.
+- Portainer-Redeploy nach Reward-Shop-Slice erfolgreich.
+- LXC-Tests fuer `GET /api/children/:childId/shop`, aktive Rewards, Ausschluss inaktiver Rewards, Sortierung und unbekanntes Kind erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Reward-Shop-Slice im Portainer-Deployment redeployen und auf dem LXC per HTTP testen.
 - Reward-Einloesung/Beantragung als naechsten MVP-Slice implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Portainer Stack redeployen und `GET /api/children/:childId/shop` auf dem LXC testen. Danach Reward-Einloesung/Beantragung implementieren.
+Als naechstes Reward-Einloesung/Beantragung implementieren: `POST /api/rewards/:rewardId/redeem` fuer ein Kinderprofil.
 
 ## Architekturentscheidungen
 

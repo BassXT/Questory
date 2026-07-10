@@ -104,6 +104,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Reward-Slice erfolgreich.
 - LXC-API-Tests fuer Reward-Erstellung, Reward-Liste, Reward-Einzelabruf und ungueltige Reward-Eingaben erfolgreich ausgefuehrt.
 - Backend- und Frontend-Build nach Reward-Shop-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Reward-Shop-Slice erfolgreich.
+- LXC-API-Tests fuer Reward-Shop, aktive Rewards, Ausschluss inaktiver Rewards, Sortierung und unbekanntes Kind erfolgreich ausgefuehrt.
 
 ### Known Issues
 
