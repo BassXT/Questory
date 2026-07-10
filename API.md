@@ -385,13 +385,49 @@ Request:
 
 Listet Belohnungen der Familie.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
 ### `POST /api/rewards`
 
 Erstellt eine Belohnung.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- `price` ist der Preis in Muenzen.
+- `imageUrl`, `category` und `maxRedemptions` sind optional.
+- `isActive` und `requiresApproval` sind optional und standardmaessig `true`.
+- `maxRedemptions` begrenzt spaeter die maximale Anzahl von Einloesungen.
+
+Request:
+
+```json
+{
+  "name": "30 Minuten Switch",
+  "description": "Eine halbe Stunde Spielzeit am Nachmittag.",
+  "imageUrl": "https://example.com/rewards/switch.png",
+  "category": "Medienzeit",
+  "price": 25,
+  "isActive": true,
+  "requiresApproval": true,
+  "maxRedemptions": 3
+}
+```
+
 ### `GET /api/rewards/{rewardId}`
 
 Gibt eine Belohnung zurueck.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
 
 ### `PATCH /api/rewards/{rewardId}`
 

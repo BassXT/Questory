@@ -8,6 +8,7 @@ import { FamiliesModule } from './families/families.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { QuestAssignmentsModule } from './quest-assignments/quest-assignments.module';
 import { QuestsModule } from './quests/quests.module';
+import { RewardsModule } from './rewards/rewards.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -21,6 +22,7 @@ import { UsersModule } from './users/users.module';
     FamiliesModule,
     QuestAssignmentsModule,
     QuestsModule,
+    RewardsModule,
     UsersModule
   ],
   controllers: [AppController],

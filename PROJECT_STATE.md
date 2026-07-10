@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe und Quest-Ablehnung sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe und Quest-Ablehnung sind auf dem LXC implementiert und getestet. Das Reward-Modul ist lokal implementiert. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -75,6 +75,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Quest-Bestaetigung vergibt XP und Muenzen in einer Transaktion und berechnet das Kinder-Level neu.
 - `POST /api/quest-completions/:completionId/reject` lehnt eingereichte Quest-Abschluesse mit optionalem Grund ab.
 - Quest-Ablehnung vergibt keine XP/Muenzen und erlaubt danach eine erneute Einreichung derselben Zuweisung.
+- Rewards-Modul mit `GET /api/rewards`, `POST /api/rewards` und `GET /api/rewards/:rewardId` angelegt.
+- Reward-Erstellung validiert Name, Preis, optionale Kategorie, optionales Bild, Aktiv-Status, Bestaetigungspflicht und maximale Einloesungen.
 - Node-Docker-Build-Images von Alpine auf `node:20-bookworm-slim` umgestellt, um native npm-Abhaengigkeiten im Portainer-Build robuster zu installieren.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert den Prisma Client im Runtime-Image, damit `node_modules/.prisma/client` vorhanden ist.
 - `JwtAuthGuard` im AuthModule als Provider exportiert und in Families/Users importiert, damit geschuetzte Feature-Module `JwtService` aufloesen koennen.
@@ -99,13 +101,14 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Reward-Modul fuer Belohnungsshop als naechsten MVP-Fachbereich implementieren.
+- Reward-Slice im Portainer-Deployment redeployen und auf dem LXC per HTTP testen.
+- Reward-Shop fuer Kinder als naechsten MVP-Slice implementieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes das Reward-Modul fuer Belohnungen und Shop beginnen: `GET /api/rewards`, `POST /api/rewards` und `GET /api/rewards/:rewardId`.
+Als naechstes den Portainer Stack redeployen und `POST /api/rewards`, `GET /api/rewards` und `GET /api/rewards/:rewardId` auf dem LXC testen. Danach den Reward-Shop fuer Kinder beginnen.
 
 ## Architekturentscheidungen
 
@@ -136,6 +139,7 @@ Als naechstes das Reward-Modul fuer Belohnungen und Shop beginnen: `GET /api/rew
 - Quest-Abschluesse starten als `SUBMITTED`. XP und Muenzen bleiben bis zur Eltern-Bestaetigung bei `0`, damit Progression in einem eigenen, testbaren Slice umgesetzt wird.
 - Level werden serverseitig nach `floor(sqrt(totalXp / 100)) + 1` berechnet und bei der Quest-Bestaetigung aktualisiert.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
+- Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen; Einloesungslogik folgt in einem separaten Slice.
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
 - Docker-Builds nutzen Debian-slim Node-Images statt Alpine fuer Node-Stages, weil Vite/Rolldown und andere native npm-Abhaengigkeiten damit im Portainer-Build weniger an musl/Alpine-Bindings haengen.
 - Prisma Client wird im Backend-Runtime-Image nach `npm ci --omit=dev` erneut generiert, weil der generierte Client nicht automatisch Teil einer frischen Production-Installation ist.

@@ -63,6 +63,7 @@ Aktuell vorhanden:
 - `ChildrenModule` fuer Kinderprofile
 - `QuestsModule` fuer Quest-Vorlagen
 - `QuestAssignmentsModule` fuer die Zuweisung von Quests an Kinder
+- `RewardsModule` fuer Belohnungen im Familienshop
 - Prisma-Schema unter `apps/backend/prisma/schema.prisma`
 - Prisma-CLI-Konfiguration unter `apps/backend/prisma.config.ts`
 
