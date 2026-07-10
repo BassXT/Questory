@@ -6,6 +6,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { CreateRewardDto } from './dto/create-reward.dto';
+import { RedeemRewardDto } from './dto/redeem-reward.dto';
 import { RewardsService } from './rewards.service';
 
 @Controller('rewards')
@@ -27,5 +28,15 @@ export class RewardsController {
   @Get(':rewardId')
   getReward(@CurrentUser() user: AuthenticatedUser, @Param('rewardId') rewardId: string) {
     return this.rewardsService.getReward(user, rewardId);
+  }
+
+  @Post(':rewardId/redeem')
+  @Roles(Role.ADMIN, Role.PARENT, Role.CHILD)
+  redeemReward(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('rewardId') rewardId: string,
+    @Body() dto: RedeemRewardDto
+  ) {
+    return this.rewardsService.redeemReward(user, rewardId, dto);
   }
 }

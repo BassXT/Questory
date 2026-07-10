@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung und Reward-Shop sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung und Reward-Shop sind auf dem LXC implementiert und getestet. Reward-Einloesung/Beantragung ist lokal implementiert und wartet auf Portainer-Redeploy plus LXC-Test. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -101,19 +101,25 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Tests fuer `POST /api/rewards`, `GET /api/rewards`, `GET /api/rewards/:rewardId` und ungueltige Reward-Eingaben erfolgreich.
 - Portainer-Redeploy nach Reward-Shop-Slice erfolgreich.
 - LXC-Tests fuer `GET /api/children/:childId/shop`, aktive Rewards, Ausschluss inaktiver Rewards, Sortierung und unbekanntes Kind erfolgreich.
+- Reward-Einloesungs-Endpunkt `POST /api/rewards/:rewardId/redeem` angelegt.
+- Reward-Einloesung prueft Familiengrenzen, Kinderbesitz bei Rolle `CHILD`, aktive Rewards, genug Muenzen und maximale Einloesungen.
+- Rewards mit `requiresApproval: true` erzeugen eine Anfrage mit Status `REQUESTED`, ohne Muenzen abzuziehen.
+- Rewards mit `requiresApproval: false` erzeugen direkt Status `APPROVED` und ziehen Muenzen transaktional ab.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Reward-Einloesung/Beantragung als naechsten MVP-Slice implementieren.
+- Portainer-Redeploy nach Reward-Einloesungs-Slice ausfuehren.
+- LXC-Tests fuer `POST /api/rewards/:rewardId/redeem`, `REQUESTED`-Anfragen, direkte `APPROVED`-Einloesungen und Coin-Abzug ausfuehren.
+- Reward-Einloesungsverwaltung fuer Eltern implementieren: Anfragen listen, bestaetigen, ablehnen und als eingeloest markieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes Reward-Einloesung/Beantragung implementieren: `POST /api/rewards/:rewardId/redeem` fuer ein Kinderprofil.
+Als naechstes den Reward-Einloesungs-Slice im Portainer-Stack redeployen und per LXC-API testen. Danach folgt die Elternverwaltung fuer Reward-Einloesungen.
 
 ## Architekturentscheidungen
 
@@ -144,8 +150,11 @@ Als naechstes Reward-Einloesung/Beantragung implementieren: `POST /api/rewards/:
 - Quest-Abschluesse starten als `SUBMITTED`. XP und Muenzen bleiben bis zur Eltern-Bestaetigung bei `0`, damit Progression in einem eigenen, testbaren Slice umgesetzt wird.
 - Level werden serverseitig nach `floor(sqrt(totalXp / 100)) + 1` berechnet und bei der Quest-Bestaetigung aktualisiert.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
-- Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen; Einloesungslogik folgt in einem separaten Slice.
+- Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
+- Reward-Einloesungen speichern den Preis als `coinCost`, damit spaetere Preisaenderungen historische Einloesungen nicht veraendern.
+- Bei bestaetigungspflichtigen Rewards werden Muenzen erst in einem spaeteren Eltern-Bestaetigungs-Slice abgezogen; die Anfrage selbst bleibt zunaechst `REQUESTED`.
+- Bei nicht bestaetigungspflichtigen Rewards werden Muenzen sofort in derselben Transaktion abgezogen, in der die Einloesung erstellt wird.
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
 - Docker-Builds nutzen Debian-slim Node-Images statt Alpine fuer Node-Stages, weil Vite/Rolldown und andere native npm-Abhaengigkeiten damit im Portainer-Build weniger an musl/Alpine-Bindings haengen.
 - Prisma Client wird im Backend-Runtime-Image nach `npm ci --omit=dev` erneut generiert, weil der generierte Client nicht automatisch Teil einer frischen Production-Installation ist.

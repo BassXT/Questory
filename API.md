@@ -459,6 +459,30 @@ Hinweise:
 
 Kind beantragt oder kauft eine Belohnung.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`, `CHILD`
+
+Hinweise:
+
+- Die Belohnung und das Kinderprofil muessen zur aktuellen Familie gehoeren.
+- Kinder mit eigenem Login koennen nur fuer ihr eigenes Kinderprofil einloesen.
+- Inaktive Belohnungen koennen nicht eingeloest werden.
+- Das Kind muss genug Muenzen fuer den aktuellen Preis besitzen.
+- Bei `requiresApproval: true` wird eine Anfrage mit Status `REQUESTED` erstellt; Muenzen werden noch nicht abgezogen.
+- Bei `requiresApproval: false` wird direkt eine Einloesung mit Status `APPROVED` erstellt; Muenzen werden sofort abgezogen.
+- `maxRedemptions` zaehlt bestehende Einloesungen mit Status `REQUESTED`, `APPROVED` und `REDEEMED` fuer dasselbe Kind.
+
+Request:
+
+```json
+{
+  "childProfileId": "child-profile-uuid"
+}
+```
+
 ### `POST /api/reward-redemptions/{redemptionId}/approve`
 
 Eltern bestaetigen eine Belohnungsanfrage.

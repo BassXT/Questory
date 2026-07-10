@@ -56,6 +56,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Quest-Ablehnungs-Endpunkt `POST /api/quest-completions/:completionId/reject` mit optionalem Ablehnungsgrund erstellt.
 - Rewards-Modul mit `GET /api/rewards`, `POST /api/rewards` und `GET /api/rewards/:rewardId` erstellt.
 - Reward-Shop-Endpunkt `GET /api/children/:childId/shop` erstellt.
+- Reward-Einloesungs-Endpunkt `POST /api/rewards/:rewardId/redeem` erstellt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -106,6 +107,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend- und Frontend-Build nach Reward-Shop-Implementierung erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach Reward-Shop-Slice erfolgreich.
 - LXC-API-Tests fuer Reward-Shop, aktive Rewards, Ausschluss inaktiver Rewards, Sortierung und unbekanntes Kind erfolgreich ausgefuehrt.
+- Prisma-Schema nach Reward-Einloesungs-Implementierung erfolgreich validiert.
+- Backend- und Frontend-Build nach Reward-Einloesungs-Implementierung erfolgreich ausgefuehrt.
 
 ### Known Issues
 
