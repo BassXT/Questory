@@ -100,6 +100,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Quest-Ablehnungs-Slice erfolgreich.
 - LXC-API-Tests fuer Quest-Ablehnung, Ablehnungsgrund, keine XP-/Muenzen-Vergabe, erneute Einreichung und doppelte Ablehnung erfolgreich ausgefuehrt.
 - Backend- und Frontend-Build nach Reward-Modul-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Reward-Slice erfolgreich.
+- LXC-API-Tests fuer Reward-Erstellung, Reward-Liste, Reward-Einzelabruf und ungueltige Reward-Eingaben erfolgreich ausgefuehrt.
 
 ### Known Issues
 
