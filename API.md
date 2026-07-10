@@ -443,6 +443,18 @@ Deaktiviert oder loescht eine Belohnung. Das genaue Verhalten wird vor Implement
 
 Listet aktive und fuer das Kind relevante Belohnungen.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Hinweise:
+
+- Das Kinderprofil muss zur aktuellen Familie gehoeren.
+- Eltern/Admin koennen den Shop jedes Kindes der Familie abrufen.
+- Kinder mit eigenem Login koennen nur den eigenen Shop abrufen.
+- Es werden aktuell alle aktiven Belohnungen der Familie angezeigt.
+- Sortierung: guenstigste Belohnungen zuerst, danach Name.
+
 ### `POST /api/rewards/{rewardId}/redeem`
 
 Kind beantragt oder kauft eine Belohnung.

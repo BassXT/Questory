@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
+import { Role } from '@prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRewardDto } from './dto/create-reward.dto';
@@ -61,5 +62,35 @@ export class RewardsService {
     }
 
     return reward;
+  }
+
+  async listShopRewardsForChild(user: AuthenticatedUser, childId: string) {
+    const child = await this.prisma.childProfile.findFirst({
+      where: {
+        id: childId,
+        familyId: user.familyId
+      },
+      select: {
+        id: true,
+        userId: true
+      }
+    });
+
+    if (!child) {
+      throw new NotFoundException('Child profile not found.');
+    }
+
+    if (user.role === Role.CHILD && child.userId !== user.sub) {
+      throw new ForbiddenException('Children can only view their own reward shop.');
+    }
+
+    return this.prisma.reward.findMany({
+      where: {
+        familyId: user.familyId,
+        isActive: true
+      },
+      orderBy: [{ price: 'asc' }, { name: 'asc' }],
+      select: rewardSelect
+    });
   }
 }
