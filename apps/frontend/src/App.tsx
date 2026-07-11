@@ -89,11 +89,29 @@ interface DashboardResponse {
   };
 }
 
+interface ChildProfile {
+  id: string;
+  familyId: string;
+  userId: string | null;
+  displayName: string;
+  avatarKey: string | null;
+  level: number;
+  xp: number;
+  coins: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface AuthFormState {
   familyName: string;
   displayName: string;
   email: string;
   password: string;
+}
+
+interface ChildFormState {
+  displayName: string;
+  avatarKey: string;
 }
 
 const initialAuthForm: AuthFormState = {
@@ -103,14 +121,22 @@ const initialAuthForm: AuthFormState = {
   password: ''
 };
 
+const initialChildForm: ChildFormState = {
+  displayName: '',
+  avatarKey: ''
+};
+
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
+  const [childForm, setChildForm] = useState<ChildFormState>(initialChildForm);
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_STORAGE_KEY));
   const [user, setUser] = useState<AuthUser | null>(null);
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
+  const [children, setChildren] = useState<ChildProfile[]>([]);
   const [authLoading, setAuthLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
+  const [childSaving, setChildSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isAuthenticated = Boolean(token);
@@ -119,6 +145,7 @@ function App() {
     if (!token) {
       setUser(null);
       setDashboard(null);
+      setChildren([]);
       return;
     }
 
@@ -128,12 +155,14 @@ function App() {
   async function loadSession(activeToken: string) {
     try {
       setDashboardLoading(true);
-      const [currentUser, dashboardData] = await Promise.all([
+      const [currentUser, dashboardData, childData] = await Promise.all([
         apiRequest<AuthUser>('/auth/me', { token: activeToken }),
-        apiRequest<DashboardResponse>('/dashboard', { token: activeToken })
+        apiRequest<DashboardResponse>('/dashboard', { token: activeToken }),
+        apiRequest<ChildProfile[]>('/children', { token: activeToken })
       ]);
       setUser(currentUser);
       setDashboard(dashboardData);
+      setChildren(childData);
       setError(null);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
@@ -187,12 +216,44 @@ function App() {
     setError(null);
 
     try {
-      const dashboardData = await apiRequest<DashboardResponse>('/dashboard', { token });
+      const [dashboardData, childData] = await Promise.all([
+        apiRequest<DashboardResponse>('/dashboard', { token }),
+        apiRequest<ChildProfile[]>('/children', { token })
+      ]);
       setDashboard(dashboardData);
+      setChildren(childData);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
       setDashboardLoading(false);
+    }
+  }
+
+  async function submitChild(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!token) {
+      return;
+    }
+
+    setChildSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<ChildProfile>('/children', {
+        method: 'POST',
+        token,
+        body: {
+          displayName: childForm.displayName,
+          avatarKey: childForm.avatarKey || undefined
+        }
+      });
+      setChildForm(initialChildForm);
+      await refreshDashboard();
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setChildSaving(false);
     }
   }
 
@@ -201,6 +262,8 @@ function App() {
     setToken(null);
     setUser(null);
     setDashboard(null);
+    setChildren([]);
+    setChildForm(initialChildForm);
   }
 
   return (
@@ -219,7 +282,16 @@ function App() {
           {error ? <Alert severity="error">{error}</Alert> : null}
 
           {isAuthenticated ? (
-            <DashboardView dashboard={dashboard} loading={dashboardLoading} />
+            <DashboardView
+              childForm={childForm}
+              childSaving={childSaving}
+              children={children}
+              dashboard={dashboard}
+              loading={dashboardLoading}
+              user={user}
+              onChildFormChange={setChildForm}
+              onChildSubmit={submitChild}
+            />
           ) : (
             <AuthView
               authMode={authMode}
@@ -440,13 +512,29 @@ function AuthView({
 }
 
 interface DashboardViewProps {
+  childForm: ChildFormState;
+  childSaving: boolean;
+  children: ChildProfile[];
   dashboard: DashboardResponse | null;
   loading: boolean;
+  user: AuthUser | null;
+  onChildFormChange: (form: ChildFormState) => void;
+  onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-function DashboardView({ dashboard, loading }: DashboardViewProps) {
-  const childRows = dashboard?.children ?? [];
+function DashboardView({
+  childForm,
+  childSaving,
+  children,
+  dashboard,
+  loading,
+  user,
+  onChildFormChange,
+  onChildSubmit
+}: DashboardViewProps) {
+  const childRows = children;
   const xpMax = useMemo(() => Math.max(...childRows.map((child) => child.xp), 1), [childRows]);
+  const canManageChildren = user?.role === 'ADMIN' || user?.role === 'PARENT';
 
   if (!dashboard) {
     return (
@@ -485,7 +573,61 @@ function DashboardView({ dashboard, loading }: DashboardViewProps) {
       >
         <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
           <Stack spacing={2}>
-            <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Heldentafel" />
+            <Box
+              sx={{
+                alignItems: { xs: 'stretch', sm: 'center' },
+                display: 'flex',
+                flexDirection: { xs: 'column', sm: 'row' },
+                gap: 1.5,
+                justifyContent: 'space-between'
+              }}
+            >
+              <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Kinderprofile" />
+              <Chip icon={<PeopleAltRoundedIcon />} label={`${childRows.length} aktiv`} variant="outlined" />
+            </Box>
+
+            {canManageChildren ? (
+              <Box
+                component="form"
+                onSubmit={onChildSubmit}
+                sx={{
+                  bgcolor: 'action.hover',
+                  borderRadius: 2,
+                  display: 'grid',
+                  gap: 1.25,
+                  gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(160px, 0.8fr) auto' },
+                  p: 1.5
+                }}
+              >
+                <TextField
+                  autoComplete="off"
+                  label="Kindername"
+                  onChange={(event) =>
+                    onChildFormChange({ ...childForm, displayName: event.target.value })
+                  }
+                  required
+                  size="small"
+                  value={childForm.displayName}
+                />
+                <TextField
+                  autoComplete="off"
+                  label="Avatar-Key"
+                  onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
+                  size="small"
+                  value={childForm.avatarKey}
+                />
+                <Button
+                  disabled={childSaving}
+                  startIcon={<PersonAddRoundedIcon />}
+                  sx={{ minHeight: 40 }}
+                  type="submit"
+                  variant="contained"
+                >
+                  Anlegen
+                </Button>
+              </Box>
+            ) : null}
+
             <Box sx={{ display: 'grid', gap: 1.5 }}>
               {childRows.length > 0 ? (
                 childRows.map((child) => <ChildRow child={child} key={child.id} maxXp={xpMax} />)

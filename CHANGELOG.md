@@ -62,6 +62,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Kinder-Statistik-Endpunkt `GET /api/children/:childId/stats` erstellt.
 - Dashboard-Summary-Endpunkt `GET /api/dashboard` erstellt.
 - Frontend-Grundlayout mit Login, Registrierung, Session-Speicherung, Dashboard-Load, Refresh und Logout erstellt.
+- Frontend-Kinderprofil-Workflow mit Kinderliste, Kinderanlage, Formular-Reset und Dashboard-Aktualisierung erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -135,6 +136,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Lokaler Browser-Test des Frontends gegen das LXC-Backend erfolgreich: Registrierung, Dashboard, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Grundlayout-Slice erfolgreich.
 - LXC-Browser-Test des Frontends unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Dashboard, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Build nach Kinderprofil-Workflow erfolgreich ausgefuehrt.
+- Lokaler Browser-Test des Kinderprofil-Workflows gegen das LXC-Backend erfolgreich: Kind anlegen, Dashboard-/Kinderzaehler aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 

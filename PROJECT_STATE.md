@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein erstes echtes Login-/Registrierungs- und Dashboard-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein erstes echtes Login-/Registrierungs- und Dashboard-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Der Frontend-Kinderprofil-Workflow ist lokal implementiert und gegen das LXC-Backend getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -129,17 +129,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Registrierung, Dashboard-Load, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Grundlayout-Slice erfolgreich.
 - LXC-Frontend-Test unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Dashboard-Load, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Kinderprofil-Workflow angelegt: Kinderliste aus `GET /api/children`, Kinderanlage ueber `POST /api/children`, Formular-Reset und Dashboard-Aktualisierung nach erfolgreicher Anlage.
+- Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Kinderprofil anlegen, Kinderzaehler aktualisieren, Kinderliste nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
+- Portainer-Redeploy nach Frontend-Kinderprofil-Slice ausfuehren.
+- LXC-Test fuer Frontend-Kinderprofil-Workflow unter `http://192.168.1.98:5173` ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den ersten Frontend-Workflow fuer Kinderprofile umsetzen: Kinderliste aus `GET /api/children`, Kinder anlegen ueber `POST /api/children` und Dashboard nach erfolgreicher Anlage aktualisieren.
+Als naechstes den Frontend-Kinderprofil-Slice im Portainer-Stack redeployen und im Browser gegen das LXC-Backend testen. Danach folgen erste Frontend-Ansichten fuer Quest-Vorlagen und Quest-Zuweisungen.
 
 ## Architekturentscheidungen
 
