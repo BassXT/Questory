@@ -117,6 +117,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend- und Frontend-Build nach Reward-Einloesungsverwaltungs-Implementierung erfolgreich ausgefuehrt.
 - Prisma Client nach expliziter Output-Pfad-Konfiguration erfolgreich neu generiert.
 - Backend-Build mit generiertem Prisma Client unter `dist/generated/prisma` erfolgreich geprueft.
+- Portainer-Redeploy nach Prisma-/Reward-Einloesungsverwaltungs-Fix erfolgreich.
+- LXC-API-Tests fuer Reward-Einloesungsverwaltung, Listen, Bestaetigung, Ablehnung, Markierung als eingeloest, Coin-Abzug und ungueltige Statuswechsel erfolgreich ausgefuehrt.
 
 ### Fixed
 

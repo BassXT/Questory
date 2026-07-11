@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop und Reward-Einloesung/Beantragung sind auf dem LXC implementiert und getestet. Reward-Einloesungsverwaltung fuer Eltern ist lokal implementiert und wartet auf Portainer-Redeploy plus LXC-Test. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung und Reward-Einloesungsverwaltung fuer Eltern sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -112,20 +112,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Reward-Einloesungsverwaltung prueft Familiengrenzen und erlaubt Statuswechsel nur von `REQUESTED` zu `APPROVED`/`REJECTED` sowie von `APPROVED` zu `REDEEMED`.
 - Reward-Bestaetigung zieht Muenzen anhand des gespeicherten `coinCost` transaktional ab.
 - Portainer-Build-Fehler bei `npm run build -w apps/backend` nach Prisma-Output-Aenderung behoben, indem Backend-Imports auf einen stabilen Prisma-Wrapper und Nest-Asset-Copy fuer den generierten Client umgestellt wurden.
+- Portainer-Redeploy nach Prisma-/Reward-Einloesungsverwaltungs-Fix erfolgreich.
+- LXC-Tests fuer Reward-Einloesungen listen, bestaetigen, ablehnen, als eingeloest markieren, Coin-Abzug und ungueltige Statuswechsel erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Portainer-Redeploy nach Reward-Einloesungsverwaltungs-Slice ausfuehren.
-- LXC-Tests fuer Reward-Einloesungen listen, bestaetigen, ablehnen, als eingeloest markieren und ungueltige Statuswechsel ausfuehren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
+- Dashboard-/Statistik-Slice fuer Backend implementieren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Reward-Einloesungsverwaltungs-Slice im Portainer-Stack redeployen und per LXC-API testen. Danach folgt ein kleiner Frontend-/Dashboard- oder Statistik-Slice.
+Als naechstes einen kleinen Dashboard-/Statistik-Slice im Backend implementieren, beginnend mit `GET /api/children/:childId/stats`.
 
 ## Architekturentscheidungen
 
