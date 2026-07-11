@@ -156,6 +156,21 @@ interface QuestCompletionSummary {
   coinsGranted: number;
 }
 
+interface Reward {
+  id: string;
+  familyId: string;
+  name: string;
+  description: string | null;
+  imageUrl: string | null;
+  category: string | null;
+  price: number;
+  isActive: boolean;
+  requiresApproval: boolean;
+  maxRedemptions: number | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface AuthFormState {
   familyName: string;
   displayName: string;
@@ -183,6 +198,17 @@ interface QuestAssignmentFormState {
   childProfileId: string;
   questId: string;
   dueAt: string;
+}
+
+interface RewardFormState {
+  name: string;
+  description: string;
+  imageUrl: string;
+  category: string;
+  price: string;
+  isActive: boolean;
+  requiresApproval: boolean;
+  maxRedemptions: string;
 }
 
 const initialAuthForm: AuthFormState = {
@@ -214,6 +240,17 @@ const initialQuestAssignmentForm: QuestAssignmentFormState = {
   dueAt: ''
 };
 
+const initialRewardForm: RewardFormState = {
+  name: '',
+  description: '',
+  imageUrl: '',
+  category: '',
+  price: '10',
+  isActive: true,
+  requiresApproval: true,
+  maxRedemptions: ''
+};
+
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
@@ -222,12 +259,14 @@ function App() {
   const [questAssignmentForm, setQuestAssignmentForm] = useState<QuestAssignmentFormState>(
     initialQuestAssignmentForm
   );
+  const [rewardForm, setRewardForm] = useState<RewardFormState>(initialRewardForm);
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_STORAGE_KEY));
   const [user, setUser] = useState<AuthUser | null>(null);
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [quests, setQuests] = useState<QuestTemplate[]>([]);
   const [questAssignments, setQuestAssignments] = useState<QuestAssignment[]>([]);
+  const [rewards, setRewards] = useState<Reward[]>([]);
   const [authLoading, setAuthLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
   const [assignmentLoading, setAssignmentLoading] = useState(false);
@@ -235,6 +274,7 @@ function App() {
   const [assignmentSaving, setAssignmentSaving] = useState(false);
   const [completionSavingId, setCompletionSavingId] = useState<string | null>(null);
   const [questSaving, setQuestSaving] = useState(false);
+  const [rewardSaving, setRewardSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isAuthenticated = Boolean(token);
@@ -247,6 +287,8 @@ function App() {
       setQuests([]);
       setQuestAssignments([]);
       setQuestAssignmentForm(initialQuestAssignmentForm);
+      setRewards([]);
+      setRewardForm(initialRewardForm);
       return;
     }
 
@@ -256,16 +298,18 @@ function App() {
   async function loadSession(activeToken: string) {
     try {
       setDashboardLoading(true);
-      const [currentUser, dashboardData, childData, questData] = await Promise.all([
+      const [currentUser, dashboardData, childData, questData, rewardData] = await Promise.all([
         apiRequest<AuthUser>('/auth/me', { token: activeToken }),
         apiRequest<DashboardResponse>('/dashboard', { token: activeToken }),
         apiRequest<ChildProfile[]>('/children', { token: activeToken }),
-        apiRequest<QuestTemplate[]>('/quests', { token: activeToken })
+        apiRequest<QuestTemplate[]>('/quests', { token: activeToken }),
+        apiRequest<Reward[]>('/rewards', { token: activeToken })
       ]);
       setUser(currentUser);
       setDashboard(dashboardData);
       setChildren(childData);
       setQuests(questData);
+      setRewards(rewardData);
       await loadAssignmentsForChildren(activeToken, childData, questData, questAssignmentForm.childProfileId);
       setError(null);
     } catch (requestError) {
@@ -320,14 +364,16 @@ function App() {
     setError(null);
 
     try {
-      const [dashboardData, childData, questData] = await Promise.all([
+      const [dashboardData, childData, questData, rewardData] = await Promise.all([
         apiRequest<DashboardResponse>('/dashboard', { token }),
         apiRequest<ChildProfile[]>('/children', { token }),
-        apiRequest<QuestTemplate[]>('/quests', { token })
+        apiRequest<QuestTemplate[]>('/quests', { token }),
+        apiRequest<Reward[]>('/rewards', { token })
       ]);
       setDashboard(dashboardData);
       setChildren(childData);
       setQuests(questData);
+      setRewards(rewardData);
       await loadAssignmentsForChildren(token, childData, questData, preferredChildId);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
@@ -550,6 +596,40 @@ function App() {
     }
   }
 
+  async function submitReward(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!token) {
+      return;
+    }
+
+    setRewardSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<Reward>('/rewards', {
+        method: 'POST',
+        token,
+        body: {
+          name: rewardForm.name,
+          description: rewardForm.description || undefined,
+          imageUrl: rewardForm.imageUrl || undefined,
+          category: rewardForm.category || undefined,
+          price: Number(rewardForm.price),
+          isActive: rewardForm.isActive,
+          requiresApproval: rewardForm.requiresApproval,
+          maxRedemptions: rewardForm.maxRedemptions ? Number(rewardForm.maxRedemptions) : undefined
+        }
+      });
+      setRewardForm(initialRewardForm);
+      await refreshDashboard();
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setRewardSaving(false);
+    }
+  }
+
   function logout() {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
@@ -561,6 +641,8 @@ function App() {
     setQuestForm(initialQuestForm);
     setQuestAssignments([]);
     setQuestAssignmentForm(initialQuestAssignmentForm);
+    setRewards([]);
+    setRewardForm(initialRewardForm);
   }
 
   return (
@@ -593,6 +675,9 @@ function App() {
               questForm={questForm}
               questSaving={questSaving}
               quests={quests}
+              rewardForm={rewardForm}
+              rewardSaving={rewardSaving}
+              rewards={rewards}
               user={user}
               onChildFormChange={setChildForm}
               onChildSubmit={submitChild}
@@ -604,6 +689,8 @@ function App() {
               onAssignmentReject={rejectQuestCompletion}
               onQuestFormChange={setQuestForm}
               onQuestSubmit={submitQuest}
+              onRewardFormChange={setRewardForm}
+              onRewardSubmit={submitReward}
             />
           ) : (
             <AuthView
@@ -838,6 +925,9 @@ interface DashboardViewProps {
   questForm: QuestFormState;
   questSaving: boolean;
   quests: QuestTemplate[];
+  rewardForm: RewardFormState;
+  rewardSaving: boolean;
+  rewards: Reward[];
   user: AuthUser | null;
   onAssignmentApprove: (assignmentId: string, completionId: string) => void;
   onAssignmentChildChange: (childProfileId: string) => void;
@@ -849,6 +939,8 @@ interface DashboardViewProps {
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onQuestFormChange: (form: QuestFormState) => void;
   onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onRewardFormChange: (form: RewardFormState) => void;
+  onRewardSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 function DashboardView({
@@ -865,6 +957,9 @@ function DashboardView({
   questForm,
   questSaving,
   quests,
+  rewardForm,
+  rewardSaving,
+  rewards,
   user,
   onAssignmentApprove,
   onAssignmentChildChange,
@@ -875,7 +970,9 @@ function DashboardView({
   onChildFormChange,
   onChildSubmit,
   onQuestFormChange,
-  onQuestSubmit
+  onQuestSubmit,
+  onRewardFormChange,
+  onRewardSubmit
 }: DashboardViewProps) {
   const childRows = children;
   const xpMax = useMemo(() => Math.max(...childRows.map((child) => child.xp), 1), [childRows]);
@@ -1027,7 +1124,152 @@ function DashboardView({
         onReject={onAssignmentReject}
         onSubmit={onAssignmentSubmit}
       />
+
+      <RewardsPanel
+        canManage={canManageChildren}
+        form={rewardForm}
+        rewards={rewards}
+        saving={rewardSaving}
+        onFormChange={onRewardFormChange}
+        onSubmit={onRewardSubmit}
+      />
     </Stack>
+  );
+}
+
+interface RewardsPanelProps {
+  canManage: boolean;
+  form: RewardFormState;
+  rewards: Reward[];
+  saving: boolean;
+  onFormChange: (form: RewardFormState) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+function RewardsPanel({ canManage, form, rewards, saving, onFormChange, onSubmit }: RewardsPanelProps) {
+  const activeRewards = rewards.filter((reward) => reward.isActive);
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<StorefrontRoundedIcon />} title="Belohnungen" />
+          <Chip icon={<StorefrontRoundedIcon />} label={`${activeRewards.length} aktiv`} variant="outlined" />
+        </Box>
+
+        {canManage ? (
+          <Box
+            component="form"
+            onSubmit={onSubmit}
+            sx={{
+              bgcolor: 'action.hover',
+              borderRadius: 2,
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
+              p: 1.5
+            }}
+          >
+            <TextField
+              autoComplete="off"
+              label="Belohnung"
+              onChange={(event) => onFormChange({ ...form, name: event.target.value })}
+              required
+              size="small"
+              value={form.name}
+            />
+            <TextField
+              autoComplete="off"
+              label="Beschreibung"
+              onChange={(event) => onFormChange({ ...form, description: event.target.value })}
+              size="small"
+              value={form.description}
+            />
+            <TextField
+              autoComplete="off"
+              label="Kategorie"
+              onChange={(event) => onFormChange({ ...form, category: event.target.value })}
+              size="small"
+              value={form.category}
+            />
+            <TextField
+              label="Preis"
+              onChange={(event) => onFormChange({ ...form, price: event.target.value })}
+              required
+              size="small"
+              slotProps={{ htmlInput: { min: 0, max: 100000 } }}
+              type="number"
+              value={form.price}
+            />
+            <TextField
+              autoComplete="off"
+              label="Bild-URL"
+              onChange={(event) => onFormChange({ ...form, imageUrl: event.target.value })}
+              size="small"
+              sx={{ gridColumn: { md: 'span 2' } }}
+              value={form.imageUrl}
+            />
+            <TextField
+              label="Max. Einloesungen"
+              onChange={(event) => onFormChange({ ...form, maxRedemptions: event.target.value })}
+              size="small"
+              slotProps={{ htmlInput: { min: 1, max: 10000 } }}
+              type="number"
+              value={form.maxRedemptions}
+            />
+            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={form.requiresApproval}
+                    onChange={(event) => onFormChange({ ...form, requiresApproval: event.target.checked })}
+                    size="small"
+                  />
+                }
+                label="Bestaetigung"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={form.isActive}
+                    onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
+                    size="small"
+                  />
+                }
+                label="Aktiv"
+              />
+            </Stack>
+            <Button
+              disabled={saving}
+              startIcon={<StorefrontRoundedIcon />}
+              sx={{ minHeight: 40 }}
+              type="submit"
+              variant="contained"
+            >
+              Anlegen
+            </Button>
+          </Box>
+        ) : null}
+
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
+          {rewards.length > 0 ? (
+            rewards.map((reward) => <RewardRow key={reward.id} reward={reward} />)
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">Noch keine Belohnungen</Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
   );
 }
 
@@ -1550,6 +1792,68 @@ function QuestAssignmentRow({
           </Button>
         </Stack>
       ) : null}
+    </Box>
+  );
+}
+
+interface RewardRowProps {
+  reward: Reward;
+}
+
+function RewardRow({ reward }: RewardRowProps) {
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1.25,
+        gridTemplateColumns: { xs: '1fr', sm: '72px minmax(0, 1fr)', md: '72px minmax(220px, 1fr) auto auto auto auto' },
+        p: 1.5
+      }}
+    >
+      <Box
+        sx={{
+          alignItems: 'center',
+          aspectRatio: '1 / 1',
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          color: 'secondary.main',
+          display: 'flex',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          width: 72
+        }}
+      >
+        {reward.imageUrl ? (
+          <Box
+            alt=""
+            component="img"
+            src={reward.imageUrl}
+            sx={{ height: '100%', objectFit: 'cover', width: '100%' }}
+          />
+        ) : (
+          <StorefrontRoundedIcon />
+        )}
+      </Box>
+      <Box sx={{ minWidth: 0 }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <Typography sx={{ fontWeight: 900 }} noWrap>
+            {reward.name}
+          </Typography>
+          {!reward.isActive ? <Chip color="default" label="Inaktiv" size="small" /> : null}
+        </Stack>
+        {reward.description ? (
+          <Typography color="text.secondary" noWrap variant="body2">
+            {reward.description}
+          </Typography>
+        ) : null}
+      </Box>
+      <Chip icon={<PaidRoundedIcon />} label={reward.price} variant="outlined" />
+      <Chip label={reward.category || 'Allgemein'} variant="outlined" />
+      <Chip label={reward.requiresApproval ? 'Mit Bestaetigung' : 'Sofort'} variant="outlined" />
+      <Chip label={reward.maxRedemptions ? `Max. ${reward.maxRedemptions}` : 'Unbegrenzt'} variant="outlined" />
     </Box>
   );
 }
