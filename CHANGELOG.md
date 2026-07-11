@@ -70,6 +70,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Workflow zum Einreichen erledigter Quest-Zuweisungen mit Status-Chip erstellt.
 - Frontend-Elternaktionen fuer eingereichte Quest-Abschluesse erstellt: bestaetigen und ablehnen direkt aus der Zuweisungsliste.
 - Frontend-Reward-Verwaltungs-Workflow mit Reward-Liste, Reward-Erstellung, Preis/Kategorie/Bild/Limit-Feldern und Aktiv-/Bestaetigungs-Schaltern erstellt.
+- Frontend-Reward-Shop-Workflow mit Kind-Shop, Muenzenanzeige und Belohnung beantragen/einloesen erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -166,6 +167,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Lokaler Browser-Test des Reward-Verwaltungs-Workflows gegen das LXC-Backend erfolgreich: Registrierung, Reward anlegen, Reward-Zaehler, Reload und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Reward-Verwaltungs-Slice per API-Script erfolgreich.
 - LXC-Browser-Test der Reward-Verwaltung unter `http://192.168.1.98:5173` erfolgreich: Reward anlegen, Preis/Kategorie/Limit anzeigen, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Build nach Reward-Shop-Workflow erfolgreich ausgefuehrt.
+- Lokaler Browser-Test des Reward-Shop-Workflows gegen das LXC-Backend erfolgreich: Kind mit Coins vorbereiten, Shop laden, Reward beantragen, offene Reward-Metrik aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 

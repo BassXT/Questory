@@ -171,6 +171,36 @@ interface Reward {
   updatedAt: string;
 }
 
+type RewardRedemptionStatus = 'REQUESTED' | 'APPROVED' | 'REJECTED' | 'REDEEMED';
+
+interface RewardRedemption {
+  id: string;
+  rewardId: string;
+  childProfileId: string;
+  status: RewardRedemptionStatus;
+  requestedAt: string;
+  approvedAt: string | null;
+  approvedByUserId: string | null;
+  redeemedAt: string | null;
+  rejectedAt: string | null;
+  rejectionReason: string | null;
+  coinCost: number;
+  reward: {
+    id: string;
+    name: string;
+    description: string | null;
+    imageUrl: string | null;
+    category: string | null;
+    price: number;
+    requiresApproval: boolean;
+  };
+  childProfile: {
+    id: string;
+    displayName: string;
+    coins: number;
+  };
+}
+
 interface AuthFormState {
   familyName: string;
   displayName: string;
@@ -267,14 +297,17 @@ function App() {
   const [quests, setQuests] = useState<QuestTemplate[]>([]);
   const [questAssignments, setQuestAssignments] = useState<QuestAssignment[]>([]);
   const [rewards, setRewards] = useState<Reward[]>([]);
+  const [shopRewards, setShopRewards] = useState<Reward[]>([]);
   const [authLoading, setAuthLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
   const [assignmentLoading, setAssignmentLoading] = useState(false);
+  const [shopLoading, setShopLoading] = useState(false);
   const [childSaving, setChildSaving] = useState(false);
   const [assignmentSaving, setAssignmentSaving] = useState(false);
   const [completionSavingId, setCompletionSavingId] = useState<string | null>(null);
   const [questSaving, setQuestSaving] = useState(false);
   const [rewardSaving, setRewardSaving] = useState(false);
+  const [redeemingRewardId, setRedeemingRewardId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const isAuthenticated = Boolean(token);
@@ -289,6 +322,7 @@ function App() {
       setQuestAssignmentForm(initialQuestAssignmentForm);
       setRewards([]);
       setRewardForm(initialRewardForm);
+      setShopRewards([]);
       return;
     }
 
@@ -399,19 +433,27 @@ function App() {
 
     if (!childProfileId) {
       setQuestAssignments([]);
+      setShopRewards([]);
       return;
     }
 
     setAssignmentLoading(true);
+    setShopLoading(true);
 
     try {
-      const assignments = await apiRequest<QuestAssignment[]>(
-        `/children/${childProfileId}/quest-assignments`,
-        { token: activeToken }
-      );
+      const [assignments, childShopRewards] = await Promise.all([
+        apiRequest<QuestAssignment[]>(`/children/${childProfileId}/quest-assignments`, {
+          token: activeToken
+        }),
+        apiRequest<Reward[]>(`/children/${childProfileId}/shop`, {
+          token: activeToken
+        })
+      ]);
       setQuestAssignments(assignments);
+      setShopRewards(childShopRewards);
     } finally {
       setAssignmentLoading(false);
+      setShopLoading(false);
     }
   }
 
@@ -422,18 +464,25 @@ function App() {
 
     setQuestAssignmentForm((currentForm) => ({ ...currentForm, childProfileId }));
     setAssignmentLoading(true);
+    setShopLoading(true);
     setError(null);
 
     try {
-      const assignments = await apiRequest<QuestAssignment[]>(
-        `/children/${childProfileId}/quest-assignments`,
-        { token }
-      );
+      const [assignments, childShopRewards] = await Promise.all([
+        apiRequest<QuestAssignment[]>(`/children/${childProfileId}/quest-assignments`, {
+          token
+        }),
+        apiRequest<Reward[]>(`/children/${childProfileId}/shop`, {
+          token
+        })
+      ]);
       setQuestAssignments(assignments);
+      setShopRewards(childShopRewards);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
       setAssignmentLoading(false);
+      setShopLoading(false);
     }
   }
 
@@ -630,6 +679,30 @@ function App() {
     }
   }
 
+  async function redeemReward(rewardId: string) {
+    if (!token || !questAssignmentForm.childProfileId) {
+      return;
+    }
+
+    setRedeemingRewardId(rewardId);
+    setError(null);
+
+    try {
+      await apiRequest<RewardRedemption>(`/rewards/${rewardId}/redeem`, {
+        method: 'POST',
+        token,
+        body: {
+          childProfileId: questAssignmentForm.childProfileId
+        }
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setRedeemingRewardId(null);
+    }
+  }
+
   function logout() {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
@@ -643,6 +716,7 @@ function App() {
     setQuestAssignmentForm(initialQuestAssignmentForm);
     setRewards([]);
     setRewardForm(initialRewardForm);
+    setShopRewards([]);
   }
 
   return (
@@ -678,6 +752,9 @@ function App() {
               rewardForm={rewardForm}
               rewardSaving={rewardSaving}
               rewards={rewards}
+              redeemingRewardId={redeemingRewardId}
+              shopLoading={shopLoading}
+              shopRewards={shopRewards}
               user={user}
               onChildFormChange={setChildForm}
               onChildSubmit={submitChild}
@@ -690,6 +767,7 @@ function App() {
               onQuestFormChange={setQuestForm}
               onQuestSubmit={submitQuest}
               onRewardFormChange={setRewardForm}
+              onRewardRedeem={redeemReward}
               onRewardSubmit={submitReward}
             />
           ) : (
@@ -925,9 +1003,12 @@ interface DashboardViewProps {
   questForm: QuestFormState;
   questSaving: boolean;
   quests: QuestTemplate[];
+  redeemingRewardId: string | null;
   rewardForm: RewardFormState;
   rewardSaving: boolean;
   rewards: Reward[];
+  shopLoading: boolean;
+  shopRewards: Reward[];
   user: AuthUser | null;
   onAssignmentApprove: (assignmentId: string, completionId: string) => void;
   onAssignmentChildChange: (childProfileId: string) => void;
@@ -940,6 +1021,7 @@ interface DashboardViewProps {
   onQuestFormChange: (form: QuestFormState) => void;
   onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onRewardFormChange: (form: RewardFormState) => void;
+  onRewardRedeem: (rewardId: string) => void;
   onRewardSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -957,9 +1039,12 @@ function DashboardView({
   questForm,
   questSaving,
   quests,
+  redeemingRewardId,
   rewardForm,
   rewardSaving,
   rewards,
+  shopLoading,
+  shopRewards,
   user,
   onAssignmentApprove,
   onAssignmentChildChange,
@@ -972,6 +1057,7 @@ function DashboardView({
   onQuestFormChange,
   onQuestSubmit,
   onRewardFormChange,
+  onRewardRedeem,
   onRewardSubmit
 }: DashboardViewProps) {
   const childRows = children;
@@ -1133,7 +1219,84 @@ function DashboardView({
         onFormChange={onRewardFormChange}
         onSubmit={onRewardSubmit}
       />
+
+      <RewardShopPanel
+        children={children}
+        redeemingRewardId={redeemingRewardId}
+        selectedChildId={assignmentForm.childProfileId}
+        shopLoading={shopLoading}
+        shopRewards={shopRewards}
+        onRedeem={onRewardRedeem}
+      />
     </Stack>
+  );
+}
+
+interface RewardShopPanelProps {
+  children: ChildProfile[];
+  redeemingRewardId: string | null;
+  selectedChildId: string;
+  shopLoading: boolean;
+  shopRewards: Reward[];
+  onRedeem: (rewardId: string) => void;
+}
+
+function RewardShopPanel({
+  children,
+  redeemingRewardId,
+  selectedChildId,
+  shopLoading,
+  shopRewards,
+  onRedeem
+}: RewardShopPanelProps) {
+  const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<StorefrontRoundedIcon />} title="Belohnungsshop" />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            <Chip icon={<StorefrontRoundedIcon />} label={`${shopRewards.length} im Shop`} variant="outlined" />
+            <Chip
+              icon={<PaidRoundedIcon />}
+              label={selectedChild ? `${selectedChild.coins} Muenzen` : 'Kein Kind'}
+              variant="outlined"
+            />
+          </Stack>
+        </Box>
+
+        {shopLoading ? <LinearProgress /> : null}
+
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
+          {selectedChild && shopRewards.length > 0 ? (
+            shopRewards.map((reward) => (
+              <RewardShopRow
+                child={selectedChild}
+                key={reward.id}
+                redeeming={redeemingRewardId === reward.id}
+                reward={reward}
+                onRedeem={onRedeem}
+              />
+            ))
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">
+                {selectedChild ? 'Noch keine aktiven Belohnungen im Shop' : 'Noch kein Kind fuer den Shop ausgewaehlt'}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
   );
 }
 
@@ -1854,6 +2017,78 @@ function RewardRow({ reward }: RewardRowProps) {
       <Chip label={reward.category || 'Allgemein'} variant="outlined" />
       <Chip label={reward.requiresApproval ? 'Mit Bestaetigung' : 'Sofort'} variant="outlined" />
       <Chip label={reward.maxRedemptions ? `Max. ${reward.maxRedemptions}` : 'Unbegrenzt'} variant="outlined" />
+    </Box>
+  );
+}
+
+interface RewardShopRowProps {
+  child: ChildProfile;
+  redeeming: boolean;
+  reward: Reward;
+  onRedeem: (rewardId: string) => void;
+}
+
+function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProps) {
+  const canAfford = child.coins >= reward.price;
+  const actionLabel = reward.requiresApproval ? 'Beantragen' : 'Einloesen';
+
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1.25,
+        gridTemplateColumns: { xs: '1fr', sm: '72px minmax(0, 1fr)', md: '72px minmax(220px, 1fr) auto auto auto' },
+        p: 1.5
+      }}
+    >
+      <Box
+        sx={{
+          alignItems: 'center',
+          aspectRatio: '1 / 1',
+          bgcolor: 'background.paper',
+          borderRadius: 2,
+          color: 'secondary.main',
+          display: 'flex',
+          justifyContent: 'center',
+          overflow: 'hidden',
+          width: 72
+        }}
+      >
+        {reward.imageUrl ? (
+          <Box
+            alt=""
+            component="img"
+            src={reward.imageUrl}
+            sx={{ height: '100%', objectFit: 'cover', width: '100%' }}
+          />
+        ) : (
+          <StorefrontRoundedIcon />
+        )}
+      </Box>
+      <Box sx={{ minWidth: 0 }}>
+        <Typography sx={{ fontWeight: 900 }} noWrap>
+          {reward.name}
+        </Typography>
+        {reward.description ? (
+          <Typography color="text.secondary" noWrap variant="body2">
+            {reward.description}
+          </Typography>
+        ) : null}
+      </Box>
+      <Chip icon={<PaidRoundedIcon />} label={reward.price} variant="outlined" />
+      <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} variant="outlined" />
+      <Button
+        disabled={!canAfford || redeeming}
+        onClick={() => onRedeem(reward.id)}
+        size="small"
+        startIcon={<StorefrontRoundedIcon />}
+        variant={canAfford ? 'contained' : 'outlined'}
+      >
+        {canAfford ? actionLabel : 'Zu teuer'}
+      </Button>
     </Box>
   );
 }
