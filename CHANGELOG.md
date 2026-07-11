@@ -61,6 +61,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Reward-Einloesungsverwaltung fuer Eltern mit Listen, Bestaetigen, Ablehnen und Markieren als eingeloest erstellt.
 - Kinder-Statistik-Endpunkt `GET /api/children/:childId/stats` erstellt.
 - Dashboard-Summary-Endpunkt `GET /api/dashboard` erstellt.
+- Frontend-Grundlayout mit Login, Registrierung, Session-Speicherung, Dashboard-Load, Refresh und Logout erstellt.
+- Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -129,6 +131,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend-Build nach Dashboard-Summary-Implementierung erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach Dashboard-Summary-Slice erfolgreich.
 - LXC-API-Test fuer Dashboard-Summary mit Familienuebersicht, Quest-Fortschritt, XP, Coins, aktiven Rewards, Reward-Ausgaben und offenen Reward-Anfragen erfolgreich ausgefuehrt.
+- Frontend-Build nach Auth-/Dashboard-Grundlayout erfolgreich ausgefuehrt.
+- Lokaler Browser-Test des Frontends gegen das LXC-Backend erfolgreich: Registrierung, Dashboard, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 

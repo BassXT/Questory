@@ -110,7 +110,9 @@ Aktuell vorhanden:
 
 - Vite-App unter `apps/frontend`
 - Material-UI-Theme unter `apps/frontend/src/theme.ts`
-- Erste responsive Startseite unter `apps/frontend/src/App.tsx`
+- Auth-/Dashboard-Grundlayout unter `apps/frontend/src/App.tsx`
+- API-Anbindung ueber `VITE_API_BASE_URL`
+- JWT-Session wird aktuell im Browser-`localStorage` gehalten
 
 ## Datenbank
 
