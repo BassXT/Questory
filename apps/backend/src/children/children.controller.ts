@@ -28,4 +28,9 @@ export class ChildrenController {
   getChild(@CurrentUser() user: AuthenticatedUser, @Param('childId') childId: string) {
     return this.childrenService.getChild(user, childId);
   }
+
+  @Get(':childId/stats')
+  getChildStats(@CurrentUser() user: AuthenticatedUser, @Param('childId') childId: string) {
+    return this.childrenService.getChildStats(user, childId);
+  }
 }

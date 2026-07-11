@@ -60,7 +60,7 @@ Aktuell vorhanden:
 - `AuthModule` mit Registrierung, Login, JWT und Guards
 - `FamiliesModule` fuer den aktuellen Familienkontext
 - `UsersModule` fuer Benutzerliste und neue Eltern-/Kinderbenutzer
-- `ChildrenModule` fuer Kinderprofile
+- `ChildrenModule` fuer Kinderprofile und kindbezogene Statistik-Read-Models
 - `QuestsModule` fuer Quest-Vorlagen
 - `QuestAssignmentsModule` fuer die Zuweisung von Quests an Kinder
 - `RewardsModule` fuer Belohnungen im Familienshop

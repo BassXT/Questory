@@ -59,6 +59,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Reward-Shop-Endpunkt `GET /api/children/:childId/shop` erstellt.
 - Reward-Einloesungs-Endpunkt `POST /api/rewards/:rewardId/redeem` erstellt.
 - Reward-Einloesungsverwaltung fuer Eltern mit Listen, Bestaetigen, Ablehnen und Markieren als eingeloest erstellt.
+- Kinder-Statistik-Endpunkt `GET /api/children/:childId/stats` erstellt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -119,6 +120,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend-Build mit generiertem Prisma Client unter `dist/generated/prisma` erfolgreich geprueft.
 - Portainer-Redeploy nach Prisma-/Reward-Einloesungsverwaltungs-Fix erfolgreich.
 - LXC-API-Tests fuer Reward-Einloesungsverwaltung, Listen, Bestaetigung, Ablehnung, Markierung als eingeloest, Coin-Abzug und ungueltige Statuswechsel erfolgreich ausgefuehrt.
+- Prisma-Schema nach Kinder-Statistik-Implementierung erfolgreich validiert.
+- Backend-Build nach Kinder-Statistik-Implementierung erfolgreich ausgefuehrt.
 
 ### Fixed
 

@@ -562,6 +562,55 @@ Gibt Dashboard-Daten fuer den aktuellen Benutzer zurueck.
 
 Gibt Statistiken fuer ein Kind zurueck.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Hinweise:
+
+- Das Kinderprofil muss zur aktuellen Familie gehoeren.
+- Eltern/Admin koennen die Statistik jedes Kindes der Familie abrufen.
+- Kinder mit eigenem Login koennen nur die eigene Statistik abrufen.
+- `coinsSpent` zaehlt Reward-Einloesungen mit Status `APPROVED` und `REDEEMED`, weil dort Muenzen bereits abgezogen wurden.
+
+Response:
+
+```json
+{
+  "child": {
+    "id": "child-profile-uuid",
+    "displayName": "Mika",
+    "level": 1,
+    "xp": 40,
+    "coins": 23
+  },
+  "progression": {
+    "level": 1,
+    "xp": 40,
+    "coins": 23,
+    "nextLevelXp": 100,
+    "xpToNextLevel": 60
+  },
+  "quests": {
+    "assigned": 3,
+    "submitted": 1,
+    "approved": 2,
+    "rejected": 0,
+    "totalCompletions": 3,
+    "xpGranted": 40,
+    "coinsGranted": 30
+  },
+  "rewards": {
+    "requested": 1,
+    "approved": 1,
+    "redeemed": 1,
+    "rejected": 0,
+    "totalRedemptions": 3,
+    "coinsSpent": 7
+  }
+}
+```
+
 ## Display API fuer spaeter
 
 ### `GET /api/display/{childId}`
