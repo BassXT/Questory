@@ -123,6 +123,26 @@ interface QuestTemplate {
   updatedAt: string;
 }
 
+interface QuestAssignment {
+  id: string;
+  questId: string;
+  childProfileId: string;
+  dueAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  quest: {
+    id: string;
+    title: string;
+    description: string | null;
+    type: QuestType;
+    frequency: QuestFrequency;
+    xpReward: number;
+    coinReward: number;
+    requiresApproval: boolean;
+    isActive: boolean;
+  };
+}
+
 interface AuthFormState {
   familyName: string;
   displayName: string;
@@ -144,6 +164,12 @@ interface QuestFormState {
   coinReward: string;
   requiresApproval: boolean;
   isActive: boolean;
+}
+
+interface QuestAssignmentFormState {
+  childProfileId: string;
+  questId: string;
+  dueAt: string;
 }
 
 const initialAuthForm: AuthFormState = {
@@ -169,19 +195,31 @@ const initialQuestForm: QuestFormState = {
   isActive: true
 };
 
+const initialQuestAssignmentForm: QuestAssignmentFormState = {
+  childProfileId: '',
+  questId: '',
+  dueAt: ''
+};
+
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
   const [childForm, setChildForm] = useState<ChildFormState>(initialChildForm);
   const [questForm, setQuestForm] = useState<QuestFormState>(initialQuestForm);
+  const [questAssignmentForm, setQuestAssignmentForm] = useState<QuestAssignmentFormState>(
+    initialQuestAssignmentForm
+  );
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_STORAGE_KEY));
   const [user, setUser] = useState<AuthUser | null>(null);
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [quests, setQuests] = useState<QuestTemplate[]>([]);
+  const [questAssignments, setQuestAssignments] = useState<QuestAssignment[]>([]);
   const [authLoading, setAuthLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
+  const [assignmentLoading, setAssignmentLoading] = useState(false);
   const [childSaving, setChildSaving] = useState(false);
+  const [assignmentSaving, setAssignmentSaving] = useState(false);
   const [questSaving, setQuestSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -193,6 +231,8 @@ function App() {
       setDashboard(null);
       setChildren([]);
       setQuests([]);
+      setQuestAssignments([]);
+      setQuestAssignmentForm(initialQuestAssignmentForm);
       return;
     }
 
@@ -212,6 +252,7 @@ function App() {
       setDashboard(dashboardData);
       setChildren(childData);
       setQuests(questData);
+      await loadAssignmentsForChildren(activeToken, childData, questData, questAssignmentForm.childProfileId);
       setError(null);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
@@ -256,7 +297,7 @@ function App() {
     }
   }
 
-  async function refreshDashboard() {
+  async function refreshDashboard(preferredChildId = questAssignmentForm.childProfileId) {
     if (!token) {
       return;
     }
@@ -273,10 +314,66 @@ function App() {
       setDashboard(dashboardData);
       setChildren(childData);
       setQuests(questData);
+      await loadAssignmentsForChildren(token, childData, questData, preferredChildId);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
       setDashboardLoading(false);
+    }
+  }
+
+  async function loadAssignmentsForChildren(
+    activeToken: string,
+    childData: ChildProfile[],
+    questData: QuestTemplate[],
+    preferredChildId: string
+  ) {
+    const childProfileId = resolveSelectedChildId(childData, preferredChildId);
+
+    setQuestAssignmentForm((currentForm) => ({
+      ...currentForm,
+      childProfileId,
+      questId: resolveSelectedQuestId(questData, currentForm.questId),
+      dueAt: currentForm.dueAt
+    }));
+
+    if (!childProfileId) {
+      setQuestAssignments([]);
+      return;
+    }
+
+    setAssignmentLoading(true);
+
+    try {
+      const assignments = await apiRequest<QuestAssignment[]>(
+        `/children/${childProfileId}/quest-assignments`,
+        { token: activeToken }
+      );
+      setQuestAssignments(assignments);
+    } finally {
+      setAssignmentLoading(false);
+    }
+  }
+
+  async function changeAssignmentChild(childProfileId: string) {
+    if (!token) {
+      return;
+    }
+
+    setQuestAssignmentForm((currentForm) => ({ ...currentForm, childProfileId }));
+    setAssignmentLoading(true);
+    setError(null);
+
+    try {
+      const assignments = await apiRequest<QuestAssignment[]>(
+        `/children/${childProfileId}/quest-assignments`,
+        { token }
+      );
+      setQuestAssignments(assignments);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setAssignmentLoading(false);
     }
   }
 
@@ -291,7 +388,7 @@ function App() {
     setError(null);
 
     try {
-      await apiRequest<ChildProfile>('/children', {
+      const child = await apiRequest<ChildProfile>('/children', {
         method: 'POST',
         token,
         body: {
@@ -300,7 +397,7 @@ function App() {
         }
       });
       setChildForm(initialChildForm);
-      await refreshDashboard();
+      await refreshDashboard(child.id);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
@@ -319,7 +416,7 @@ function App() {
     setError(null);
 
     try {
-      await apiRequest<QuestTemplate>('/quests', {
+      const quest = await apiRequest<QuestTemplate>('/quests', {
         method: 'POST',
         token,
         body: {
@@ -334,11 +431,44 @@ function App() {
         }
       });
       setQuestForm(initialQuestForm);
+      setQuestAssignmentForm((currentForm) => ({ ...currentForm, questId: quest.id }));
       await refreshDashboard();
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
       setQuestSaving(false);
+    }
+  }
+
+  async function submitQuestAssignment(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!token) {
+      return;
+    }
+
+    const formElement = event.currentTarget;
+    const dueAtValue = formElement.querySelector<HTMLInputElement>('input[type="date"]')?.value ?? questAssignmentForm.dueAt;
+
+    setAssignmentSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<QuestAssignment>('/quest-assignments', {
+        method: 'POST',
+        token,
+        body: {
+          childProfileId: questAssignmentForm.childProfileId,
+          questId: questAssignmentForm.questId,
+          dueAt: dueAtValue ? `${dueAtValue}T12:00:00.000Z` : undefined
+        }
+      });
+      setQuestAssignmentForm((currentForm) => ({ ...currentForm, dueAt: '' }));
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setAssignmentSaving(false);
     }
   }
 
@@ -351,6 +481,8 @@ function App() {
     setChildForm(initialChildForm);
     setQuests([]);
     setQuestForm(initialQuestForm);
+    setQuestAssignments([]);
+    setQuestAssignmentForm(initialQuestAssignmentForm);
   }
 
   return (
@@ -374,6 +506,10 @@ function App() {
               childSaving={childSaving}
               children={children}
               dashboard={dashboard}
+              assignmentForm={questAssignmentForm}
+              assignmentLoading={assignmentLoading}
+              assignmentSaving={assignmentSaving}
+              assignments={questAssignments}
               loading={dashboardLoading}
               questForm={questForm}
               questSaving={questSaving}
@@ -381,6 +517,9 @@ function App() {
               user={user}
               onChildFormChange={setChildForm}
               onChildSubmit={submitChild}
+              onAssignmentChildChange={changeAssignmentChild}
+              onAssignmentFormChange={setQuestAssignmentForm}
+              onAssignmentSubmit={submitQuestAssignment}
               onQuestFormChange={setQuestForm}
               onQuestSubmit={submitQuest}
             />
@@ -604,6 +743,10 @@ function AuthView({
 }
 
 interface DashboardViewProps {
+  assignmentForm: QuestAssignmentFormState;
+  assignmentLoading: boolean;
+  assignmentSaving: boolean;
+  assignments: QuestAssignment[];
   childForm: ChildFormState;
   childSaving: boolean;
   children: ChildProfile[];
@@ -613,6 +756,9 @@ interface DashboardViewProps {
   questSaving: boolean;
   quests: QuestTemplate[];
   user: AuthUser | null;
+  onAssignmentChildChange: (childProfileId: string) => void;
+  onAssignmentFormChange: (form: QuestAssignmentFormState) => void;
+  onAssignmentSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChildFormChange: (form: ChildFormState) => void;
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onQuestFormChange: (form: QuestFormState) => void;
@@ -620,6 +766,10 @@ interface DashboardViewProps {
 }
 
 function DashboardView({
+  assignmentForm,
+  assignmentLoading,
+  assignmentSaving,
+  assignments,
   childForm,
   childSaving,
   children,
@@ -629,6 +779,9 @@ function DashboardView({
   questSaving,
   quests,
   user,
+  onAssignmentChildChange,
+  onAssignmentFormChange,
+  onAssignmentSubmit,
   onChildFormChange,
   onChildSubmit,
   onQuestFormChange,
@@ -767,7 +920,149 @@ function DashboardView({
         onFormChange={onQuestFormChange}
         onSubmit={onQuestSubmit}
       />
+
+      <QuestAssignmentsPanel
+        assignments={assignments}
+        canManage={canManageChildren}
+        children={children}
+        form={assignmentForm}
+        loading={assignmentLoading}
+        quests={quests}
+        saving={assignmentSaving}
+        onChildChange={onAssignmentChildChange}
+        onFormChange={onAssignmentFormChange}
+        onSubmit={onAssignmentSubmit}
+      />
     </Stack>
+  );
+}
+
+interface QuestAssignmentsPanelProps {
+  assignments: QuestAssignment[];
+  canManage: boolean;
+  children: ChildProfile[];
+  form: QuestAssignmentFormState;
+  loading: boolean;
+  quests: QuestTemplate[];
+  saving: boolean;
+  onChildChange: (childProfileId: string) => void;
+  onFormChange: (form: QuestAssignmentFormState) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+function QuestAssignmentsPanel({
+  assignments,
+  canManage,
+  children,
+  form,
+  loading,
+  quests,
+  saving,
+  onChildChange,
+  onFormChange,
+  onSubmit
+}: QuestAssignmentsPanelProps) {
+  const activeQuests = quests.filter((quest) => quest.isActive);
+  const canAssign = canManage && children.length > 0 && activeQuests.length > 0;
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<TaskAltRoundedIcon />} title="Quest-Zuweisungen" />
+          <Chip icon={<TaskAltRoundedIcon />} label={`${assignments.length} zugewiesen`} variant="outlined" />
+        </Box>
+
+        {canManage ? (
+          <Box
+            component="form"
+            onSubmit={onSubmit}
+            sx={{
+              bgcolor: 'action.hover',
+              borderRadius: 2,
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(220px, 1.2fr) minmax(160px, 0.8fr) auto' },
+              p: 1.5
+            }}
+          >
+            <TextField
+              disabled={children.length === 0}
+              label="Kind"
+              onChange={(event) => {
+                const childProfileId = event.target.value;
+                onFormChange({ ...form, childProfileId });
+                onChildChange(childProfileId);
+              }}
+              required
+              select
+              size="small"
+              value={form.childProfileId}
+            >
+              {children.map((child) => (
+                <MenuItem key={child.id} value={child.id}>
+                  {child.displayName}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              disabled={activeQuests.length === 0}
+              label="Quest"
+              onChange={(event) => onFormChange({ ...form, questId: event.target.value })}
+              required
+              select
+              size="small"
+              value={form.questId}
+            >
+              {activeQuests.map((quest) => (
+                <MenuItem key={quest.id} value={quest.id}>
+                  {quest.title}
+                </MenuItem>
+              ))}
+            </TextField>
+            <TextField
+              label="Faellig am"
+              onChange={(event) => onFormChange({ ...form, dueAt: event.target.value })}
+              size="small"
+              slotProps={{ inputLabel: { shrink: true } }}
+              type="date"
+              value={form.dueAt}
+            />
+            <Button
+              disabled={!canAssign || saving}
+              startIcon={<TaskAltRoundedIcon />}
+              sx={{ minHeight: 40 }}
+              type="submit"
+              variant="contained"
+            >
+              Zuweisen
+            </Button>
+          </Box>
+        ) : null}
+
+        {loading ? <LinearProgress /> : null}
+
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
+          {assignments.length > 0 ? (
+            assignments.map((assignment) => <QuestAssignmentRow assignment={assignment} key={assignment.id} />)
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">
+                {children.length === 0 ? 'Noch kein Kind fuer Zuweisungen' : 'Noch keine Quest-Zuweisungen'}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
   );
 }
 
@@ -1055,6 +1350,39 @@ function QuestTemplateRow({ quest }: QuestTemplateRowProps) {
   );
 }
 
+interface QuestAssignmentRowProps {
+  assignment: QuestAssignment;
+}
+
+function QuestAssignmentRow({ assignment }: QuestAssignmentRowProps) {
+  return (
+    <Box
+      sx={{
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1,
+        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto' },
+        p: 1.5
+      }}
+    >
+      <Box sx={{ minWidth: 0 }}>
+        <Typography sx={{ fontWeight: 900 }} noWrap>
+          {assignment.quest.title}
+        </Typography>
+        {assignment.quest.description ? (
+          <Typography color="text.secondary" noWrap variant="body2">
+            {assignment.quest.description}
+          </Typography>
+        ) : null}
+      </Box>
+      <Chip label={assignment.quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(assignment.quest.frequency)} variant="outlined" />
+      <Chip label={assignment.dueAt ? formatDateLabel(assignment.dueAt) : 'Ohne Datum'} variant="outlined" />
+      <Chip icon={<PaidRoundedIcon />} label={assignment.quest.coinReward} variant="outlined" />
+    </Box>
+  );
+}
+
 function frequencyLabel(frequency: QuestFrequency): string {
   switch (frequency) {
     case 'DAILY':
@@ -1067,6 +1395,14 @@ function frequencyLabel(frequency: QuestFrequency): string {
     default:
       return 'Kein Rhythmus';
   }
+}
+
+function formatDateLabel(value: string): string {
+  return new Intl.DateTimeFormat('de-DE', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  }).format(new Date(value));
 }
 
 interface SectionTitleProps {
@@ -1101,6 +1437,24 @@ interface ApiRequestOptions {
   method?: 'GET' | 'POST';
   token?: string;
   body?: unknown;
+}
+
+function resolveSelectedChildId(children: ChildProfile[], preferredChildId: string): string {
+  if (preferredChildId && children.some((child) => child.id === preferredChildId)) {
+    return preferredChildId;
+  }
+
+  return children[0]?.id ?? '';
+}
+
+function resolveSelectedQuestId(quests: QuestTemplate[], preferredQuestId: string): string {
+  const activeQuests = quests.filter((quest) => quest.isActive);
+
+  if (preferredQuestId && activeQuests.some((quest) => quest.id === preferredQuestId)) {
+    return preferredQuestId;
+  }
+
+  return activeQuests[0]?.id ?? '';
 }
 
 async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {

@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil- und Quest-Vorlagen-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil- und Quest-Vorlagen-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Der Frontend-Quest-Zuweisungs-Workflow ist lokal implementiert und gegen das LXC-Backend getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -137,17 +137,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Quest-Vorlage anlegen, aktive Quest-Metrik aktualisieren, Quest-Liste nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Quest-Vorlagen-Slice erfolgreich.
 - LXC-Frontend-Test unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Quest-Vorlage anlegen, aktive Quest-Metrik aktualisieren, Quest-Liste nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Quest-Zuweisungs-Workflow angelegt: Kind und aktive Quest auswaehlen, optionales Faelligkeitsdatum setzen, `POST /api/quest-assignments` aufrufen und Zuweisungen fuer das ausgewaehlte Kind ueber `GET /api/children/:childId/quest-assignments` anzeigen.
+- Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Kind anlegen, Quest anlegen, Quest zuweisen, Zuweisungsliste nach Reload erhalten, Faelligkeitsdatum stabil anzeigen und mobile Ansicht ohne horizontalen Overflow.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
+- Portainer-Redeploy nach Frontend-Quest-Zuweisungs-Slice ausfuehren.
+- LXC-Test fuer Frontend-Quest-Zuweisungs-Workflow unter `http://192.168.1.98:5173` ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Frontend-Workflow fuer Quest-Zuweisungen an Kinderprofile umsetzen: Kind und Quest auswaehlen, `POST /api/quest-assignments` aufrufen und die Zuweisungen fuer ein Kind anzeigen.
+Als naechstes den Frontend-Quest-Zuweisungs-Slice im Portainer-Stack redeployen und im Browser gegen das LXC-Backend testen. Danach folgt der Frontend-Workflow fuer Quest-Abschluss-Einreichung durch Eltern/Kinder.
 
 ## Architekturentscheidungen
 
@@ -177,6 +181,7 @@ Als naechstes den Frontend-Workflow fuer Quest-Zuweisungen an Kinderprofile umse
 - Kinder koennen aktuell auf zwei Wegen abgebildet werden: als reines `ChildProfile` ohne Login oder als `User` mit Rolle `CHILD` plus verknuepftem `ChildProfile`. Der konkrete Kinder-Login/PIN-Flow wird spaeter entschieden.
 - Quest-Vorlagen gehoeren immer zu genau einer Familie. Einmalige Quests nutzen `QuestFrequency.NONE`; wiederkehrende Quests nutzen `DAILY`, `WEEKLY` oder `CUSTOM`.
 - Quest-Zuweisungen verbinden genau eine Quest mit genau einem Kinderprofil. Doppelte Zuweisungen derselben Quest an dasselbe Kind werden aktuell in der Anwendungsschicht abgelehnt.
+- Das Frontend speichert optionale Quest-Zuweisungs-Faelligkeitsdaten als mittags UTC (`T12:00:00.000Z`), damit reine Kalendertage in der deutschen Anzeige nicht durch Zeitzonen auf den Vortag oder Folgetag rutschen.
 - Quest-Abschluesse starten als `SUBMITTED`. XP und Muenzen bleiben bis zur Eltern-Bestaetigung bei `0`, damit Progression in einem eigenen, testbaren Slice umgesetzt wird.
 - Level werden serverseitig nach `floor(sqrt(totalXp / 100)) + 1` berechnet und bei der Quest-Bestaetigung aktualisiert.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
