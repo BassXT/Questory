@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { QuestCompletionStatus, QuestType, Role } from '@prisma/client';
+import { QuestCompletionStatus, QuestType, Role } from '../prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateQuestAssignmentDto } from './dto/create-quest-assignment.dto';

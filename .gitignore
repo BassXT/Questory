@@ -24,3 +24,4 @@ Thumbs.db
 
 # Prisma
 apps/backend/prisma/dev.db
+apps/backend/src/generated/

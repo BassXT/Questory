@@ -121,7 +121,7 @@ Das Prisma-Schema startet mit Familien, Benutzern, Kindern, Aufgaben, Aufgabenab
 
 Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Deshalb enthaelt `schema.prisma` nur den Provider, nicht die Connection URL. Zur Laufzeit konstruiert der NestJS `PrismaService` den Client mit `PrismaPg` aus `@prisma/adapter-pg`.
 
-Der Prisma Client Generator schreibt explizit nach `../../../node_modules/@prisma/client/.prisma/client`. Dadurch passen die generierten Dateien zum Importpfad von `@prisma/client` in lokalen npm-Workspaces und im Docker-Runtime-Image.
+Der Prisma Client Generator schreibt nach `apps/backend/src/generated/prisma`. Backend-Code importiert Prisma-Typen und `PrismaClient` ueber den stabilen Wrapper `apps/backend/src/prisma/client.ts`; Nest kopiert den generierten Client beim Build nach `dist/generated/prisma`. Dadurch haengt der Docker-Build nicht vom internen `@prisma/client/.prisma` Layout ab.
 
 Details stehen in `DATABASE.md`.
 

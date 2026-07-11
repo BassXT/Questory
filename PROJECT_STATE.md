@@ -28,7 +28,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - JSON-Syntax der drei `package.json` Dateien erfolgreich geprueft.
 - `package-lock.json` erzeugt und Dependencies mit `npm ci` erfolgreich installiert.
 - Prisma 7 kompatibel konfiguriert ueber `apps/backend/prisma.config.ts`.
-- Prisma Client Generator schreibt explizit nach `../../../node_modules/@prisma/client/.prisma/client`, damit lokale Workspace-Builds und Docker-Runtime-Builds dieselben `@prisma/client` Exporte finden.
+- Prisma Client Generator schreibt nach `apps/backend/src/generated/prisma`; Backend-Code importiert Prisma-Typen und `PrismaClient` ueber den stabilen Wrapper `apps/backend/src/prisma/client.ts`.
 - TypeScript fuer Tooling-Kompatibilitaet auf `5.9.3` gepinnt.
 - `npm run prisma:generate` erfolgreich ausgefuehrt.
 - `npm run build` erfolgreich ausgefuehrt.
@@ -111,6 +111,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Reward-Einloesungsverwaltung fuer Eltern angelegt: `GET /api/reward-redemptions`, `POST /api/reward-redemptions/:redemptionId/approve`, `POST /api/reward-redemptions/:redemptionId/reject` und `POST /api/reward-redemptions/:redemptionId/mark-redeemed`.
 - Reward-Einloesungsverwaltung prueft Familiengrenzen und erlaubt Statuswechsel nur von `REQUESTED` zu `APPROVED`/`REJECTED` sowie von `APPROVED` zu `REDEEMED`.
 - Reward-Bestaetigung zieht Muenzen anhand des gespeicherten `coinCost` transaktional ab.
+- Portainer-Build-Fehler bei `npm run build -w apps/backend` nach Prisma-Output-Aenderung behoben, indem Backend-Imports auf einen stabilen Prisma-Wrapper und Nest-Asset-Copy fuer den generierten Client umgestellt wurden.
 
 ## Offene Aufgaben
 
@@ -140,7 +141,7 @@ Als naechstes den Reward-Einloesungsverwaltungs-Slice im Portainer-Stack redeplo
 - Die erste Frontend-Oberflaeche nutzt Material UI und einfache CSS-Grid-Layouts, um nicht von experimentellen Layout-APIs abzuhaengen.
 - Das aktuelle Scaffold wurde manuell erstellt, weil der NestJS-Generator wegen fehlendem Speicherplatz auf `C:` abgebrochen ist.
 - Prisma 7 verwendet `prisma.config.ts`; die Datenbank-URL liegt nicht mehr in `schema.prisma`.
-- Der Prisma Client Output ist im Schema explizit auf `node_modules/@prisma/client/.prisma/client` gesetzt, weil `@prisma/client` in Prisma 7 diesen relativen Pfad importiert und der Workspace-Default sonst lokal nach `node_modules/.prisma/client` schreiben kann.
+- Der Prisma Client Output ist im Schema explizit auf `../src/generated/prisma` gesetzt. Nest kopiert `src/generated/prisma` als Asset nach `dist/generated/prisma`, damit Docker-Build und Runtime nicht vom internen `@prisma/client/.prisma` Layout abhaengen.
 - TypeScript bleibt vorerst auf `5.9.3`, weil Nest CLI mit TypeScript 7 aktuell nicht sauber baut.
 - Ziel-Deployment ist ein Proxmox-LXC. Die konkrete Betriebsart wird spaeter dokumentiert, voraussichtlich mit Docker/Podman im LXC oder Compose auf einer passenden Container-/VM-Umgebung.
 - Fuer den Homelab-Start wird Portainer als Stack-Verwaltung genutzt.

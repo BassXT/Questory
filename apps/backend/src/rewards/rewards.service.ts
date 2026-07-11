@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { RewardRedemptionStatus, Role } from '@prisma/client';
+import { RewardRedemptionStatus, Role } from '../prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRewardDto } from './dto/create-reward.dto';

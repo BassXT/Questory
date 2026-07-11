@@ -1,4 +1,4 @@
-import { QuestFrequency, QuestType } from '@prisma/client';
+import { QuestFrequency, QuestType } from '../../prisma/client';
 import {
   IsBoolean,
   IsIn,

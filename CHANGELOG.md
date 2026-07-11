@@ -23,7 +23,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - React/Vite/Material-UI-Frontend-Skelett mit erster Questory-Startseite erstellt.
 - `package-lock.json` erzeugt und Dependencies erfolgreich installiert.
 - Prisma 7 Konfiguration ueber `apps/backend/prisma.config.ts` ergaenzt.
-- Prisma Client Generator Output fuer Workspace- und Docker-Kompatibilitaet explizit gesetzt.
+- Prisma Client Generator Output auf `apps/backend/src/generated/prisma` gesetzt und stabilen Backend-Wrapper fuer Prisma-Imports ergaenzt.
 - TypeScript fuer Backend und Frontend auf `5.9.3` gepinnt.
 - Frontend-Typisierung fuer Material UI 9 angepasst.
 - `.dockerignore` ergaenzt.
@@ -116,6 +116,11 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Prisma-Schema nach Reward-Einloesungsverwaltungs-Implementierung erfolgreich validiert.
 - Backend- und Frontend-Build nach Reward-Einloesungsverwaltungs-Implementierung erfolgreich ausgefuehrt.
 - Prisma Client nach expliziter Output-Pfad-Konfiguration erfolgreich neu generiert.
+- Backend-Build mit generiertem Prisma Client unter `dist/generated/prisma` erfolgreich geprueft.
+
+### Fixed
+
+- Prisma Client Importpfad fuer Portainer/Docker-Builds stabilisiert, damit `npm run build -w apps/backend` nicht vom internen `@prisma/client/.prisma` Layout abhaengt.
 
 ### Known Issues
 

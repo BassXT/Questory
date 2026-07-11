@@ -1,4 +1,4 @@
-import { RewardRedemptionStatus } from '@prisma/client';
+import { RewardRedemptionStatus } from '../../prisma/client';
 import { IsEnum, IsOptional, IsUUID } from 'class-validator';
 
 export class ListRewardRedemptionsQueryDto {
