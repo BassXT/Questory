@@ -147,19 +147,19 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Frontend-Quest-Abschluss-Slice per API-Script erfolgreich.
 - LXC-Frontend-Test des Quest-Abschluss-Workflows unter `http://192.168.1.98:5173` erfolgreich: offene Zuweisung einreichen, Status `Eingereicht`, Button gesperrt, Status nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Elternfreigabe fuer Quest-Abschluesse angelegt: eingereichte Zuweisungen koennen direkt bestaetigt oder abgelehnt werden; nach Bestaetigung werden Dashboard, Kinder-XP und Muenzen neu geladen.
+- Portainer-Redeploy nach Frontend-Elternfreigabe-Slice per API-Script erfolgreich.
+- LXC-Frontend-Test der Elternfreigabe unter `http://192.168.1.98:5173` erfolgreich: eingereichte Quest bestaetigen, XP/Muenzen sichtbar aktualisieren, neue Quest einreichen und ablehnen, Status nach Reload erhalten, `Erneut einreichen` verfuegbar und mobile Ansicht ohne horizontalen Overflow.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Portainer-Redeploy nach Frontend-Elternfreigabe-Slice ausfuehren.
-- LXC-Test fuer Frontend-Elternfreigabe unter `http://192.168.1.98:5173` ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Frontend-Elternfreigabe-Slice im Portainer-Stack redeployen und im Browser gegen das LXC-Backend testen. Danach folgt der Frontend-Reward-Verwaltungs-Slice.
+Als naechstes den Frontend-Reward-Verwaltungs-Slice umsetzen: Belohnungen anlegen, aktive/inaktive Rewards anzeigen und danach Shop/Einloesung im Frontend verdrahten.
 
 ## Architekturentscheidungen
 
