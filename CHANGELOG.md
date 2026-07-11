@@ -138,6 +138,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Browser-Test des Frontends unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Dashboard, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Build nach Kinderprofil-Workflow erfolgreich ausgefuehrt.
 - Lokaler Browser-Test des Kinderprofil-Workflows gegen das LXC-Backend erfolgreich: Kind anlegen, Dashboard-/Kinderzaehler aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy nach Frontend-Kinderprofil-Slice erfolgreich.
+- LXC-Browser-Test des Kinderprofil-Workflows unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Kind anlegen, Dashboard-/Kinderzaehler aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 
