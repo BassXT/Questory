@@ -169,6 +169,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Browser-Test der Reward-Verwaltung unter `http://192.168.1.98:5173` erfolgreich: Reward anlegen, Preis/Kategorie/Limit anzeigen, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Build nach Reward-Shop-Workflow erfolgreich ausgefuehrt.
 - Lokaler Browser-Test des Reward-Shop-Workflows gegen das LXC-Backend erfolgreich: Kind mit Coins vorbereiten, Shop laden, Reward beantragen, offene Reward-Metrik aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy nach Frontend-Reward-Shop-Slice per API-Script erfolgreich.
+- LXC-Browser-Test des Reward-Shop-Workflows unter `http://192.168.1.98:5173` erfolgreich: Reward beantragen, offene Reward-Metrik aktualisieren, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 
