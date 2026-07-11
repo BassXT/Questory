@@ -109,6 +109,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-API-Tests fuer Reward-Shop, aktive Rewards, Ausschluss inaktiver Rewards, Sortierung und unbekanntes Kind erfolgreich ausgefuehrt.
 - Prisma-Schema nach Reward-Einloesungs-Implementierung erfolgreich validiert.
 - Backend- und Frontend-Build nach Reward-Einloesungs-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Reward-Einloesungs-Slice erfolgreich.
+- LXC-API-Tests fuer Reward-Einloesung, `REQUESTED`-Anfragen, direkte `APPROVED`-Einloesungen, Coin-Abzug, Einloesungslimit und unzureichende Muenzen erfolgreich ausgefuehrt.
 
 ### Known Issues
 

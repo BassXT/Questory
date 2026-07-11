@@ -1,12 +1,12 @@
 # PROJECT_STATE.md
 
-Letzte Aktualisierung: 2026-07-10
+Letzte Aktualisierung: 2026-07-11
 
 Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den aktuellen Projektstand, offene Aufgaben, Architekturentscheidungen und bekannte Probleme.
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung und Reward-Shop sind auf dem LXC implementiert und getestet. Reward-Einloesung/Beantragung ist lokal implementiert und wartet auf Portainer-Redeploy plus LXC-Test. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop und Reward-Einloesung/Beantragung sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -105,21 +105,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Reward-Einloesung prueft Familiengrenzen, Kinderbesitz bei Rolle `CHILD`, aktive Rewards, genug Muenzen und maximale Einloesungen.
 - Rewards mit `requiresApproval: true` erzeugen eine Anfrage mit Status `REQUESTED`, ohne Muenzen abzuziehen.
 - Rewards mit `requiresApproval: false` erzeugen direkt Status `APPROVED` und ziehen Muenzen transaktional ab.
+- Portainer-Redeploy nach Reward-Einloesungs-Slice erfolgreich.
+- LXC-Tests fuer `POST /api/rewards/:rewardId/redeem`, `REQUESTED`-Anfragen, direkte `APPROVED`-Einloesungen, Coin-Abzug, Einloesungslimit und unzureichende Muenzen erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Portainer-Redeploy nach Reward-Einloesungs-Slice ausfuehren.
-- LXC-Tests fuer `POST /api/rewards/:rewardId/redeem`, `REQUESTED`-Anfragen, direkte `APPROVED`-Einloesungen und Coin-Abzug ausfuehren.
 - Reward-Einloesungsverwaltung fuer Eltern implementieren: Anfragen listen, bestaetigen, ablehnen und als eingeloest markieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Reward-Einloesungs-Slice im Portainer-Stack redeployen und per LXC-API testen. Danach folgt die Elternverwaltung fuer Reward-Einloesungen.
+Als naechstes die Elternverwaltung fuer Reward-Einloesungen implementieren: Anfragen listen, bestaetigen, ablehnen und als eingeloest markieren.
 
 ## Architekturentscheidungen
 
