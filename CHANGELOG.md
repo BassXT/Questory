@@ -143,6 +143,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Browser-Test des Kinderprofil-Workflows unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Kind anlegen, Dashboard-/Kinderzaehler aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Build nach Quest-Vorlagen-Workflow erfolgreich ausgefuehrt.
 - Lokaler Browser-Test des Quest-Vorlagen-Workflows gegen das LXC-Backend erfolgreich: Quest anlegen, aktive Quest-Metrik aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy nach Frontend-Quest-Vorlagen-Slice erfolgreich.
+- LXC-Browser-Test des Quest-Vorlagen-Workflows unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Quest anlegen, aktive Quest-Metrik aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 
