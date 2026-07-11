@@ -61,6 +61,7 @@ Aktuell vorhanden:
 - `FamiliesModule` fuer den aktuellen Familienkontext
 - `UsersModule` fuer Benutzerliste und neue Eltern-/Kinderbenutzer
 - `ChildrenModule` fuer Kinderprofile und kindbezogene Statistik-Read-Models
+- `DashboardModule` fuer familienweite Startseiten-Read-Models
 - `QuestsModule` fuer Quest-Vorlagen
 - `QuestAssignmentsModule` fuer die Zuweisung von Quests an Kinder
 - `RewardsModule` fuer Belohnungen im Familienshop

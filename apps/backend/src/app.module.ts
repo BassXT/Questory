@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { ChildrenModule } from './children/children.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { FamiliesModule } from './families/families.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { QuestAssignmentsModule } from './quest-assignments/quest-assignments.module';
@@ -19,6 +20,7 @@ import { UsersModule } from './users/users.module';
     PrismaModule,
     AuthModule,
     ChildrenModule,
+    DashboardModule,
     FamiliesModule,
     QuestAssignmentsModule,
     QuestsModule,

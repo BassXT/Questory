@@ -558,6 +558,63 @@ Optionale Query-Parameter:
 
 Gibt Dashboard-Daten fuer den aktuellen Benutzer zurueck.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Hinweise:
+
+- Eltern/Admin erhalten eine Familienuebersicht.
+- Kinder mit eigenem Login erhalten eine auf ihr Kinderprofil begrenzte Uebersicht.
+- Der Endpunkt ist ein Read-Model fuer Startseiten und soll haeufig benoetigte Dashboard-Zahlen buendeln.
+
+Response:
+
+```json
+{
+  "family": {
+    "id": "family-uuid",
+    "name": "Familie Beispiel"
+  },
+  "scope": "FAMILY",
+  "children": [
+    {
+      "id": "child-profile-uuid",
+      "displayName": "Mika",
+      "level": 1,
+      "xp": 25,
+      "coins": 14
+    }
+  ],
+  "totals": {
+    "children": 1,
+    "parents": 1,
+    "childUsers": 0,
+    "activeQuests": 3,
+    "activeRewards": 4,
+    "xp": 25,
+    "coins": 14
+  },
+  "quests": {
+    "assigned": 1,
+    "submitted": 0,
+    "approved": 1,
+    "rejected": 0,
+    "totalCompletions": 1,
+    "xpGranted": 25,
+    "coinsGranted": 20
+  },
+  "rewards": {
+    "requested": 1,
+    "approved": 0,
+    "redeemed": 1,
+    "rejected": 1,
+    "totalRedemptions": 3,
+    "coinsSpent": 6
+  }
+}
+```
+
 ### `GET /api/children/{childId}/stats`
 
 Gibt Statistiken fuer ein Kind zurueck.
