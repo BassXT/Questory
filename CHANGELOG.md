@@ -127,6 +127,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-API-Test fuer Kinder-Statistik mit Quest-Fortschritt, XP, Coins, Reward-Ausgaben, Reward-Statuszaehlern und unbekanntem Kind erfolgreich ausgefuehrt.
 - Prisma-Schema nach Dashboard-Summary-Implementierung erfolgreich validiert.
 - Backend-Build nach Dashboard-Summary-Implementierung erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Dashboard-Summary-Slice erfolgreich.
+- LXC-API-Test fuer Dashboard-Summary mit Familienuebersicht, Quest-Fortschritt, XP, Coins, aktiven Rewards, Reward-Ausgaben und offenen Reward-Anfragen erfolgreich ausgefuehrt.
 
 ### Fixed
 
