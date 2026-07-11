@@ -63,6 +63,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Dashboard-Summary-Endpunkt `GET /api/dashboard` erstellt.
 - Frontend-Grundlayout mit Login, Registrierung, Session-Speicherung, Dashboard-Load, Refresh und Logout erstellt.
 - Frontend-Kinderprofil-Workflow mit Kinderliste, Kinderanlage, Formular-Reset und Dashboard-Aktualisierung erstellt.
+- Frontend-Quest-Vorlagen-Workflow mit Quest-Liste, Quest-Erstellung, Typ/Frequenz-Auswahl, XP-/Muenzen-Feldern und Aktiv-/Bestaetigungs-Schaltern erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -140,6 +141,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Lokaler Browser-Test des Kinderprofil-Workflows gegen das LXC-Backend erfolgreich: Kind anlegen, Dashboard-/Kinderzaehler aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Kinderprofil-Slice erfolgreich.
 - LXC-Browser-Test des Kinderprofil-Workflows unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Kind anlegen, Dashboard-/Kinderzaehler aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Build nach Quest-Vorlagen-Workflow erfolgreich ausgefuehrt.
+- Lokaler Browser-Test des Quest-Vorlagen-Workflows gegen das LXC-Backend erfolgreich: Quest anlegen, aktive Quest-Metrik aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 

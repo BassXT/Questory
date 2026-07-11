@@ -16,9 +16,12 @@ import {
   Chip,
   Container,
   Divider,
+  FormControlLabel,
   LinearProgress,
+  MenuItem,
   Paper,
   Stack,
+  Switch,
   Tab,
   Tabs,
   TextField,
@@ -31,6 +34,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000
 const TOKEN_STORAGE_KEY = 'questory.accessToken';
 
 type AuthMode = 'login' | 'register';
+type QuestType = 'ONE_TIME' | 'RECURRING';
+type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
 
 interface AuthUser {
   id: string;
@@ -102,6 +107,22 @@ interface ChildProfile {
   updatedAt: string;
 }
 
+interface QuestTemplate {
+  id: string;
+  familyId: string;
+  title: string;
+  description: string | null;
+  type: QuestType;
+  frequency: QuestFrequency;
+  xpReward: number;
+  coinReward: number;
+  requiresApproval: boolean;
+  isActive: boolean;
+  createdByUserId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
 interface AuthFormState {
   familyName: string;
   displayName: string;
@@ -112,6 +133,17 @@ interface AuthFormState {
 interface ChildFormState {
   displayName: string;
   avatarKey: string;
+}
+
+interface QuestFormState {
+  title: string;
+  description: string;
+  type: QuestType;
+  frequency: QuestFrequency;
+  xpReward: string;
+  coinReward: string;
+  requiresApproval: boolean;
+  isActive: boolean;
 }
 
 const initialAuthForm: AuthFormState = {
@@ -126,17 +158,31 @@ const initialChildForm: ChildFormState = {
   avatarKey: ''
 };
 
+const initialQuestForm: QuestFormState = {
+  title: '',
+  description: '',
+  type: 'ONE_TIME',
+  frequency: 'NONE',
+  xpReward: '25',
+  coinReward: '5',
+  requiresApproval: true,
+  isActive: true
+};
+
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
   const [childForm, setChildForm] = useState<ChildFormState>(initialChildForm);
+  const [questForm, setQuestForm] = useState<QuestFormState>(initialQuestForm);
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_STORAGE_KEY));
   const [user, setUser] = useState<AuthUser | null>(null);
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
   const [children, setChildren] = useState<ChildProfile[]>([]);
+  const [quests, setQuests] = useState<QuestTemplate[]>([]);
   const [authLoading, setAuthLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
   const [childSaving, setChildSaving] = useState(false);
+  const [questSaving, setQuestSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isAuthenticated = Boolean(token);
@@ -146,6 +192,7 @@ function App() {
       setUser(null);
       setDashboard(null);
       setChildren([]);
+      setQuests([]);
       return;
     }
 
@@ -155,14 +202,16 @@ function App() {
   async function loadSession(activeToken: string) {
     try {
       setDashboardLoading(true);
-      const [currentUser, dashboardData, childData] = await Promise.all([
+      const [currentUser, dashboardData, childData, questData] = await Promise.all([
         apiRequest<AuthUser>('/auth/me', { token: activeToken }),
         apiRequest<DashboardResponse>('/dashboard', { token: activeToken }),
-        apiRequest<ChildProfile[]>('/children', { token: activeToken })
+        apiRequest<ChildProfile[]>('/children', { token: activeToken }),
+        apiRequest<QuestTemplate[]>('/quests', { token: activeToken })
       ]);
       setUser(currentUser);
       setDashboard(dashboardData);
       setChildren(childData);
+      setQuests(questData);
       setError(null);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
@@ -216,12 +265,14 @@ function App() {
     setError(null);
 
     try {
-      const [dashboardData, childData] = await Promise.all([
+      const [dashboardData, childData, questData] = await Promise.all([
         apiRequest<DashboardResponse>('/dashboard', { token }),
-        apiRequest<ChildProfile[]>('/children', { token })
+        apiRequest<ChildProfile[]>('/children', { token }),
+        apiRequest<QuestTemplate[]>('/quests', { token })
       ]);
       setDashboard(dashboardData);
       setChildren(childData);
+      setQuests(questData);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
@@ -257,6 +308,40 @@ function App() {
     }
   }
 
+  async function submitQuest(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!token) {
+      return;
+    }
+
+    setQuestSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<QuestTemplate>('/quests', {
+        method: 'POST',
+        token,
+        body: {
+          title: questForm.title,
+          description: questForm.description || undefined,
+          type: questForm.type,
+          frequency: questForm.type === 'ONE_TIME' ? 'NONE' : questForm.frequency,
+          xpReward: Number(questForm.xpReward),
+          coinReward: Number(questForm.coinReward),
+          requiresApproval: questForm.requiresApproval,
+          isActive: questForm.isActive
+        }
+      });
+      setQuestForm(initialQuestForm);
+      await refreshDashboard();
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setQuestSaving(false);
+    }
+  }
+
   function logout() {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
@@ -264,6 +349,8 @@ function App() {
     setDashboard(null);
     setChildren([]);
     setChildForm(initialChildForm);
+    setQuests([]);
+    setQuestForm(initialQuestForm);
   }
 
   return (
@@ -288,9 +375,14 @@ function App() {
               children={children}
               dashboard={dashboard}
               loading={dashboardLoading}
+              questForm={questForm}
+              questSaving={questSaving}
+              quests={quests}
               user={user}
               onChildFormChange={setChildForm}
               onChildSubmit={submitChild}
+              onQuestFormChange={setQuestForm}
+              onQuestSubmit={submitQuest}
             />
           ) : (
             <AuthView
@@ -517,9 +609,14 @@ interface DashboardViewProps {
   children: ChildProfile[];
   dashboard: DashboardResponse | null;
   loading: boolean;
+  questForm: QuestFormState;
+  questSaving: boolean;
+  quests: QuestTemplate[];
   user: AuthUser | null;
   onChildFormChange: (form: ChildFormState) => void;
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onQuestFormChange: (form: QuestFormState) => void;
+  onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 function DashboardView({
@@ -528,9 +625,14 @@ function DashboardView({
   children,
   dashboard,
   loading,
+  questForm,
+  questSaving,
+  quests,
   user,
   onChildFormChange,
-  onChildSubmit
+  onChildSubmit,
+  onQuestFormChange,
+  onQuestSubmit
 }: DashboardViewProps) {
   const childRows = children;
   const xpMax = useMemo(() => Math.max(...childRows.map((child) => child.xp), 1), [childRows]);
@@ -656,7 +758,173 @@ function DashboardView({
           </Stack>
         </Paper>
       </Box>
+
+      <QuestTemplatesPanel
+        canManage={canManageChildren}
+        form={questForm}
+        quests={quests}
+        saving={questSaving}
+        onFormChange={onQuestFormChange}
+        onSubmit={onQuestSubmit}
+      />
     </Stack>
+  );
+}
+
+interface QuestTemplatesPanelProps {
+  canManage: boolean;
+  form: QuestFormState;
+  quests: QuestTemplate[];
+  saving: boolean;
+  onFormChange: (form: QuestFormState) => void;
+  onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+function QuestTemplatesPanel({
+  canManage,
+  form,
+  quests,
+  saving,
+  onFormChange,
+  onSubmit
+}: QuestTemplatesPanelProps) {
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<TaskAltRoundedIcon />} title="Quest-Vorlagen" />
+          <Chip icon={<TaskAltRoundedIcon />} label={`${quests.length} Vorlagen`} variant="outlined" />
+        </Box>
+
+        {canManage ? (
+          <Box
+            component="form"
+            onSubmit={onSubmit}
+            sx={{
+              bgcolor: 'action.hover',
+              borderRadius: 2,
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
+              p: 1.5
+            }}
+          >
+            <TextField
+              autoComplete="off"
+              label="Quest"
+              onChange={(event) => onFormChange({ ...form, title: event.target.value })}
+              required
+              size="small"
+              value={form.title}
+            />
+            <TextField
+              autoComplete="off"
+              label="Beschreibung"
+              onChange={(event) => onFormChange({ ...form, description: event.target.value })}
+              size="small"
+              value={form.description}
+            />
+            <TextField
+              label="Typ"
+              onChange={(event) => {
+                const type = event.target.value as QuestType;
+                onFormChange({
+                  ...form,
+                  type,
+                  frequency: type === 'ONE_TIME' ? 'NONE' : form.frequency === 'NONE' ? 'DAILY' : form.frequency
+                });
+              }}
+              select
+              size="small"
+              value={form.type}
+            >
+              <MenuItem value="ONE_TIME">Einmalig</MenuItem>
+              <MenuItem value="RECURRING">Wiederkehrend</MenuItem>
+            </TextField>
+            <TextField
+              disabled={form.type === 'ONE_TIME'}
+              label="Rhythmus"
+              onChange={(event) => onFormChange({ ...form, frequency: event.target.value as QuestFrequency })}
+              select
+              size="small"
+              value={form.type === 'ONE_TIME' ? 'NONE' : form.frequency}
+            >
+              <MenuItem value="NONE">Kein Rhythmus</MenuItem>
+              <MenuItem value="DAILY">Taeglich</MenuItem>
+              <MenuItem value="WEEKLY">Woechentlich</MenuItem>
+              <MenuItem value="CUSTOM">Individuell</MenuItem>
+            </TextField>
+            <TextField
+              label="XP"
+              onChange={(event) => onFormChange({ ...form, xpReward: event.target.value })}
+              required
+              size="small"
+              slotProps={{ htmlInput: { min: 0, max: 10000 } }}
+              type="number"
+              value={form.xpReward}
+            />
+            <TextField
+              label="Muenzen"
+              onChange={(event) => onFormChange({ ...form, coinReward: event.target.value })}
+              required
+              size="small"
+              slotProps={{ htmlInput: { min: 0, max: 10000 } }}
+              type="number"
+              value={form.coinReward}
+            />
+            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={form.requiresApproval}
+                    onChange={(event) => onFormChange({ ...form, requiresApproval: event.target.checked })}
+                    size="small"
+                  />
+                }
+                label="Bestaetigung"
+              />
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={form.isActive}
+                    onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
+                    size="small"
+                  />
+                }
+                label="Aktiv"
+              />
+            </Stack>
+            <Button
+              disabled={saving}
+              startIcon={<TaskAltRoundedIcon />}
+              sx={{ minHeight: 40 }}
+              type="submit"
+              variant="contained"
+            >
+              Erstellen
+            </Button>
+          </Box>
+        ) : null}
+
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
+          {quests.length > 0 ? (
+            quests.map((quest) => <QuestTemplateRow key={quest.id} quest={quest} />)
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">Noch keine Quest-Vorlagen</Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
   );
 }
 
@@ -749,6 +1017,56 @@ function ChildRow({ child, maxXp }: ChildRowProps) {
       <Chip icon={<PaidRoundedIcon />} label={child.coins} variant="outlined" />
     </Box>
   );
+}
+
+interface QuestTemplateRowProps {
+  quest: QuestTemplate;
+}
+
+function QuestTemplateRow({ quest }: QuestTemplateRowProps) {
+  return (
+    <Box
+      sx={{
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1,
+        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto' },
+        p: 1.5
+      }}
+    >
+      <Box sx={{ minWidth: 0 }}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <Typography sx={{ fontWeight: 900 }} noWrap>
+            {quest.title}
+          </Typography>
+          {!quest.isActive ? <Chip color="default" label="Inaktiv" size="small" /> : null}
+        </Stack>
+        {quest.description ? (
+          <Typography color="text.secondary" noWrap variant="body2">
+            {quest.description}
+          </Typography>
+        ) : null}
+      </Box>
+      <Chip label={quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(quest.frequency)} variant="outlined" />
+      <Chip icon={<EmojiEventsRoundedIcon />} label={`${quest.xpReward} XP`} variant="outlined" />
+      <Chip icon={<PaidRoundedIcon />} label={quest.coinReward} variant="outlined" />
+    </Box>
+  );
+}
+
+function frequencyLabel(frequency: QuestFrequency): string {
+  switch (frequency) {
+    case 'DAILY':
+      return 'Taeglich';
+    case 'WEEKLY':
+      return 'Woechentlich';
+    case 'CUSTOM':
+      return 'Individuell';
+    case 'NONE':
+    default:
+      return 'Kein Rhythmus';
+  }
 }
 
 interface SectionTitleProps {

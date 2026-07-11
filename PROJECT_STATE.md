@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard- und Kinderprofil-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard- und Kinderprofil-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Der Frontend-Quest-Vorlagen-Workflow ist lokal implementiert und gegen das LXC-Backend getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -133,17 +133,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Kinderprofil anlegen, Kinderzaehler aktualisieren, Kinderliste nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Kinderprofil-Slice erfolgreich.
 - LXC-Frontend-Test unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Kinderprofil anlegen, Kinderzaehler aktualisieren, Kinderliste nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Quest-Vorlagen-Workflow angelegt: Quest-Liste aus `GET /api/quests`, Quest-Erstellung ueber `POST /api/quests`, Typ/Frequenz-Auswahl, XP-/Muenzen-Felder, Aktiv-/Bestaetigungs-Schalter und Dashboard-Aktualisierung nach erfolgreicher Anlage.
+- Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Quest-Vorlage anlegen, aktive Quest-Metrik aktualisieren, Quest-Liste nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
+- Portainer-Redeploy nach Frontend-Quest-Vorlagen-Slice ausfuehren.
+- LXC-Test fuer Frontend-Quest-Vorlagen-Workflow unter `http://192.168.1.98:5173` ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes erste Frontend-Ansichten fuer Quest-Vorlagen umsetzen: Quest-Liste aus `GET /api/quests`, Quest-Erstellung ueber `POST /api/quests` und Vorbereitung fuer spaetere Quest-Zuweisungen an Kinderprofile.
+Als naechstes den Frontend-Quest-Vorlagen-Slice im Portainer-Stack redeployen und im Browser gegen das LXC-Backend testen. Danach folgt der Frontend-Workflow fuer Quest-Zuweisungen an Kinderprofile.
 
 ## Architekturentscheidungen
 
