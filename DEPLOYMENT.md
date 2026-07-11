@@ -109,6 +109,30 @@ Gepruefte URLs:
 - Frontend: `http://192.168.1.98:5173`
 - Backend Health-Check: `http://192.168.1.98:3001/api/health`
 
+## Lokaler Portainer-Redeploy per API
+
+Fuer wiederholte kleine Slices kann der Git-basierte Portainer Stack lokal ueber die Portainer API redeployed werden. Echte Zugangsdaten liegen nur lokal in `.env.local`; diese Datei wird nicht versioniert.
+
+Minimaler lokaler Inhalt:
+
+```text
+PORTAINER_URL=https://192.168.1.98:9443
+PORTAINER_API_KEY=<portainer-api-token>
+PORTAINER_ENDPOINT_ID=1
+PORTAINER_STACK_NAME=questory
+PORTAINER_SKIP_TLS_VERIFY=true
+PORTAINER_PULL_IMAGE=true
+PORTAINER_PRUNE=false
+```
+
+Redeploy:
+
+```bash
+npm run portainer:redeploy
+```
+
+Das Script `scripts/portainer-redeploy.mjs` sucht den Stack ueber Portainer, verwendet den tatsaechlichen Stack-Endpoint und ruft `PUT /api/stacks/{stackId}/git/redeploy?endpointId={endpointId}` auf. Secrets aus Stack-Environment-Variablen werden im Script-Output maskiert.
+
 ## Standard-URLs nach Deployment
 
 Wenn die Standardports verwendet werden:

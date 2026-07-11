@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil- und Quest-Vorlagen-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Der Frontend-Quest-Zuweisungs-Workflow ist lokal implementiert und gegen das LXC-Backend getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen- und Quest-Zuweisungs-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -139,19 +139,20 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Frontend-Test unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Quest-Vorlage anlegen, aktive Quest-Metrik aktualisieren, Quest-Liste nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Quest-Zuweisungs-Workflow angelegt: Kind und aktive Quest auswaehlen, optionales Faelligkeitsdatum setzen, `POST /api/quest-assignments` aufrufen und Zuweisungen fuer das ausgewaehlte Kind ueber `GET /api/children/:childId/quest-assignments` anzeigen.
 - Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Kind anlegen, Quest anlegen, Quest zuweisen, Zuweisungsliste nach Reload erhalten, Faelligkeitsdatum stabil anzeigen und mobile Ansicht ohne horizontalen Overflow.
+- Lokales Portainer-Redeploy-Script `scripts/portainer-redeploy.mjs` angelegt und ueber `npm run portainer:redeploy` erfolgreich gegen den Questory-Stack getestet.
+- Portainer-Redeploy nach Frontend-Quest-Zuweisungs-Slice per API-Script erfolgreich.
+- LXC-Frontend-Test des Quest-Zuweisungs-Workflows unter `http://192.168.1.98:5173` erfolgreich: Kind anlegen, Quest zuweisen, Faelligkeitsdatum anzeigen, Reload und mobile Ansicht ohne horizontalen Overflow.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Portainer-Redeploy nach Frontend-Quest-Zuweisungs-Slice ausfuehren.
-- LXC-Test fuer Frontend-Quest-Zuweisungs-Workflow unter `http://192.168.1.98:5173` ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Frontend-Quest-Zuweisungs-Slice im Portainer-Stack redeployen und im Browser gegen das LXC-Backend testen. Danach folgt der Frontend-Workflow fuer Quest-Abschluss-Einreichung durch Eltern/Kinder.
+Als naechstes den Frontend-Workflow fuer Quest-Abschluss-Einreichung durch Eltern/Kinder umsetzen: zugewiesene Quest aus der Kindansicht einreichen, Status sichtbar machen und Dashboard/Listen nach erfolgreicher Einreichung aktualisieren.
 
 ## Architekturentscheidungen
 
@@ -196,6 +197,7 @@ Als naechstes den Frontend-Quest-Zuweisungs-Slice im Portainer-Stack redeployen 
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
 - Docker-Builds nutzen Debian-slim Node-Images statt Alpine fuer Node-Stages, weil Vite/Rolldown und andere native npm-Abhaengigkeiten damit im Portainer-Build weniger an musl/Alpine-Bindings haengen.
 - Prisma Client wird im Backend-Runtime-Image nach `npm ci --omit=dev` erneut generiert, weil der generierte Client nicht automatisch Teil einer frischen Production-Installation ist.
+- Lokale Portainer-Automation nutzt `.env.local` fuer API-Zugangsdaten. Das Script sucht den Stack ueber Portainer und verwendet den tatsaechlichen Stack-Endpoint, damit ein falsch gesetzter lokaler `PORTAINER_ENDPOINT_ID` nicht versehentlich den Redeploy blockiert, solange der Stackname eindeutig ist.
 
 ## Bekannte Probleme
 

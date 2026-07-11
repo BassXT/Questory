@@ -65,6 +65,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Kinderprofil-Workflow mit Kinderliste, Kinderanlage, Formular-Reset und Dashboard-Aktualisierung erstellt.
 - Frontend-Quest-Vorlagen-Workflow mit Quest-Liste, Quest-Erstellung, Typ/Frequenz-Auswahl, XP-/Muenzen-Feldern und Aktiv-/Bestaetigungs-Schaltern erstellt.
 - Frontend-Quest-Zuweisungs-Workflow mit Kind-/Quest-Auswahl, optionalem Faelligkeitsdatum, Zuweisungserstellung und Zuweisungsliste pro Kind erstellt.
+- Lokales Portainer-Redeploy-Script `scripts/portainer-redeploy.mjs` erstellt und als `npm run portainer:redeploy` verfuegbar gemacht.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -148,6 +149,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Browser-Test des Quest-Vorlagen-Workflows unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Quest anlegen, aktive Quest-Metrik aktualisieren, Reload und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Build nach Quest-Zuweisungs-Workflow erfolgreich ausgefuehrt.
 - Lokaler Browser-Test des Quest-Zuweisungs-Workflows gegen das LXC-Backend erfolgreich: Kind und Quest anlegen, Quest zuweisen, Faelligkeitsdatum stabil anzeigen, Reload und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy per API-Script erfolgreich ausgefuehrt.
+- LXC-Browser-Test des Quest-Zuweisungs-Workflows unter `http://192.168.1.98:5173` erfolgreich: Kind anlegen, Quest zuweisen, Faelligkeitsdatum stabil anzeigen, Reload und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 

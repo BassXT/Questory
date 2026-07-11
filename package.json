@@ -17,6 +17,7 @@
     "build:frontend": "npm run build -w apps/frontend",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
+    "portainer:redeploy": "node scripts/portainer-redeploy.mjs",
     "prisma:generate": "npm run prisma:generate -w apps/backend",
     "prisma:migrate": "npm run prisma:migrate -w apps/backend"
   },
