@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung und Reward-Einloesungsverwaltung fuer Eltern sind auf dem LXC implementiert und getestet. Kinder-Statistik ist lokal implementiert und wartet auf Portainer-Redeploy plus LXC-Test. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern und Kinder-Statistik sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -117,6 +117,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Kinder-Statistik-Endpunkt `GET /api/children/:childId/stats` angelegt.
 - Kinder-Statistik liefert Fortschritt, Quest-Zusammenfassung, vergebene XP/Muenzen und Reward-Einloesungszahlen.
 - Kinder mit eigenem Login duerfen nur die eigene Statistik abrufen.
+- Portainer-Redeploy nach Kinder-Statistik-Slice erfolgreich.
+- LXC-Test fuer `GET /api/children/:childId/stats` mit Quest- und Reward-Daten, XP-/Coin-Werten, Reward-Ausgaben und unbekanntem Kind erfolgreich.
 
 ## Offene Aufgaben
 
@@ -124,13 +126,11 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
-- Portainer-Redeploy nach Kinder-Statistik-Slice ausfuehren.
-- LXC-Test fuer `GET /api/children/:childId/stats` mit Quest- und Reward-Daten ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Kinder-Statistik-Slice im Portainer-Stack redeployen und per LXC-API testen. Danach folgt ein Dashboard-Summary-Endpunkt oder der Einstieg ins Frontend-Grundlayout.
+Als naechstes folgt ein Dashboard-Summary-Endpunkt oder der Einstieg ins Frontend-Grundlayout.
 
 ## Architekturentscheidungen
 
