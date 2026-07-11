@@ -23,6 +23,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - React/Vite/Material-UI-Frontend-Skelett mit erster Questory-Startseite erstellt.
 - `package-lock.json` erzeugt und Dependencies erfolgreich installiert.
 - Prisma 7 Konfiguration ueber `apps/backend/prisma.config.ts` ergaenzt.
+- Prisma Client Generator Output fuer Workspace- und Docker-Kompatibilitaet explizit gesetzt.
 - TypeScript fuer Backend und Frontend auf `5.9.3` gepinnt.
 - Frontend-Typisierung fuer Material UI 9 angepasst.
 - `.dockerignore` ergaenzt.
@@ -57,6 +58,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Rewards-Modul mit `GET /api/rewards`, `POST /api/rewards` und `GET /api/rewards/:rewardId` erstellt.
 - Reward-Shop-Endpunkt `GET /api/children/:childId/shop` erstellt.
 - Reward-Einloesungs-Endpunkt `POST /api/rewards/:rewardId/redeem` erstellt.
+- Reward-Einloesungsverwaltung fuer Eltern mit Listen, Bestaetigen, Ablehnen und Markieren als eingeloest erstellt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
@@ -111,6 +113,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Backend- und Frontend-Build nach Reward-Einloesungs-Implementierung erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach Reward-Einloesungs-Slice erfolgreich.
 - LXC-API-Tests fuer Reward-Einloesung, `REQUESTED`-Anfragen, direkte `APPROVED`-Einloesungen, Coin-Abzug, Einloesungslimit und unzureichende Muenzen erfolgreich ausgefuehrt.
+- Prisma-Schema nach Reward-Einloesungsverwaltungs-Implementierung erfolgreich validiert.
+- Backend- und Frontend-Build nach Reward-Einloesungsverwaltungs-Implementierung erfolgreich ausgefuehrt.
+- Prisma Client nach expliziter Output-Pfad-Konfiguration erfolgreich neu generiert.
 
 ### Known Issues
 

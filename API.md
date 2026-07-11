@@ -487,13 +487,70 @@ Request:
 
 Eltern bestaetigen eine Belohnungsanfrage.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Die Einloesung muss zur aktuellen Familie gehoeren.
+- Nur Einloesungen mit Status `REQUESTED` koennen bestaetigt werden.
+- Beim Bestaetigen werden die in `coinCost` gespeicherten Muenzen vom Kinderprofil abgezogen.
+- Falls das Kind nicht mehr genug Muenzen besitzt, wird die Bestaetigung abgelehnt.
+
 ### `POST /api/reward-redemptions/{redemptionId}/reject`
 
 Eltern lehnen eine Belohnungsanfrage ab.
 
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Nur Einloesungen mit Status `REQUESTED` koennen abgelehnt werden.
+- Es werden keine Muenzen abgezogen.
+
+Request:
+
+```json
+{
+  "rejectionReason": "Heute passt es leider nicht."
+}
+```
+
 ### `POST /api/reward-redemptions/{redemptionId}/mark-redeemed`
 
 Markiert eine Belohnung als eingeloest.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Nur Einloesungen mit Status `APPROVED` koennen als eingeloest markiert werden.
+
+### `GET /api/reward-redemptions`
+
+Listet Belohnungseinloesungen der aktuellen Familie.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Optionale Query-Parameter:
+
+- `childProfileId`: filtert auf ein Kinderprofil.
+- `status`: filtert auf `REQUESTED`, `APPROVED`, `REJECTED` oder `REDEEMED`.
 
 ## Dashboard und Statistiken
 

@@ -64,6 +64,7 @@ Aktuell vorhanden:
 - `QuestsModule` fuer Quest-Vorlagen
 - `QuestAssignmentsModule` fuer die Zuweisung von Quests an Kinder
 - `RewardsModule` fuer Belohnungen im Familienshop
+- `RewardRedemptionsController` im `RewardsModule` fuer Einloeseanfragen, Bestaetigung, Ablehnung und Ausgabe
 - Prisma-Schema unter `apps/backend/prisma/schema.prisma`
 - Prisma-CLI-Konfiguration unter `apps/backend/prisma.config.ts`
 
@@ -119,6 +120,8 @@ ORM: Prisma.
 Das Prisma-Schema startet mit Familien, Benutzern, Kindern, Aufgaben, Aufgabenabschluessen, Belohnungen und Einloesungen. Erweiterungen wie Badges, Streaks und Sammelobjekte werden spaeter modular ergaenzt.
 
 Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Deshalb enthaelt `schema.prisma` nur den Provider, nicht die Connection URL. Zur Laufzeit konstruiert der NestJS `PrismaService` den Client mit `PrismaPg` aus `@prisma/adapter-pg`.
+
+Der Prisma Client Generator schreibt explizit nach `../../../node_modules/@prisma/client/.prisma/client`. Dadurch passen die generierten Dateien zum Importpfad von `@prisma/client` in lokalen npm-Workspaces und im Docker-Runtime-Image.
 
 Details stehen in `DATABASE.md`.
 

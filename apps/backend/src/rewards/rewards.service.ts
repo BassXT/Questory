@@ -3,7 +3,9 @@ import { RewardRedemptionStatus, Role } from '@prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateRewardDto } from './dto/create-reward.dto';
+import { ListRewardRedemptionsQueryDto } from './dto/list-reward-redemptions-query.dto';
 import { RedeemRewardDto } from './dto/redeem-reward.dto';
+import { RejectRewardRedemptionDto } from './dto/reject-reward-redemption.dto';
 
 const rewardSelect = {
   id: true,
@@ -231,6 +233,177 @@ export class RewardsService {
           approvedByUserId: user.role === Role.CHILD ? null : user.sub,
           coinCost: reward.price
         },
+        select: rewardRedemptionSelect
+      });
+    });
+  }
+
+  listRewardRedemptions(user: AuthenticatedUser, query: ListRewardRedemptionsQueryDto) {
+    return this.prisma.rewardRedemption.findMany({
+      where: {
+        status: query.status,
+        childProfileId: query.childProfileId,
+        childProfile: {
+          familyId: user.familyId
+        }
+      },
+      orderBy: [{ requestedAt: 'desc' }],
+      select: rewardRedemptionSelect
+    });
+  }
+
+  async approveRewardRedemption(user: AuthenticatedUser, redemptionId: string) {
+    const redemption = await this.prisma.rewardRedemption.findFirst({
+      where: {
+        id: redemptionId,
+        childProfile: {
+          familyId: user.familyId
+        }
+      },
+      select: {
+        id: true,
+        status: true,
+        childProfileId: true,
+        coinCost: true
+      }
+    });
+
+    if (!redemption) {
+      throw new NotFoundException('Reward redemption not found.');
+    }
+
+    if (redemption.status !== RewardRedemptionStatus.REQUESTED) {
+      throw new ConflictException('Only requested reward redemptions can be approved.');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const redemptionUpdate = await tx.rewardRedemption.updateMany({
+        where: {
+          id: redemptionId,
+          status: RewardRedemptionStatus.REQUESTED
+        },
+        data: {
+          status: RewardRedemptionStatus.APPROVED,
+          approvedAt: new Date(),
+          approvedByUserId: user.sub
+        }
+      });
+
+      if (redemptionUpdate.count !== 1) {
+        throw new ConflictException('Only requested reward redemptions can be approved.');
+      }
+
+      const childUpdate = await tx.childProfile.updateMany({
+        where: {
+          id: redemption.childProfileId,
+          coins: { gte: redemption.coinCost }
+        },
+        data: {
+          coins: { decrement: redemption.coinCost }
+        }
+      });
+
+      if (childUpdate.count !== 1) {
+        throw new BadRequestException('Child does not have enough coins for this reward.');
+      }
+
+      return tx.rewardRedemption.findUniqueOrThrow({
+        where: { id: redemptionId },
+        select: rewardRedemptionSelect
+      });
+    });
+  }
+
+  async rejectRewardRedemption(
+    user: AuthenticatedUser,
+    redemptionId: string,
+    dto: RejectRewardRedemptionDto
+  ) {
+    const redemption = await this.prisma.rewardRedemption.findFirst({
+      where: {
+        id: redemptionId,
+        childProfile: {
+          familyId: user.familyId
+        }
+      },
+      select: {
+        id: true,
+        status: true
+      }
+    });
+
+    if (!redemption) {
+      throw new NotFoundException('Reward redemption not found.');
+    }
+
+    if (redemption.status !== RewardRedemptionStatus.REQUESTED) {
+      throw new ConflictException('Only requested reward redemptions can be rejected.');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const updateResult = await tx.rewardRedemption.updateMany({
+        where: {
+          id: redemptionId,
+          status: RewardRedemptionStatus.REQUESTED
+        },
+        data: {
+          status: RewardRedemptionStatus.REJECTED,
+          rejectedAt: new Date(),
+          rejectionReason: dto.rejectionReason?.trim() || null
+        }
+      });
+
+      if (updateResult.count !== 1) {
+        throw new ConflictException('Only requested reward redemptions can be rejected.');
+      }
+
+      return tx.rewardRedemption.findUniqueOrThrow({
+        where: { id: redemptionId },
+        select: rewardRedemptionSelect
+      });
+    });
+  }
+
+  async markRewardRedemptionRedeemed(user: AuthenticatedUser, redemptionId: string) {
+    const redemption = await this.prisma.rewardRedemption.findFirst({
+      where: {
+        id: redemptionId,
+        childProfile: {
+          familyId: user.familyId
+        }
+      },
+      select: {
+        id: true,
+        status: true
+      }
+    });
+
+    if (!redemption) {
+      throw new NotFoundException('Reward redemption not found.');
+    }
+
+    if (redemption.status !== RewardRedemptionStatus.APPROVED) {
+      throw new ConflictException('Only approved reward redemptions can be marked as redeemed.');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const updateResult = await tx.rewardRedemption.updateMany({
+        where: {
+          id: redemptionId,
+          status: RewardRedemptionStatus.APPROVED
+        },
+        data: {
+          status: RewardRedemptionStatus.REDEEMED,
+          redeemedAt: new Date()
+        }
+      });
+
+      if (updateResult.count !== 1) {
+        throw new ConflictException('Only approved reward redemptions can be marked as redeemed.');
+      }
+
+      return tx.rewardRedemption.findUniqueOrThrow({
+        where: { id: redemptionId },
         select: rewardRedemptionSelect
       });
     });

@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop und Reward-Einloesung/Beantragung sind auf dem LXC implementiert und getestet. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop und Reward-Einloesung/Beantragung sind auf dem LXC implementiert und getestet. Reward-Einloesungsverwaltung fuer Eltern ist lokal implementiert und wartet auf Portainer-Redeploy plus LXC-Test. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -28,6 +28,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - JSON-Syntax der drei `package.json` Dateien erfolgreich geprueft.
 - `package-lock.json` erzeugt und Dependencies mit `npm ci` erfolgreich installiert.
 - Prisma 7 kompatibel konfiguriert ueber `apps/backend/prisma.config.ts`.
+- Prisma Client Generator schreibt explizit nach `../../../node_modules/@prisma/client/.prisma/client`, damit lokale Workspace-Builds und Docker-Runtime-Builds dieselben `@prisma/client` Exporte finden.
 - TypeScript fuer Tooling-Kompatibilitaet auf `5.9.3` gepinnt.
 - `npm run prisma:generate` erfolgreich ausgefuehrt.
 - `npm run build` erfolgreich ausgefuehrt.
@@ -107,19 +108,23 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Rewards mit `requiresApproval: false` erzeugen direkt Status `APPROVED` und ziehen Muenzen transaktional ab.
 - Portainer-Redeploy nach Reward-Einloesungs-Slice erfolgreich.
 - LXC-Tests fuer `POST /api/rewards/:rewardId/redeem`, `REQUESTED`-Anfragen, direkte `APPROVED`-Einloesungen, Coin-Abzug, Einloesungslimit und unzureichende Muenzen erfolgreich.
+- Reward-Einloesungsverwaltung fuer Eltern angelegt: `GET /api/reward-redemptions`, `POST /api/reward-redemptions/:redemptionId/approve`, `POST /api/reward-redemptions/:redemptionId/reject` und `POST /api/reward-redemptions/:redemptionId/mark-redeemed`.
+- Reward-Einloesungsverwaltung prueft Familiengrenzen und erlaubt Statuswechsel nur von `REQUESTED` zu `APPROVED`/`REJECTED` sowie von `APPROVED` zu `REDEEMED`.
+- Reward-Bestaetigung zieht Muenzen anhand des gespeicherten `coinCost` transaktional ab.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Reward-Einloesungsverwaltung fuer Eltern implementieren: Anfragen listen, bestaetigen, ablehnen und als eingeloest markieren.
+- Portainer-Redeploy nach Reward-Einloesungsverwaltungs-Slice ausfuehren.
+- LXC-Tests fuer Reward-Einloesungen listen, bestaetigen, ablehnen, als eingeloest markieren und ungueltige Statuswechsel ausfuehren.
 - Frontend-Grundlayout und Designsystem-Basis ausbauen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes die Elternverwaltung fuer Reward-Einloesungen implementieren: Anfragen listen, bestaetigen, ablehnen und als eingeloest markieren.
+Als naechstes den Reward-Einloesungsverwaltungs-Slice im Portainer-Stack redeployen und per LXC-API testen. Danach folgt ein kleiner Frontend-/Dashboard- oder Statistik-Slice.
 
 ## Architekturentscheidungen
 
@@ -135,6 +140,7 @@ Als naechstes die Elternverwaltung fuer Reward-Einloesungen implementieren: Anfr
 - Die erste Frontend-Oberflaeche nutzt Material UI und einfache CSS-Grid-Layouts, um nicht von experimentellen Layout-APIs abzuhaengen.
 - Das aktuelle Scaffold wurde manuell erstellt, weil der NestJS-Generator wegen fehlendem Speicherplatz auf `C:` abgebrochen ist.
 - Prisma 7 verwendet `prisma.config.ts`; die Datenbank-URL liegt nicht mehr in `schema.prisma`.
+- Der Prisma Client Output ist im Schema explizit auf `node_modules/@prisma/client/.prisma/client` gesetzt, weil `@prisma/client` in Prisma 7 diesen relativen Pfad importiert und der Workspace-Default sonst lokal nach `node_modules/.prisma/client` schreiben kann.
 - TypeScript bleibt vorerst auf `5.9.3`, weil Nest CLI mit TypeScript 7 aktuell nicht sauber baut.
 - Ziel-Deployment ist ein Proxmox-LXC. Die konkrete Betriebsart wird spaeter dokumentiert, voraussichtlich mit Docker/Podman im LXC oder Compose auf einer passenden Container-/VM-Umgebung.
 - Fuer den Homelab-Start wird Portainer als Stack-Verwaltung genutzt.
@@ -153,8 +159,9 @@ Als naechstes die Elternverwaltung fuer Reward-Einloesungen implementieren: Anfr
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
 - Reward-Einloesungen speichern den Preis als `coinCost`, damit spaetere Preisaenderungen historische Einloesungen nicht veraendern.
-- Bei bestaetigungspflichtigen Rewards werden Muenzen erst in einem spaeteren Eltern-Bestaetigungs-Slice abgezogen; die Anfrage selbst bleibt zunaechst `REQUESTED`.
+- Bei bestaetigungspflichtigen Rewards werden Muenzen erst beim Eltern-Approve abgezogen; die Anfrage selbst bleibt zunaechst `REQUESTED`.
 - Bei nicht bestaetigungspflichtigen Rewards werden Muenzen sofort in derselben Transaktion abgezogen, in der die Einloesung erstellt wird.
+- Die Eltern-Bestaetigung fuer Reward-Einloesungen zieht Muenzen erst beim Wechsel von `REQUESTED` zu `APPROVED` ab; `REDEEMED` markiert nur die reale Ausgabe der Belohnung und veraendert keine Muenzen.
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
 - Docker-Builds nutzen Debian-slim Node-Images statt Alpine fuer Node-Stages, weil Vite/Rolldown und andere native npm-Abhaengigkeiten damit im Portainer-Build weniger an musl/Alpine-Bindings haengen.
 - Prisma Client wird im Backend-Runtime-Image nach `npm ci --omit=dev` erneut generiert, weil der generierte Client nicht automatisch Teil einer frischen Production-Installation ist.
