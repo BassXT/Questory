@@ -12,6 +12,22 @@ const questAssignmentSelect = {
   dueAt: true,
   createdAt: true,
   updatedAt: true,
+  completions: {
+    orderBy: {
+      submittedAt: 'desc'
+    },
+    take: 1,
+    select: {
+      id: true,
+      status: true,
+      submittedAt: true,
+      approvedAt: true,
+      rejectedAt: true,
+      rejectionReason: true,
+      xpGranted: true,
+      coinsGranted: true
+    }
+  },
   quest: {
     select: {
       id: true,
@@ -25,7 +41,7 @@ const questAssignmentSelect = {
       isActive: true
     }
   }
-};
+} as const;
 
 const questCompletionSelect = {
   id: true,

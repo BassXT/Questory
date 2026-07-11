@@ -280,7 +280,40 @@ Status: implementiert.
 
 Auth: Bearer Token erforderlich.
 
-Hinweis: Die Antwort enthaelt die Zuweisung und eingebettete Quest-Daten.
+Hinweis: Die Antwort enthaelt die Zuweisung, eingebettete Quest-Daten und die neueste Completion im Feld `completions` mit maximal einem Eintrag. Dadurch kann das Frontend den aktuellen Status pro Zuweisung nach einem Reload anzeigen.
+
+Beispiel:
+
+```json
+[
+  {
+    "id": "<assignment-id>",
+    "questId": "<quest-id>",
+    "childProfileId": "<child-profile-id>",
+    "dueAt": "2026-07-16T12:00:00.000Z",
+    "completions": [
+      {
+        "id": "<completion-id>",
+        "status": "SUBMITTED",
+        "submittedAt": "2026-07-11T20:30:00.000Z",
+        "approvedAt": null,
+        "rejectedAt": null,
+        "rejectionReason": null,
+        "xpGranted": 0,
+        "coinsGranted": 0
+      }
+    ],
+    "quest": {
+      "id": "<quest-id>",
+      "title": "Zimmer aufraeumen",
+      "xpReward": 40,
+      "coinReward": 8,
+      "requiresApproval": true,
+      "isActive": true
+    }
+  }
+]
+```
 
 ### `POST /api/quest-assignments`
 
@@ -332,6 +365,8 @@ Hinweise:
 - Eltern/Admin duerfen bis zum finalen Kinder-Login-Flow stellvertretend einreichen.
 - Eine Zuweisung darf nur eine offene Einreichung mit Status `SUBMITTED` haben.
 - Einmalige Quests koennen nach einer bestaetigten Einreichung nicht erneut eingereicht werden.
+
+Response: Die erzeugte Completion mit Status `SUBMITTED`.
 
 ### `POST /api/quest-completions/{completionId}/approve`
 

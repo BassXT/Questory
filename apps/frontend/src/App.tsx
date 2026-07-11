@@ -36,6 +36,7 @@ const TOKEN_STORAGE_KEY = 'questory.accessToken';
 type AuthMode = 'login' | 'register';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
+type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
 
 interface AuthUser {
   id: string;
@@ -130,6 +131,7 @@ interface QuestAssignment {
   dueAt: string | null;
   createdAt: string;
   updatedAt: string;
+  completions?: QuestCompletionSummary[];
   quest: {
     id: string;
     title: string;
@@ -141,6 +143,17 @@ interface QuestAssignment {
     requiresApproval: boolean;
     isActive: boolean;
   };
+}
+
+interface QuestCompletionSummary {
+  id: string;
+  status: QuestCompletionStatus;
+  submittedAt: string;
+  approvedAt: string | null;
+  rejectedAt: string | null;
+  rejectionReason: string | null;
+  xpGranted: number;
+  coinsGranted: number;
 }
 
 interface AuthFormState {
@@ -220,6 +233,7 @@ function App() {
   const [assignmentLoading, setAssignmentLoading] = useState(false);
   const [childSaving, setChildSaving] = useState(false);
   const [assignmentSaving, setAssignmentSaving] = useState(false);
+  const [completionSavingId, setCompletionSavingId] = useState<string | null>(null);
   const [questSaving, setQuestSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -472,6 +486,27 @@ function App() {
     }
   }
 
+  async function submitQuestCompletion(assignmentId: string) {
+    if (!token) {
+      return;
+    }
+
+    setCompletionSavingId(assignmentId);
+    setError(null);
+
+    try {
+      await apiRequest<QuestCompletionSummary>(`/quest-assignments/${assignmentId}/complete`, {
+        method: 'POST',
+        token
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setCompletionSavingId(null);
+    }
+  }
+
   function logout() {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
@@ -510,6 +545,7 @@ function App() {
               assignmentLoading={assignmentLoading}
               assignmentSaving={assignmentSaving}
               assignments={questAssignments}
+              completionSavingId={completionSavingId}
               loading={dashboardLoading}
               questForm={questForm}
               questSaving={questSaving}
@@ -520,6 +556,7 @@ function App() {
               onAssignmentChildChange={changeAssignmentChild}
               onAssignmentFormChange={setQuestAssignmentForm}
               onAssignmentSubmit={submitQuestAssignment}
+              onAssignmentComplete={submitQuestCompletion}
               onQuestFormChange={setQuestForm}
               onQuestSubmit={submitQuest}
             />
@@ -750,6 +787,7 @@ interface DashboardViewProps {
   childForm: ChildFormState;
   childSaving: boolean;
   children: ChildProfile[];
+  completionSavingId: string | null;
   dashboard: DashboardResponse | null;
   loading: boolean;
   questForm: QuestFormState;
@@ -757,6 +795,7 @@ interface DashboardViewProps {
   quests: QuestTemplate[];
   user: AuthUser | null;
   onAssignmentChildChange: (childProfileId: string) => void;
+  onAssignmentComplete: (assignmentId: string) => void;
   onAssignmentFormChange: (form: QuestAssignmentFormState) => void;
   onAssignmentSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChildFormChange: (form: ChildFormState) => void;
@@ -773,6 +812,7 @@ function DashboardView({
   childForm,
   childSaving,
   children,
+  completionSavingId,
   dashboard,
   loading,
   questForm,
@@ -780,6 +820,7 @@ function DashboardView({
   quests,
   user,
   onAssignmentChildChange,
+  onAssignmentComplete,
   onAssignmentFormChange,
   onAssignmentSubmit,
   onChildFormChange,
@@ -925,11 +966,13 @@ function DashboardView({
         assignments={assignments}
         canManage={canManageChildren}
         children={children}
+        completionSavingId={completionSavingId}
         form={assignmentForm}
         loading={assignmentLoading}
         quests={quests}
         saving={assignmentSaving}
         onChildChange={onAssignmentChildChange}
+        onComplete={onAssignmentComplete}
         onFormChange={onAssignmentFormChange}
         onSubmit={onAssignmentSubmit}
       />
@@ -941,11 +984,13 @@ interface QuestAssignmentsPanelProps {
   assignments: QuestAssignment[];
   canManage: boolean;
   children: ChildProfile[];
+  completionSavingId: string | null;
   form: QuestAssignmentFormState;
   loading: boolean;
   quests: QuestTemplate[];
   saving: boolean;
   onChildChange: (childProfileId: string) => void;
+  onComplete: (assignmentId: string) => void;
   onFormChange: (form: QuestAssignmentFormState) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
@@ -954,11 +999,13 @@ function QuestAssignmentsPanel({
   assignments,
   canManage,
   children,
+  completionSavingId,
   form,
   loading,
   quests,
   saving,
   onChildChange,
+  onComplete,
   onFormChange,
   onSubmit
 }: QuestAssignmentsPanelProps) {
@@ -1052,7 +1099,14 @@ function QuestAssignmentsPanel({
 
         <Box sx={{ display: 'grid', gap: 1.5 }}>
           {assignments.length > 0 ? (
-            assignments.map((assignment) => <QuestAssignmentRow assignment={assignment} key={assignment.id} />)
+            assignments.map((assignment) => (
+              <QuestAssignmentRow
+                assignment={assignment}
+                completionSaving={completionSavingId === assignment.id}
+                key={assignment.id}
+                onComplete={onComplete}
+              />
+            ))
           ) : (
             <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
               <Typography color="text.secondary">
@@ -1352,9 +1406,17 @@ function QuestTemplateRow({ quest }: QuestTemplateRowProps) {
 
 interface QuestAssignmentRowProps {
   assignment: QuestAssignment;
+  completionSaving: boolean;
+  onComplete: (assignmentId: string) => void;
 }
 
-function QuestAssignmentRow({ assignment }: QuestAssignmentRowProps) {
+function QuestAssignmentRow({ assignment, completionSaving, onComplete }: QuestAssignmentRowProps) {
+  const latestCompletion = assignment.completions?.[0] ?? null;
+  const hasBlockingCompletion =
+    latestCompletion?.status === 'SUBMITTED' ||
+    (assignment.quest.type === 'ONE_TIME' && latestCompletion?.status === 'APPROVED');
+  const completionButtonLabel = latestCompletion?.status === 'REJECTED' ? 'Erneut einreichen' : 'Erledigt einreichen';
+
   return (
     <Box
       sx={{
@@ -1362,7 +1424,7 @@ function QuestAssignmentRow({ assignment }: QuestAssignmentRowProps) {
         borderRadius: 2,
         display: 'grid',
         gap: 1,
-        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto' },
+        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto auto auto' },
         p: 1.5
       }}
     >
@@ -1378,9 +1440,53 @@ function QuestAssignmentRow({ assignment }: QuestAssignmentRowProps) {
       </Box>
       <Chip label={assignment.quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(assignment.quest.frequency)} variant="outlined" />
       <Chip label={assignment.dueAt ? formatDateLabel(assignment.dueAt) : 'Ohne Datum'} variant="outlined" />
+      {latestCompletion ? (
+        <Chip
+          color={completionStatusColor(latestCompletion.status)}
+          label={completionStatusLabel(latestCompletion.status)}
+          variant={latestCompletion.status === 'SUBMITTED' ? 'filled' : 'outlined'}
+        />
+      ) : (
+        <Chip label="Offen" variant="outlined" />
+      )}
       <Chip icon={<PaidRoundedIcon />} label={assignment.quest.coinReward} variant="outlined" />
+      <Button
+        disabled={completionSaving || hasBlockingCompletion}
+        onClick={() => onComplete(assignment.id)}
+        size="small"
+        startIcon={<TaskAltRoundedIcon />}
+        variant={hasBlockingCompletion ? 'outlined' : 'contained'}
+      >
+        {hasBlockingCompletion ? completionStatusLabel(latestCompletion.status) : completionButtonLabel}
+      </Button>
     </Box>
   );
+}
+
+function completionStatusLabel(status: QuestCompletionStatus): string {
+  switch (status) {
+    case 'SUBMITTED':
+      return 'Eingereicht';
+    case 'APPROVED':
+      return 'Bestaetigt';
+    case 'REJECTED':
+      return 'Abgelehnt';
+    default:
+      return 'Offen';
+  }
+}
+
+function completionStatusColor(status: QuestCompletionStatus): 'default' | 'success' | 'warning' | 'error' {
+  switch (status) {
+    case 'SUBMITTED':
+      return 'warning';
+    case 'APPROVED':
+      return 'success';
+    case 'REJECTED':
+      return 'error';
+    default:
+      return 'default';
+  }
 }
 
 function frequencyLabel(frequency: QuestFrequency): string {
