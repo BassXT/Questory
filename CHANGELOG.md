@@ -133,6 +133,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-API-Test fuer Dashboard-Summary mit Familienuebersicht, Quest-Fortschritt, XP, Coins, aktiven Rewards, Reward-Ausgaben und offenen Reward-Anfragen erfolgreich ausgefuehrt.
 - Frontend-Build nach Auth-/Dashboard-Grundlayout erfolgreich ausgefuehrt.
 - Lokaler Browser-Test des Frontends gegen das LXC-Backend erfolgreich: Registrierung, Dashboard, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy nach Frontend-Grundlayout-Slice erfolgreich.
+- LXC-Browser-Test des Frontends unter `http://192.168.1.98:5173` erfolgreich: Registrierung, Dashboard, Reload-Session, Logout/Login und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 
