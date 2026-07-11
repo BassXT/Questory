@@ -155,6 +155,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Browser-Test des Quest-Zuweisungs-Workflows unter `http://192.168.1.98:5173` erfolgreich: Kind anlegen, Quest zuweisen, Faelligkeitsdatum stabil anzeigen, Reload und mobile Ansicht ohne horizontalen Overflow.
 - Backend-Build nach Erweiterung der Quest-Zuweisungsantwort erfolgreich ausgefuehrt.
 - Frontend-Build nach Quest-Abschluss-Workflow erfolgreich ausgefuehrt.
+- Portainer-Redeploy nach Frontend-Quest-Abschluss-Slice per API-Script erfolgreich.
+- LXC-Browser-Test des Quest-Abschluss-Workflows unter `http://192.168.1.98:5173` erfolgreich: offene Quest-Zuweisung einreichen, Status `Eingereicht`, gesperrter Button, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 
