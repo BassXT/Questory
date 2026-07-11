@@ -507,6 +507,49 @@ function App() {
     }
   }
 
+  async function approveQuestCompletion(assignmentId: string, completionId: string) {
+    if (!token) {
+      return;
+    }
+
+    setCompletionSavingId(assignmentId);
+    setError(null);
+
+    try {
+      await apiRequest<QuestCompletionSummary>(`/quest-completions/${completionId}/approve`, {
+        method: 'POST',
+        token
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setCompletionSavingId(null);
+    }
+  }
+
+  async function rejectQuestCompletion(assignmentId: string, completionId: string) {
+    if (!token) {
+      return;
+    }
+
+    setCompletionSavingId(assignmentId);
+    setError(null);
+
+    try {
+      await apiRequest<QuestCompletionSummary>(`/quest-completions/${completionId}/reject`, {
+        method: 'POST',
+        token,
+        body: {}
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setCompletionSavingId(null);
+    }
+  }
+
   function logout() {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
@@ -557,6 +600,8 @@ function App() {
               onAssignmentFormChange={setQuestAssignmentForm}
               onAssignmentSubmit={submitQuestAssignment}
               onAssignmentComplete={submitQuestCompletion}
+              onAssignmentApprove={approveQuestCompletion}
+              onAssignmentReject={rejectQuestCompletion}
               onQuestFormChange={setQuestForm}
               onQuestSubmit={submitQuest}
             />
@@ -794,9 +839,11 @@ interface DashboardViewProps {
   questSaving: boolean;
   quests: QuestTemplate[];
   user: AuthUser | null;
+  onAssignmentApprove: (assignmentId: string, completionId: string) => void;
   onAssignmentChildChange: (childProfileId: string) => void;
   onAssignmentComplete: (assignmentId: string) => void;
   onAssignmentFormChange: (form: QuestAssignmentFormState) => void;
+  onAssignmentReject: (assignmentId: string, completionId: string) => void;
   onAssignmentSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChildFormChange: (form: ChildFormState) => void;
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -819,9 +866,11 @@ function DashboardView({
   questSaving,
   quests,
   user,
+  onAssignmentApprove,
   onAssignmentChildChange,
   onAssignmentComplete,
   onAssignmentFormChange,
+  onAssignmentReject,
   onAssignmentSubmit,
   onChildFormChange,
   onChildSubmit,
@@ -971,9 +1020,11 @@ function DashboardView({
         loading={assignmentLoading}
         quests={quests}
         saving={assignmentSaving}
+        onApprove={onAssignmentApprove}
         onChildChange={onAssignmentChildChange}
         onComplete={onAssignmentComplete}
         onFormChange={onAssignmentFormChange}
+        onReject={onAssignmentReject}
         onSubmit={onAssignmentSubmit}
       />
     </Stack>
@@ -989,9 +1040,11 @@ interface QuestAssignmentsPanelProps {
   loading: boolean;
   quests: QuestTemplate[];
   saving: boolean;
+  onApprove: (assignmentId: string, completionId: string) => void;
   onChildChange: (childProfileId: string) => void;
   onComplete: (assignmentId: string) => void;
   onFormChange: (form: QuestAssignmentFormState) => void;
+  onReject: (assignmentId: string, completionId: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -1004,9 +1057,11 @@ function QuestAssignmentsPanel({
   loading,
   quests,
   saving,
+  onApprove,
   onChildChange,
   onComplete,
   onFormChange,
+  onReject,
   onSubmit
 }: QuestAssignmentsPanelProps) {
   const activeQuests = quests.filter((quest) => quest.isActive);
@@ -1102,9 +1157,12 @@ function QuestAssignmentsPanel({
             assignments.map((assignment) => (
               <QuestAssignmentRow
                 assignment={assignment}
+                canManage={canManage}
                 completionSaving={completionSavingId === assignment.id}
                 key={assignment.id}
+                onApprove={onApprove}
                 onComplete={onComplete}
+                onReject={onReject}
               />
             ))
           ) : (
@@ -1406,16 +1464,27 @@ function QuestTemplateRow({ quest }: QuestTemplateRowProps) {
 
 interface QuestAssignmentRowProps {
   assignment: QuestAssignment;
+  canManage: boolean;
   completionSaving: boolean;
+  onApprove: (assignmentId: string, completionId: string) => void;
   onComplete: (assignmentId: string) => void;
+  onReject: (assignmentId: string, completionId: string) => void;
 }
 
-function QuestAssignmentRow({ assignment, completionSaving, onComplete }: QuestAssignmentRowProps) {
+function QuestAssignmentRow({
+  assignment,
+  canManage,
+  completionSaving,
+  onApprove,
+  onComplete,
+  onReject
+}: QuestAssignmentRowProps) {
   const latestCompletion = assignment.completions?.[0] ?? null;
   const hasBlockingCompletion =
     latestCompletion?.status === 'SUBMITTED' ||
     (assignment.quest.type === 'ONE_TIME' && latestCompletion?.status === 'APPROVED');
   const completionButtonLabel = latestCompletion?.status === 'REJECTED' ? 'Erneut einreichen' : 'Erledigt einreichen';
+  const canReview = canManage && latestCompletion?.status === 'SUBMITTED';
 
   return (
     <Box
@@ -1459,6 +1528,28 @@ function QuestAssignmentRow({ assignment, completionSaving, onComplete }: QuestA
       >
         {hasBlockingCompletion ? completionStatusLabel(latestCompletion.status) : completionButtonLabel}
       </Button>
+      {canReview && latestCompletion ? (
+        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+          <Button
+            color="success"
+            disabled={completionSaving}
+            onClick={() => onApprove(assignment.id, latestCompletion.id)}
+            size="small"
+            variant="contained"
+          >
+            Bestaetigen
+          </Button>
+          <Button
+            color="error"
+            disabled={completionSaving}
+            onClick={() => onReject(assignment.id, latestCompletion.id)}
+            size="small"
+            variant="outlined"
+          >
+            Ablehnen
+          </Button>
+        </Stack>
+      ) : null}
     </Box>
   );
 }

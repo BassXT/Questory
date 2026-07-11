@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs- und Quest-Abschluss-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss- und Elternfreigabe-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -146,17 +146,20 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Frontend-Quest-Abschluss-Workflow angelegt: Zuweisung als erledigt einreichen, Status-Chip anzeigen und blockierende Einreichungen gegen doppelte Submit-Klicks sperren.
 - Portainer-Redeploy nach Frontend-Quest-Abschluss-Slice per API-Script erfolgreich.
 - LXC-Frontend-Test des Quest-Abschluss-Workflows unter `http://192.168.1.98:5173` erfolgreich: offene Zuweisung einreichen, Status `Eingereicht`, Button gesperrt, Status nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Elternfreigabe fuer Quest-Abschluesse angelegt: eingereichte Zuweisungen koennen direkt bestaetigt oder abgelehnt werden; nach Bestaetigung werden Dashboard, Kinder-XP und Muenzen neu geladen.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
+- Portainer-Redeploy nach Frontend-Elternfreigabe-Slice ausfuehren.
+- LXC-Test fuer Frontend-Elternfreigabe unter `http://192.168.1.98:5173` ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Frontend-Workflow fuer Eltern-Bestaetigung und Ablehnung eingereichter Quests umsetzen: eingereichte Quest-Abschluesse sichtbar machen, bestaetigen/ablehnen und Kinder-XP/Muenzen nach Bestaetigung im Dashboard aktualisieren.
+Als naechstes den Frontend-Elternfreigabe-Slice im Portainer-Stack redeployen und im Browser gegen das LXC-Backend testen. Danach folgt der Frontend-Reward-Verwaltungs-Slice.
 
 ## Architekturentscheidungen
 

@@ -68,6 +68,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Lokales Portainer-Redeploy-Script `scripts/portainer-redeploy.mjs` erstellt und als `npm run portainer:redeploy` verfuegbar gemacht.
 - Quest-Zuweisungsantwort um die neueste Completion pro Zuweisung erweitert.
 - Frontend-Workflow zum Einreichen erledigter Quest-Zuweisungen mit Status-Chip erstellt.
+- Frontend-Elternaktionen fuer eingereichte Quest-Abschluesse erstellt: bestaetigen und ablehnen direkt aus der Zuweisungsliste.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -157,6 +158,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Build nach Quest-Abschluss-Workflow erfolgreich ausgefuehrt.
 - Portainer-Redeploy nach Frontend-Quest-Abschluss-Slice per API-Script erfolgreich.
 - LXC-Browser-Test des Quest-Abschluss-Workflows unter `http://192.168.1.98:5173` erfolgreich: offene Quest-Zuweisung einreichen, Status `Eingereicht`, gesperrter Button, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Build nach Elternfreigabe-Workflow erfolgreich ausgefuehrt.
 
 ### Fixed
 
