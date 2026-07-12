@@ -318,7 +318,8 @@ Hinweise:
 
 - Die Vorschlaege sind read-only und gehoeren nicht zu einer Familie.
 - Das Frontend nutzt sie als Formularvorlagen; gespeichert wird erst ueber `POST /api/quests` oder `POST /api/rewards`.
-- Die Bibliothek ist bewusst statisch im Backend versioniert, bis klar ist, ob Familien eigene Bibliotheken pflegen sollen.
+- Die Bibliothek ist bewusst statisch im Backend versioniert, bis klar ist, ob Familien eigene Bibliotheken oder einen optionalen Generator pflegen sollen.
+- Vorschlaege sind kategorisiert, damit das Frontend sie in einem kompakten Dialog filtern kann.
 
 Response:
 
@@ -340,6 +341,7 @@ Response:
       "id": "tidy-room",
       "title": "Zimmer aufraeumen",
       "description": "Spielzeug sortieren, Boden frei machen und sichtbare Sachen an ihren Platz legen.",
+      "category": "Haushalt",
       "type": "ONE_TIME",
       "frequency": "NONE",
       "xpReward": 30,

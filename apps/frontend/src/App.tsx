@@ -1,5 +1,7 @@
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
+import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import PaidRoundedIcon from '@mui/icons-material/PaidRounded';
@@ -16,7 +18,11 @@ import {
   Chip,
   Container,
   Divider,
+  Dialog,
+  DialogContent,
+  DialogTitle,
   FormControlLabel,
+  IconButton,
   LinearProgress,
   MenuItem,
   Paper,
@@ -260,6 +266,7 @@ interface QuestSuggestion {
   id: string;
   title: string;
   description: string;
+  category: string;
   type: QuestType;
   frequency: QuestFrequency;
   xpReward: number;
@@ -2145,10 +2152,13 @@ function RewardsPanel({
 
         {canManage ? (
           <Stack spacing={1.25}>
-            <SuggestionStrip
-              label="Shop-Bibliothek"
-              suggestions={suggestions}
+            <SuggestionLibraryButton
+              actionLabel="Vorlagen"
+              existingLabels={rewards.map((reward) => reward.name)}
               getLabel={(suggestion) => suggestion.name}
+              getMeta={(suggestion) => `${suggestion.price} Muenzen`}
+              suggestions={suggestions}
+              title="Shop-Bibliothek"
               onSelect={onSuggestionSelect}
             />
             <Box
@@ -2445,10 +2455,15 @@ function QuestTemplatesPanel({
 
         {canManage ? (
           <Stack spacing={1.25}>
-            <SuggestionStrip
-              label="Quest-Bibliothek"
-              suggestions={suggestions}
+            <SuggestionLibraryButton
+              actionLabel="Vorlagen"
+              existingLabels={quests.map((quest) => quest.title)}
               getLabel={(suggestion) => suggestion.title}
+              getMeta={(suggestion) =>
+                `${suggestion.type === 'ONE_TIME' ? 'Einmalig' : 'Wiederkehrend'} | ${suggestion.xpReward} XP | ${suggestion.coinReward} Muenzen`
+              }
+              suggestions={suggestions}
+              title="Quest-Bibliothek"
               onSelect={onSuggestionSelect}
             />
             <Box
@@ -2702,52 +2717,172 @@ function SelfServiceQuestRow({ quest, saving, onComplete }: SelfServiceQuestRowP
   );
 }
 
-interface SuggestionStripProps<TSuggestion extends { id: string }> {
-  label: string;
-  suggestions: TSuggestion[];
+interface SuggestionLibraryButtonProps<TSuggestion extends { category: string; description: string; id: string }> {
+  actionLabel: string;
+  existingLabels: string[];
   getLabel: (suggestion: TSuggestion) => string;
+  getMeta: (suggestion: TSuggestion) => string;
+  suggestions: TSuggestion[];
+  title: string;
   onSelect: (suggestion: TSuggestion) => void;
 }
 
-function SuggestionStrip<TSuggestion extends { id: string }>({
-  label,
-  suggestions,
+function SuggestionLibraryButton<TSuggestion extends { category: string; description: string; id: string }>({
+  actionLabel,
+  existingLabels,
   getLabel,
+  getMeta,
+  suggestions,
+  title,
   onSelect
-}: SuggestionStripProps<TSuggestion>) {
-  if (suggestions.length === 0) {
-    return null;
+}: SuggestionLibraryButtonProps<TSuggestion>) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('Alle');
+  const existingLabelSet = useMemo(() => new Set(existingLabels.map(normalizeSuggestionLabel)), [existingLabels]);
+  const availableSuggestions = useMemo(
+    () => suggestions.filter((suggestion) => !existingLabelSet.has(normalizeSuggestionLabel(getLabel(suggestion)))),
+    [existingLabelSet, getLabel, suggestions]
+  );
+  const categories = useMemo(
+    () => ['Alle', ...Array.from(new Set(availableSuggestions.map((suggestion) => suggestion.category))).sort()],
+    [availableSuggestions]
+  );
+  const visibleSuggestions = useMemo(() => {
+    const normalizedQuery = normalizeSuggestionLabel(query);
+
+    return availableSuggestions.filter((suggestion) => {
+      const matchesCategory = category === 'Alle' || suggestion.category === category;
+      const searchable = `${getLabel(suggestion)} ${suggestion.description} ${suggestion.category} ${getMeta(suggestion)}`;
+      const matchesQuery = normalizedQuery.length === 0 || normalizeSuggestionLabel(searchable).includes(normalizedQuery);
+
+      return matchesCategory && matchesQuery;
+    });
+  }, [availableSuggestions, category, getLabel, getMeta, query]);
+
+  function closeDialog() {
+    setOpen(false);
+    setQuery('');
+    setCategory('Alle');
   }
 
   return (
-    <Box
-      sx={{
-        bgcolor: 'action.hover',
-        borderRadius: 2,
-        display: 'grid',
-        gap: 1,
-        gridTemplateColumns: { xs: '1fr', md: 'auto minmax(0, 1fr)' },
-        p: 1.25
-      }}
-    >
-      <Typography color="text.secondary" sx={{ fontWeight: 800, pt: 0.5 }} variant="body2">
-        {label}
-      </Typography>
-      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-        {suggestions.map((suggestion) => (
-          <Button
-            key={suggestion.id}
-            onClick={() => onSelect(suggestion)}
+    <>
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start' }}>
+        <Button
+          disabled={availableSuggestions.length === 0}
+          onClick={() => setOpen(true)}
+          size="small"
+          startIcon={<LibraryBooksRoundedIcon />}
+          variant="outlined"
+        >
+          {actionLabel}
+        </Button>
+      </Box>
+
+      <Dialog fullWidth maxWidth="md" onClose={closeDialog} open={open}>
+        <DialogTitle
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            justifyContent: 'space-between',
+            pb: 1
+          }}
+        >
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
+            <Box sx={{ color: 'primary.main', display: 'grid', placeItems: 'center' }}>
+              <LibraryBooksRoundedIcon />
+            </Box>
+            <Typography sx={{ fontWeight: 900 }} noWrap>
+              {title}
+            </Typography>
+            <Chip label={`${availableSuggestions.length} offen`} size="small" variant="outlined" />
+          </Stack>
+          <Tooltip title="Schliessen">
+            <IconButton aria-label="Schliessen" onClick={closeDialog} size="small">
+              <CloseRoundedIcon />
+            </IconButton>
+          </Tooltip>
+        </DialogTitle>
+        <DialogContent sx={{ display: 'grid', gap: 1.5, pt: 1 }}>
+          <TextField
+            autoComplete="off"
+            label="Suchen"
+            onChange={(event) => setQuery(event.target.value)}
             size="small"
-            startIcon={<AutoAwesomeRoundedIcon />}
-            variant="outlined"
+            value={query}
+          />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            {categories.map((categoryOption) => (
+              <Chip
+                color={category === categoryOption ? 'primary' : 'default'}
+                key={categoryOption}
+                label={categoryOption}
+                onClick={() => setCategory(categoryOption)}
+                variant={category === categoryOption ? 'filled' : 'outlined'}
+              />
+            ))}
+          </Stack>
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 1,
+              gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' },
+              maxHeight: { xs: '55vh', md: '58vh' },
+              overflow: 'auto',
+              pr: 0.5
+            }}
           >
-            {getLabel(suggestion)}
-          </Button>
-        ))}
-      </Stack>
-    </Box>
+            {visibleSuggestions.length > 0 ? (
+              visibleSuggestions.map((suggestion) => (
+                <Button
+                  key={suggestion.id}
+                  onClick={() => {
+                    onSelect(suggestion);
+                    closeDialog();
+                  }}
+                  sx={{
+                    alignItems: 'stretch',
+                    borderColor: 'divider',
+                    color: 'text.primary',
+                    display: 'grid',
+                    gap: 0.75,
+                    justifyContent: 'stretch',
+                    minHeight: 112,
+                    p: 1.25,
+                    textAlign: 'left'
+                  }}
+                  variant="outlined"
+                >
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                    <Typography sx={{ fontWeight: 900 }} noWrap>
+                      {getLabel(suggestion)}
+                    </Typography>
+                    <Chip label={suggestion.category} size="small" variant="outlined" />
+                  </Stack>
+                  <Typography color="text.secondary" sx={{ whiteSpace: 'normal' }} variant="body2">
+                    {suggestion.description}
+                  </Typography>
+                  <Typography color="primary" sx={{ fontWeight: 800 }} variant="body2">
+                    {getMeta(suggestion)}
+                  </Typography>
+                </Button>
+              ))
+            ) : (
+              <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, gridColumn: '1 / -1', p: 1.5 }}>
+                <Typography color="text.secondary">Keine passende Vorlage</Typography>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </>
   );
+}
+
+function normalizeSuggestionLabel(value: string) {
+  return value.trim().toLowerCase().replace(/\s+/g, ' ');
 }
 
 interface MetricCardProps {

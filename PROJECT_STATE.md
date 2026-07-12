@@ -228,17 +228,23 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Spontane-Quests-Slice per API-Script erfolgreich.
 - LXC-Health nach Spontane-Quests-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer spontane Quests erfolgreich: `isAssignable: false` blockiert manuelle Zuweisung, spontane Einreichung erzeugt `SUBMITTED`, doppelte `ONE_TIME`-Einreichung wird vor und nach Bestaetigung geblockt, Bestaetigung vergibt XP/Muenzen, PIN-Kind darf eigene spontane Quest einreichen und fremdes Kind nicht.
+- Vorschlagsbibliothek auf 32 Reward-Vorlagen und 36 Quest-Vorlagen erweitert.
+- Quest-Vorschlaege besitzen nun ebenfalls eine Kategorie.
+- Frontend-Vorschlaege werden nicht mehr als dauerhafte Button-Leiste angezeigt, sondern ueber einen kompakten Vorlagen-Dialog mit Suche und Kategorie-Filter ausgewaehlt.
+- Der Vorlagen-Dialog blendet bereits angelegte Quest- oder Reward-Namen aus, damit sich Vorschlaege nicht in der Familienliste wiederholen.
+- Backend- und Frontend-Build nach Vorlagen-Dialog-/Bibliotheks-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Ersten echten UI-Testlauf mit Spontane-Quests-Panel, Reward-Reservierung/Storno und Kinderlogin im Browser durchgehen.
+- Vorlagen-Dialog auf dem LXC deployen und im Browser testen.
+- Danach Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufraeumen.
 
 ## Naechster Schritt
 
-Als naechstes einen echten UI-Testlauf im Browser durchgehen: Familie anlegen, Kind mit PIN einrichten, spontane Quest anlegen/einreichen/bestaetigen, Reward beantragen/stornieren/einloesen und dabei die ersten UX-Feinschliffe sammeln.
+Als naechstes den Vorlagen-Dialog auf dem LXC deployen und im Browser testen. Danach das Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufteilen.
 
 ## Architekturentscheidungen
 
@@ -279,7 +285,7 @@ Als naechstes einen echten UI-Testlauf im Browser durchgehen: Familie anlegen, K
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
-- Die Vorschlagsbibliothek ist aktuell statischer Backend-Inhalt ohne Datenbanktabelle. Vorschlaege fuellen nur Formulare; echte Familieninhalte entstehen erst beim Speichern als Quest oder Reward.
+- Die Vorschlagsbibliothek ist aktuell statischer Backend-Inhalt ohne Datenbanktabelle. Vorschlaege fuellen nur Formulare; echte Familieninhalte entstehen erst beim Speichern als Quest oder Reward. Das Frontend zeigt Vorschlaege in einem Dialog mit Suche, Kategorie-Filter und Duplikat-Ausblendung statt als dauerhafte Flaeche im Formular.
 - Reward-Einloesungen speichern den Preis als `coinCost`, damit spaetere Preisaenderungen historische Einloesungen nicht veraendern.
 - Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. `REQUESTED` und `APPROVED` halten Muenzen gebunden, `REDEEMED` ist final, `REJECTED` und `CANCELLED` geben Muenzen wieder frei.
 - Die Eltern-Bestaetigung fuer Reward-Einloesungen wechselt nur von `REQUESTED` zu `APPROVED`; Muenzen wurden bereits reserviert. `REDEEMED` markiert nur die reale Ausgabe der Belohnung und veraendert keine Muenzen.
