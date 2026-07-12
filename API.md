@@ -212,6 +212,74 @@ Auth: Bearer Token erforderlich.
 
 Aktualisiert ein Kinderprofil.
 
+## Suggestions
+
+### `GET /api/suggestions`
+
+Listet kuratierte Systemvorschlaege fuer Quest-Vorlagen und Shop-Belohnungen.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Die Vorschlaege sind read-only und gehoeren nicht zu einer Familie.
+- Das Frontend nutzt sie als Formularvorlagen; gespeichert wird erst ueber `POST /api/quests` oder `POST /api/rewards`.
+- Die Bibliothek ist bewusst statisch im Backend versioniert, bis klar ist, ob Familien eigene Bibliotheken pflegen sollen.
+
+Response:
+
+```json
+{
+  "rewards": [
+    {
+      "id": "ice-cream",
+      "name": "Eis essen",
+      "description": "Ein gemeinsamer Ausflug zur Eisdiele oder ein besonderes Eis zuhause.",
+      "category": "Ausflug",
+      "price": 20,
+      "requiresApproval": true,
+      "maxRedemptions": null
+    }
+  ],
+  "quests": [
+    {
+      "id": "tidy-room",
+      "title": "Zimmer aufraeumen",
+      "description": "Spielzeug sortieren, Boden frei machen und sichtbare Sachen an ihren Platz legen.",
+      "type": "ONE_TIME",
+      "frequency": "NONE",
+      "xpReward": 30,
+      "coinReward": 6,
+      "requiresApproval": true
+    }
+  ]
+}
+```
+
+### `GET /api/suggestions/rewards`
+
+Listet nur Shop-Belohnungsvorschlaege.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+### `GET /api/suggestions/quests`
+
+Listet nur Quest-Vorlagenvorschlaege.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
 ## Quests
 
 ### `GET /api/quests`

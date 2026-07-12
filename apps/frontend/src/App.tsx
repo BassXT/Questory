@@ -232,6 +232,32 @@ interface RewardRedemption {
   };
 }
 
+interface RewardSuggestion {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  price: number;
+  requiresApproval: boolean;
+  maxRedemptions: number | null;
+}
+
+interface QuestSuggestion {
+  id: string;
+  title: string;
+  description: string;
+  type: QuestType;
+  frequency: QuestFrequency;
+  xpReward: number;
+  coinReward: number;
+  requiresApproval: boolean;
+}
+
+interface SuggestionLibraryResponse {
+  rewards: RewardSuggestion[];
+  quests: QuestSuggestion[];
+}
+
 interface AuthFormState {
   familyName: string;
   displayName: string;
@@ -312,6 +338,11 @@ const initialRewardForm: RewardFormState = {
   maxRedemptions: ''
 };
 
+const emptySuggestions: SuggestionLibraryResponse = {
+  rewards: [],
+  quests: []
+};
+
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
@@ -331,6 +362,7 @@ function App() {
   const [rewards, setRewards] = useState<Reward[]>([]);
   const [rewardRedemptions, setRewardRedemptions] = useState<RewardRedemption[]>([]);
   const [shopRewards, setShopRewards] = useState<Reward[]>([]);
+  const [suggestions, setSuggestions] = useState<SuggestionLibraryResponse>(emptySuggestions);
   const [authLoading, setAuthLoading] = useState(false);
   const [childStatsLoading, setChildStatsLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
@@ -361,6 +393,7 @@ function App() {
       setRewardRedemptions([]);
       setRewardForm(initialRewardForm);
       setShopRewards([]);
+      setSuggestions(emptySuggestions);
       return;
     }
 
@@ -382,6 +415,7 @@ function App() {
       setChildren(childData);
       setQuests(questData);
       setRewards(rewardData);
+      await loadSuggestions(activeToken, currentUser);
       await loadRewardRedemptions(activeToken, currentUser);
       await loadAssignmentsForChildren(activeToken, childData, questData, questAssignmentForm.childProfileId);
       setError(null);
@@ -447,6 +481,7 @@ function App() {
       setChildren(childData);
       setQuests(questData);
       setRewards(rewardData);
+      await loadSuggestions(token, user);
       await loadRewardRedemptions(token, user);
       await loadAssignmentsForChildren(token, childData, questData, preferredChildId);
     } catch (requestError) {
@@ -520,6 +555,18 @@ function App() {
     } finally {
       setRedemptionLoading(false);
     }
+  }
+
+  async function loadSuggestions(activeToken: string, activeUser: AuthUser | null) {
+    if (activeUser?.role === 'CHILD') {
+      setSuggestions(emptySuggestions);
+      return;
+    }
+
+    const suggestionData = await apiRequest<SuggestionLibraryResponse>('/suggestions', {
+      token: activeToken
+    });
+    setSuggestions(suggestionData);
   }
 
   async function changeAssignmentChild(childProfileId: string) {
@@ -618,6 +665,19 @@ function App() {
     } finally {
       setQuestSaving(false);
     }
+  }
+
+  function applyQuestSuggestion(suggestion: QuestSuggestion) {
+    setQuestForm({
+      title: suggestion.title,
+      description: suggestion.description,
+      type: suggestion.type,
+      frequency: suggestion.frequency,
+      xpReward: String(suggestion.xpReward),
+      coinReward: String(suggestion.coinReward),
+      requiresApproval: suggestion.requiresApproval,
+      isActive: true
+    });
   }
 
   async function submitQuestAssignment(event: FormEvent<HTMLFormElement>) {
@@ -748,6 +808,19 @@ function App() {
     } finally {
       setRewardSaving(false);
     }
+  }
+
+  function applyRewardSuggestion(suggestion: RewardSuggestion) {
+    setRewardForm({
+      name: suggestion.name,
+      description: suggestion.description,
+      imageUrl: '',
+      category: suggestion.category,
+      price: String(suggestion.price),
+      isActive: true,
+      requiresApproval: suggestion.requiresApproval,
+      maxRedemptions: suggestion.maxRedemptions ? String(suggestion.maxRedemptions) : ''
+    });
   }
 
   async function redeemReward(rewardId: string) {
@@ -918,6 +991,7 @@ function App() {
               redeemingRewardId={redeemingRewardId}
               shopLoading={shopLoading}
               shopRewards={shopRewards}
+              suggestions={suggestions}
               user={user}
               onChildFormChange={setChildForm}
               onChildSubmit={submitChild}
@@ -928,6 +1002,7 @@ function App() {
               onAssignmentApprove={approveQuestCompletion}
               onAssignmentReject={rejectQuestCompletion}
               onQuestFormChange={setQuestForm}
+              onQuestSuggestionSelect={applyQuestSuggestion}
               onQuestSubmit={submitQuest}
               onRewardFormChange={setRewardForm}
               onRewardRedemptionApprove={approveRewardRedemption}
@@ -935,6 +1010,7 @@ function App() {
               onRewardRedemptionMarkRedeemed={markRewardRedemptionRedeemed}
               onRewardRedemptionReject={rejectRewardRedemption}
               onRewardRedeem={redeemReward}
+              onRewardSuggestionSelect={applyRewardSuggestion}
               onRewardSubmit={submitReward}
             />
           ) : (
@@ -1181,6 +1257,7 @@ interface DashboardViewProps {
   rewards: Reward[];
   shopLoading: boolean;
   shopRewards: Reward[];
+  suggestions: SuggestionLibraryResponse;
   user: AuthUser | null;
   onAssignmentApprove: (assignmentId: string, completionId: string) => void;
   onAssignmentChildChange: (childProfileId: string) => void;
@@ -1191,6 +1268,7 @@ interface DashboardViewProps {
   onChildFormChange: (form: ChildFormState) => void;
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onQuestFormChange: (form: QuestFormState) => void;
+  onQuestSuggestionSelect: (suggestion: QuestSuggestion) => void;
   onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onRewardFormChange: (form: RewardFormState) => void;
   onRewardRedemptionApprove: (redemptionId: string) => void;
@@ -1198,6 +1276,7 @@ interface DashboardViewProps {
   onRewardRedemptionMarkRedeemed: (redemptionId: string) => void;
   onRewardRedemptionReject: (redemptionId: string) => void;
   onRewardRedeem: (rewardId: string) => void;
+  onRewardSuggestionSelect: (suggestion: RewardSuggestion) => void;
   onRewardSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -1226,6 +1305,7 @@ function DashboardView({
   rewards,
   shopLoading,
   shopRewards,
+  suggestions,
   user,
   onAssignmentApprove,
   onAssignmentChildChange,
@@ -1236,6 +1316,7 @@ function DashboardView({
   onChildFormChange,
   onChildSubmit,
   onQuestFormChange,
+  onQuestSuggestionSelect,
   onQuestSubmit,
   onRewardFormChange,
   onRewardRedemptionApprove,
@@ -1243,6 +1324,7 @@ function DashboardView({
   onRewardRedemptionMarkRedeemed,
   onRewardRedemptionReject,
   onRewardRedeem,
+  onRewardSuggestionSelect,
   onRewardSubmit
 }: DashboardViewProps) {
   const childRows = children;
@@ -1377,7 +1459,9 @@ function DashboardView({
         form={questForm}
         quests={quests}
         saving={questSaving}
+        suggestions={suggestions.quests}
         onFormChange={onQuestFormChange}
+        onSuggestionSelect={onQuestSuggestionSelect}
         onSubmit={onQuestSubmit}
       />
 
@@ -1403,7 +1487,9 @@ function DashboardView({
         form={rewardForm}
         rewards={rewards}
         saving={rewardSaving}
+        suggestions={suggestions.rewards}
         onFormChange={onRewardFormChange}
+        onSuggestionSelect={onRewardSuggestionSelect}
         onSubmit={onRewardSubmit}
       />
 
@@ -1664,11 +1750,22 @@ interface RewardsPanelProps {
   form: RewardFormState;
   rewards: Reward[];
   saving: boolean;
+  suggestions: RewardSuggestion[];
   onFormChange: (form: RewardFormState) => void;
+  onSuggestionSelect: (suggestion: RewardSuggestion) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
-function RewardsPanel({ canManage, form, rewards, saving, onFormChange, onSubmit }: RewardsPanelProps) {
+function RewardsPanel({
+  canManage,
+  form,
+  rewards,
+  saving,
+  suggestions,
+  onFormChange,
+  onSuggestionSelect,
+  onSubmit
+}: RewardsPanelProps) {
   const activeRewards = rewards.filter((reward) => reward.isActive);
 
   return (
@@ -1688,97 +1785,105 @@ function RewardsPanel({ canManage, form, rewards, saving, onFormChange, onSubmit
         </Box>
 
         {canManage ? (
-          <Box
-            component="form"
-            onSubmit={onSubmit}
-            sx={{
-              bgcolor: 'action.hover',
-              borderRadius: 2,
-              display: 'grid',
-              gap: 1.25,
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
-              p: 1.5
-            }}
-          >
-            <TextField
-              autoComplete="off"
-              label="Belohnung"
-              onChange={(event) => onFormChange({ ...form, name: event.target.value })}
-              required
-              size="small"
-              value={form.name}
+          <Stack spacing={1.25}>
+            <SuggestionStrip
+              label="Shop-Bibliothek"
+              suggestions={suggestions}
+              getLabel={(suggestion) => suggestion.name}
+              onSelect={onSuggestionSelect}
             />
-            <TextField
-              autoComplete="off"
-              label="Beschreibung"
-              onChange={(event) => onFormChange({ ...form, description: event.target.value })}
-              size="small"
-              value={form.description}
-            />
-            <TextField
-              autoComplete="off"
-              label="Kategorie"
-              onChange={(event) => onFormChange({ ...form, category: event.target.value })}
-              size="small"
-              value={form.category}
-            />
-            <TextField
-              label="Preis"
-              onChange={(event) => onFormChange({ ...form, price: event.target.value })}
-              required
-              size="small"
-              slotProps={{ htmlInput: { min: 0, max: 100000 } }}
-              type="number"
-              value={form.price}
-            />
-            <TextField
-              autoComplete="off"
-              label="Bild-URL"
-              onChange={(event) => onFormChange({ ...form, imageUrl: event.target.value })}
-              size="small"
-              sx={{ gridColumn: { md: 'span 2' } }}
-              value={form.imageUrl}
-            />
-            <TextField
-              label="Max. Einloesungen"
-              onChange={(event) => onFormChange({ ...form, maxRedemptions: event.target.value })}
-              size="small"
-              slotProps={{ htmlInput: { min: 1, max: 10000 } }}
-              type="number"
-              value={form.maxRedemptions}
-            />
-            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={form.requiresApproval}
-                    onChange={(event) => onFormChange({ ...form, requiresApproval: event.target.checked })}
-                    size="small"
-                  />
-                }
-                label="Bestaetigung"
-              />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={form.isActive}
-                    onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
-                    size="small"
-                  />
-                }
-                label="Aktiv"
-              />
-            </Stack>
-            <Button
-              disabled={saving}
-              startIcon={<StorefrontRoundedIcon />}
-              sx={{ minHeight: 40 }}
-              type="submit"
-              variant="contained"
+            <Box
+              component="form"
+              onSubmit={onSubmit}
+              sx={{
+                bgcolor: 'action.hover',
+                borderRadius: 2,
+                display: 'grid',
+                gap: 1.25,
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
+                p: 1.5
+              }}
             >
-              Anlegen
-            </Button>
-          </Box>
+              <TextField
+                autoComplete="off"
+                label="Belohnung"
+                onChange={(event) => onFormChange({ ...form, name: event.target.value })}
+                required
+                size="small"
+                value={form.name}
+              />
+              <TextField
+                autoComplete="off"
+                label="Beschreibung"
+                onChange={(event) => onFormChange({ ...form, description: event.target.value })}
+                size="small"
+                value={form.description}
+              />
+              <TextField
+                autoComplete="off"
+                label="Kategorie"
+                onChange={(event) => onFormChange({ ...form, category: event.target.value })}
+                size="small"
+                value={form.category}
+              />
+              <TextField
+                label="Preis"
+                onChange={(event) => onFormChange({ ...form, price: event.target.value })}
+                required
+                size="small"
+                slotProps={{ htmlInput: { min: 0, max: 100000 } }}
+                type="number"
+                value={form.price}
+              />
+              <TextField
+                autoComplete="off"
+                label="Bild-URL"
+                onChange={(event) => onFormChange({ ...form, imageUrl: event.target.value })}
+                size="small"
+                sx={{ gridColumn: { md: 'span 2' } }}
+                value={form.imageUrl}
+              />
+              <TextField
+                label="Max. Einloesungen"
+                onChange={(event) => onFormChange({ ...form, maxRedemptions: event.target.value })}
+                size="small"
+                slotProps={{ htmlInput: { min: 1, max: 10000 } }}
+                type="number"
+                value={form.maxRedemptions}
+              />
+              <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={form.requiresApproval}
+                      onChange={(event) => onFormChange({ ...form, requiresApproval: event.target.checked })}
+                      size="small"
+                    />
+                  }
+                  label="Bestaetigung"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={form.isActive}
+                      onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
+                      size="small"
+                    />
+                  }
+                  label="Aktiv"
+                />
+              </Stack>
+              <Button
+                disabled={saving}
+                startIcon={<StorefrontRoundedIcon />}
+                sx={{ minHeight: 40 }}
+                type="submit"
+                variant="contained"
+              >
+                Anlegen
+              </Button>
+            </Box>
+          </Stack>
         ) : null}
 
         <Box sx={{ display: 'grid', gap: 1.5 }}>
@@ -1947,7 +2052,9 @@ interface QuestTemplatesPanelProps {
   form: QuestFormState;
   quests: QuestTemplate[];
   saving: boolean;
+  suggestions: QuestSuggestion[];
   onFormChange: (form: QuestFormState) => void;
+  onSuggestionSelect: (suggestion: QuestSuggestion) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
@@ -1956,7 +2063,9 @@ function QuestTemplatesPanel({
   form,
   quests,
   saving,
+  suggestions,
   onFormChange,
+  onSuggestionSelect,
   onSubmit
 }: QuestTemplatesPanelProps) {
   return (
@@ -1976,113 +2085,121 @@ function QuestTemplatesPanel({
         </Box>
 
         {canManage ? (
-          <Box
-            component="form"
-            onSubmit={onSubmit}
-            sx={{
-              bgcolor: 'action.hover',
-              borderRadius: 2,
-              display: 'grid',
-              gap: 1.25,
-              gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
-              p: 1.5
-            }}
-          >
-            <TextField
-              autoComplete="off"
-              label="Quest"
-              onChange={(event) => onFormChange({ ...form, title: event.target.value })}
-              required
-              size="small"
-              value={form.title}
+          <Stack spacing={1.25}>
+            <SuggestionStrip
+              label="Quest-Bibliothek"
+              suggestions={suggestions}
+              getLabel={(suggestion) => suggestion.title}
+              onSelect={onSuggestionSelect}
             />
-            <TextField
-              autoComplete="off"
-              label="Beschreibung"
-              onChange={(event) => onFormChange({ ...form, description: event.target.value })}
-              size="small"
-              value={form.description}
-            />
-            <TextField
-              label="Typ"
-              onChange={(event) => {
-                const type = event.target.value as QuestType;
-                onFormChange({
-                  ...form,
-                  type,
-                  frequency: type === 'ONE_TIME' ? 'NONE' : form.frequency === 'NONE' ? 'DAILY' : form.frequency
-                });
+            <Box
+              component="form"
+              onSubmit={onSubmit}
+              sx={{
+                bgcolor: 'action.hover',
+                borderRadius: 2,
+                display: 'grid',
+                gap: 1.25,
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
+                p: 1.5
               }}
-              select
-              size="small"
-              value={form.type}
             >
-              <MenuItem value="ONE_TIME">Einmalig</MenuItem>
-              <MenuItem value="RECURRING">Wiederkehrend</MenuItem>
-            </TextField>
-            <TextField
-              disabled={form.type === 'ONE_TIME'}
-              label="Rhythmus"
-              onChange={(event) => onFormChange({ ...form, frequency: event.target.value as QuestFrequency })}
-              select
-              size="small"
-              value={form.type === 'ONE_TIME' ? 'NONE' : form.frequency}
-            >
-              <MenuItem value="NONE">Kein Rhythmus</MenuItem>
-              <MenuItem value="DAILY">Taeglich</MenuItem>
-              <MenuItem value="WEEKLY">Woechentlich</MenuItem>
-              <MenuItem value="CUSTOM">Individuell</MenuItem>
-            </TextField>
-            <TextField
-              label="XP"
-              onChange={(event) => onFormChange({ ...form, xpReward: event.target.value })}
-              required
-              size="small"
-              slotProps={{ htmlInput: { min: 0, max: 10000 } }}
-              type="number"
-              value={form.xpReward}
-            />
-            <TextField
-              label="Muenzen"
-              onChange={(event) => onFormChange({ ...form, coinReward: event.target.value })}
-              required
-              size="small"
-              slotProps={{ htmlInput: { min: 0, max: 10000 } }}
-              type="number"
-              value={form.coinReward}
-            />
-            <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={form.requiresApproval}
-                    onChange={(event) => onFormChange({ ...form, requiresApproval: event.target.checked })}
-                    size="small"
-                  />
-                }
-                label="Bestaetigung"
+              <TextField
+                autoComplete="off"
+                label="Quest"
+                onChange={(event) => onFormChange({ ...form, title: event.target.value })}
+                required
+                size="small"
+                value={form.title}
               />
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={form.isActive}
-                    onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
-                    size="small"
-                  />
-                }
-                label="Aktiv"
+              <TextField
+                autoComplete="off"
+                label="Beschreibung"
+                onChange={(event) => onFormChange({ ...form, description: event.target.value })}
+                size="small"
+                value={form.description}
               />
-            </Stack>
-            <Button
-              disabled={saving}
-              startIcon={<TaskAltRoundedIcon />}
-              sx={{ minHeight: 40 }}
-              type="submit"
-              variant="contained"
-            >
-              Erstellen
-            </Button>
-          </Box>
+              <TextField
+                label="Typ"
+                onChange={(event) => {
+                  const type = event.target.value as QuestType;
+                  onFormChange({
+                    ...form,
+                    type,
+                    frequency: type === 'ONE_TIME' ? 'NONE' : form.frequency === 'NONE' ? 'DAILY' : form.frequency
+                  });
+                }}
+                select
+                size="small"
+                value={form.type}
+              >
+                <MenuItem value="ONE_TIME">Einmalig</MenuItem>
+                <MenuItem value="RECURRING">Wiederkehrend</MenuItem>
+              </TextField>
+              <TextField
+                disabled={form.type === 'ONE_TIME'}
+                label="Rhythmus"
+                onChange={(event) => onFormChange({ ...form, frequency: event.target.value as QuestFrequency })}
+                select
+                size="small"
+                value={form.type === 'ONE_TIME' ? 'NONE' : form.frequency}
+              >
+                <MenuItem value="NONE">Kein Rhythmus</MenuItem>
+                <MenuItem value="DAILY">Taeglich</MenuItem>
+                <MenuItem value="WEEKLY">Woechentlich</MenuItem>
+                <MenuItem value="CUSTOM">Individuell</MenuItem>
+              </TextField>
+              <TextField
+                label="XP"
+                onChange={(event) => onFormChange({ ...form, xpReward: event.target.value })}
+                required
+                size="small"
+                slotProps={{ htmlInput: { min: 0, max: 10000 } }}
+                type="number"
+                value={form.xpReward}
+              />
+              <TextField
+                label="Muenzen"
+                onChange={(event) => onFormChange({ ...form, coinReward: event.target.value })}
+                required
+                size="small"
+                slotProps={{ htmlInput: { min: 0, max: 10000 } }}
+                type="number"
+                value={form.coinReward}
+              />
+              <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={form.requiresApproval}
+                      onChange={(event) => onFormChange({ ...form, requiresApproval: event.target.checked })}
+                      size="small"
+                    />
+                  }
+                  label="Bestaetigung"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={form.isActive}
+                      onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
+                      size="small"
+                    />
+                  }
+                  label="Aktiv"
+                />
+              </Stack>
+              <Button
+                disabled={saving}
+                startIcon={<TaskAltRoundedIcon />}
+                sx={{ minHeight: 40 }}
+                type="submit"
+                variant="contained"
+              >
+                Erstellen
+              </Button>
+            </Box>
+          </Stack>
         ) : null}
 
         <Box sx={{ display: 'grid', gap: 1.5 }}>
@@ -2096,6 +2213,54 @@ function QuestTemplatesPanel({
         </Box>
       </Stack>
     </Paper>
+  );
+}
+
+interface SuggestionStripProps<TSuggestion extends { id: string }> {
+  label: string;
+  suggestions: TSuggestion[];
+  getLabel: (suggestion: TSuggestion) => string;
+  onSelect: (suggestion: TSuggestion) => void;
+}
+
+function SuggestionStrip<TSuggestion extends { id: string }>({
+  label,
+  suggestions,
+  getLabel,
+  onSelect
+}: SuggestionStripProps<TSuggestion>) {
+  if (suggestions.length === 0) {
+    return null;
+  }
+
+  return (
+    <Box
+      sx={{
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1,
+        gridTemplateColumns: { xs: '1fr', md: 'auto minmax(0, 1fr)' },
+        p: 1.25
+      }}
+    >
+      <Typography color="text.secondary" sx={{ fontWeight: 800, pt: 0.5 }} variant="body2">
+        {label}
+      </Typography>
+      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+        {suggestions.map((suggestion) => (
+          <Button
+            key={suggestion.id}
+            onClick={() => onSelect(suggestion)}
+            size="small"
+            startIcon={<AutoAwesomeRoundedIcon />}
+            variant="outlined"
+          >
+            {getLabel(suggestion)}
+          </Button>
+        ))}
+      </Stack>
+    </Box>
   );
 }
 

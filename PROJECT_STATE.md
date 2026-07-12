@@ -183,19 +183,23 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Reward-Reservierungs-/Storno-Slice per API-Script erfolgreich.
 - LXC-Health nach Reward-Reservierungs-/Storno-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Reward-Reservierung und Storno erfolgreich: Beantragung zieht Muenzen ab, doppelte Ausgabe wird blockiert, Ablehnung erstattet Muenzen und Storno vor Ausgabe erstattet Muenzen.
+- Suggestions-Modul mit `GET /api/suggestions`, `GET /api/suggestions/rewards` und `GET /api/suggestions/quests` angelegt.
+- Erste kuratierte Bibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen angelegt.
+- Frontend zeigt die Vorschlagsbibliothek in Quest- und Reward-Formularen und uebernimmt Vorschlaege als editierbare Formularwerte.
+- Backend- und Frontend-Build nach Vorschlagsbibliothek-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen entwerfen.
+- Vorschlagsbibliothek auf dem LXC deployen und API/UI testen.
 - Kinderlogin ohne E-Mail konzipieren, z.B. Familiencode, QR-Code oder Eltern-freigegebene Kinder-PIN.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes die Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen entwerfen. Danach Kinderlogin per Familiencode/QR/PIN und spontane Quests als separate Produkt-Slices planen.
+Als naechstes die Vorschlagsbibliothek auf dem LXC deployen und pruefen. Danach Kinderlogin per Familiencode/QR/PIN und spontane Quests als separate Produkt-Slices planen.
 
 ## Architekturentscheidungen
 
@@ -231,6 +235,7 @@ Als naechstes die Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
+- Die Vorschlagsbibliothek ist aktuell statischer Backend-Inhalt ohne Datenbanktabelle. Vorschlaege fuellen nur Formulare; echte Familieninhalte entstehen erst beim Speichern als Quest oder Reward.
 - Reward-Einloesungen speichern den Preis als `coinCost`, damit spaetere Preisaenderungen historische Einloesungen nicht veraendern.
 - Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. `REQUESTED` und `APPROVED` halten Muenzen gebunden, `REDEEMED` ist final, `REJECTED` und `CANCELLED` geben Muenzen wieder frei.
 - Die Eltern-Bestaetigung fuer Reward-Einloesungen wechselt nur von `REQUESTED` zu `APPROVED`; Muenzen wurden bereits reserviert. `REDEEMED` markiert nur die reale Ausgabe der Belohnung und veraendert keine Muenzen.

@@ -66,6 +66,7 @@ Aktuell vorhanden:
 - `QuestAssignmentsModule` fuer die Zuweisung von Quests an Kinder
 - `RewardsModule` fuer Belohnungen im Familienshop
 - `RewardRedemptionsController` im `RewardsModule` fuer Einloeseanfragen, Bestaetigung, Ablehnung, Storno und Ausgabe
+- `SuggestionsModule` fuer kuratierte, read-only Vorschlaege zu Quest-Vorlagen und Shop-Belohnungen
 - Prisma-Schema unter `apps/backend/prisma/schema.prisma`
 - Prisma-CLI-Konfiguration unter `apps/backend/prisma.config.ts`
 
@@ -113,6 +114,7 @@ Aktuell vorhanden:
 - Auth-/Dashboard-Grundlayout unter `apps/frontend/src/App.tsx`
 - API-Anbindung ueber `VITE_API_BASE_URL`
 - JWT-Session wird aktuell im Browser-`localStorage` gehalten
+- Vorschlagsbibliotheken fuellen bestehende Quest- und Reward-Formulare, legen aber nichts automatisch an
 
 ## Datenbank
 
@@ -127,6 +129,8 @@ Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Desh
 Der Prisma Client Generator schreibt nach `apps/backend/src/generated/prisma`. Backend-Code importiert Prisma-Typen und `PrismaClient` ueber den stabilen Wrapper `apps/backend/src/prisma/client.ts`; Nest kopiert den generierten Client beim Build nach `dist/generated/prisma`. Dadurch haengt der Docker-Build nicht vom internen `@prisma/client/.prisma` Layout ab.
 
 Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. Status `REQUESTED` und `APPROVED` halten die Muenzen gebunden, `REDEEMED` ist final. Status `REJECTED` und `CANCELLED` geben die Muenzen wieder frei. Dadurch kann ein Kind denselben Muenzenstand nicht mehrfach parallel im Shop ausgeben.
+
+Die erste Vorschlagsbibliothek ist statischer, versionierter Backend-Inhalt ohne eigene Datenbanktabelle. Familien kopieren Vorschlaege bewusst in eigene Quest- oder Reward-Daten, indem sie das vorausgefuellte Formular speichern.
 
 Details stehen in `DATABASE.md`.
 

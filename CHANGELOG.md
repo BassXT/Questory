@@ -80,6 +80,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Reward-Einloesungen reservieren Muenzen beim Beantragen oder direkten Einloesen transaktional.
 - Reward-Storno mit Status `CANCELLED`, `cancelledAt` und API-Endpunkt `POST /api/reward-redemptions/{redemptionId}/cancel` erstellt.
 - Frontend-Stornoaktion fuer noch nicht ausgegebene Reward-Einloesungen erstellt.
+- Suggestions-Modul mit `GET /api/suggestions`, `GET /api/suggestions/rewards` und `GET /api/suggestions/quests` erstellt.
+- Kuratierte Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen erstellt.
+- Frontend-Bibliotheksauswahl fuer Quest- und Reward-Formulare erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -197,6 +200,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Reward-Reservierungs-/Storno-Slice per API-Script erfolgreich.
 - LXC-Health nach Reward-Reservierungs-/Storno-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Reward-Reservierung und Storno erfolgreich: Beantragung zieht Muenzen ab, doppelte Ausgabe wird blockiert, Ablehnung erstattet Muenzen und Storno vor Ausgabe erstattet Muenzen.
+- Backend- und Frontend-Build nach Vorschlagsbibliothek-Slice erfolgreich.
 
 ### Fixed
 
