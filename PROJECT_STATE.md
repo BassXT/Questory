@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs- und Reward-Shop-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Der Frontend-Workflow fuer Reward-Einloesungsverwaltung durch Eltern ist lokal gegen das LXC-Backend getestet. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop- und Reward-Einloesungsverwaltungs-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -159,19 +159,19 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Frontend-Test des Reward-Shops unter `http://192.168.1.98:5173` erfolgreich: guenstige Belohnung anlegen, Shop laden, Reward beantragen, offene Reward-Metrik aktualisieren, Coins bei bestaetigungspflichtigem Reward unveraendert lassen, Reload und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Reward-Einloesungsverwaltung fuer Eltern angelegt: Einloeseanfragen listen, offene Anfragen bestaetigen/ablehnen und freigegebene Belohnungen als eingeloest markieren.
 - Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: bestehende Reward-Anfrage bestaetigen, Coin-Abzug sichtbar machen, als eingeloest markieren, zweite Anfrage ablehnen, Status nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy nach Frontend-Reward-Einloesungsverwaltungs-Slice per API-Script erfolgreich.
+- LXC-Frontend-Test der Reward-Einloesungsverwaltung unter `http://192.168.1.98:5173` erfolgreich: Anfrage bestaetigen, Coin-Abzug sichtbar machen, als eingeloest markieren, neue Anfrage ablehnen, Status nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
-- Portainer-Redeploy nach Frontend-Reward-Einloesungsverwaltungs-Slice ausfuehren.
-- LXC-Test fuer Frontend-Reward-Einloesungsverwaltung unter `http://192.168.1.98:5173` ausfuehren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes den Frontend-Reward-Einloesungsverwaltungs-Slice im Portainer-Stack redeployen und im Browser gegen das LXC-Backend testen. Danach folgt Dashboard-/Statistik-Polish und MVP-Haertung.
+Als naechstes Dashboard-/Statistik-Polish und MVP-Haertung umsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern, Testdaten-Aufraeumstrategie definieren und erste automatisierte Tests/CI vorbereiten.
 
 ## Architekturentscheidungen
 
