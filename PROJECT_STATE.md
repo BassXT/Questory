@@ -219,17 +219,23 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Health nach Kinderlogin-UI-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Kinderlogin-UI-Slice erfolgreich: Familiencode, Kinderauswahl und PIN-Login liefern weiterhin `CHILD`-Dashboard-Scope.
 - LXC-Browser-Test der Kinderlogin-UI unter `http://192.168.1.98:5173` erfolgreich: Kind-Tab, Familiencode, Kind laden, PIN eingeben, Child-Dashboard sichtbar und Eltern-Anlageformular ausgeblendet.
+- Prisma-Migration `20260712162000_spontaneous_quests` fuer `Quest.isAssignable` und `Quest.isSelfService` angelegt.
+- Spontane Quest-Einreichung `POST /api/quests/:questId/self-service-completions` angelegt.
+- Manuelle Quest-Zuweisung blockiert Quests mit `isAssignable: false`.
+- Frontend-Questformular um Schalter fuer `Zuweisbar` und `Spontan` erweitert.
+- Frontend-Dashboard zeigt spontane Quests fuer das ausgewaehlte Kind und erlaubt Einreichung ohne vorherige Zuweisung.
+- Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Spontane-Quests-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
+- Spontane-Quests-Slice auf dem LXC deployen und API/UI testen.
 
 ## Naechster Schritt
 
-Als naechstes zeitlich ungebundene/spontane Quests konzipieren und als separaten Produkt-Slice implementieren.
+Als naechstes den Spontane-Quests-Slice auf dem LXC deployen und mit API/UI testen. Danach die ersten UX-Feinschliffe aus dem echten Testlauf priorisieren.
 
 ## Architekturentscheidungen
 
@@ -261,6 +267,8 @@ Als naechstes zeitlich ungebundene/spontane Quests konzipieren und als separaten
 - PIN-basierter Kinderlogin erzeugt ein JWT mit `role: CHILD` und `childProfileId`. API-Scope-Pruefungen muessen fuer Kinder entweder `childProfileId` oder den alten `userId`-basierten Kinder-User akzeptieren.
 - Bestehende Familien aus der Zeit vor `20260712143000_child_login_model` koennen noch `childLoginCode = null` haben. Vor dem finalen Kinderlogin-Rollout braucht es entweder Backfill oder einen Eltern-Endpunkt zum Erzeugen/Rotieren des Codes.
 - Quest-Vorlagen gehoeren immer zu genau einer Familie. Einmalige Quests nutzen `QuestFrequency.NONE`; wiederkehrende Quests nutzen `DAILY`, `WEEKLY` oder `CUSTOM`.
+- Quest-Vorlagen koennen ueber `isAssignable` manuell zuweisbar und ueber `isSelfService` spontan einreichbar sein.
+- Spontane Quests nutzen dieselben `QuestAssignment`- und `QuestCompletion`-Tabellen wie geplante Quests. Falls noch keine Zuweisung existiert, legt das Backend eine interne Zuweisung ohne Faelligkeitsdatum an.
 - Quest-Zuweisungen verbinden genau eine Quest mit genau einem Kinderprofil. Doppelte Zuweisungen derselben Quest an dasselbe Kind werden aktuell in der Anwendungsschicht abgelehnt.
 - Das Frontend speichert optionale Quest-Zuweisungs-Faelligkeitsdaten als mittags UTC (`T12:00:00.000Z`), damit reine Kalendertage in der deutschen Anzeige nicht durch Zeitzonen auf den Vortag oder Folgetag rutschen.
 - Quest-Abschluesse starten als `SUBMITTED`. XP und Muenzen bleiben bis zur Eltern-Bestaetigung bei `0`, damit Progression in einem eigenen, testbaren Slice umgesetzt wird.

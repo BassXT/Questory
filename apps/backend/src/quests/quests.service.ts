@@ -15,6 +15,8 @@ const questSelect = {
   coinReward: true,
   requiresApproval: true,
   isActive: true,
+  isAssignable: true,
+  isSelfService: true,
   createdByUserId: true,
   createdAt: true,
   updatedAt: true
@@ -46,6 +48,8 @@ export class QuestsService {
         coinReward: dto.coinReward,
         requiresApproval: dto.requiresApproval ?? true,
         isActive: dto.isActive ?? true,
+        isAssignable: dto.isAssignable ?? true,
+        isSelfService: dto.isSelfService ?? false,
         createdByUserId: user.sub
       },
       select: questSelect

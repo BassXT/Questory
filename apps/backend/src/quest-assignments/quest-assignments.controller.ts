@@ -5,6 +5,7 @@ import { Roles } from '../auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
+import { CompleteSelfServiceQuestDto } from './dto/complete-self-service-quest.dto';
 import { CreateQuestAssignmentDto } from './dto/create-quest-assignment.dto';
 import { RejectQuestCompletionDto } from './dto/reject-quest-completion.dto';
 import { QuestAssignmentsService } from './quest-assignments.service';
@@ -29,6 +30,16 @@ export class QuestAssignmentsController {
   @Roles(Role.ADMIN, Role.PARENT, Role.CHILD)
   completeAssignment(@CurrentUser() user: AuthenticatedUser, @Param('assignmentId') assignmentId: string) {
     return this.questAssignmentsService.completeAssignment(user, assignmentId);
+  }
+
+  @Post('quests/:questId/self-service-completions')
+  @Roles(Role.ADMIN, Role.PARENT, Role.CHILD)
+  completeSelfServiceQuest(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('questId') questId: string,
+    @Body() dto: CompleteSelfServiceQuestDto
+  ) {
+    return this.questAssignmentsService.completeSelfServiceQuest(user, questId, dto);
   }
 
   @Post('quest-completions/:completionId/approve')

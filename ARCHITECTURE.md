@@ -132,6 +132,8 @@ Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Ein
 
 Die erste Vorschlagsbibliothek ist statischer, versionierter Backend-Inhalt ohne eigene Datenbanktabelle. Familien kopieren Vorschlaege bewusst in eigene Quest- oder Reward-Daten, indem sie das vorausgefuellte Formular speichern.
 
+Quest-Vorlagen trennen planbare Zuweisungen und spontane Einreichungen ueber `isAssignable` und `isSelfService`. Spontane Quests verwenden bewusst dieselben Tabellen `QuestAssignment` und `QuestCompletion` wie geplante Quests, damit Elternfreigabe, XP-/Muenzen-Vergabe und Statistiken ohne paralleles Sondermodell funktionieren.
+
 Details stehen in `DATABASE.md`.
 
 ## API

@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable,
 import { QuestCompletionStatus, QuestType, Role } from '../prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
+import { CompleteSelfServiceQuestDto } from './dto/complete-self-service-quest.dto';
 import { CreateQuestAssignmentDto } from './dto/create-quest-assignment.dto';
 import { RejectQuestCompletionDto } from './dto/reject-quest-completion.dto';
 
@@ -127,7 +128,8 @@ export class QuestAssignmentsService {
         },
         select: {
           id: true,
-          isActive: true
+          isActive: true,
+          isAssignable: true
         }
       }),
       this.prisma.childProfile.findFirst({
@@ -151,6 +153,10 @@ export class QuestAssignmentsService {
 
     if (!quest.isActive) {
       throw new BadRequestException('Inactive quests cannot be assigned.');
+    }
+
+    if (!quest.isAssignable) {
+      throw new BadRequestException('Quest cannot be manually assigned.');
     }
 
     const existingAssignment = await this.prisma.questAssignment.findFirst({
@@ -270,6 +276,101 @@ export class QuestAssignmentsService {
         status: QuestCompletionStatus.SUBMITTED
       },
       select: questCompletionSelect
+    });
+  }
+
+  async completeSelfServiceQuest(user: AuthenticatedUser, questId: string, dto: CompleteSelfServiceQuestDto) {
+    const [quest, child] = await Promise.all([
+      this.prisma.quest.findFirst({
+        where: {
+          id: questId,
+          familyId: user.familyId
+        },
+        select: {
+          id: true,
+          type: true,
+          isActive: true,
+          isSelfService: true
+        }
+      }),
+      this.prisma.childProfile.findFirst({
+        where: {
+          id: dto.childProfileId,
+          familyId: user.familyId
+        },
+        select: {
+          id: true,
+          userId: true
+        }
+      })
+    ]);
+
+    if (!quest) {
+      throw new NotFoundException('Quest not found.');
+    }
+
+    if (!child) {
+      throw new NotFoundException('Child profile not found.');
+    }
+
+    if (!this.canAccessChild(user, child)) {
+      throw new ForbiddenException('Children can only complete their own self-service quests.');
+    }
+
+    if (!quest.isActive) {
+      throw new BadRequestException('Inactive quests cannot be completed.');
+    }
+
+    if (!quest.isSelfService) {
+      throw new BadRequestException('Quest is not available for self-service completion.');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const assignment =
+        (await tx.questAssignment.findFirst({
+          where: {
+            questId,
+            childProfileId: dto.childProfileId
+          },
+          select: {
+            id: true
+          }
+        })) ??
+        (await tx.questAssignment.create({
+          data: {
+            questId,
+            childProfileId: dto.childProfileId,
+            dueAt: null
+          },
+          select: {
+            id: true
+          }
+        }));
+
+      const blockingCompletion = await tx.questCompletion.findFirst({
+        where: {
+          questAssignmentId: assignment.id,
+          status:
+            quest.type === QuestType.ONE_TIME
+              ? { in: [QuestCompletionStatus.SUBMITTED, QuestCompletionStatus.APPROVED] }
+              : QuestCompletionStatus.SUBMITTED
+        },
+        select: {
+          id: true
+        }
+      });
+
+      if (blockingCompletion) {
+        throw new ConflictException('Self-service quest already has a pending or completed submission.');
+      }
+
+      return tx.questCompletion.create({
+        data: {
+          questAssignmentId: assignment.id,
+          status: QuestCompletionStatus.SUBMITTED
+        },
+        select: questCompletionSelect
+      });
     });
   }
 

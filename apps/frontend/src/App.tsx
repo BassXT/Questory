@@ -159,6 +159,8 @@ interface QuestTemplate {
   coinReward: number;
   requiresApproval: boolean;
   isActive: boolean;
+  isAssignable: boolean;
+  isSelfService: boolean;
   createdByUserId: string;
   createdAt: string;
   updatedAt: string;
@@ -182,6 +184,8 @@ interface QuestAssignment {
     coinReward: number;
     requiresApproval: boolean;
     isActive: boolean;
+    isAssignable: boolean;
+    isSelfService: boolean;
   };
 }
 
@@ -299,6 +303,8 @@ interface QuestFormState {
   xpReward: string;
   coinReward: string;
   requiresApproval: boolean;
+  isAssignable: boolean;
+  isSelfService: boolean;
   isActive: boolean;
 }
 
@@ -350,6 +356,8 @@ const initialQuestForm: QuestFormState = {
   xpReward: '25',
   coinReward: '5',
   requiresApproval: true,
+  isAssignable: true,
+  isSelfService: false,
   isActive: true
 };
 
@@ -801,6 +809,8 @@ function App() {
           xpReward: Number(questForm.xpReward),
           coinReward: Number(questForm.coinReward),
           requiresApproval: questForm.requiresApproval,
+          isAssignable: questForm.isAssignable,
+          isSelfService: questForm.isSelfService,
           isActive: questForm.isActive
         }
       });
@@ -823,6 +833,8 @@ function App() {
       xpReward: String(suggestion.xpReward),
       coinReward: String(suggestion.coinReward),
       requiresApproval: suggestion.requiresApproval,
+      isAssignable: true,
+      isSelfService: false,
       isActive: true
     });
   }
@@ -871,6 +883,30 @@ function App() {
       await apiRequest<QuestCompletionSummary>(`/quest-assignments/${assignmentId}/complete`, {
         method: 'POST',
         token
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setCompletionSavingId(null);
+    }
+  }
+
+  async function submitSelfServiceQuest(questId: string) {
+    if (!token || !questAssignmentForm.childProfileId) {
+      return;
+    }
+
+    setCompletionSavingId(`self-service:${questId}`);
+    setError(null);
+
+    try {
+      await apiRequest<QuestCompletionSummary>(`/quests/${questId}/self-service-completions`, {
+        method: 'POST',
+        token,
+        body: {
+          childProfileId: questAssignmentForm.childProfileId
+        }
       });
       await refreshDashboard(questAssignmentForm.childProfileId);
     } catch (requestError) {
@@ -1156,6 +1192,7 @@ function App() {
               onAssignmentComplete={submitQuestCompletion}
               onAssignmentApprove={approveQuestCompletion}
               onAssignmentReject={rejectQuestCompletion}
+              onSelfServiceQuestComplete={submitSelfServiceQuest}
               onQuestFormChange={setQuestForm}
               onQuestSuggestionSelect={applyQuestSuggestion}
               onQuestSubmit={submitQuest}
@@ -1502,6 +1539,7 @@ interface DashboardViewProps {
   onAssignmentFormChange: (form: QuestAssignmentFormState) => void;
   onAssignmentReject: (assignmentId: string, completionId: string) => void;
   onAssignmentSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onSelfServiceQuestComplete: (questId: string) => void;
   onChildFormChange: (form: ChildFormState) => void;
   onChildPinDisable: (childProfileId: string) => void;
   onChildPinFormChange: (form: ChildPinFormState) => void;
@@ -1555,6 +1593,7 @@ function DashboardView({
   onAssignmentFormChange,
   onAssignmentReject,
   onAssignmentSubmit,
+  onSelfServiceQuestComplete,
   onChildFormChange,
   onChildPinDisable,
   onChildPinFormChange,
@@ -1792,6 +1831,14 @@ function DashboardView({
         onFormChange={onAssignmentFormChange}
         onReject={onAssignmentReject}
         onSubmit={onAssignmentSubmit}
+      />
+
+      <SelfServiceQuestsPanel
+        children={children}
+        completionSavingId={completionSavingId}
+        quests={quests}
+        selectedChildId={assignmentForm.childProfileId}
+        onComplete={onSelfServiceQuestComplete}
       />
 
       <RewardsPanel
@@ -2493,6 +2540,26 @@ function QuestTemplatesPanel({
                 <FormControlLabel
                   control={
                     <Switch
+                      checked={form.isAssignable}
+                      onChange={(event) => onFormChange({ ...form, isAssignable: event.target.checked })}
+                      size="small"
+                    />
+                  }
+                  label="Zuweisbar"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={form.isSelfService}
+                      onChange={(event) => onFormChange({ ...form, isSelfService: event.target.checked })}
+                      size="small"
+                    />
+                  }
+                  label="Spontan"
+                />
+                <FormControlLabel
+                  control={
+                    <Switch
                       checked={form.isActive}
                       onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
                       size="small"
@@ -2525,6 +2592,113 @@ function QuestTemplatesPanel({
         </Box>
       </Stack>
     </Paper>
+  );
+}
+
+interface SelfServiceQuestsPanelProps {
+  children: ChildProfile[];
+  completionSavingId: string | null;
+  quests: QuestTemplate[];
+  selectedChildId: string;
+  onComplete: (questId: string) => void;
+}
+
+function SelfServiceQuestsPanel({
+  children,
+  completionSavingId,
+  quests,
+  selectedChildId,
+  onComplete
+}: SelfServiceQuestsPanelProps) {
+  const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
+  const selfServiceQuests = quests.filter((quest) => quest.isActive && quest.isSelfService);
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<AutoAwesomeRoundedIcon />} title="Spontane Quests" />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            <Chip icon={<TaskAltRoundedIcon />} label={`${selfServiceQuests.length} bereit`} variant="outlined" />
+            <Chip
+              icon={<PeopleAltRoundedIcon />}
+              label={selectedChild ? selectedChild.displayName : 'Kein Kind'}
+              variant="outlined"
+            />
+          </Stack>
+        </Box>
+
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
+          {selectedChild && selfServiceQuests.length > 0 ? (
+            selfServiceQuests.map((quest) => (
+              <SelfServiceQuestRow
+                key={quest.id}
+                quest={quest}
+                saving={completionSavingId === `self-service:${quest.id}`}
+                onComplete={onComplete}
+              />
+            ))
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">
+                {selectedChild ? 'Noch keine spontanen Quests aktiv' : 'Noch kein Kind fuer spontane Quests ausgewaehlt'}
+              </Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
+  );
+}
+
+interface SelfServiceQuestRowProps {
+  quest: QuestTemplate;
+  saving: boolean;
+  onComplete: (questId: string) => void;
+}
+
+function SelfServiceQuestRow({ quest, saving, onComplete }: SelfServiceQuestRowProps) {
+  return (
+    <Box
+      sx={{
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1,
+        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto auto auto' },
+        p: 1.5
+      }}
+    >
+      <Box sx={{ minWidth: 0 }}>
+        <Typography sx={{ fontWeight: 900 }} noWrap>
+          {quest.title}
+        </Typography>
+        {quest.description ? (
+          <Typography color="text.secondary" variant="body2">
+            {quest.description}
+          </Typography>
+        ) : null}
+      </Box>
+      <Chip label={`${quest.xpReward} XP`} variant="outlined" />
+      <Chip icon={<PaidRoundedIcon />} label={quest.coinReward} variant="outlined" />
+      <Button
+        disabled={saving}
+        onClick={() => onComplete(quest.id)}
+        size="small"
+        startIcon={<TaskAltRoundedIcon />}
+        variant="contained"
+      >
+        Erledigt
+      </Button>
+    </Box>
   );
 }
 
@@ -2706,6 +2880,8 @@ function QuestTemplateRow({ quest }: QuestTemplateRowProps) {
         ) : null}
       </Box>
       <Chip label={quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(quest.frequency)} variant="outlined" />
+      <Chip color={quest.isAssignable ? 'success' : 'default'} label={quest.isAssignable ? 'Zuweisbar' : 'Nicht zuweisbar'} variant="outlined" />
+      <Chip color={quest.isSelfService ? 'success' : 'default'} label={quest.isSelfService ? 'Spontan' : 'Planbar'} variant="outlined" />
       <Chip icon={<EmojiEventsRoundedIcon />} label={`${quest.xpReward} XP`} variant="outlined" />
       <Chip icon={<PaidRoundedIcon />} label={quest.coinReward} variant="outlined" />
     </Box>

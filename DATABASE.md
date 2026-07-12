@@ -101,6 +101,8 @@ Felder:
 - `xpReward`
 - `coinReward`
 - `requiresApproval`
+- `isAssignable`
+- `isSelfService`
 - `isActive`
 - `createdByUserId`
 - `createdAt`
@@ -117,6 +119,12 @@ Frequenz:
 - `DAILY`
 - `WEEKLY`
 - `CUSTOM`
+
+Spontane Quests:
+
+- `isAssignable` erlaubt oder verhindert die manuelle Zuweisung durch Eltern.
+- `isSelfService` erlaubt Einreichungen ohne vorherige Zuweisung, zum Beispiel "Ich habe mein Zimmer aufgeraeumt".
+- Spontane Einreichungen nutzen weiterhin `QuestAssignment` und `QuestCompletion`. Existiert noch keine Zuweisung, wird eine interne Zuweisung ohne `dueAt` angelegt.
 
 ### QuestAssignment
 
@@ -220,6 +228,7 @@ Weitere Migrationen:
 ```text
 apps/backend/prisma/migrations/20260712122000_reward_redemption_reservations/migration.sql
 apps/backend/prisma/migrations/20260712143000_child_login_model/migration.sql
+apps/backend/prisma/migrations/20260712162000_spontaneous_quests/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:

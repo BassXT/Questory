@@ -46,4 +46,12 @@ export class CreateQuestDto {
   @IsOptional()
   @IsBoolean()
   isActive?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isAssignable?: boolean;
+
+  @IsOptional()
+  @IsBoolean()
+  isSelfService?: boolean;
 }

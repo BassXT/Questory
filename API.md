@@ -396,6 +396,8 @@ Hinweise:
 - Einmalige Quests muessen `frequency: "NONE"` verwenden oder `frequency` weglassen.
 - Wiederkehrende Quests muessen `DAILY`, `WEEKLY` oder `CUSTOM` verwenden.
 - `xpReward` und `coinReward` muessen Zahlen zwischen `0` und `10000` sein.
+- `isAssignable` steuert, ob Eltern die Quest manuell einem Kind zuweisen koennen.
+- `isSelfService` steuert, ob Kinder die Quest ohne vorherige Zuweisung spontan einreichen koennen.
 
 Request:
 
@@ -408,6 +410,8 @@ Request:
   "xpReward": 25,
   "coinReward": 5,
   "requiresApproval": true,
+  "isAssignable": true,
+  "isSelfService": false,
   "isActive": true
 }
 ```
@@ -487,6 +491,7 @@ Hinweise:
 
 - Quest und Kinderprofil muessen zur aktuellen Familie gehoeren.
 - Inaktive Quests koennen nicht zugewiesen werden.
+- Quests mit `isAssignable: false` koennen nicht manuell zugewiesen werden.
 - Dieselbe Quest kann einem Kind aktuell nur einmal zugewiesen werden.
 
 Request:
@@ -523,6 +528,36 @@ Hinweise:
 - Eltern/Admin duerfen bis zum finalen Kinder-Login-Flow stellvertretend einreichen.
 - Eine Zuweisung darf nur eine offene Einreichung mit Status `SUBMITTED` haben.
 - Einmalige Quests koennen nach einer bestaetigten Einreichung nicht erneut eingereicht werden.
+
+Response: Die erzeugte Completion mit Status `SUBMITTED`.
+
+### `POST /api/quests/{questId}/self-service-completions`
+
+Kind, Elternteil oder Admin reicht eine spontane Quest fuer ein Kind ein.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`, `CHILD`
+
+Hinweise:
+
+- Die Quest muss aktiv sein und `isSelfService: true` besitzen.
+- Das Kinderprofil muss zur aktuellen Familie gehoeren.
+- Kinder mit eigenem Login duerfen nur fuer das eigene Kinderprofil einreichen.
+- Wenn schon eine Zuweisung fuer Quest und Kind existiert, wird sie wiederverwendet.
+- Wenn keine Zuweisung existiert, wird intern eine Zuweisung ohne Faelligkeitsdatum angelegt.
+- Einmalige spontane Quests blockieren weitere Einreichungen, sobald eine Einreichung `SUBMITTED` oder `APPROVED` ist.
+- Wiederkehrende spontane Quests blockieren nur parallele offene Einreichungen mit Status `SUBMITTED`.
+
+Request:
+
+```json
+{
+  "childProfileId": "<child-profile-id>"
+}
+```
 
 Response: Die erzeugte Completion mit Status `SUBMITTED`.
 

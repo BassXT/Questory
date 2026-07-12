@@ -103,6 +103,8 @@ model Quest {
   coinReward       Int
   requiresApproval Boolean           @default(true)
   isActive         Boolean           @default(true)
+  isAssignable     Boolean           @default(true)
+  isSelfService    Boolean           @default(false)
   createdByUserId  String?
   createdBy        User?             @relation("QuestCreatedBy", fields: [createdByUserId], references: [id], onDelete: SetNull)
   assignments      QuestAssignment[]

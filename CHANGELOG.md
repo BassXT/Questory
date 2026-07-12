@@ -93,6 +93,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Kinderlogin-Endpunkte fuer Familiencode-Kinderauswahl und PIN-Login erstellt.
 - `CHILD`-JWTs koennen nun eine `childProfileId` enthalten; Kind-Scope-Regeln akzeptieren PIN-Kinder und alte Kinder-User.
 - Frontend-Kinderlogin-UI im Auth-Screen mit Kind-Tab, Familiencode, Kinderauswahl und PIN erstellt.
+- Spontane Quests mit `Quest.isAssignable`, `Quest.isSelfService` und `POST /api/quests/{questId}/self-service-completions` erstellt.
+- Frontend-Questformular um `Zuweisbar`/`Spontan` erweitert und Dashboard-Panel fuer spontane Quest-Einreichungen erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -232,6 +234,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Health nach Kinderlogin-UI-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Kinderlogin-UI-Slice erfolgreich: Familiencode, Kinderauswahl und PIN-Login liefern weiterhin `CHILD`-Dashboard-Scope.
 - LXC-Browser-Test der Kinderlogin-UI unter `http://192.168.1.98:5173` erfolgreich: Kind-Tab, Familiencode, Kind laden, PIN eingeben, Child-Dashboard sichtbar und Eltern-Anlageformular ausgeblendet.
+- Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Spontane-Quests-Slice erfolgreich.
 
 ### Fixed
 
