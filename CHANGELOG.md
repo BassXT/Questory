@@ -189,6 +189,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Erster GitHub-Actions-CI-Lauf erfolgreich: `https://github.com/BassXT/Questory/actions/runs/29188728441`.
 - GitHub-Actions-CI um Shellscript-Syntaxcheck fuer `deploy/portainer/*.sh` erweitert.
 - Testdaten-Aufraeum-Dry-Run auf dem LXC erfolgreich: Pattern `%2026%`, `MIN_AGE_DAYS=0`, `LIMIT=20`, 12 passende Testfamilien gefunden, keine Loeschung ausgefuehrt.
+- Testdaten-Aufraeumung auf dem LXC erfolgreich ausgefuehrt: lokales PostgreSQL-Custom-Dump-Backup erstellt, 12 Testfamilien geloescht, Nachpruefung `remaining = 0`, Backend-Health und Frontend-HTTP erfolgreich.
 
 ### Fixed
 

@@ -173,17 +173,19 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Testdaten-Aufraeumstrategie in `DEPLOYMENT.md` dokumentiert: Dry-Run, Pattern, Altersgrenze, Limit, Pflicht-Bestaetigung und Backup vor echter Loeschung.
 - GitHub-Actions-CI prueft Portainer-Shellscripts nun mit `sh -n`.
 - Testdaten-Aufraeum-Dry-Run ueber Portainer/Docker-Exec auf dem LXC erfolgreich: Pattern `%2026%`, `MIN_AGE_DAYS=0`, `LIMIT=20`, 12 passende Testfamilien gefunden, keine Loeschung ausgefuehrt.
+- Testdaten-Aufraeumung ueber Portainer/Docker-Exec ausgefuehrt: vorher lokales PostgreSQL-Custom-Dump-Backup `C:\Users\Thomas\Documents\Questory-db-backups\questory-postgres-before-test-cleanup-20260712T114531Z.dump` mit 34.725 Bytes erstellt, danach 12 Testfamilien geloescht und Nachpruefung mit `remaining = 0` erfolgreich.
+- LXC-Health nach Testdaten-Aufraeumung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
-- Vor echter Testdaten-Loeschung ein frisches Backup erstellen und die 12 im Dry-Run gefundenen Testfamilien bewusst bestaetigt loeschen, falls sie wirklich entfernt werden sollen.
+- Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes entscheiden, ob die im Dry-Run gefundenen 12 Testfamilien nach frischem Backup geloescht werden sollen. Danach MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern und erste fachliche Backend-Tests vorbereiten.
+Als naechstes MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern und erste fachliche Backend-Tests vorbereiten.
 
 ## Architekturentscheidungen
 
