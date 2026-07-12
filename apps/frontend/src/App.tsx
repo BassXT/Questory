@@ -1747,6 +1747,7 @@ function DashboardView({
             loading={assignmentLoading}
             quests={quests}
             saving={assignmentSaving}
+            selectedChildId={assignmentForm.childProfileId}
             onApprove={onAssignmentApprove}
             onChildChange={onAssignmentChildChange}
             onComplete={onAssignmentComplete}
@@ -1783,6 +1784,7 @@ function DashboardView({
           <RewardShopPanel
             children={children}
             redeemingRewardId={redeemingRewardId}
+            onChildChange={onAssignmentChildChange}
             selectedChildId={assignmentForm.childProfileId}
             shopLoading={shopLoading}
             shopRewards={shopRewards}
@@ -2160,12 +2162,64 @@ function StatTile({ label, value }: StatTileProps) {
   );
 }
 
+interface ChildFocusBarProps {
+  children: ChildProfile[];
+  selectedChildId: string;
+  onChildChange: (childProfileId: string) => void;
+}
+
+function ChildFocusBar({ children, selectedChildId, onChildChange }: ChildFocusBarProps) {
+  const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
+
+  if (children.length === 0) {
+    return (
+      <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.25 }}>
+        <Typography color="text.secondary">Noch kein Kind ausgewaehlt</Typography>
+      </Box>
+    );
+  }
+
+  return (
+    <Box
+      sx={{
+        alignItems: { xs: 'stretch', md: 'center' },
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1.25,
+        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 0.8fr) minmax(0, 1fr)' },
+        p: 1.25
+      }}
+    >
+      <TextField
+        label="Aktives Kind"
+        onChange={(event) => onChildChange(event.target.value)}
+        select
+        size="small"
+        value={selectedChildId}
+      >
+        {children.map((child) => (
+          <MenuItem key={child.id} value={child.id}>
+            {child.displayName}
+          </MenuItem>
+        ))}
+      </TextField>
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+        <Chip icon={<EmojiEventsRoundedIcon />} label={selectedChild ? `Level ${selectedChild.level}` : 'Kein Level'} variant="outlined" />
+        <Chip label={selectedChild ? `${selectedChild.xp} XP` : '0 XP'} variant="outlined" />
+        <Chip icon={<PaidRoundedIcon />} label={selectedChild ? `${selectedChild.coins} Muenzen` : '0 Muenzen'} variant="outlined" />
+      </Stack>
+    </Box>
+  );
+}
+
 interface RewardShopPanelProps {
   children: ChildProfile[];
   redeemingRewardId: string | null;
   selectedChildId: string;
   shopLoading: boolean;
   shopRewards: Reward[];
+  onChildChange: (childProfileId: string) => void;
   onRedeem: (rewardId: string) => void;
 }
 
@@ -2175,6 +2229,7 @@ function RewardShopPanel({
   selectedChildId,
   shopLoading,
   shopRewards,
+  onChildChange,
   onRedeem
 }: RewardShopPanelProps) {
   const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
@@ -2202,9 +2257,17 @@ function RewardShopPanel({
           </Stack>
         </Box>
 
+        <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onChildChange} />
+
         {shopLoading ? <LinearProgress /> : null}
 
-        <Box sx={{ display: 'grid', gap: 1.5 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 1.25,
+            gridTemplateColumns: { xs: '1fr', lg: shopRewards.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr' }
+          }}
+        >
           {selectedChild && shopRewards.length > 0 ? (
             shopRewards.map((reward) => (
               <RewardShopRow
@@ -2395,6 +2458,7 @@ interface QuestAssignmentsPanelProps {
   loading: boolean;
   quests: QuestTemplate[];
   saving: boolean;
+  selectedChildId: string;
   onApprove: (assignmentId: string, completionId: string) => void;
   onChildChange: (childProfileId: string) => void;
   onComplete: (assignmentId: string) => void;
@@ -2412,6 +2476,7 @@ function QuestAssignmentsPanel({
   loading,
   quests,
   saving,
+  selectedChildId,
   onApprove,
   onChildChange,
   onComplete,
@@ -2421,6 +2486,7 @@ function QuestAssignmentsPanel({
 }: QuestAssignmentsPanelProps) {
   const activeQuests = quests.filter((quest) => quest.isActive);
   const canAssign = canManage && children.length > 0 && activeQuests.length > 0;
+  const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
 
   return (
     <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
@@ -2435,8 +2501,13 @@ function QuestAssignmentsPanel({
           }}
         >
           <SectionTitle icon={<TaskAltRoundedIcon />} title="Quest-Zuweisungen" />
-          <Chip icon={<TaskAltRoundedIcon />} label={`${assignments.length} zugewiesen`} variant="outlined" />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            <Chip icon={<PeopleAltRoundedIcon />} label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
+            <Chip icon={<TaskAltRoundedIcon />} label={`${assignments.length} zugewiesen`} variant="outlined" />
+          </Stack>
         </Box>
+
+        <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onChildChange} />
 
         {canManage ? (
           <Box
@@ -2507,7 +2578,13 @@ function QuestAssignmentsPanel({
 
         {loading ? <LinearProgress /> : null}
 
-        <Box sx={{ display: 'grid', gap: 1.5 }}>
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 1.25,
+            gridTemplateColumns: { xs: '1fr', lg: assignments.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr' }
+          }}
+        >
           {assignments.length > 0 ? (
             assignments.map((assignment) => (
               <QuestAssignmentRow
@@ -2801,26 +2878,35 @@ function SelfServiceQuestRow({ quest, saving, onComplete }: SelfServiceQuestRowP
   return (
     <Box
       sx={{
+        alignContent: 'space-between',
         bgcolor: 'action.hover',
         borderRadius: 2,
         display: 'grid',
-        gap: 1,
-        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto auto auto' },
+        gap: 1.25,
+        minHeight: 170,
         p: 1.5
       }}
     >
-      <Box sx={{ minWidth: 0 }}>
-        <Typography sx={{ fontWeight: 900 }} noWrap>
-          {quest.title}
-        </Typography>
-        {quest.description ? (
-          <Typography color="text.secondary" variant="body2">
-            {quest.description}
-          </Typography>
-        ) : null}
-      </Box>
-      <Chip label={`${quest.xpReward} XP`} variant="outlined" />
-      <Chip icon={<PaidRoundedIcon />} label={quest.coinReward} variant="outlined" />
+      <Stack spacing={0.75}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography sx={{ fontWeight: 900 }} noWrap>
+              {quest.title}
+            </Typography>
+            {quest.description ? (
+              <Typography color="text.secondary" sx={{ display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }} variant="body2">
+                {quest.description}
+              </Typography>
+            ) : null}
+          </Box>
+          <Chip color="success" label="Spontan" size="small" variant="outlined" />
+        </Stack>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+          <Chip label={quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(quest.frequency)} size="small" variant="outlined" />
+          <Chip icon={<EmojiEventsRoundedIcon />} label={`${quest.xpReward} XP`} size="small" variant="outlined" />
+          <Chip icon={<PaidRoundedIcon />} label={`${quest.coinReward}`} size="small" variant="outlined" />
+        </Stack>
+      </Stack>
       <Button
         disabled={saving}
         onClick={() => onComplete(quest.id)}
@@ -2828,7 +2914,7 @@ function SelfServiceQuestRow({ quest, saving, onComplete }: SelfServiceQuestRowP
         startIcon={<TaskAltRoundedIcon />}
         variant="contained"
       >
-        Erledigt
+        Ich hab's erledigt
       </Button>
     </Box>
   );
@@ -3163,49 +3249,59 @@ function QuestAssignmentRow({
     (assignment.quest.type === 'ONE_TIME' && latestCompletion?.status === 'APPROVED');
   const completionButtonLabel = latestCompletion?.status === 'REJECTED' ? 'Erneut einreichen' : 'Erledigt einreichen';
   const canReview = canManage && latestCompletion?.status === 'SUBMITTED';
+  const statusLabel = latestCompletion ? completionStatusLabel(latestCompletion.status) : 'Bereit';
+  const statusColor = latestCompletion ? completionStatusColor(latestCompletion.status) : 'default';
 
   return (
     <Box
       sx={{
+        alignContent: 'space-between',
         bgcolor: 'action.hover',
         borderRadius: 2,
         display: 'grid',
-        gap: 1,
-        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto auto auto' },
+        gap: 1.25,
+        minHeight: 190,
         p: 1.5
       }}
     >
-      <Box sx={{ minWidth: 0 }}>
-        <Typography sx={{ fontWeight: 900 }} noWrap>
-          {assignment.quest.title}
-        </Typography>
-        {assignment.quest.description ? (
-          <Typography color="text.secondary" noWrap variant="body2">
-            {assignment.quest.description}
-          </Typography>
-        ) : null}
-      </Box>
-      <Chip label={assignment.quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(assignment.quest.frequency)} variant="outlined" />
-      <Chip label={assignment.dueAt ? formatDateLabel(assignment.dueAt) : 'Ohne Datum'} variant="outlined" />
-      {latestCompletion ? (
-        <Chip
-          color={completionStatusColor(latestCompletion.status)}
-          label={completionStatusLabel(latestCompletion.status)}
-          variant={latestCompletion.status === 'SUBMITTED' ? 'filled' : 'outlined'}
-        />
-      ) : (
-        <Chip label="Offen" variant="outlined" />
-      )}
-      <Chip icon={<PaidRoundedIcon />} label={assignment.quest.coinReward} variant="outlined" />
-      <Button
-        disabled={completionSaving || hasBlockingCompletion}
-        onClick={() => onComplete(assignment.id)}
-        size="small"
-        startIcon={<TaskAltRoundedIcon />}
-        variant={hasBlockingCompletion ? 'outlined' : 'contained'}
-      >
-        {hasBlockingCompletion ? completionStatusLabel(latestCompletion.status) : completionButtonLabel}
-      </Button>
+      <Stack spacing={0.75}>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+          <Box sx={{ minWidth: 0 }}>
+            <Typography sx={{ fontWeight: 900 }} noWrap>
+              {assignment.quest.title}
+            </Typography>
+            {assignment.quest.description ? (
+              <Typography color="text.secondary" sx={{ display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }} variant="body2">
+                {assignment.quest.description}
+              </Typography>
+            ) : null}
+          </Box>
+          <Chip
+            color={statusColor}
+            label={statusLabel}
+            size="small"
+            variant={latestCompletion?.status === 'SUBMITTED' ? 'filled' : 'outlined'}
+          />
+        </Stack>
+
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+          <Chip label={assignment.quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(assignment.quest.frequency)} size="small" variant="outlined" />
+          <Chip label={assignment.dueAt ? formatDateLabel(assignment.dueAt) : 'Ohne Datum'} size="small" variant="outlined" />
+          <Chip icon={<EmojiEventsRoundedIcon />} label={`${assignment.quest.xpReward} XP`} size="small" variant="outlined" />
+          <Chip icon={<PaidRoundedIcon />} label={`${assignment.quest.coinReward}`} size="small" variant="outlined" />
+        </Stack>
+      </Stack>
+
+      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+        <Button
+          disabled={completionSaving || hasBlockingCompletion}
+          onClick={() => onComplete(assignment.id)}
+          size="small"
+          startIcon={<TaskAltRoundedIcon />}
+          variant={hasBlockingCompletion ? 'outlined' : 'contained'}
+        >
+          {hasBlockingCompletion ? statusLabel : completionButtonLabel}
+        </Button>
       {canReview && latestCompletion ? (
         <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
           <Button
@@ -3228,6 +3324,7 @@ function QuestAssignmentRow({
           </Button>
         </Stack>
       ) : null}
+      </Stack>
     </Box>
   );
 }
@@ -3304,16 +3401,18 @@ interface RewardShopRowProps {
 function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProps) {
   const canAfford = child.coins >= reward.price;
   const actionLabel = reward.requiresApproval ? 'Beantragen' : 'Einloesen';
+  const missingCoins = Math.max(reward.price - child.coins, 0);
 
   return (
     <Box
       sx={{
-        alignItems: 'center',
+        alignContent: 'space-between',
         bgcolor: 'action.hover',
         borderRadius: 2,
         display: 'grid',
         gap: 1.25,
-        gridTemplateColumns: { xs: '1fr', sm: '72px minmax(0, 1fr)', md: '72px minmax(220px, 1fr) auto auto auto' },
+        gridTemplateColumns: { xs: '1fr', sm: '72px minmax(0, 1fr)' },
+        minHeight: 190,
         p: 1.5
       }}
     >
@@ -3341,27 +3440,32 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
           <StorefrontRoundedIcon />
         )}
       </Box>
-      <Box sx={{ minWidth: 0 }}>
-        <Typography sx={{ fontWeight: 900 }} noWrap>
-          {reward.name}
-        </Typography>
-        {reward.description ? (
-          <Typography color="text.secondary" noWrap variant="body2">
-            {reward.description}
+      <Stack spacing={1} sx={{ minWidth: 0 }}>
+        <Box sx={{ minWidth: 0 }}>
+          <Typography sx={{ fontWeight: 900 }} noWrap>
+            {reward.name}
           </Typography>
-        ) : null}
-      </Box>
-      <Chip icon={<PaidRoundedIcon />} label={reward.price} variant="outlined" />
-      <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} variant="outlined" />
-      <Button
-        disabled={!canAfford || redeeming}
-        onClick={() => onRedeem(reward.id)}
-        size="small"
-        startIcon={<StorefrontRoundedIcon />}
-        variant={canAfford ? 'contained' : 'outlined'}
-      >
-        {canAfford ? actionLabel : 'Zu teuer'}
-      </Button>
+          {reward.description ? (
+            <Typography color="text.secondary" sx={{ display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }} variant="body2">
+              {reward.description}
+            </Typography>
+          ) : null}
+        </Box>
+        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+          <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
+          <Chip color={canAfford ? 'success' : 'warning'} label={canAfford ? 'Bezahlbar' : `Noch ${missingCoins} Muenzen`} size="small" variant={canAfford ? 'filled' : 'outlined'} />
+          <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} size="small" variant="outlined" />
+        </Stack>
+        <Button
+          disabled={!canAfford || redeeming}
+          onClick={() => onRedeem(reward.id)}
+          size="small"
+          startIcon={<StorefrontRoundedIcon />}
+          variant={canAfford ? 'contained' : 'outlined'}
+        >
+          {canAfford ? actionLabel : 'Noch sparen'}
+        </Button>
+      </Stack>
     </Box>
   );
 }

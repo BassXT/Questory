@@ -98,6 +98,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Vorschlagsbibliothek auf 32 Reward-Vorlagen und 36 Quest-Vorlagen erweitert.
 - Frontend-Vorschlaege in einen kompakten Dialog mit Suche, Kategorien und Duplikat-Ausblendung verschoben.
 - Frontend-Dashboard in getrennte Tabs fuer Uebersicht, Kinder, Quests, Shop und Freigaben aufgeteilt; Kinder-Logins sehen eine reduzierte Navigation.
+- Quest- und Shop-Tabs um eine Kind-Fokusleiste sowie kompaktere Quest-/Shop-Karten mit klareren Status-, Reward- und Aktionsbereichen erweitert.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -249,6 +250,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Dashboard-Tab-Slice per API-Script erfolgreich.
 - LXC-Health nach Dashboard-Tab-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test des Dashboard-Tab-Slice erfolgreich: Eltern sehen Uebersicht/Kinder/Quests/Shop/Freigaben, Kinder sehen nur Uebersicht/Quests/Shop und keine Eltern-Adminformulare.
+- Frontend-Build nach Quest-/Shop-Karten-UX-Slice erfolgreich.
 
 ### Fixed
 

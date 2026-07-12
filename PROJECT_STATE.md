@@ -245,17 +245,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Dashboard-Tab-Slice per API-Script erfolgreich.
 - LXC-Health nach Dashboard-Tab-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test des Dashboard-Tab-Slice erfolgreich: Eltern sehen Uebersicht/Kinder/Quests/Shop/Freigaben, die Tabs zeigen die passenden Panels, Kinder sehen nur Uebersicht/Quests/Shop und keine Eltern-Adminformulare.
+- Quest- und Shop-Tabs um eine kompakte Kind-Fokusleiste mit aktivem Kind, Level, XP und Muenzen erweitert.
+- Quest-Zuweisungen, spontane Quests und Shop-Belohnungen werden als kompaktere Karten mit klareren Status-, Reward- und Aktionsbereichen dargestellt.
+- Shop-Karten zeigen direkt, ob ein Reward bezahlbar ist oder wie viele Muenzen noch fehlen.
+- Frontend-Build nach Quest-/Shop-Karten-UX-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Naechste UX-Verbesserung fuer die Quest-/Shop-Flows priorisieren, zum Beispiel bessere Kind-Auswahl oder kompaktere Karten.
+- Quest-/Shop-Karten-UX-Slice auf dem LXC deployen und im Browser testen.
 
 ## Naechster Schritt
 
-Als naechstes die Quest-/Shop-Flows innerhalb der neuen Tabs weiter verfeinern, zum Beispiel mit besserer Kind-Auswahl, kompakteren Karten und klareren Statusanzeigen.
+Als naechstes den Quest-/Shop-Karten-UX-Slice auf dem LXC deployen und im Browser testen.
 
 ## Architekturentscheidungen
 
