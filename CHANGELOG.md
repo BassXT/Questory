@@ -228,6 +228,10 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Health nach Kinderlogin-Endpunkte-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Kinderlogin-Endpunkte erfolgreich: Kinderauswahl zeigt nur PIN-aktive Kinder, falsche PIN wird blockiert, richtige PIN liefert `CHILD`-JWT, Kind sieht nur eigene Dashboard-/Kinder-/Statistik-/Shop-Daten.
 - Backend- und Frontend-Build nach Kinderlogin-UI-Slice erfolgreich.
+- Portainer-Redeploy nach Kinderlogin-UI-Slice per API-Script erfolgreich.
+- LXC-Health nach Kinderlogin-UI-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Kinderlogin-UI-Slice erfolgreich: Familiencode, Kinderauswahl und PIN-Login liefern weiterhin `CHILD`-Dashboard-Scope.
+- LXC-Browser-Test der Kinderlogin-UI unter `http://192.168.1.98:5173` erfolgreich: Kind-Tab, Familiencode, Kind laden, PIN eingeben, Child-Dashboard sichtbar und Eltern-Anlageformular ausgeblendet.
 
 ### Fixed
 

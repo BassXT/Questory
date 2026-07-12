@@ -215,18 +215,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-API-Test fuer Kinderlogin-Endpunkte erfolgreich: Kinderauswahl zeigt nur PIN-aktive Kinder, falsche PIN wird blockiert, richtige PIN liefert `CHILD`-JWT, Kind sieht nur eigene Dashboard-/Kinder-/Statistik-/Shop-Daten.
 - Frontend-Kinderlogin-UI im Auth-Screen angelegt: eigener Kind-Tab, Familiencode, Kinderauswahl laden, PIN eingeben und als Kind starten.
 - Backend- und Frontend-Build nach Kinderlogin-UI-Slice erfolgreich.
+- Portainer-Redeploy nach Kinderlogin-UI-Slice per API-Script erfolgreich.
+- LXC-Health nach Kinderlogin-UI-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Kinderlogin-UI-Slice erfolgreich: Familiencode, Kinderauswahl und PIN-Login liefern weiterhin `CHILD`-Dashboard-Scope.
+- LXC-Browser-Test der Kinderlogin-UI unter `http://192.168.1.98:5173` erfolgreich: Kind-Tab, Familiencode, Kind laden, PIN eingeben, Child-Dashboard sichtbar und Eltern-Anlageformular ausgeblendet.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Kinderlogin-UI auf dem LXC deployen und im Browser testen.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes die Kinderlogin-UI auf dem LXC deployen und im Browser testen. Danach zeitlich ungebundene/spontane Quests als separaten Produkt-Slice planen.
+Als naechstes zeitlich ungebundene/spontane Quests konzipieren und als separaten Produkt-Slice implementieren.
 
 ## Architekturentscheidungen
 
