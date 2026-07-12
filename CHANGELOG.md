@@ -194,6 +194,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Testdaten-Aufraeum-Dry-Run auf dem LXC erfolgreich: Pattern `%2026%`, `MIN_AGE_DAYS=0`, `LIMIT=20`, 12 passende Testfamilien gefunden, keine Loeschung ausgefuehrt.
 - Testdaten-Aufraeumung auf dem LXC erfolgreich ausgefuehrt: lokales PostgreSQL-Custom-Dump-Backup erstellt, 12 Testfamilien geloescht, Nachpruefung `remaining = 0`, Backend-Health und Frontend-HTTP erfolgreich.
 - Prisma-Schema, Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Reservierungs-/Storno-Slice erfolgreich.
+- Portainer-Redeploy nach Reward-Reservierungs-/Storno-Slice per API-Script erfolgreich.
+- LXC-Health nach Reward-Reservierungs-/Storno-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Reward-Reservierung und Storno erfolgreich: Beantragung zieht Muenzen ab, doppelte Ausgabe wird blockiert, Ablehnung erstattet Muenzen und Storno vor Ausgabe erstattet Muenzen.
 
 ### Fixed
 

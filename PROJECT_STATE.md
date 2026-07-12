@@ -180,20 +180,22 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Reward-Storno-Endpunkt `POST /api/reward-redemptions/:redemptionId/cancel` angelegt; `REQUESTED` und `APPROVED` koennen storniert werden, `REDEEMED` bleibt final.
 - Frontend-Elternverwaltung zeigt fuer noch nicht ausgegebene Rewards eine Storno-Aktion und den neuen Status `Storniert`.
 - Prisma-Migration `20260712122000_reward_redemption_reservations` angelegt.
+- Portainer-Redeploy nach Reward-Reservierungs-/Storno-Slice per API-Script erfolgreich.
+- LXC-Health nach Reward-Reservierungs-/Storno-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Reward-Reservierung und Storno erfolgreich: Beantragung zieht Muenzen ab, doppelte Ausgabe wird blockiert, Ablehnung erstattet Muenzen und Storno vor Ausgabe erstattet Muenzen.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Reward-Reservierungs-/Storno-Slice auf dem LXC deployen und mit echter Shop-Bedienung testen.
 - Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen entwerfen.
 - Kinderlogin ohne E-Mail konzipieren, z.B. Familiencode, QR-Code oder Eltern-freigegebene Kinder-PIN.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes den Reward-Reservierungs-/Storno-Slice deployen und auf dem LXC testen. Danach Vorschlagsbibliothek, Kinderlogin per Familiencode/QR/PIN und spontane Quests als separate Produkt-Slices planen.
+Als naechstes die Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen entwerfen. Danach Kinderlogin per Familiencode/QR/PIN und spontane Quests als separate Produkt-Slices planen.
 
 ## Architekturentscheidungen
 
