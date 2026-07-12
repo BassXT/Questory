@@ -187,19 +187,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Erste kuratierte Bibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen angelegt.
 - Frontend zeigt die Vorschlagsbibliothek in Quest- und Reward-Formularen und uebernimmt Vorschlaege als editierbare Formularwerte.
 - Backend- und Frontend-Build nach Vorschlagsbibliothek-Slice erfolgreich.
+- Portainer-Redeploy nach Vorschlagsbibliothek-Slice per API-Script erfolgreich.
+- LXC-Health nach Vorschlagsbibliothek-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 8 Reward-Vorschlaege und 8 Quest-Vorschlaege fuer eine neue Eltern-Testfamilie geladen.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Vorschlagsbibliothek auf dem LXC deployen und API/UI testen.
 - Kinderlogin ohne E-Mail konzipieren, z.B. Familiencode, QR-Code oder Eltern-freigegebene Kinder-PIN.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes die Vorschlagsbibliothek auf dem LXC deployen und pruefen. Danach Kinderlogin per Familiencode/QR/PIN und spontane Quests als separate Produkt-Slices planen.
+Als naechstes Kinderlogin per Familiencode/QR/PIN konzipieren. Danach spontane, zeitlich ungebundene Quests als separaten Produkt-Slice planen.
 
 ## Architekturentscheidungen
 

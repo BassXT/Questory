@@ -201,6 +201,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Health nach Reward-Reservierungs-/Storno-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Reward-Reservierung und Storno erfolgreich: Beantragung zieht Muenzen ab, doppelte Ausgabe wird blockiert, Ablehnung erstattet Muenzen und Storno vor Ausgabe erstattet Muenzen.
 - Backend- und Frontend-Build nach Vorschlagsbibliothek-Slice erfolgreich.
+- Portainer-Redeploy nach Vorschlagsbibliothek-Slice per API-Script erfolgreich.
+- LXC-Health nach Vorschlagsbibliothek-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 8 Reward-Vorschlaege und 8 Quest-Vorschlaege fuer eine neue Eltern-Testfamilie geladen.
 
 ### Fixed
 
