@@ -184,6 +184,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Frontend-Kinderstatistik-Slice per API-Script erfolgreich.
 - LXC-Browser-Test des Kinderstatistik-Panels unter `http://192.168.1.98:5173` erfolgreich: Statistik sichtbar, Backend-Werte geladen, keine Konsolenfehler, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 - Lokale CI-Befehle erfolgreich geprueft: `npm run prisma:validate`, `npm run prisma:generate` und `npm run build`.
+- Erster GitHub-Actions-CI-Lauf erfolgreich: `https://github.com/BassXT/Questory/actions/runs/29188728441`.
 
 ### Fixed
 
@@ -196,4 +197,3 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `npm ci` meldet eine Node-Engine-Warnung fuer eine transitive Prisma-Abhaengigkeit, obwohl Build und Generate mit Node `20.19.6` funktionieren.
 - Port `3000` ist auf dem LXC bereits belegt; das Questory-Backend nutzt aktuell `3001`.
 - Lokaler Migration-Drift-Vergleich aus dem Migrationsordner benoetigt eine Shadow-Datenbank und wurde deshalb noch nicht ausgefuehrt.
-- GitHub-Actions-Ausfuehrung nach dem ersten Push der CI-Konfiguration muss noch beobachtet werden.
