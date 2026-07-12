@@ -116,7 +116,7 @@ export class RewardsService {
       throw new NotFoundException('Child profile not found.');
     }
 
-    if (user.role === Role.CHILD && child.userId !== user.sub) {
+    if (!this.canAccessChild(user, child)) {
       throw new ForbiddenException('Children can only view their own reward shop.');
     }
 
@@ -166,7 +166,7 @@ export class RewardsService {
       throw new NotFoundException('Child profile not found.');
     }
 
-    if (user.role === Role.CHILD && child.userId !== user.sub) {
+    if (!this.canAccessChild(user, child)) {
       throw new ForbiddenException('Children can only redeem rewards for themselves.');
     }
 
@@ -448,5 +448,20 @@ export class RewardsService {
         select: rewardRedemptionSelect
       });
     });
+  }
+
+  private canAccessChild(
+    user: AuthenticatedUser,
+    child: { id: string; userId: string | null }
+  ): boolean {
+    if (user.role !== Role.CHILD) {
+      return true;
+    }
+
+    if (user.childProfileId) {
+      return child.id === user.childProfileId;
+    }
+
+    return child.userId === user.sub;
   }
 }

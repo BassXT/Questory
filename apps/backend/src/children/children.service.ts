@@ -45,7 +45,7 @@ export class ChildrenService {
 
   listChildren(user: AuthenticatedUser) {
     return this.prisma.childProfile.findMany({
-      where: { familyId: user.familyId },
+      where: this.childWhereForUser(user),
       orderBy: { createdAt: 'asc' },
       select: childSelect
     });
@@ -54,8 +54,11 @@ export class ChildrenService {
   async getChild(user: AuthenticatedUser, childId: string) {
     const child = await this.prisma.childProfile.findFirst({
       where: {
-        id: childId,
-        familyId: user.familyId
+        AND: [
+          { id: childId, familyId: user.familyId },
+          ...(user.role === Role.CHILD && user.childProfileId ? [{ id: user.childProfileId }] : []),
+          ...(user.role === Role.CHILD && !user.childProfileId ? [{ userId: user.sub }] : [])
+        ]
       },
       select: childSelect
     });
@@ -80,7 +83,7 @@ export class ChildrenService {
       throw new NotFoundException('Child profile not found.');
     }
 
-    if (user.role === Role.CHILD && child.userId !== user.sub) {
+    if (!this.canAccessChild(user, child)) {
       throw new ForbiddenException('Children can only view their own stats.');
     }
 
@@ -262,5 +265,38 @@ export class ChildrenService {
     }
 
     return child;
+  }
+
+  private childWhereForUser(user: AuthenticatedUser) {
+    if (user.role !== Role.CHILD) {
+      return { familyId: user.familyId };
+    }
+
+    if (user.childProfileId) {
+      return {
+        familyId: user.familyId,
+        id: user.childProfileId
+      };
+    }
+
+    return {
+      familyId: user.familyId,
+      userId: user.sub
+    };
+  }
+
+  private canAccessChild(
+    user: AuthenticatedUser,
+    child: { id: string; userId: string | null }
+  ): boolean {
+    if (user.role !== Role.CHILD) {
+      return true;
+    }
+
+    if (user.childProfileId) {
+      return child.id === user.childProfileId;
+    }
+
+    return child.userId === user.sub;
   }
 }

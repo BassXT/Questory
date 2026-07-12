@@ -19,10 +19,15 @@ export class DashboardService {
   async getDashboard(user: AuthenticatedUser) {
     const childWhere =
       user.role === Role.CHILD
-        ? {
-            familyId: user.familyId,
-            userId: user.sub
-          }
+        ? user.childProfileId
+          ? {
+              familyId: user.familyId,
+              id: user.childProfileId
+            }
+          : {
+              familyId: user.familyId,
+              userId: user.sub
+            }
         : {
             familyId: user.familyId
           };

@@ -41,7 +41,7 @@ type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
 interface AuthUser {
   id: string;
   familyId: string;
-  email: string;
+  email: string | null;
   displayName: string;
   role: 'ADMIN' | 'PARENT' | 'CHILD';
 }

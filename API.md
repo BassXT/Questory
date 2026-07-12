@@ -101,7 +101,7 @@ Auth: Bearer Token erforderlich.
 
 Meldet ein Kind ohne E-Mail-Adresse ueber Familiencode, Kinderprofil und PIN an.
 
-Status: geplant.
+Status: implementiert.
 
 Geplanter Request:
 
@@ -113,7 +113,7 @@ Geplanter Request:
 }
 ```
 
-Geplante Response: wie `POST /api/auth/login`, aber mit Rolle `CHILD`.
+Response: wie `POST /api/auth/login`, aber mit Rolle `CHILD`, `email: null` und `id` als Kinderprofil-ID.
 
 Hinweise:
 
@@ -126,9 +126,13 @@ Hinweise:
 
 Listet fuer einen Familiencode die fuer Kinderlogin freigegebenen Kinderprofile.
 
-Status: geplant.
+Status: implementiert.
 
-Hinweis: Die Antwort darf nur minimale Anzeigeinformationen enthalten, z.B. `id`, `displayName` und `avatarKey`.
+Hinweise:
+
+- Authentifizierung ist fuer diesen Endpunkt nicht erforderlich.
+- Es werden nur Kinderprofile mit aktivierter PIN ausgegeben.
+- Die Antwort enthaelt nur minimale Anzeigeinformationen: `id`, `displayName` und `avatarKey`.
 
 ## Families
 

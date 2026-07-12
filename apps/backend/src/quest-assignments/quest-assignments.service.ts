@@ -184,12 +184,17 @@ export class QuestAssignmentsService {
         familyId: user.familyId
       },
       select: {
-        id: true
+        id: true,
+        userId: true
       }
     });
 
     if (!childProfile) {
       throw new NotFoundException('Child profile not found.');
+    }
+
+    if (!this.canAccessChild(user, childProfile)) {
+      throw new ForbiddenException('Children can only view their own quest assignments.');
     }
 
     return this.prisma.questAssignment.findMany({
@@ -216,6 +221,7 @@ export class QuestAssignmentsService {
         id: true,
         childProfile: {
           select: {
+            id: true,
             userId: true
           }
         },
@@ -232,7 +238,7 @@ export class QuestAssignmentsService {
       throw new NotFoundException('Quest assignment not found.');
     }
 
-    if (user.role === Role.CHILD && assignment.childProfile.userId !== user.sub) {
+    if (!this.canAccessChild(user, assignment.childProfile)) {
       throw new ForbiddenException('Children can only complete their own quest assignments.');
     }
 
@@ -402,5 +408,20 @@ export class QuestAssignmentsService {
         select: questCompletionSelect
       });
     });
+  }
+
+  private canAccessChild(
+    user: AuthenticatedUser,
+    child: { id: string; userId: string | null }
+  ): boolean {
+    if (user.role !== Role.CHILD) {
+      return true;
+    }
+
+    if (user.childProfileId) {
+      return child.id === user.childProfileId;
+    }
+
+    return child.userId === user.sub;
   }
 }

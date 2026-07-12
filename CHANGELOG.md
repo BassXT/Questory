@@ -90,6 +90,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Kinderprofil-Antworten wurden auf einen expliziten Select ohne `pinHash` umgestellt.
 - Kinderlogin-PIN-Verwaltung fuer Eltern mit `POST /api/children/{childId}/pin` und `POST /api/children/{childId}/pin/disable` erstellt.
 - Frontend-PIN-Verwaltung im Kinderprofil-Bereich mit Kind-Auswahl, Status, Speichern und Deaktivieren erstellt.
+- Kinderlogin-Endpunkte fuer Familiencode-Kinderauswahl und PIN-Login erstellt.
+- `CHILD`-JWTs koennen nun eine `childProfileId` enthalten; Kind-Scope-Regeln akzeptieren PIN-Kinder und alte Kinder-User.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -220,6 +222,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Kinderlogin-PIN-Verwaltung per API-Script erfolgreich.
 - LXC-Health nach Kinderlogin-PIN-Verwaltung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Kinderlogin-PIN-Verwaltung erfolgreich: PIN setzen, PIN ersetzen, ungueltige PIN blockieren, PIN deaktivieren und keine `pinHash`-Ausgabe.
+- Backend- und Frontend-Build nach Kinderlogin-Endpunkte-Slice erfolgreich.
 
 ### Fixed
 
