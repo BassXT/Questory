@@ -191,18 +191,22 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Health nach Vorschlagsbibliothek-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 8 Reward-Vorschlaege und 8 Quest-Vorschlaege fuer eine neue Eltern-Testfamilie geladen.
 - Kinderlogin-Konzept dokumentiert: Familiencode/QR als Familien-Locator, Kinder-PIN pro Profil als Authentifizierung, keine Fake-E-Mail-Adressen fuer Kinder.
+- Prisma-Migration `20260712143000_child_login_model` fuer `Family.childLoginCode` sowie `ChildProfile.pinHash`, `pinEnabled` und `pinUpdatedAt` angelegt.
+- Neue Familien erhalten beim Registrieren automatisch einen eindeutigen, kurz lesbaren Kinderlogin-Code.
+- `GET /api/families/current` liefert den `childLoginCode` mit aus.
+- Prisma Generate, Prisma Validate und Backend-Build nach Kinderlogin-Datenmodell-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Kinderlogin-Datenmodell fuer Familiencode und Kinder-PIN implementieren.
+- Kinderlogin-Datenmodell auf dem LXC deployen und Migration/API testen.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes das Kinderlogin-Datenmodell fuer Familiencode und Kinder-PIN implementieren. Danach Login-Endpunkte und UI fuer Familiencode/QR/PIN als separate kleine Slices bauen.
+Als naechstes das Kinderlogin-Datenmodell auf dem LXC deployen und pruefen. Danach Login-Endpunkte und UI fuer Familiencode/QR/PIN als separate kleine Slices bauen.
 
 ## Architekturentscheidungen
 

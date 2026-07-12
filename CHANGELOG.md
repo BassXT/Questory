@@ -84,6 +84,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Kuratierte Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen erstellt.
 - Frontend-Bibliotheksauswahl fuer Quest- und Reward-Formulare erstellt.
 - Kinderlogin-Konzept mit Familiencode/QR und Kinder-PIN ohne Fake-E-Mail-Adressen dokumentiert.
+- Kinderlogin-Datenmodell mit `Family.childLoginCode`, `ChildProfile.pinHash`, `pinEnabled` und `pinUpdatedAt` erstellt.
+- Registrierung neuer Familien erzeugt automatisch einen eindeutigen Kinderlogin-Code.
+- `GET /api/families/current` liefert den Kinderlogin-Code mit aus.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -205,6 +208,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Vorschlagsbibliothek-Slice per API-Script erfolgreich.
 - LXC-Health nach Vorschlagsbibliothek-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 8 Reward-Vorschlaege und 8 Quest-Vorschlaege fuer eine neue Eltern-Testfamilie geladen.
+- Prisma Generate, Prisma Validate und Backend-Build nach Kinderlogin-Datenmodell-Slice erfolgreich.
 
 ### Fixed
 

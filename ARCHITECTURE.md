@@ -171,7 +171,8 @@ Aktueller Stand:
 Geplanter Kinderlogin:
 
 - Kinder sollen keine E-Mail-Adresse brauchen.
-- Familien erhalten einen kurz lesbaren Familiencode, der auch als QR-Code dargestellt werden kann.
+- Familien erhalten einen kurz lesbaren Familiencode, der auch als QR-Code dargestellt werden kann. Neue Familien bekommen diesen Code bereits beim Registrieren.
+- Das Datenmodell enthaelt `ChildProfile.pinHash`, `pinEnabled` und `pinUpdatedAt`; die Endpunkte zum Setzen und Nutzen der PIN folgen in eigenen Slices.
 - Eltern aktivieren den Kinderlogin pro Kinderprofil und setzen eine Kinder-PIN.
 - Der Familiencode identifiziert nur die Familie; die PIN authentifiziert immer ein konkretes Kinderprofil.
 - Nach erfolgreichem PIN-Login gibt das Backend ein normales JWT mit Rolle `CHILD` aus, damit bestehende Guards und Kind-Scope-Regeln weiter genutzt werden koennen.

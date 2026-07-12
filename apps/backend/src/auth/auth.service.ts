@@ -1,5 +1,6 @@
 import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { randomInt } from 'node:crypto';
 import { Role, User } from '../prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { LoginDto } from './dto/login.dto';
@@ -39,10 +40,12 @@ export class AuthService {
     }
 
     const passwordHash = await this.passwordService.hashPassword(dto.password);
+    const childLoginCode = await this.createUniqueChildLoginCode();
     const user = await this.prisma.$transaction(async (tx) => {
       const family = await tx.family.create({
         data: {
-          name: dto.familyName.trim()
+          name: dto.familyName.trim(),
+          childLoginCode
         }
       });
 
@@ -109,5 +112,27 @@ export class AuthService {
       createdAt: user.createdAt,
       updatedAt: user.updatedAt
     };
+  }
+
+  private async createUniqueChildLoginCode(): Promise<string> {
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      const code = this.generateChildLoginCode();
+      const existingFamily = await this.prisma.family.findUnique({
+        where: { childLoginCode: code },
+        select: { id: true }
+      });
+
+      if (!existingFamily) {
+        return code;
+      }
+    }
+
+    throw new ConflictException('Could not generate a unique child login code.');
+  }
+
+  private generateChildLoginCode(): string {
+    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    const characters = Array.from({ length: 8 }, () => alphabet[randomInt(alphabet.length)]);
+    return `${characters.slice(0, 4).join('')}-${characters.slice(4).join('')}`;
   }
 }

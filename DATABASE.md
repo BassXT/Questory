@@ -28,8 +28,11 @@ Felder:
 
 - `id`
 - `name`
+- `childLoginCode`
 - `createdAt`
 - `updatedAt`
+
+`childLoginCode` ist ein eindeutiger, kurz lesbarer Familiencode fuer den geplanten Kinderlogin und fuer spaetere QR-Code-Login-URLs. Bestehende Familien duerfen vorerst `NULL` enthalten; neue Familien erhalten beim Registrieren automatisch einen Code.
 
 ### User
 
@@ -65,18 +68,21 @@ Felder:
 - `userId`
 - `displayName`
 - `avatarKey`
+- `pinHash`
+- `pinEnabled`
+- `pinUpdatedAt`
 - `level`
 - `xp`
 - `coins`
 - `createdAt`
 - `updatedAt`
 
-Geplante Erweiterung fuer Kinderlogin ohne E-Mail:
+Kinderlogin ohne E-Mail:
 
-- `Family.childLoginCode`: kurz lesbarer, eindeutiger Familiencode fuer Login und QR-Code.
-- `ChildProfile.pinHash`: Hash der Kinder-PIN, niemals Klartext.
-- `ChildProfile.pinEnabled`: steuert, ob ein Kind per PIN einloggen darf.
-- Optional spaeter: `pinUpdatedAt`, `pinFailedAttempts`, `pinLockedUntil`.
+- `pinHash` speichert spaeter den Hash der Kinder-PIN, niemals Klartext.
+- `pinEnabled` steuert, ob ein Kind per PIN einloggen darf.
+- `pinUpdatedAt` dokumentiert die letzte PIN-Aenderung.
+- Optional spaeter: `pinFailedAttempts`, `pinLockedUntil`.
 
 Der Familiencode ist kein Geheimnis, sondern ein Locator fuer die Familie. Die PIN bleibt der eigentliche Authentifizierungsfaktor.
 
@@ -207,6 +213,13 @@ Die erste Prisma-Migration wurde erzeugt:
 
 ```text
 apps/backend/prisma/migrations/20260709120000_init/migration.sql
+```
+
+Weitere Migrationen:
+
+```text
+apps/backend/prisma/migrations/20260712122000_reward_redemption_reservations/migration.sql
+apps/backend/prisma/migrations/20260712143000_child_login_model/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:

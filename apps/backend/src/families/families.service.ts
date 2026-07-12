@@ -12,6 +12,7 @@ export class FamiliesService {
       select: {
         id: true,
         name: true,
+        childLoginCode: true,
         createdAt: true,
         updatedAt: true
       }

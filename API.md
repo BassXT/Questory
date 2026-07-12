@@ -140,6 +140,20 @@ Status: implementiert.
 
 Auth: Bearer Token erforderlich.
 
+Response:
+
+```json
+{
+  "id": "<family-id>",
+  "name": "Familie Beispiel",
+  "childLoginCode": "ABCD-1234",
+  "createdAt": "2026-07-12T00:00:00.000Z",
+  "updatedAt": "2026-07-12T00:00:00.000Z"
+}
+```
+
+Hinweis: `childLoginCode` ist fuer bestehende Familien vor der Kinderlogin-Migration oder vor einer spaeteren Nachziehfunktion optional `null`.
+
 ### `PATCH /api/families/current`
 
 Aktualisiert Familieninformationen.
