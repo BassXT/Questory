@@ -188,6 +188,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Lokale CI-Befehle erfolgreich geprueft: `npm run prisma:validate`, `npm run prisma:generate` und `npm run build`.
 - Erster GitHub-Actions-CI-Lauf erfolgreich: `https://github.com/BassXT/Questory/actions/runs/29188728441`.
 - GitHub-Actions-CI um Shellscript-Syntaxcheck fuer `deploy/portainer/*.sh` erweitert.
+- Testdaten-Aufraeum-Dry-Run auf dem LXC erfolgreich: Pattern `%2026%`, `MIN_AGE_DAYS=0`, `LIMIT=20`, 12 passende Testfamilien gefunden, keine Loeschung ausgefuehrt.
 
 ### Fixed
 

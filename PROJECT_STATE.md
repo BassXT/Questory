@@ -172,17 +172,18 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Wartungs-Script `deploy/portainer/cleanup-test-families.sh` fuer sichere Testfamilien-Aufraeumlaeufe auf dem Docker-LXC angelegt.
 - Testdaten-Aufraeumstrategie in `DEPLOYMENT.md` dokumentiert: Dry-Run, Pattern, Altersgrenze, Limit, Pflicht-Bestaetigung und Backup vor echter Loeschung.
 - GitHub-Actions-CI prueft Portainer-Shellscripts nun mit `sh -n`.
+- Testdaten-Aufraeum-Dry-Run ueber Portainer/Docker-Exec auf dem LXC erfolgreich: Pattern `%2026%`, `MIN_AGE_DAYS=0`, `LIMIT=20`, 12 passende Testfamilien gefunden, keine Loeschung ausgefuehrt.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
-- Testdaten-Aufraeum-Script auf dem Docker-LXC zuerst als Dry-Run ausfuehren und Ergebnis pruefen.
+- Vor echter Testdaten-Loeschung ein frisches Backup erstellen und die 12 im Dry-Run gefundenen Testfamilien bewusst bestaetigt loeschen, falls sie wirklich entfernt werden sollen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes das Testdaten-Aufraeum-Script auf dem Docker-LXC im Dry-Run pruefen. Danach MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern und erste fachliche Backend-Tests vorbereiten.
+Als naechstes entscheiden, ob die im Dry-Run gefundenen 12 Testfamilien nach frischem Backup geloescht werden sollen. Danach MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern und erste fachliche Backend-Tests vorbereiten.
 
 ## Architekturentscheidungen
 
