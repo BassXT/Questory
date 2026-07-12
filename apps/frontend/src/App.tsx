@@ -108,6 +108,34 @@ interface ChildProfile {
   updatedAt: string;
 }
 
+interface ChildStatsResponse {
+  child: ChildProfile;
+  progression: {
+    level: number;
+    xp: number;
+    coins: number;
+    nextLevelXp: number;
+    xpToNextLevel: number;
+  };
+  quests: {
+    assigned: number;
+    submitted: number;
+    approved: number;
+    rejected: number;
+    totalCompletions: number;
+    xpGranted: number;
+    coinsGranted: number;
+  };
+  rewards: {
+    requested: number;
+    approved: number;
+    redeemed: number;
+    rejected: number;
+    totalRedemptions: number;
+    coinsSpent: number;
+  };
+}
+
 interface QuestTemplate {
   id: string;
   familyId: string;
@@ -293,6 +321,7 @@ function App() {
   const [token, setToken] = useState(() => localStorage.getItem(TOKEN_STORAGE_KEY));
   const [user, setUser] = useState<AuthUser | null>(null);
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
+  const [childStats, setChildStats] = useState<ChildStatsResponse | null>(null);
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [quests, setQuests] = useState<QuestTemplate[]>([]);
   const [questAssignments, setQuestAssignments] = useState<QuestAssignment[]>([]);
@@ -300,6 +329,7 @@ function App() {
   const [rewardRedemptions, setRewardRedemptions] = useState<RewardRedemption[]>([]);
   const [shopRewards, setShopRewards] = useState<Reward[]>([]);
   const [authLoading, setAuthLoading] = useState(false);
+  const [childStatsLoading, setChildStatsLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
   const [assignmentLoading, setAssignmentLoading] = useState(false);
   const [redemptionLoading, setRedemptionLoading] = useState(false);
@@ -319,6 +349,7 @@ function App() {
     if (!token) {
       setUser(null);
       setDashboard(null);
+      setChildStats(null);
       setChildren([]);
       setQuests([]);
       setQuestAssignments([]);
@@ -439,26 +470,33 @@ function App() {
 
     if (!childProfileId) {
       setQuestAssignments([]);
+      setChildStats(null);
       setShopRewards([]);
       return;
     }
 
     setAssignmentLoading(true);
+    setChildStatsLoading(true);
     setShopLoading(true);
 
     try {
-      const [assignments, childShopRewards] = await Promise.all([
+      const [assignments, childShopRewards, stats] = await Promise.all([
         apiRequest<QuestAssignment[]>(`/children/${childProfileId}/quest-assignments`, {
           token: activeToken
         }),
         apiRequest<Reward[]>(`/children/${childProfileId}/shop`, {
           token: activeToken
+        }),
+        apiRequest<ChildStatsResponse>(`/children/${childProfileId}/stats`, {
+          token: activeToken
         })
       ]);
       setQuestAssignments(assignments);
       setShopRewards(childShopRewards);
+      setChildStats(stats);
     } finally {
       setAssignmentLoading(false);
+      setChildStatsLoading(false);
       setShopLoading(false);
     }
   }
@@ -488,24 +526,30 @@ function App() {
 
     setQuestAssignmentForm((currentForm) => ({ ...currentForm, childProfileId }));
     setAssignmentLoading(true);
+    setChildStatsLoading(true);
     setShopLoading(true);
     setError(null);
 
     try {
-      const [assignments, childShopRewards] = await Promise.all([
+      const [assignments, childShopRewards, stats] = await Promise.all([
         apiRequest<QuestAssignment[]>(`/children/${childProfileId}/quest-assignments`, {
           token
         }),
         apiRequest<Reward[]>(`/children/${childProfileId}/shop`, {
           token
+        }),
+        apiRequest<ChildStatsResponse>(`/children/${childProfileId}/stats`, {
+          token
         })
       ]);
       setQuestAssignments(assignments);
       setShopRewards(childShopRewards);
+      setChildStats(stats);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
       setAssignmentLoading(false);
+      setChildStatsLoading(false);
       setShopLoading(false);
     }
   }
@@ -796,6 +840,7 @@ function App() {
     setToken(null);
     setUser(null);
     setDashboard(null);
+    setChildStats(null);
     setChildren([]);
     setChildForm(initialChildForm);
     setQuests([]);
@@ -827,6 +872,8 @@ function App() {
             <DashboardView
               childForm={childForm}
               childSaving={childSaving}
+              childStats={childStats}
+              childStatsLoading={childStatsLoading}
               children={children}
               dashboard={dashboard}
               assignmentForm={questAssignmentForm}
@@ -1091,6 +1138,8 @@ interface DashboardViewProps {
   assignments: QuestAssignment[];
   childForm: ChildFormState;
   childSaving: boolean;
+  childStats: ChildStatsResponse | null;
+  childStatsLoading: boolean;
   children: ChildProfile[];
   completionSavingId: string | null;
   dashboard: DashboardResponse | null;
@@ -1133,6 +1182,8 @@ function DashboardView({
   assignments,
   childForm,
   childSaving,
+  childStats,
+  childStatsLoading,
   children,
   completionSavingId,
   dashboard,
@@ -1292,6 +1343,8 @@ function DashboardView({
         </Paper>
       </Box>
 
+      <ChildStatsPanel loading={childStatsLoading} stats={childStats} />
+
       <QuestTemplatesPanel
         canManage={canManageChildren}
         form={questForm}
@@ -1409,6 +1462,101 @@ function RewardRedemptionsPanel({
         </Box>
       </Stack>
     </Paper>
+  );
+}
+
+interface ChildStatsPanelProps {
+  loading: boolean;
+  stats: ChildStatsResponse | null;
+}
+
+function ChildStatsPanel({ loading, stats }: ChildStatsPanelProps) {
+  const nextLevelXp = Math.max(stats?.progression.nextLevelXp ?? 1, 1);
+  const xpProgress = stats ? Math.min((stats.progression.xp / nextLevelXp) * 100, 100) : 0;
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Kinderstatistik" />
+          <Chip
+            icon={<PeopleAltRoundedIcon />}
+            label={stats ? stats.child.displayName : 'Kein Kind'}
+            variant="outlined"
+          />
+        </Box>
+
+        {loading ? <LinearProgress /> : null}
+
+        {stats ? (
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 1.5,
+              gridTemplateColumns: { xs: '1fr', lg: 'minmax(260px, 0.9fr) minmax(0, 1.1fr)' }
+            }}
+          >
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Stack spacing={1}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Typography sx={{ fontWeight: 900 }}>Level {stats.progression.level}</Typography>
+                  <Chip icon={<PaidRoundedIcon />} label={stats.progression.coins} variant="outlined" />
+                </Stack>
+                <LinearProgress value={xpProgress} variant="determinate" />
+                <Typography color="text.secondary" variant="body2">
+                  {stats.progression.xp} XP - noch {stats.progression.xpToNextLevel} XP bis Level {stats.progression.level + 1}
+                </Typography>
+              </Stack>
+            </Box>
+
+            <Box
+              sx={{
+                display: 'grid',
+                gap: 1,
+                gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' }
+              }}
+            >
+              <StatTile label="Zuweisungen" value={stats.quests.assigned} />
+              <StatTile label="Bestaetigt" value={stats.quests.approved} />
+              <StatTile label="Eingereicht" value={stats.quests.submitted} />
+              <StatTile label="XP vergeben" value={stats.quests.xpGranted} />
+              <StatTile label="Rewards offen" value={stats.rewards.requested} />
+              <StatTile label="Coins ausgegeben" value={stats.rewards.coinsSpent} />
+            </Box>
+          </Box>
+        ) : (
+          <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+            <Typography color="text.secondary">Noch kein Kind fuer Statistiken ausgewaehlt</Typography>
+          </Box>
+        )}
+      </Stack>
+    </Paper>
+  );
+}
+
+interface StatTileProps {
+  label: string;
+  value: number;
+}
+
+function StatTile({ label, value }: StatTileProps) {
+  return (
+    <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, minWidth: 0, p: 1.25 }}>
+      <Typography color="text.secondary" variant="body2" noWrap>
+        {label}
+      </Typography>
+      <Typography sx={{ fontWeight: 900 }} variant="h6">
+        {value}
+      </Typography>
+    </Box>
   );
 }
 

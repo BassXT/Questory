@@ -72,6 +72,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Reward-Verwaltungs-Workflow mit Reward-Liste, Reward-Erstellung, Preis/Kategorie/Bild/Limit-Feldern und Aktiv-/Bestaetigungs-Schaltern erstellt.
 - Frontend-Reward-Shop-Workflow mit Kind-Shop, Muenzenanzeige und Belohnung beantragen/einloesen erstellt.
 - Frontend-Reward-Einloesungsverwaltung fuer Eltern mit Listen, Bestaetigen, Ablehnen und als eingeloest markieren erstellt.
+- Frontend-Kinderstatistik-Panel im Dashboard mit Level, XP-Fortschritt, Muenzen, Quest-Zahlen und Reward-Ausgaben erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -176,6 +177,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Lokaler Browser-Test der Reward-Einloesungsverwaltung gegen das LXC-Backend erfolgreich: bestaetigen, als eingeloest markieren, ablehnen, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Reward-Einloesungsverwaltungs-Slice per API-Script erfolgreich.
 - LXC-Browser-Test der Reward-Einloesungsverwaltung unter `http://192.168.1.98:5173` erfolgreich: bestaetigen, als eingeloest markieren, ablehnen, Coin-Abzug, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
+- Frontend-Build nach Kinderstatistik-Panel erfolgreich ausgefuehrt.
+- Lokaler Browser-Test des Kinderstatistik-Panels gegen das LXC-Backend erfolgreich: Statistik sichtbar, Backend-Werte geladen, keine Konsolenfehler, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 
