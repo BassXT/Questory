@@ -194,6 +194,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Prisma-Migration `20260712143000_child_login_model` fuer `Family.childLoginCode` sowie `ChildProfile.pinHash`, `pinEnabled` und `pinUpdatedAt` angelegt.
 - Neue Familien erhalten beim Registrieren automatisch einen eindeutigen, kurz lesbaren Kinderlogin-Code.
 - `GET /api/families/current` liefert den `childLoginCode` mit aus.
+- Kinderprofil-Antworten liefern `pinEnabled` und `pinUpdatedAt`, aber keinen `pinHash`.
 - Prisma Generate, Prisma Validate und Backend-Build nach Kinderlogin-Datenmodell-Slice erfolgreich.
 
 ## Offene Aufgaben

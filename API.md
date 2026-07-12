@@ -247,6 +247,8 @@ Request:
 }
 ```
 
+Response enthaelt `pinEnabled` und `pinUpdatedAt`, aber niemals `pinHash`.
+
 ### `GET /api/children/{childId}`
 
 Gibt ein Kinderprofil inklusive Fortschritt zurueck.

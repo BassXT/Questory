@@ -87,6 +87,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Kinderlogin-Datenmodell mit `Family.childLoginCode`, `ChildProfile.pinHash`, `pinEnabled` und `pinUpdatedAt` erstellt.
 - Registrierung neuer Familien erzeugt automatisch einen eindeutigen Kinderlogin-Code.
 - `GET /api/families/current` liefert den Kinderlogin-Code mit aus.
+- Kinderprofil-Antworten wurden auf einen expliziten Select ohne `pinHash` umgestellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.

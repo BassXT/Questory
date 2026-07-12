@@ -10,6 +10,8 @@ const childSelect = {
   userId: true,
   displayName: true,
   avatarKey: true,
+  pinEnabled: true,
+  pinUpdatedAt: true,
   level: true,
   xp: true,
   coins: true,
@@ -31,7 +33,8 @@ export class ChildrenService {
         familyId: user.familyId,
         displayName: dto.displayName.trim(),
         avatarKey: dto.avatarKey?.trim() || null
-      }
+      },
+      select: childSelect
     });
   }
 

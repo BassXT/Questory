@@ -55,6 +55,8 @@ interface DashboardChild {
   id: string;
   displayName: string;
   avatarKey: string | null;
+  pinEnabled: boolean;
+  pinUpdatedAt: string | null;
   level: number;
   xp: number;
   coins: number;
@@ -2318,7 +2320,14 @@ function FeatureTile({ icon, label, value }: FeatureTileProps) {
 }
 
 interface ChildRowProps {
-  child: DashboardChild;
+  child: {
+    id: string;
+    displayName: string;
+    avatarKey: string | null;
+    level: number;
+    xp: number;
+    coins: number;
+  };
   maxXp: number;
 }
 
