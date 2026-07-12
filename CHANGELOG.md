@@ -241,6 +241,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Health nach Spontane-Quests-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer spontane Quests erfolgreich: manuelle Zuweisung nicht-zuweisbarer Quests blockiert, spontane Einreichung moeglich, doppelte `ONE_TIME`-Einreichung geblockt, XP/Muenzen nach Bestaetigung vergeben und Kinder-Scope fuer PIN-Login durchgesetzt.
 - Backend- und Frontend-Build nach Vorlagen-Dialog-/Bibliotheks-Slice erfolgreich.
+- Portainer-Redeploy nach Vorlagen-Dialog-/Bibliotheks-Slice per API-Script erfolgreich.
+- LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 32 Reward-Vorlagen, 36 Quest-Vorlagen, Kategorien fuer beide Listen und keine doppelten IDs/Namen.
+- LXC-Browser-Test des Quest-Vorlagen-Dialogs erfolgreich: Dialog oeffnet, Suche filtert, Auswahl fuellt das Questformular, Anlage funktioniert und genutzte Vorlage wird danach ausgeblendet.
 
 ### Fixed
 

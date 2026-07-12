@@ -233,18 +233,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Frontend-Vorschlaege werden nicht mehr als dauerhafte Button-Leiste angezeigt, sondern ueber einen kompakten Vorlagen-Dialog mit Suche und Kategorie-Filter ausgewaehlt.
 - Der Vorlagen-Dialog blendet bereits angelegte Quest- oder Reward-Namen aus, damit sich Vorschlaege nicht in der Familienliste wiederholen.
 - Backend- und Frontend-Build nach Vorlagen-Dialog-/Bibliotheks-Slice erfolgreich.
+- Portainer-Redeploy nach Vorlagen-Dialog-/Bibliotheks-Slice per API-Script erfolgreich.
+- LXC-Health nach Vorlagen-Dialog-/Bibliotheks-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 32 Reward-Vorlagen, 36 Quest-Vorlagen, Kategorien fuer beide Listen und keine doppelten IDs/Namen.
+- LXC-Browser-Test des Quest-Vorlagen-Dialogs erfolgreich: Dialog oeffnet, Suche filtert auf eine Vorlage, Auswahl fuellt das Questformular, Anlage funktioniert und die genutzte Vorlage wird danach aus dem Dialog ausgeblendet.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Vorlagen-Dialog auf dem LXC deployen und im Browser testen.
-- Danach Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufraeumen.
+- Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufraeumen.
 
 ## Naechster Schritt
 
-Als naechstes den Vorlagen-Dialog auf dem LXC deployen und im Browser testen. Danach das Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufteilen.
+Als naechstes das Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufteilen.
 
 ## Architekturentscheidungen
 
