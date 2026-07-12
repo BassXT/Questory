@@ -204,19 +204,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - PINs werden als Hash gespeichert, koennen durch Eltern ersetzt oder deaktiviert werden und werden nie als `pinHash` ausgeliefert.
 - Frontend zeigt im Kinderprofil-Bereich eine PIN-Verwaltung mit Kind-Auswahl, PIN-Status, Speichern und Deaktivieren.
 - Backend- und Frontend-Build nach Kinderlogin-PIN-Verwaltung erfolgreich.
+- Portainer-Redeploy nach Kinderlogin-PIN-Verwaltung per API-Script erfolgreich.
+- LXC-Health nach Kinderlogin-PIN-Verwaltung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Kinderlogin-PIN-Verwaltung erfolgreich: PIN setzen, PIN ersetzen, ungueltige PIN blockieren, PIN deaktivieren und keine `pinHash`-Ausgabe.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Kinderlogin-PIN-Verwaltung auf dem LXC deployen und API/UI testen.
 - Kinderlogin-Endpunkte fuer Familiencode, Kinderauswahl und PIN-Login implementieren.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes die Kinderlogin-PIN-Verwaltung auf dem LXC deployen und pruefen. Danach Login-Endpunkte und UI fuer Familiencode/QR/PIN als separate kleine Slices bauen.
+Als naechstes die Kinderlogin-Endpunkte fuer Familiencode, Kinderauswahl und PIN-Login implementieren. Danach die passende UI fuer Familiencode/QR/PIN bauen.
 
 ## Architekturentscheidungen
 
