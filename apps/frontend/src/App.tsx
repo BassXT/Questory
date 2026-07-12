@@ -33,7 +33,7 @@ import { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react';
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/api';
 const TOKEN_STORAGE_KEY = 'questory.accessToken';
 
-type AuthMode = 'login' | 'register';
+type AuthMode = 'login' | 'register' | 'child';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
 type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
@@ -49,6 +49,12 @@ interface AuthUser {
 interface AuthResponse {
   accessToken: string;
   user: AuthUser;
+}
+
+interface ChildLoginProfile {
+  id: string;
+  displayName: string;
+  avatarKey: string | null;
 }
 
 interface DashboardChild {
@@ -269,6 +275,12 @@ interface AuthFormState {
   password: string;
 }
 
+interface ChildLoginFormState {
+  familyCode: string;
+  childProfileId: string;
+  pin: string;
+}
+
 interface ChildFormState {
   displayName: string;
   avatarKey: string;
@@ -312,6 +324,12 @@ const initialAuthForm: AuthFormState = {
   displayName: '',
   email: '',
   password: ''
+};
+
+const initialChildLoginForm: ChildLoginFormState = {
+  familyCode: '',
+  childProfileId: '',
+  pin: ''
 };
 
 const initialChildForm: ChildFormState = {
@@ -360,6 +378,8 @@ const emptySuggestions: SuggestionLibraryResponse = {
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
+  const [childLoginForm, setChildLoginForm] = useState<ChildLoginFormState>(initialChildLoginForm);
+  const [childLoginProfiles, setChildLoginProfiles] = useState<ChildLoginProfile[]>([]);
   const [childForm, setChildForm] = useState<ChildFormState>(initialChildForm);
   const [childPinForm, setChildPinForm] = useState<ChildPinFormState>(initialChildPinForm);
   const [questForm, setQuestForm] = useState<QuestFormState>(initialQuestForm);
@@ -401,6 +421,8 @@ function App() {
       setUser(null);
       setDashboard(null);
       setChildStats(null);
+      setChildLoginProfiles([]);
+      setChildLoginForm(initialChildLoginForm);
       setChildren([]);
       setChildPinForm(initialChildPinForm);
       setQuests([]);
@@ -446,6 +468,11 @@ function App() {
 
   async function submitAuth(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (authMode === 'child') {
+      await submitChildLogin();
+      return;
+    }
+
     setAuthLoading(true);
     setError(null);
 
@@ -472,6 +499,58 @@ function App() {
       setToken(auth.accessToken);
       setUser(auth.user);
       setForm(initialAuthForm);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  async function loadChildLoginProfiles() {
+    const familyCode = childLoginForm.familyCode.trim();
+
+    if (!familyCode) {
+      return;
+    }
+
+    setAuthLoading(true);
+    setError(null);
+
+    try {
+      const profiles = await apiRequest<ChildLoginProfile[]>(
+        `/auth/child-login/${encodeURIComponent(familyCode)}/children`
+      );
+      setChildLoginProfiles(profiles);
+      setChildLoginForm((currentForm) => ({
+        ...currentForm,
+        familyCode: familyCode.toUpperCase(),
+        childProfileId: resolveSelectedChildLoginProfileId(profiles, currentForm.childProfileId)
+      }));
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setAuthLoading(false);
+    }
+  }
+
+  async function submitChildLogin() {
+    setAuthLoading(true);
+    setError(null);
+
+    try {
+      const auth = await apiRequest<AuthResponse>('/auth/child-login', {
+        method: 'POST',
+        body: {
+          familyCode: childLoginForm.familyCode,
+          childProfileId: childLoginForm.childProfileId,
+          pin: childLoginForm.pin
+        }
+      });
+      localStorage.setItem(TOKEN_STORAGE_KEY, auth.accessToken);
+      setToken(auth.accessToken);
+      setUser(auth.user);
+      setChildLoginForm(initialChildLoginForm);
+      setChildLoginProfiles([]);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
@@ -1006,6 +1085,8 @@ function App() {
     setUser(null);
     setDashboard(null);
     setChildStats(null);
+    setChildLoginForm(initialChildLoginForm);
+    setChildLoginProfiles([]);
     setChildren([]);
     setChildForm(initialChildForm);
     setChildPinForm(initialChildPinForm);
@@ -1090,9 +1171,13 @@ function App() {
           ) : (
             <AuthView
               authMode={authMode}
+              childLoginForm={childLoginForm}
+              childLoginProfiles={childLoginProfiles}
               form={form}
               loading={authLoading}
               onAuthModeChange={setAuthMode}
+              onChildLoginFormChange={setChildLoginForm}
+              onChildLoginProfilesLoad={loadChildLoginProfiles}
               onFormChange={setForm}
               onSubmit={submitAuth}
             />
@@ -1196,22 +1281,35 @@ function AppHeader({
 
 interface AuthViewProps {
   authMode: AuthMode;
+  childLoginForm: ChildLoginFormState;
+  childLoginProfiles: ChildLoginProfile[];
   form: AuthFormState;
   loading: boolean;
   onAuthModeChange: (mode: AuthMode) => void;
+  onChildLoginFormChange: (form: ChildLoginFormState) => void;
+  onChildLoginProfilesLoad: () => void;
   onFormChange: (form: AuthFormState) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
 
 function AuthView({
   authMode,
+  childLoginForm,
+  childLoginProfiles,
   form,
   loading,
   onAuthModeChange,
+  onChildLoginFormChange,
+  onChildLoginProfilesLoad,
   onFormChange,
   onSubmit
 }: AuthViewProps) {
   const isRegister = authMode === 'register';
+  const isChildLogin = authMode === 'child';
+  const selectedChildLoginProfileId = resolveSelectedChildLoginProfileId(
+    childLoginProfiles,
+    childLoginForm.childProfileId
+  );
 
   return (
     <Box
@@ -1229,6 +1327,7 @@ function AuthView({
             variant="fullWidth"
           >
             <Tab icon={<LoginRoundedIcon />} iconPosition="start" label="Login" value="login" />
+            <Tab icon={<EmojiEventsRoundedIcon />} iconPosition="start" label="Kind" value="child" />
             <Tab
               icon={<PersonAddRoundedIcon />}
               iconPosition="start"
@@ -1237,7 +1336,59 @@ function AuthView({
             />
           </Tabs>
 
-          {isRegister ? (
+          {isChildLogin ? (
+            <>
+              <TextField
+                autoComplete="off"
+                label="Familiencode"
+                onChange={(event) =>
+                  onChildLoginFormChange({
+                    ...childLoginForm,
+                    familyCode: event.target.value,
+                    childProfileId: '',
+                    pin: ''
+                  })
+                }
+                required
+                value={childLoginForm.familyCode}
+              />
+              <Button
+                disabled={loading || !childLoginForm.familyCode.trim()}
+                onClick={onChildLoginProfilesLoad}
+                startIcon={<PeopleAltRoundedIcon />}
+                type="button"
+                variant="outlined"
+              >
+                Kinder laden
+              </Button>
+              <TextField
+                disabled={childLoginProfiles.length === 0}
+                label="Kind"
+                onChange={(event) =>
+                  onChildLoginFormChange({ ...childLoginForm, childProfileId: event.target.value })
+                }
+                required
+                select
+                value={selectedChildLoginProfileId}
+              >
+                {childLoginProfiles.map((profile) => (
+                  <MenuItem key={profile.id} value={profile.id}>
+                    {profile.displayName}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <TextField
+                autoComplete="current-password"
+                disabled={childLoginProfiles.length === 0}
+                label="PIN"
+                onChange={(event) => onChildLoginFormChange({ ...childLoginForm, pin: event.target.value })}
+                required
+                slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 12, minLength: 4, pattern: '[0-9]*' } }}
+                type="password"
+                value={childLoginForm.pin}
+              />
+            </>
+          ) : isRegister ? (
             <>
               <TextField
                 autoComplete="organization"
@@ -1256,24 +1407,34 @@ function AuthView({
             </>
           ) : null}
 
-          <TextField
-            autoComplete="email"
-            label="E-Mail"
-            onChange={(event) => onFormChange({ ...form, email: event.target.value })}
-            required
-            type="email"
-            value={form.email}
-          />
-          <TextField
-            autoComplete={isRegister ? 'new-password' : 'current-password'}
-            label="Passwort"
-            onChange={(event) => onFormChange({ ...form, password: event.target.value })}
-            required
-            type="password"
-            value={form.password}
-          />
-          <Button disabled={loading} size="large" startIcon={<LoginRoundedIcon />} type="submit" variant="contained">
-            {isRegister ? 'Familie erstellen' : 'Einloggen'}
+          {!isChildLogin ? (
+            <>
+              <TextField
+                autoComplete="email"
+                label="E-Mail"
+                onChange={(event) => onFormChange({ ...form, email: event.target.value })}
+                required
+                type="email"
+                value={form.email}
+              />
+              <TextField
+                autoComplete={isRegister ? 'new-password' : 'current-password'}
+                label="Passwort"
+                onChange={(event) => onFormChange({ ...form, password: event.target.value })}
+                required
+                type="password"
+                value={form.password}
+              />
+            </>
+          ) : null}
+          <Button
+            disabled={loading || (isChildLogin && (!selectedChildLoginProfileId || !childLoginForm.pin))}
+            size="large"
+            startIcon={<LoginRoundedIcon />}
+            type="submit"
+            variant="contained"
+          >
+            {isChildLogin ? 'Als Kind starten' : isRegister ? 'Familie erstellen' : 'Einloggen'}
           </Button>
         </Stack>
       </Paper>
@@ -3005,6 +3166,17 @@ function resolveSelectedChildId(children: ChildProfile[], preferredChildId: stri
   }
 
   return children[0]?.id ?? '';
+}
+
+function resolveSelectedChildLoginProfileId(
+  profiles: ChildLoginProfile[],
+  preferredProfileId: string
+): string {
+  if (preferredProfileId && profiles.some((profile) => profile.id === preferredProfileId)) {
+    return preferredProfileId;
+  }
+
+  return profiles[0]?.id ?? '';
 }
 
 function resolveSelectedQuestId(quests: QuestTemplate[], preferredQuestId: string): string {
