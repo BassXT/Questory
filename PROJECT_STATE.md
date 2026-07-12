@@ -210,19 +210,21 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Kinderlogin-Endpunkte angelegt: `GET /api/auth/child-login/:familyCode/children` und `POST /api/auth/child-login`.
 - PIN-Kinder erhalten ein normales `CHILD`-JWT mit `childProfileId`; bestehende Kind-Scope-Regeln wurden fuer PIN-Kinder und alte Kinder-User angepasst.
 - Backend- und Frontend-Build nach Kinderlogin-Endpunkte-Slice erfolgreich.
+- Portainer-Redeploy nach Kinderlogin-Endpunkte-Slice per API-Script erfolgreich.
+- LXC-Health nach Kinderlogin-Endpunkte-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Kinderlogin-Endpunkte erfolgreich: Kinderauswahl zeigt nur PIN-aktive Kinder, falsche PIN wird blockiert, richtige PIN liefert `CHILD`-JWT, Kind sieht nur eigene Dashboard-/Kinder-/Statistik-/Shop-Daten.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Kinderlogin-Endpunkte auf dem LXC deployen und API testen.
 - UI fuer Kinderlogin per Familiencode/QR/PIN implementieren.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes die Kinderlogin-Endpunkte auf dem LXC deployen und pruefen. Danach die passende UI fuer Familiencode/QR/PIN bauen.
+Als naechstes die UI fuer Kinderlogin per Familiencode/QR/PIN bauen. Danach zeitlich ungebundene/spontane Quests als separaten Produkt-Slice planen.
 
 ## Architekturentscheidungen
 
