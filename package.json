@@ -19,6 +19,7 @@
     "test": "npm run test --workspaces --if-present",
     "portainer:redeploy": "node scripts/portainer-redeploy.mjs",
     "prisma:generate": "npm run prisma:generate -w apps/backend",
+    "prisma:validate": "npm exec -w apps/backend -- prisma validate",
     "prisma:migrate": "npm run prisma:migrate -w apps/backend"
   },
   "engines": {

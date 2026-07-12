@@ -73,6 +73,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Reward-Shop-Workflow mit Kind-Shop, Muenzenanzeige und Belohnung beantragen/einloesen erstellt.
 - Frontend-Reward-Einloesungsverwaltung fuer Eltern mit Listen, Bestaetigen, Ablehnen und als eingeloest markieren erstellt.
 - Frontend-Kinderstatistik-Panel im Dashboard mit Level, XP-Fortschritt, Muenzen, Quest-Zahlen und Reward-Ausgaben erstellt.
+- GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate und Workspace-Build erstellt.
+- Root-Script `npm run prisma:validate` fuer lokale und CI-Prisma-Validierung erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -181,6 +183,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Lokaler Browser-Test des Kinderstatistik-Panels gegen das LXC-Backend erfolgreich: Statistik sichtbar, Backend-Werte geladen, keine Konsolenfehler, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 - Portainer-Redeploy nach Frontend-Kinderstatistik-Slice per API-Script erfolgreich.
 - LXC-Browser-Test des Kinderstatistik-Panels unter `http://192.168.1.98:5173` erfolgreich: Statistik sichtbar, Backend-Werte geladen, keine Konsolenfehler, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
+- Lokale CI-Befehle erfolgreich geprueft: `npm run prisma:validate`, `npm run prisma:generate` und `npm run build`.
 
 ### Fixed
 
@@ -193,3 +196,4 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `npm ci` meldet eine Node-Engine-Warnung fuer eine transitive Prisma-Abhaengigkeit, obwohl Build und Generate mit Node `20.19.6` funktionieren.
 - Port `3000` ist auf dem LXC bereits belegt; das Questory-Backend nutzt aktuell `3001`.
 - Lokaler Migration-Drift-Vergleich aus dem Migrationsordner benoetigt eine Shadow-Datenbank und wurde deshalb noch nicht ausgefuehrt.
+- GitHub-Actions-Ausfuehrung nach dem ersten Push der CI-Konfiguration muss noch beobachtet werden.
