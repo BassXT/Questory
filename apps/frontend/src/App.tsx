@@ -104,6 +104,8 @@ interface ChildProfile {
   userId: string | null;
   displayName: string;
   avatarKey: string | null;
+  pinEnabled: boolean;
+  pinUpdatedAt: string | null;
   level: number;
   xp: number;
   coins: number;
@@ -272,6 +274,11 @@ interface ChildFormState {
   avatarKey: string;
 }
 
+interface ChildPinFormState {
+  childProfileId: string;
+  pin: string;
+}
+
 interface QuestFormState {
   title: string;
   description: string;
@@ -312,6 +319,11 @@ const initialChildForm: ChildFormState = {
   avatarKey: ''
 };
 
+const initialChildPinForm: ChildPinFormState = {
+  childProfileId: '',
+  pin: ''
+};
+
 const initialQuestForm: QuestFormState = {
   title: '',
   description: '',
@@ -349,6 +361,7 @@ function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
   const [childForm, setChildForm] = useState<ChildFormState>(initialChildForm);
+  const [childPinForm, setChildPinForm] = useState<ChildPinFormState>(initialChildPinForm);
   const [questForm, setQuestForm] = useState<QuestFormState>(initialQuestForm);
   const [questAssignmentForm, setQuestAssignmentForm] = useState<QuestAssignmentFormState>(
     initialQuestAssignmentForm
@@ -372,6 +385,7 @@ function App() {
   const [redemptionLoading, setRedemptionLoading] = useState(false);
   const [shopLoading, setShopLoading] = useState(false);
   const [childSaving, setChildSaving] = useState(false);
+  const [childPinSaving, setChildPinSaving] = useState(false);
   const [assignmentSaving, setAssignmentSaving] = useState(false);
   const [completionSavingId, setCompletionSavingId] = useState<string | null>(null);
   const [questSaving, setQuestSaving] = useState(false);
@@ -388,6 +402,7 @@ function App() {
       setDashboard(null);
       setChildStats(null);
       setChildren([]);
+      setChildPinForm(initialChildPinForm);
       setQuests([]);
       setQuestAssignments([]);
       setQuestAssignmentForm(initialQuestAssignmentForm);
@@ -631,6 +646,57 @@ function App() {
       setError(toErrorMessage(requestError));
     } finally {
       setChildSaving(false);
+    }
+  }
+
+  async function submitChildPin(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const selectedChildId = resolveSelectedChildId(children, childPinForm.childProfileId);
+
+    if (!token || !selectedChildId) {
+      return;
+    }
+
+    setChildPinSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<ChildProfile>(`/children/${selectedChildId}/pin`, {
+        method: 'POST',
+        token,
+        body: {
+          pin: childPinForm.pin
+        }
+      });
+      setChildPinForm({ childProfileId: selectedChildId, pin: '' });
+      await refreshDashboard(questAssignmentForm.childProfileId || selectedChildId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setChildPinSaving(false);
+    }
+  }
+
+  async function disableChildPin(childProfileId: string) {
+    if (!token) {
+      return;
+    }
+
+    setChildPinSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<ChildProfile>(`/children/${childProfileId}/pin/disable`, {
+        method: 'POST',
+        token
+      });
+      setChildPinForm({ childProfileId, pin: '' });
+      await refreshDashboard(questAssignmentForm.childProfileId || childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setChildPinSaving(false);
     }
   }
 
@@ -942,6 +1008,7 @@ function App() {
     setChildStats(null);
     setChildren([]);
     setChildForm(initialChildForm);
+    setChildPinForm(initialChildPinForm);
     setQuests([]);
     setQuestForm(initialQuestForm);
     setQuestAssignments([]);
@@ -970,6 +1037,8 @@ function App() {
           {isAuthenticated ? (
             <DashboardView
               childForm={childForm}
+              childPinForm={childPinForm}
+              childPinSaving={childPinSaving}
               childSaving={childSaving}
               childStats={childStats}
               childStatsLoading={childStatsLoading}
@@ -996,6 +1065,9 @@ function App() {
               suggestions={suggestions}
               user={user}
               onChildFormChange={setChildForm}
+              onChildPinDisable={disableChildPin}
+              onChildPinFormChange={setChildPinForm}
+              onChildPinSubmit={submitChildPin}
               onChildSubmit={submitChild}
               onAssignmentChildChange={changeAssignmentChild}
               onAssignmentFormChange={setQuestAssignmentForm}
@@ -1240,6 +1312,8 @@ interface DashboardViewProps {
   assignmentSaving: boolean;
   assignments: QuestAssignment[];
   childForm: ChildFormState;
+  childPinForm: ChildPinFormState;
+  childPinSaving: boolean;
   childSaving: boolean;
   childStats: ChildStatsResponse | null;
   childStatsLoading: boolean;
@@ -1268,6 +1342,9 @@ interface DashboardViewProps {
   onAssignmentReject: (assignmentId: string, completionId: string) => void;
   onAssignmentSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChildFormChange: (form: ChildFormState) => void;
+  onChildPinDisable: (childProfileId: string) => void;
+  onChildPinFormChange: (form: ChildPinFormState) => void;
+  onChildPinSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onQuestFormChange: (form: QuestFormState) => void;
   onQuestSuggestionSelect: (suggestion: QuestSuggestion) => void;
@@ -1288,6 +1365,8 @@ function DashboardView({
   assignmentSaving,
   assignments,
   childForm,
+  childPinForm,
+  childPinSaving,
   childSaving,
   childStats,
   childStatsLoading,
@@ -1316,6 +1395,9 @@ function DashboardView({
   onAssignmentReject,
   onAssignmentSubmit,
   onChildFormChange,
+  onChildPinDisable,
+  onChildPinFormChange,
+  onChildPinSubmit,
   onChildSubmit,
   onQuestFormChange,
   onQuestSuggestionSelect,
@@ -1332,6 +1414,8 @@ function DashboardView({
   const childRows = children;
   const xpMax = useMemo(() => Math.max(...childRows.map((child) => child.xp), 1), [childRows]);
   const canManageChildren = user?.role === 'ADMIN' || user?.role === 'PARENT';
+  const selectedPinChildId = resolveSelectedChildId(children, childPinForm.childProfileId);
+  const selectedPinChild = children.find((child) => child.id === selectedPinChildId) ?? null;
 
   if (!dashboard) {
     return (
@@ -1384,45 +1468,110 @@ function DashboardView({
             </Box>
 
             {canManageChildren ? (
-              <Box
-                component="form"
-                onSubmit={onChildSubmit}
-                sx={{
-                  bgcolor: 'action.hover',
-                  borderRadius: 2,
-                  display: 'grid',
-                  gap: 1.25,
-                  gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(160px, 0.8fr) auto' },
-                  p: 1.5
-                }}
-              >
-                <TextField
-                  autoComplete="off"
-                  label="Kindername"
-                  onChange={(event) =>
-                    onChildFormChange({ ...childForm, displayName: event.target.value })
-                  }
-                  required
-                  size="small"
-                  value={childForm.displayName}
-                />
-                <TextField
-                  autoComplete="off"
-                  label="Avatar-Key"
-                  onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
-                  size="small"
-                  value={childForm.avatarKey}
-                />
-                <Button
-                  disabled={childSaving}
-                  startIcon={<PersonAddRoundedIcon />}
-                  sx={{ minHeight: 40 }}
-                  type="submit"
-                  variant="contained"
+              <Stack spacing={1.25}>
+                <Box
+                  component="form"
+                  onSubmit={onChildSubmit}
+                  sx={{
+                    bgcolor: 'action.hover',
+                    borderRadius: 2,
+                    display: 'grid',
+                    gap: 1.25,
+                    gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(160px, 0.8fr) auto' },
+                    p: 1.5
+                  }}
                 >
-                  Anlegen
-                </Button>
-              </Box>
+                  <TextField
+                    autoComplete="off"
+                    label="Kindername"
+                    onChange={(event) =>
+                      onChildFormChange({ ...childForm, displayName: event.target.value })
+                    }
+                    required
+                    size="small"
+                    value={childForm.displayName}
+                  />
+                  <TextField
+                    autoComplete="off"
+                    label="Avatar-Key"
+                    onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
+                    size="small"
+                    value={childForm.avatarKey}
+                  />
+                  <Button
+                    disabled={childSaving}
+                    startIcon={<PersonAddRoundedIcon />}
+                    sx={{ minHeight: 40 }}
+                    type="submit"
+                    variant="contained"
+                  >
+                    Anlegen
+                  </Button>
+                </Box>
+
+                {children.length > 0 ? (
+                  <Box
+                    component="form"
+                    onSubmit={onChildPinSubmit}
+                    sx={{
+                      bgcolor: 'action.hover',
+                      borderRadius: 2,
+                      display: 'grid',
+                      gap: 1.25,
+                      gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(140px, 0.7fr) auto auto' },
+                      p: 1.5
+                    }}
+                  >
+                    <TextField
+                      label="Kind"
+                      onChange={(event) =>
+                        onChildPinFormChange({ ...childPinForm, childProfileId: event.target.value })
+                      }
+                      select
+                      size="small"
+                      value={selectedPinChildId}
+                    >
+                      {children.map((child) => (
+                        <MenuItem key={child.id} value={child.id}>
+                          {child.displayName}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <TextField
+                      autoComplete="new-password"
+                      label="Kinder-PIN"
+                      onChange={(event) => onChildPinFormChange({ ...childPinForm, pin: event.target.value })}
+                      required
+                      size="small"
+                      slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 12, minLength: 4, pattern: '[0-9]*' } }}
+                      type="password"
+                      value={childPinForm.pin}
+                    />
+                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                      <Chip
+                        color={selectedPinChild?.pinEnabled ? 'success' : 'default'}
+                        label={selectedPinChild?.pinEnabled ? 'PIN aktiv' : 'PIN aus'}
+                        variant="outlined"
+                      />
+                    </Stack>
+                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                      <Button disabled={childPinSaving} size="small" type="submit" variant="contained">
+                        PIN speichern
+                      </Button>
+                      {selectedPinChild?.pinEnabled ? (
+                        <Button
+                          disabled={childPinSaving}
+                          onClick={() => onChildPinDisable(selectedPinChild.id)}
+                          size="small"
+                          variant="outlined"
+                        >
+                          Deaktivieren
+                        </Button>
+                      ) : null}
+                    </Stack>
+                  </Box>
+                ) : null}
+              </Stack>
             ) : null}
 
             <Box sx={{ display: 'grid', gap: 1.5 }}>
@@ -2327,6 +2476,7 @@ interface ChildRowProps {
     level: number;
     xp: number;
     coins: number;
+    pinEnabled: boolean;
   };
   maxXp: number;
 }
@@ -2341,7 +2491,7 @@ function ChildRow({ child, maxXp }: ChildRowProps) {
         borderRadius: 2,
         display: 'grid',
         gap: 1,
-        gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 0.7fr) minmax(0, 1fr) auto' },
+        gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 0.7fr) minmax(0, 1fr) auto auto' },
         p: 1.5
       }}
     >
@@ -2359,6 +2509,7 @@ function ChildRow({ child, maxXp }: ChildRowProps) {
           {child.xp} XP
         </Typography>
       </Stack>
+      <Chip color={child.pinEnabled ? 'success' : 'default'} label={child.pinEnabled ? 'PIN' : 'Keine PIN'} variant="outlined" />
       <Chip icon={<PaidRoundedIcon />} label={child.coins} variant="outlined" />
     </Box>
   );

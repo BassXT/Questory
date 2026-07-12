@@ -2,7 +2,9 @@ import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/commo
 import { QuestCompletionStatus, RewardRedemptionStatus, Role } from '../prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
+import { PasswordService } from '../auth/password.service';
 import { CreateChildDto } from './dto/create-child.dto';
+import { SetChildPinDto } from './dto/set-child-pin.dto';
 
 const childSelect = {
   id: true,
@@ -25,7 +27,10 @@ function calculateNextLevelXp(currentLevel: number): number {
 
 @Injectable()
 export class ChildrenService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly passwordService: PasswordService
+  ) {}
 
   createChildProfile(user: AuthenticatedUser, dto: CreateChildDto) {
     return this.prisma.childProfile.create({
@@ -180,6 +185,35 @@ export class ChildrenService {
     };
   }
 
+  async setChildPin(user: AuthenticatedUser, childId: string, dto: SetChildPinDto) {
+    await this.ensureChildExists(user, childId);
+    const pinHash = await this.passwordService.hashPassword(dto.pin);
+
+    return this.prisma.childProfile.update({
+      where: { id: childId },
+      data: {
+        pinHash,
+        pinEnabled: true,
+        pinUpdatedAt: new Date()
+      },
+      select: childSelect
+    });
+  }
+
+  async disableChildPin(user: AuthenticatedUser, childId: string) {
+    await this.ensureChildExists(user, childId);
+
+    return this.prisma.childProfile.update({
+      where: { id: childId },
+      data: {
+        pinHash: null,
+        pinEnabled: false,
+        pinUpdatedAt: new Date()
+      },
+      select: childSelect
+    });
+  }
+
   private countQuestCompletions(
     familyId: string,
     childProfileId: string,
@@ -212,5 +246,21 @@ export class ChildrenService {
         }
       }
     });
+  }
+
+  private async ensureChildExists(user: AuthenticatedUser, childId: string) {
+    const child = await this.prisma.childProfile.findFirst({
+      where: {
+        id: childId,
+        familyId: user.familyId
+      },
+      select: { id: true }
+    });
+
+    if (!child) {
+      throw new NotFoundException('Child profile not found.');
+    }
+
+    return child;
   }
 }

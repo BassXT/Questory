@@ -7,6 +7,7 @@ import { RolesGuard } from '../auth/guards/roles.guard';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { ChildrenService } from './children.service';
 import { CreateChildDto } from './dto/create-child.dto';
+import { SetChildPinDto } from './dto/set-child-pin.dto';
 
 @Controller('children')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -27,6 +28,22 @@ export class ChildrenController {
   @Get(':childId')
   getChild(@CurrentUser() user: AuthenticatedUser, @Param('childId') childId: string) {
     return this.childrenService.getChild(user, childId);
+  }
+
+  @Post(':childId/pin')
+  @Roles(Role.ADMIN, Role.PARENT)
+  setChildPin(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('childId') childId: string,
+    @Body() dto: SetChildPinDto
+  ) {
+    return this.childrenService.setChildPin(user, childId, dto);
+  }
+
+  @Post(':childId/pin/disable')
+  @Roles(Role.ADMIN, Role.PARENT)
+  disableChildPin(@CurrentUser() user: AuthenticatedUser, @Param('childId') childId: string) {
+    return this.childrenService.disableChildPin(user, childId);
   }
 
   @Get(':childId/stats')

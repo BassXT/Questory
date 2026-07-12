@@ -257,6 +257,43 @@ Status: implementiert.
 
 Auth: Bearer Token erforderlich.
 
+### `POST /api/children/{childId}/pin`
+
+Setzt oder ersetzt die Kinder-PIN fuer ein Kinderprofil.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Das Kinderprofil muss zur aktuellen Familie gehoeren.
+- Die PIN muss aus 4 bis 12 Ziffern bestehen.
+- Die PIN wird gehasht gespeichert.
+- Die Response enthaelt `pinEnabled` und `pinUpdatedAt`, aber niemals `pinHash`.
+
+Request:
+
+```json
+{
+  "pin": "1234"
+}
+```
+
+### `POST /api/children/{childId}/pin/disable`
+
+Deaktiviert den Kinderlogin per PIN fuer ein Kinderprofil.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweis: Der gespeicherte PIN-Hash wird entfernt, `pinEnabled` wird auf `false` gesetzt.
+
 ### `PATCH /api/children/{childId}`
 
 Aktualisiert ein Kinderprofil.
