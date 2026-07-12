@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -109,8 +109,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Reward-Einloesungs-Slice erfolgreich.
 - LXC-Tests fuer `POST /api/rewards/:rewardId/redeem`, `REQUESTED`-Anfragen, direkte `APPROVED`-Einloesungen, Coin-Abzug, Einloesungslimit und unzureichende Muenzen erfolgreich.
 - Reward-Einloesungsverwaltung fuer Eltern angelegt: `GET /api/reward-redemptions`, `POST /api/reward-redemptions/:redemptionId/approve`, `POST /api/reward-redemptions/:redemptionId/reject` und `POST /api/reward-redemptions/:redemptionId/mark-redeemed`.
-- Reward-Einloesungsverwaltung prueft Familiengrenzen und erlaubt Statuswechsel nur von `REQUESTED` zu `APPROVED`/`REJECTED` sowie von `APPROVED` zu `REDEEMED`.
-- Reward-Bestaetigung zieht Muenzen anhand des gespeicherten `coinCost` transaktional ab.
+- Reward-Einloesungsverwaltung prueft Familiengrenzen und erlaubt Statuswechsel von `REQUESTED` zu `APPROVED`/`REJECTED`/`CANCELLED`, von `APPROVED` zu `REDEEMED`/`CANCELLED` und verhindert Storno nach `REDEEMED`.
+- Reward-Beantragung zieht Muenzen anhand des gespeicherten `coinCost` transaktional ab; Ablehnung und Storno schreiben diese Muenzen wieder gut.
 - Portainer-Build-Fehler bei `npm run build -w apps/backend` nach Prisma-Output-Aenderung behoben, indem Backend-Imports auf einen stabilen Prisma-Wrapper und Nest-Asset-Copy fuer den generierten Client umgestellt wurden.
 - Portainer-Redeploy nach Prisma-/Reward-Einloesungsverwaltungs-Fix erfolgreich.
 - LXC-Tests fuer Reward-Einloesungen listen, bestaetigen, ablehnen, als eingeloest markieren, Coin-Abzug und ungueltige Statuswechsel erfolgreich.
@@ -175,17 +175,25 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Testdaten-Aufraeum-Dry-Run ueber Portainer/Docker-Exec auf dem LXC erfolgreich: Pattern `%2026%`, `MIN_AGE_DAYS=0`, `LIMIT=20`, 12 passende Testfamilien gefunden, keine Loeschung ausgefuehrt.
 - Testdaten-Aufraeumung ueber Portainer/Docker-Exec ausgefuehrt: vorher lokales PostgreSQL-Custom-Dump-Backup `C:\Users\Thomas\Documents\Questory-db-backups\questory-postgres-before-test-cleanup-20260712T114531Z.dump` mit 34.725 Bytes erstellt, danach 12 Testfamilien geloescht und Nachpruefung mit `remaining = 0` erfolgreich.
 - LXC-Health nach Testdaten-Aufraeumung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Reward-Einloesungen reservieren Muenzen beim Beantragen oder direkten Einloesen transaktional, damit derselbe Muenzstand nicht mehrfach ausgegeben werden kann.
+- Reward-Ablehnung schreibt reservierte Muenzen wieder gut.
+- Reward-Storno-Endpunkt `POST /api/reward-redemptions/:redemptionId/cancel` angelegt; `REQUESTED` und `APPROVED` koennen storniert werden, `REDEEMED` bleibt final.
+- Frontend-Elternverwaltung zeigt fuer noch nicht ausgegebene Rewards eine Storno-Aktion und den neuen Status `Storniert`.
+- Prisma-Migration `20260712122000_reward_redemption_reservations` angelegt.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
+- Reward-Reservierungs-/Storno-Slice auf dem LXC deployen und mit echter Shop-Bedienung testen.
+- Vorschlagsbibliothek fuer haeufige Shop-Belohnungen und Quest-Vorlagen entwerfen.
+- Kinderlogin ohne E-Mail konzipieren, z.B. Familiencode, QR-Code oder Eltern-freigegebene Kinder-PIN.
+- Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern und erste fachliche Backend-Tests vorbereiten.
+Als naechstes den Reward-Reservierungs-/Storno-Slice deployen und auf dem LXC testen. Danach Vorschlagsbibliothek, Kinderlogin per Familiencode/QR/PIN und spontane Quests als separate Produkt-Slices planen.
 
 ## Architekturentscheidungen
 
@@ -222,9 +230,8 @@ Als naechstes MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zu
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
 - Reward-Einloesungen speichern den Preis als `coinCost`, damit spaetere Preisaenderungen historische Einloesungen nicht veraendern.
-- Bei bestaetigungspflichtigen Rewards werden Muenzen erst beim Eltern-Approve abgezogen; die Anfrage selbst bleibt zunaechst `REQUESTED`.
-- Bei nicht bestaetigungspflichtigen Rewards werden Muenzen sofort in derselben Transaktion abgezogen, in der die Einloesung erstellt wird.
-- Die Eltern-Bestaetigung fuer Reward-Einloesungen zieht Muenzen erst beim Wechsel von `REQUESTED` zu `APPROVED` ab; `REDEEMED` markiert nur die reale Ausgabe der Belohnung und veraendert keine Muenzen.
+- Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. `REQUESTED` und `APPROVED` halten Muenzen gebunden, `REDEEMED` ist final, `REJECTED` und `CANCELLED` geben Muenzen wieder frei.
+- Die Eltern-Bestaetigung fuer Reward-Einloesungen wechselt nur von `REQUESTED` zu `APPROVED`; Muenzen wurden bereits reserviert. `REDEEMED` markiert nur die reale Ausgabe der Belohnung und veraendert keine Muenzen.
 - Kinder-Statistiken sind ein API-Read-Model im `ChildrenModule`, damit das Frontend fuer Profil- und Dashboardansichten nicht mehrere Rohlisten zusammenfuehren muss.
 - Das Dashboard ist ein eigenes Read-Model im `DashboardModule`, damit die Startseite spaeter mit einem einzigen API-Aufruf die wichtigsten Familienzahlen laden kann.
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.

@@ -173,6 +173,7 @@ Felder:
 - `approvedByUserId`
 - `redeemedAt`
 - `rejectedAt`
+- `cancelledAt`
 - `rejectionReason`
 - `coinCost`
 
@@ -181,7 +182,15 @@ Status:
 - `REQUESTED`
 - `APPROVED`
 - `REJECTED`
+- `CANCELLED`
 - `REDEEMED`
+
+Muenzlogik:
+
+- `coinCost` speichert den zum Beantragungszeitpunkt reservierten Preis.
+- Beim Erstellen einer Einloesung werden Muenzen sofort vom Kinderprofil abgezogen.
+- `REJECTED` und `CANCELLED` schreiben diese Muenzen wieder gut.
+- `REDEEMED` ist final und kann nicht mehr storniert werden.
 
 ## Migrationen
 

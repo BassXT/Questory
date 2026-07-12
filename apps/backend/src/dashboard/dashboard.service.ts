@@ -49,6 +49,7 @@ export class DashboardService {
       approvedRewardCount,
       redeemedRewardCount,
       rejectedRewardCount,
+      cancelledRewardCount,
       spentRewardCoins
     ] = await Promise.all([
       this.prisma.family.findUniqueOrThrow({
@@ -111,10 +112,15 @@ export class DashboardService {
       this.countRewardRedemptions(user.familyId, childIds, RewardRedemptionStatus.APPROVED),
       this.countRewardRedemptions(user.familyId, childIds, RewardRedemptionStatus.REDEEMED),
       this.countRewardRedemptions(user.familyId, childIds, RewardRedemptionStatus.REJECTED),
+      this.countRewardRedemptions(user.familyId, childIds, RewardRedemptionStatus.CANCELLED),
       this.prisma.rewardRedemption.aggregate({
         where: {
           status: {
-            in: [RewardRedemptionStatus.APPROVED, RewardRedemptionStatus.REDEEMED]
+            in: [
+              RewardRedemptionStatus.REQUESTED,
+              RewardRedemptionStatus.APPROVED,
+              RewardRedemptionStatus.REDEEMED
+            ]
           },
           childProfile: {
             familyId: user.familyId,
@@ -156,7 +162,13 @@ export class DashboardService {
         approved: approvedRewardCount,
         redeemed: redeemedRewardCount,
         rejected: rejectedRewardCount,
-        totalRedemptions: requestedRewardCount + approvedRewardCount + redeemedRewardCount + rejectedRewardCount,
+        cancelled: cancelledRewardCount,
+        totalRedemptions:
+          requestedRewardCount +
+          approvedRewardCount +
+          redeemedRewardCount +
+          rejectedRewardCount +
+          cancelledRewardCount,
         coinsSpent: spentRewardCoins._sum.coinCost ?? 0
       }
     };

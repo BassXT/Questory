@@ -506,8 +506,10 @@ Hinweise:
 - Kinder mit eigenem Login koennen nur fuer ihr eigenes Kinderprofil einloesen.
 - Inaktive Belohnungen koennen nicht eingeloest werden.
 - Das Kind muss genug Muenzen fuer den aktuellen Preis besitzen.
-- Bei `requiresApproval: true` wird eine Anfrage mit Status `REQUESTED` erstellt; Muenzen werden noch nicht abgezogen.
-- Bei `requiresApproval: false` wird direkt eine Einloesung mit Status `APPROVED` erstellt; Muenzen werden sofort abgezogen.
+- Die Muenzen werden beim Beantragen oder direkten Einloesen sofort reserviert und vom Kinderprofil abgezogen.
+- Bei `requiresApproval: true` wird eine Anfrage mit Status `REQUESTED` erstellt.
+- Bei `requiresApproval: false` wird direkt eine Einloesung mit Status `APPROVED` erstellt.
+- Bei Ablehnung oder Storno werden reservierte Muenzen wieder gutgeschrieben.
 - `maxRedemptions` zaehlt bestehende Einloesungen mit Status `REQUESTED`, `APPROVED` und `REDEEMED` fuer dasselbe Kind.
 
 Request:
@@ -532,8 +534,7 @@ Hinweise:
 
 - Die Einloesung muss zur aktuellen Familie gehoeren.
 - Nur Einloesungen mit Status `REQUESTED` koennen bestaetigt werden.
-- Beim Bestaetigen werden die in `coinCost` gespeicherten Muenzen vom Kinderprofil abgezogen.
-- Falls das Kind nicht mehr genug Muenzen besitzt, wird die Bestaetigung abgelehnt.
+- Die Muenzen wurden bereits beim Beantragen reserviert; beim Bestaetigen werden keine weiteren Muenzen abgezogen.
 
 ### `POST /api/reward-redemptions/{redemptionId}/reject`
 
@@ -548,7 +549,7 @@ Rollen: `ADMIN`, `PARENT`
 Hinweise:
 
 - Nur Einloesungen mit Status `REQUESTED` koennen abgelehnt werden.
-- Es werden keine Muenzen abgezogen.
+- Die beim Beantragen reservierten Muenzen werden wieder gutgeschrieben.
 
 Request:
 
@@ -557,6 +558,23 @@ Request:
   "rejectionReason": "Heute passt es leider nicht."
 }
 ```
+
+### `POST /api/reward-redemptions/{redemptionId}/cancel`
+
+Storniert eine noch nicht ausgegebene Belohnung.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Nur Einloesungen mit Status `REQUESTED` oder `APPROVED` koennen storniert werden.
+- Stornierte Einloesungen erhalten Status `CANCELLED`.
+- Die in `coinCost` reservierten Muenzen werden wieder gutgeschrieben.
+- Einloesungen mit Status `REDEEMED` koennen nicht mehr storniert werden.
 
 ### `POST /api/reward-redemptions/{redemptionId}/mark-redeemed`
 
@@ -585,7 +603,7 @@ Rollen: `ADMIN`, `PARENT`
 Optionale Query-Parameter:
 
 - `childProfileId`: filtert auf ein Kinderprofil.
-- `status`: filtert auf `REQUESTED`, `APPROVED`, `REJECTED` oder `REDEEMED`.
+- `status`: filtert auf `REQUESTED`, `APPROVED`, `REJECTED`, `CANCELLED` oder `REDEEMED`.
 
 ## Dashboard und Statistiken
 
@@ -663,7 +681,7 @@ Hinweise:
 - Das Kinderprofil muss zur aktuellen Familie gehoeren.
 - Eltern/Admin koennen die Statistik jedes Kindes der Familie abrufen.
 - Kinder mit eigenem Login koennen nur die eigene Statistik abrufen.
-- `coinsSpent` zaehlt Reward-Einloesungen mit Status `APPROVED` und `REDEEMED`, weil dort Muenzen bereits abgezogen wurden.
+- `coinsSpent` zaehlt aktuell gebundene oder final ausgegebene Reward-Muenzen mit Status `REQUESTED`, `APPROVED` und `REDEEMED`. Bei `REJECTED` oder `CANCELLED` werden Muenzen zurueckgegeben und nicht mitgezaehlt.
 
 Response:
 

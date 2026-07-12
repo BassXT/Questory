@@ -32,6 +32,7 @@ const rewardRedemptionSelect = {
   approvedByUserId: true,
   redeemedAt: true,
   rejectedAt: true,
+  cancelledAt: true,
   rejectionReason: true,
   coinCost: true,
   reward: {
@@ -173,43 +174,27 @@ export class RewardsService {
       throw new BadRequestException('Inactive rewards cannot be redeemed.');
     }
 
-    if (child.coins < reward.price) {
-      throw new BadRequestException('Child does not have enough coins for this reward.');
-    }
-
-    if (reward.maxRedemptions !== null) {
-      const existingRedemptions = await this.prisma.rewardRedemption.count({
-        where: {
-          rewardId,
-          childProfileId: dto.childProfileId,
-          status: {
-            in: [
-              RewardRedemptionStatus.REQUESTED,
-              RewardRedemptionStatus.APPROVED,
-              RewardRedemptionStatus.REDEEMED
-            ]
-          }
-        }
-      });
-
-      if (existingRedemptions >= reward.maxRedemptions) {
-        throw new ConflictException('Reward redemption limit reached for this child.');
-      }
-    }
-
-    if (reward.requiresApproval) {
-      return this.prisma.rewardRedemption.create({
-        data: {
-          rewardId,
-          childProfileId: dto.childProfileId,
-          status: RewardRedemptionStatus.REQUESTED,
-          coinCost: reward.price
-        },
-        select: rewardRedemptionSelect
-      });
-    }
-
     return this.prisma.$transaction(async (tx) => {
+      if (reward.maxRedemptions !== null) {
+        const existingRedemptions = await tx.rewardRedemption.count({
+          where: {
+            rewardId,
+            childProfileId: dto.childProfileId,
+            status: {
+              in: [
+                RewardRedemptionStatus.REQUESTED,
+                RewardRedemptionStatus.APPROVED,
+                RewardRedemptionStatus.REDEEMED
+              ]
+            }
+          }
+        });
+
+        if (existingRedemptions >= reward.maxRedemptions) {
+          throw new ConflictException('Reward redemption limit reached for this child.');
+        }
+      }
+
       const updateResult = await tx.childProfile.updateMany({
         where: {
           id: dto.childProfileId,
@@ -228,9 +213,9 @@ export class RewardsService {
         data: {
           rewardId,
           childProfileId: dto.childProfileId,
-          status: RewardRedemptionStatus.APPROVED,
-          approvedAt: new Date(),
-          approvedByUserId: user.role === Role.CHILD ? null : user.sub,
+          status: reward.requiresApproval ? RewardRedemptionStatus.REQUESTED : RewardRedemptionStatus.APPROVED,
+          approvedAt: reward.requiresApproval ? null : new Date(),
+          approvedByUserId: reward.requiresApproval || user.role === Role.CHILD ? null : user.sub,
           coinCost: reward.price
         },
         select: rewardRedemptionSelect
@@ -262,9 +247,7 @@ export class RewardsService {
       },
       select: {
         id: true,
-        status: true,
-        childProfileId: true,
-        coinCost: true
+        status: true
       }
     });
 
@@ -293,20 +276,6 @@ export class RewardsService {
         throw new ConflictException('Only requested reward redemptions can be approved.');
       }
 
-      const childUpdate = await tx.childProfile.updateMany({
-        where: {
-          id: redemption.childProfileId,
-          coins: { gte: redemption.coinCost }
-        },
-        data: {
-          coins: { decrement: redemption.coinCost }
-        }
-      });
-
-      if (childUpdate.count !== 1) {
-        throw new BadRequestException('Child does not have enough coins for this reward.');
-      }
-
       return tx.rewardRedemption.findUniqueOrThrow({
         where: { id: redemptionId },
         select: rewardRedemptionSelect
@@ -328,7 +297,9 @@ export class RewardsService {
       },
       select: {
         id: true,
-        status: true
+        status: true,
+        childProfileId: true,
+        coinCost: true
       }
     });
 
@@ -356,6 +327,76 @@ export class RewardsService {
       if (updateResult.count !== 1) {
         throw new ConflictException('Only requested reward redemptions can be rejected.');
       }
+
+      await tx.childProfile.update({
+        where: {
+          id: redemption.childProfileId
+        },
+        data: {
+          coins: { increment: redemption.coinCost }
+        }
+      });
+
+      return tx.rewardRedemption.findUniqueOrThrow({
+        where: { id: redemptionId },
+        select: rewardRedemptionSelect
+      });
+    });
+  }
+
+  async cancelRewardRedemption(user: AuthenticatedUser, redemptionId: string) {
+    const redemption = await this.prisma.rewardRedemption.findFirst({
+      where: {
+        id: redemptionId,
+        childProfile: {
+          familyId: user.familyId
+        }
+      },
+      select: {
+        id: true,
+        status: true,
+        childProfileId: true,
+        coinCost: true
+      }
+    });
+
+    if (!redemption) {
+      throw new NotFoundException('Reward redemption not found.');
+    }
+
+    if (
+      redemption.status !== RewardRedemptionStatus.REQUESTED &&
+      redemption.status !== RewardRedemptionStatus.APPROVED
+    ) {
+      throw new ConflictException('Only requested or approved reward redemptions can be cancelled.');
+    }
+
+    return this.prisma.$transaction(async (tx) => {
+      const updateResult = await tx.rewardRedemption.updateMany({
+        where: {
+          id: redemptionId,
+          status: {
+            in: [RewardRedemptionStatus.REQUESTED, RewardRedemptionStatus.APPROVED]
+          }
+        },
+        data: {
+          status: RewardRedemptionStatus.CANCELLED,
+          cancelledAt: new Date()
+        }
+      });
+
+      if (updateResult.count !== 1) {
+        throw new ConflictException('Only requested or approved reward redemptions can be cancelled.');
+      }
+
+      await tx.childProfile.update({
+        where: {
+          id: redemption.childProfileId
+        },
+        data: {
+          coins: { increment: redemption.coinCost }
+        }
+      });
 
       return tx.rewardRedemption.findUniqueOrThrow({
         where: { id: redemptionId },

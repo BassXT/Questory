@@ -77,6 +77,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Root-Script `npm run prisma:validate` fuer lokale und CI-Prisma-Validierung erstellt.
 - Wartungs-Script `deploy/portainer/cleanup-test-families.sh` fuer sichere Testfamilien-Aufraeumlaeufe auf dem Docker-LXC erstellt.
 - Testdaten-Aufraeumstrategie mit Dry-Run, Pattern, Altersgrenze, Limit, Pflicht-Bestaetigung und Backup-Hinweis in `DEPLOYMENT.md` dokumentiert.
+- Reward-Einloesungen reservieren Muenzen beim Beantragen oder direkten Einloesen transaktional.
+- Reward-Storno mit Status `CANCELLED`, `cancelledAt` und API-Endpunkt `POST /api/reward-redemptions/{redemptionId}/cancel` erstellt.
+- Frontend-Stornoaktion fuer noch nicht ausgegebene Reward-Einloesungen erstellt.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -190,6 +193,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - GitHub-Actions-CI um Shellscript-Syntaxcheck fuer `deploy/portainer/*.sh` erweitert.
 - Testdaten-Aufraeum-Dry-Run auf dem LXC erfolgreich: Pattern `%2026%`, `MIN_AGE_DAYS=0`, `LIMIT=20`, 12 passende Testfamilien gefunden, keine Loeschung ausgefuehrt.
 - Testdaten-Aufraeumung auf dem LXC erfolgreich ausgefuehrt: lokales PostgreSQL-Custom-Dump-Backup erstellt, 12 Testfamilien geloescht, Nachpruefung `remaining = 0`, Backend-Health und Frontend-HTTP erfolgreich.
+- Prisma-Schema, Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Reservierungs-/Storno-Slice erfolgreich.
 
 ### Fixed
 

@@ -40,6 +40,14 @@ export class RewardRedemptionsController {
     return this.rewardsService.rejectRewardRedemption(user, redemptionId, dto);
   }
 
+  @Post(':redemptionId/cancel')
+  cancelRewardRedemption(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('redemptionId') redemptionId: string
+  ) {
+    return this.rewardsService.cancelRewardRedemption(user, redemptionId);
+  }
+
   @Post(':redemptionId/mark-redeemed')
   markRewardRedemptionRedeemed(
     @CurrentUser() user: AuthenticatedUser,

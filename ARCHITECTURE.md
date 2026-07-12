@@ -65,7 +65,7 @@ Aktuell vorhanden:
 - `QuestsModule` fuer Quest-Vorlagen
 - `QuestAssignmentsModule` fuer die Zuweisung von Quests an Kinder
 - `RewardsModule` fuer Belohnungen im Familienshop
-- `RewardRedemptionsController` im `RewardsModule` fuer Einloeseanfragen, Bestaetigung, Ablehnung und Ausgabe
+- `RewardRedemptionsController` im `RewardsModule` fuer Einloeseanfragen, Bestaetigung, Ablehnung, Storno und Ausgabe
 - Prisma-Schema unter `apps/backend/prisma/schema.prisma`
 - Prisma-CLI-Konfiguration unter `apps/backend/prisma.config.ts`
 
@@ -125,6 +125,8 @@ Das Prisma-Schema startet mit Familien, Benutzern, Kindern, Aufgaben, Aufgabenab
 Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Deshalb enthaelt `schema.prisma` nur den Provider, nicht die Connection URL. Zur Laufzeit konstruiert der NestJS `PrismaService` den Client mit `PrismaPg` aus `@prisma/adapter-pg`.
 
 Der Prisma Client Generator schreibt nach `apps/backend/src/generated/prisma`. Backend-Code importiert Prisma-Typen und `PrismaClient` ueber den stabilen Wrapper `apps/backend/src/prisma/client.ts`; Nest kopiert den generierten Client beim Build nach `dist/generated/prisma`. Dadurch haengt der Docker-Build nicht vom internen `@prisma/client/.prisma` Layout ab.
+
+Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. Status `REQUESTED` und `APPROVED` halten die Muenzen gebunden, `REDEEMED` ist final. Status `REJECTED` und `CANCELLED` geben die Muenzen wieder frei. Dadurch kann ein Kind denselben Muenzenstand nicht mehrfach parallel im Shop ausgeben.
 
 Details stehen in `DATABASE.md`.
 

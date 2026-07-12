@@ -86,6 +86,7 @@ export class ChildrenService {
       approvedRewardCount,
       redeemedRewardCount,
       rejectedRewardCount,
+      cancelledRewardCount,
       spentRewardCoins
     ] = await Promise.all([
       this.prisma.questAssignment.count({
@@ -118,10 +119,15 @@ export class ChildrenService {
       this.countRewardRedemptions(user.familyId, childId, RewardRedemptionStatus.APPROVED),
       this.countRewardRedemptions(user.familyId, childId, RewardRedemptionStatus.REDEEMED),
       this.countRewardRedemptions(user.familyId, childId, RewardRedemptionStatus.REJECTED),
+      this.countRewardRedemptions(user.familyId, childId, RewardRedemptionStatus.CANCELLED),
       this.prisma.rewardRedemption.aggregate({
         where: {
           status: {
-            in: [RewardRedemptionStatus.APPROVED, RewardRedemptionStatus.REDEEMED]
+            in: [
+              RewardRedemptionStatus.REQUESTED,
+              RewardRedemptionStatus.APPROVED,
+              RewardRedemptionStatus.REDEEMED
+            ]
           },
           childProfileId: childId,
           childProfile: {
@@ -159,7 +165,13 @@ export class ChildrenService {
         approved: approvedRewardCount,
         redeemed: redeemedRewardCount,
         rejected: rejectedRewardCount,
-        totalRedemptions: requestedRewardCount + approvedRewardCount + redeemedRewardCount + rejectedRewardCount,
+        cancelled: cancelledRewardCount,
+        totalRedemptions:
+          requestedRewardCount +
+          approvedRewardCount +
+          redeemedRewardCount +
+          rejectedRewardCount +
+          cancelledRewardCount,
         coinsSpent: spentRewardCoins._sum.coinCost ?? 0
       }
     };

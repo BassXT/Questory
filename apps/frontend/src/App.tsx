@@ -90,6 +90,7 @@ interface DashboardResponse {
     approved: number;
     redeemed: number;
     rejected: number;
+    cancelled: number;
     totalRedemptions: number;
     coinsSpent: number;
   };
@@ -131,6 +132,7 @@ interface ChildStatsResponse {
     approved: number;
     redeemed: number;
     rejected: number;
+    cancelled: number;
     totalRedemptions: number;
     coinsSpent: number;
   };
@@ -199,7 +201,7 @@ interface Reward {
   updatedAt: string;
 }
 
-type RewardRedemptionStatus = 'REQUESTED' | 'APPROVED' | 'REJECTED' | 'REDEEMED';
+type RewardRedemptionStatus = 'REQUESTED' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | 'REDEEMED';
 
 interface RewardRedemption {
   id: string;
@@ -211,6 +213,7 @@ interface RewardRedemption {
   approvedByUserId: string | null;
   redeemedAt: string | null;
   rejectedAt: string | null;
+  cancelledAt: string | null;
   rejectionReason: string | null;
   coinCost: number;
   reward: {
@@ -814,6 +817,27 @@ function App() {
     }
   }
 
+  async function cancelRewardRedemption(redemptionId: string) {
+    if (!token) {
+      return;
+    }
+
+    setRedemptionSavingId(redemptionId);
+    setError(null);
+
+    try {
+      await apiRequest<RewardRedemption>(`/reward-redemptions/${redemptionId}/cancel`, {
+        method: 'POST',
+        token
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setRedemptionSavingId(null);
+    }
+  }
+
   async function markRewardRedemptionRedeemed(redemptionId: string) {
     if (!token) {
       return;
@@ -907,6 +931,7 @@ function App() {
               onQuestSubmit={submitQuest}
               onRewardFormChange={setRewardForm}
               onRewardRedemptionApprove={approveRewardRedemption}
+              onRewardRedemptionCancel={cancelRewardRedemption}
               onRewardRedemptionMarkRedeemed={markRewardRedemptionRedeemed}
               onRewardRedemptionReject={rejectRewardRedemption}
               onRewardRedeem={redeemReward}
@@ -1169,6 +1194,7 @@ interface DashboardViewProps {
   onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onRewardFormChange: (form: RewardFormState) => void;
   onRewardRedemptionApprove: (redemptionId: string) => void;
+  onRewardRedemptionCancel: (redemptionId: string) => void;
   onRewardRedemptionMarkRedeemed: (redemptionId: string) => void;
   onRewardRedemptionReject: (redemptionId: string) => void;
   onRewardRedeem: (rewardId: string) => void;
@@ -1213,6 +1239,7 @@ function DashboardView({
   onQuestSubmit,
   onRewardFormChange,
   onRewardRedemptionApprove,
+  onRewardRedemptionCancel,
   onRewardRedemptionMarkRedeemed,
   onRewardRedemptionReject,
   onRewardRedeem,
@@ -1338,7 +1365,7 @@ function DashboardView({
             <Divider />
             <SummaryRow label="Rewards aktiv" value={dashboard.totals.activeRewards} />
             <SummaryRow label="Rewards eingeloest" value={dashboard.rewards.redeemed} />
-            <SummaryRow label="Coins ausgegeben" value={dashboard.rewards.coinsSpent} />
+            <SummaryRow label="Coins gebunden" value={dashboard.rewards.coinsSpent} />
           </Stack>
         </Paper>
       </Box>
@@ -1395,6 +1422,7 @@ function DashboardView({
         redemptions={rewardRedemptions}
         savingId={redemptionSavingId}
         onApprove={onRewardRedemptionApprove}
+        onCancel={onRewardRedemptionCancel}
         onMarkRedeemed={onRewardRedemptionMarkRedeemed}
         onReject={onRewardRedemptionReject}
       />
@@ -1408,6 +1436,7 @@ interface RewardRedemptionsPanelProps {
   redemptions: RewardRedemption[];
   savingId: string | null;
   onApprove: (redemptionId: string) => void;
+  onCancel: (redemptionId: string) => void;
   onMarkRedeemed: (redemptionId: string) => void;
   onReject: (redemptionId: string) => void;
 }
@@ -1418,6 +1447,7 @@ function RewardRedemptionsPanel({
   redemptions,
   savingId,
   onApprove,
+  onCancel,
   onMarkRedeemed,
   onReject
 }: RewardRedemptionsPanelProps) {
@@ -1450,6 +1480,7 @@ function RewardRedemptionsPanel({
                 redemption={redemption}
                 saving={savingId === redemption.id}
                 onApprove={onApprove}
+                onCancel={onCancel}
                 onMarkRedeemed={onMarkRedeemed}
                 onReject={onReject}
               />
@@ -1529,7 +1560,7 @@ function ChildStatsPanel({ loading, stats }: ChildStatsPanelProps) {
               <StatTile label="Eingereicht" value={stats.quests.submitted} />
               <StatTile label="XP vergeben" value={stats.quests.xpGranted} />
               <StatTile label="Rewards offen" value={stats.rewards.requested} />
-              <StatTile label="Coins ausgegeben" value={stats.rewards.coinsSpent} />
+              <StatTile label="Coins gebunden" value={stats.rewards.coinsSpent} />
             </Box>
           </Box>
         ) : (
@@ -2426,6 +2457,7 @@ interface RewardRedemptionRowProps {
   redemption: RewardRedemption;
   saving: boolean;
   onApprove: (redemptionId: string) => void;
+  onCancel: (redemptionId: string) => void;
   onMarkRedeemed: (redemptionId: string) => void;
   onReject: (redemptionId: string) => void;
 }
@@ -2435,11 +2467,13 @@ function RewardRedemptionRow({
   redemption,
   saving,
   onApprove,
+  onCancel,
   onMarkRedeemed,
   onReject
 }: RewardRedemptionRowProps) {
   const canReview = canManage && redemption.status === 'REQUESTED';
   const canMarkRedeemed = canManage && redemption.status === 'APPROVED';
+  const canCancel = canManage && (redemption.status === 'REQUESTED' || redemption.status === 'APPROVED');
 
   return (
     <Box
@@ -2458,7 +2492,7 @@ function RewardRedemptionRow({
           {redemption.reward.name}
         </Typography>
         <Typography color="text.secondary" noWrap variant="body2">
-          {redemption.childProfile.displayName} · {formatDateLabel(redemption.requestedAt)}
+          {redemption.childProfile.displayName} - {formatDateLabel(redemption.requestedAt)}
         </Typography>
       </Box>
       <Chip icon={<PaidRoundedIcon />} label={redemption.coinCost} variant="outlined" />
@@ -2490,14 +2524,36 @@ function RewardRedemptionRow({
         </Stack>
       ) : null}
       {canMarkRedeemed ? (
+        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+          <Button
+            disabled={saving}
+            onClick={() => onMarkRedeemed(redemption.id)}
+            size="small"
+            startIcon={<StorefrontRoundedIcon />}
+            variant="contained"
+          >
+            Ausgegeben
+          </Button>
+          {canCancel ? (
+            <Button
+              disabled={saving}
+              onClick={() => onCancel(redemption.id)}
+              size="small"
+              variant="outlined"
+            >
+              Stornieren
+            </Button>
+          ) : null}
+        </Stack>
+      ) : null}
+      {canReview && canCancel ? (
         <Button
           disabled={saving}
-          onClick={() => onMarkRedeemed(redemption.id)}
+          onClick={() => onCancel(redemption.id)}
           size="small"
-          startIcon={<StorefrontRoundedIcon />}
-          variant="contained"
+          variant="outlined"
         >
-          Ausgegeben
+          Stornieren
         </Button>
       ) : null}
     </Box>
@@ -2525,6 +2581,8 @@ function rewardRedemptionStatusLabel(status: RewardRedemptionStatus): string {
       return 'Freigegeben';
     case 'REJECTED':
       return 'Abgelehnt';
+    case 'CANCELLED':
+      return 'Storniert';
     case 'REDEEMED':
       return 'Eingeloest';
     default:
@@ -2540,6 +2598,7 @@ function rewardRedemptionStatusColor(status: RewardRedemptionStatus): 'default' 
     case 'REDEEMED':
       return 'success';
     case 'REJECTED':
+    case 'CANCELLED':
       return 'error';
     default:
       return 'default';
