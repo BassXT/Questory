@@ -40,6 +40,7 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000
 const TOKEN_STORAGE_KEY = 'questory.accessToken';
 
 type AuthMode = 'login' | 'register' | 'child';
+type DashboardTab = 'overview' | 'children' | 'quests' | 'shop' | 'approvals';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
 type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
@@ -1623,6 +1624,30 @@ function DashboardView({
   const canManageChildren = user?.role === 'ADMIN' || user?.role === 'PARENT';
   const selectedPinChildId = resolveSelectedChildId(children, childPinForm.childProfileId);
   const selectedPinChild = children.find((child) => child.id === selectedPinChildId) ?? null;
+  const dashboardTabs = useMemo(
+    () =>
+      canManageChildren
+        ? [
+            { label: 'Uebersicht', value: 'overview' as DashboardTab },
+            { label: 'Kinder', value: 'children' as DashboardTab },
+            { label: 'Quests', value: 'quests' as DashboardTab },
+            { label: 'Shop', value: 'shop' as DashboardTab },
+            { label: 'Freigaben', value: 'approvals' as DashboardTab }
+          ]
+        : [
+            { label: 'Uebersicht', value: 'overview' as DashboardTab },
+            { label: 'Quests', value: 'quests' as DashboardTab },
+            { label: 'Shop', value: 'shop' as DashboardTab }
+          ],
+    [canManageChildren]
+  );
+  const [activeDashboardTab, setActiveDashboardTab] = useState<DashboardTab>('overview');
+
+  useEffect(() => {
+    if (!dashboardTabs.some((tab) => tab.value === activeDashboardTab)) {
+      setActiveDashboardTab(dashboardTabs[0].value);
+    }
+  }, [activeDashboardTab, dashboardTabs]);
 
   if (!dashboard) {
     return (
@@ -1652,233 +1677,325 @@ function DashboardView({
         <MetricCard icon={<StorefrontRoundedIcon />} label="Offene Rewards" value={dashboard.rewards.requested} />
       </Box>
 
-      <Box
-        sx={{
-          display: 'grid',
-          gap: 2,
-          gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1.5fr) minmax(360px, 0.5fr)' }
-        }}
-      >
-        <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
-          <Stack spacing={2}>
+      <Paper elevation={0} sx={{ p: 0.5 }}>
+        <Tabs
+          onChange={(_, value: DashboardTab) => setActiveDashboardTab(value)}
+          scrollButtons="auto"
+          value={activeDashboardTab}
+          variant="scrollable"
+        >
+          {dashboardTabs.map((tab) => (
+            <Tab key={tab.value} label={tab.label} value={tab.value} />
+          ))}
+        </Tabs>
+      </Paper>
+
+      {activeDashboardTab === 'overview' ? (
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 2,
+            gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1.35fr) minmax(320px, 0.65fr)' }
+          }}
+        >
+          <ChildStatsPanel loading={childStatsLoading} stats={childStats} />
+          <FamilyStatusPanel dashboard={dashboard} />
+        </Box>
+      ) : null}
+
+      {activeDashboardTab === 'children' && canManageChildren ? (
+        <ChildrenProfilesPanel
+          canManage={canManageChildren}
+          childForm={childForm}
+          childPinForm={childPinForm}
+          childPinSaving={childPinSaving}
+          childRows={childRows}
+          childSaving={childSaving}
+          children={children}
+          maxXp={xpMax}
+          selectedPinChild={selectedPinChild}
+          selectedPinChildId={selectedPinChildId}
+          onChildFormChange={onChildFormChange}
+          onChildPinDisable={onChildPinDisable}
+          onChildPinFormChange={onChildPinFormChange}
+          onChildPinSubmit={onChildPinSubmit}
+          onChildSubmit={onChildSubmit}
+        />
+      ) : null}
+
+      {activeDashboardTab === 'quests' ? (
+        <Stack spacing={2}>
+          {canManageChildren ? (
+            <QuestTemplatesPanel
+              canManage={canManageChildren}
+              form={questForm}
+              quests={quests}
+              saving={questSaving}
+              suggestions={suggestions.quests}
+              onFormChange={onQuestFormChange}
+              onSuggestionSelect={onQuestSuggestionSelect}
+              onSubmit={onQuestSubmit}
+            />
+          ) : null}
+
+          <QuestAssignmentsPanel
+            assignments={assignments}
+            canManage={canManageChildren}
+            children={children}
+            completionSavingId={completionSavingId}
+            form={assignmentForm}
+            loading={assignmentLoading}
+            quests={quests}
+            saving={assignmentSaving}
+            onApprove={onAssignmentApprove}
+            onChildChange={onAssignmentChildChange}
+            onComplete={onAssignmentComplete}
+            onFormChange={onAssignmentFormChange}
+            onReject={onAssignmentReject}
+            onSubmit={onAssignmentSubmit}
+          />
+
+          <SelfServiceQuestsPanel
+            children={children}
+            completionSavingId={completionSavingId}
+            quests={quests}
+            selectedChildId={assignmentForm.childProfileId}
+            onComplete={onSelfServiceQuestComplete}
+          />
+        </Stack>
+      ) : null}
+
+      {activeDashboardTab === 'shop' ? (
+        <Stack spacing={2}>
+          {canManageChildren ? (
+            <RewardsPanel
+              canManage={canManageChildren}
+              form={rewardForm}
+              rewards={rewards}
+              saving={rewardSaving}
+              suggestions={suggestions.rewards}
+              onFormChange={onRewardFormChange}
+              onSuggestionSelect={onRewardSuggestionSelect}
+              onSubmit={onRewardSubmit}
+            />
+          ) : null}
+
+          <RewardShopPanel
+            children={children}
+            redeemingRewardId={redeemingRewardId}
+            selectedChildId={assignmentForm.childProfileId}
+            shopLoading={shopLoading}
+            shopRewards={shopRewards}
+            onRedeem={onRewardRedeem}
+          />
+        </Stack>
+      ) : null}
+
+      {activeDashboardTab === 'approvals' && canManageChildren ? (
+        <RewardRedemptionsPanel
+          canManage={canManageChildren}
+          loading={redemptionLoading}
+          redemptions={rewardRedemptions}
+          savingId={redemptionSavingId}
+          onApprove={onRewardRedemptionApprove}
+          onCancel={onRewardRedemptionCancel}
+          onMarkRedeemed={onRewardRedemptionMarkRedeemed}
+          onReject={onRewardRedemptionReject}
+        />
+      ) : null}
+    </Stack>
+  );
+}
+
+interface ChildrenProfilesPanelProps {
+  canManage: boolean;
+  childForm: ChildFormState;
+  childPinForm: ChildPinFormState;
+  childPinSaving: boolean;
+  childRows: ChildProfile[];
+  childSaving: boolean;
+  children: ChildProfile[];
+  maxXp: number;
+  selectedPinChild: ChildProfile | null;
+  selectedPinChildId: string;
+  onChildFormChange: (form: ChildFormState) => void;
+  onChildPinDisable: (childProfileId: string) => void;
+  onChildPinFormChange: (form: ChildPinFormState) => void;
+  onChildPinSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+function ChildrenProfilesPanel({
+  canManage,
+  childForm,
+  childPinForm,
+  childPinSaving,
+  childRows,
+  childSaving,
+  children,
+  maxXp,
+  selectedPinChild,
+  selectedPinChildId,
+  onChildFormChange,
+  onChildPinDisable,
+  onChildPinFormChange,
+  onChildPinSubmit,
+  onChildSubmit
+}: ChildrenProfilesPanelProps) {
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Kinderprofile" />
+          <Chip icon={<PeopleAltRoundedIcon />} label={`${childRows.length} aktiv`} variant="outlined" />
+        </Box>
+
+        {canManage ? (
+          <Stack spacing={1.25}>
             <Box
+              component="form"
+              onSubmit={onChildSubmit}
               sx={{
-                alignItems: { xs: 'stretch', sm: 'center' },
-                display: 'flex',
-                flexDirection: { xs: 'column', sm: 'row' },
-                gap: 1.5,
-                justifyContent: 'space-between'
+                bgcolor: 'action.hover',
+                borderRadius: 2,
+                display: 'grid',
+                gap: 1.25,
+                gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(160px, 0.8fr) auto' },
+                p: 1.5
               }}
             >
-              <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Kinderprofile" />
-              <Chip icon={<PeopleAltRoundedIcon />} label={`${childRows.length} aktiv`} variant="outlined" />
+              <TextField
+                autoComplete="off"
+                label="Kindername"
+                onChange={(event) => onChildFormChange({ ...childForm, displayName: event.target.value })}
+                required
+                size="small"
+                value={childForm.displayName}
+              />
+              <TextField
+                autoComplete="off"
+                label="Avatar-Key"
+                onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
+                size="small"
+                value={childForm.avatarKey}
+              />
+              <Button
+                disabled={childSaving}
+                startIcon={<PersonAddRoundedIcon />}
+                sx={{ minHeight: 40 }}
+                type="submit"
+                variant="contained"
+              >
+                Anlegen
+              </Button>
             </Box>
 
-            {canManageChildren ? (
-              <Stack spacing={1.25}>
-                <Box
-                  component="form"
-                  onSubmit={onChildSubmit}
-                  sx={{
-                    bgcolor: 'action.hover',
-                    borderRadius: 2,
-                    display: 'grid',
-                    gap: 1.25,
-                    gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(160px, 0.8fr) auto' },
-                    p: 1.5
-                  }}
+            {children.length > 0 ? (
+              <Box
+                component="form"
+                onSubmit={onChildPinSubmit}
+                sx={{
+                  bgcolor: 'action.hover',
+                  borderRadius: 2,
+                  display: 'grid',
+                  gap: 1.25,
+                  gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(140px, 0.7fr) auto auto' },
+                  p: 1.5
+                }}
+              >
+                <TextField
+                  label="Kind"
+                  onChange={(event) => onChildPinFormChange({ ...childPinForm, childProfileId: event.target.value })}
+                  select
+                  size="small"
+                  value={selectedPinChildId}
                 >
-                  <TextField
-                    autoComplete="off"
-                    label="Kindername"
-                    onChange={(event) =>
-                      onChildFormChange({ ...childForm, displayName: event.target.value })
-                    }
-                    required
-                    size="small"
-                    value={childForm.displayName}
+                  {children.map((child) => (
+                    <MenuItem key={child.id} value={child.id}>
+                      {child.displayName}
+                    </MenuItem>
+                  ))}
+                </TextField>
+                <TextField
+                  autoComplete="new-password"
+                  label="Kinder-PIN"
+                  onChange={(event) => onChildPinFormChange({ ...childPinForm, pin: event.target.value })}
+                  required
+                  size="small"
+                  slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 12, minLength: 4, pattern: '[0-9]*' } }}
+                  type="password"
+                  value={childPinForm.pin}
+                />
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                  <Chip
+                    color={selectedPinChild?.pinEnabled ? 'success' : 'default'}
+                    label={selectedPinChild?.pinEnabled ? 'PIN aktiv' : 'PIN aus'}
+                    variant="outlined"
                   />
-                  <TextField
-                    autoComplete="off"
-                    label="Avatar-Key"
-                    onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
-                    size="small"
-                    value={childForm.avatarKey}
-                  />
-                  <Button
-                    disabled={childSaving}
-                    startIcon={<PersonAddRoundedIcon />}
-                    sx={{ minHeight: 40 }}
-                    type="submit"
-                    variant="contained"
-                  >
-                    Anlegen
+                </Stack>
+                <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                  <Button disabled={childPinSaving} size="small" type="submit" variant="contained">
+                    PIN speichern
                   </Button>
-                </Box>
-
-                {children.length > 0 ? (
-                  <Box
-                    component="form"
-                    onSubmit={onChildPinSubmit}
-                    sx={{
-                      bgcolor: 'action.hover',
-                      borderRadius: 2,
-                      display: 'grid',
-                      gap: 1.25,
-                      gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(140px, 0.7fr) auto auto' },
-                      p: 1.5
-                    }}
-                  >
-                    <TextField
-                      label="Kind"
-                      onChange={(event) =>
-                        onChildPinFormChange({ ...childPinForm, childProfileId: event.target.value })
-                      }
-                      select
+                  {selectedPinChild?.pinEnabled ? (
+                    <Button
+                      disabled={childPinSaving}
+                      onClick={() => onChildPinDisable(selectedPinChild.id)}
                       size="small"
-                      value={selectedPinChildId}
+                      variant="outlined"
                     >
-                      {children.map((child) => (
-                        <MenuItem key={child.id} value={child.id}>
-                          {child.displayName}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                    <TextField
-                      autoComplete="new-password"
-                      label="Kinder-PIN"
-                      onChange={(event) => onChildPinFormChange({ ...childPinForm, pin: event.target.value })}
-                      required
-                      size="small"
-                      slotProps={{ htmlInput: { inputMode: 'numeric', maxLength: 12, minLength: 4, pattern: '[0-9]*' } }}
-                      type="password"
-                      value={childPinForm.pin}
-                    />
-                    <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
-                      <Chip
-                        color={selectedPinChild?.pinEnabled ? 'success' : 'default'}
-                        label={selectedPinChild?.pinEnabled ? 'PIN aktiv' : 'PIN aus'}
-                        variant="outlined"
-                      />
-                    </Stack>
-                    <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
-                      <Button disabled={childPinSaving} size="small" type="submit" variant="contained">
-                        PIN speichern
-                      </Button>
-                      {selectedPinChild?.pinEnabled ? (
-                        <Button
-                          disabled={childPinSaving}
-                          onClick={() => onChildPinDisable(selectedPinChild.id)}
-                          size="small"
-                          variant="outlined"
-                        >
-                          Deaktivieren
-                        </Button>
-                      ) : null}
-                    </Stack>
-                  </Box>
-                ) : null}
-              </Stack>
+                      Deaktivieren
+                    </Button>
+                  ) : null}
+                </Stack>
+              </Box>
             ) : null}
+          </Stack>
+        ) : null}
 
-            <Box sx={{ display: 'grid', gap: 1.5 }}>
-              {childRows.length > 0 ? (
-                childRows.map((child) => <ChildRow child={child} key={child.id} maxXp={xpMax} />)
-              ) : (
-                <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
-                  <Typography color="text.secondary">Noch keine Kinderprofile</Typography>
-                </Box>
-              )}
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
+          {childRows.length > 0 ? (
+            childRows.map((child) => <ChildRow child={child} key={child.id} maxXp={maxXp} />)
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">Noch keine Kinderprofile</Typography>
             </Box>
-          </Stack>
-        </Paper>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
+  );
+}
 
-        <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
-          <Stack spacing={2}>
-            <SectionTitle icon={<ShieldRoundedIcon />} title="Familienlage" />
-            <SummaryRow label="Eltern/Admins" value={dashboard.totals.parents} />
-            <SummaryRow label="Kinderkonten" value={dashboard.totals.childUsers} />
-            <Divider />
-            <SummaryRow label="Quest-Abschluesse" value={dashboard.quests.totalCompletions} />
-            <SummaryRow label="Bestaetigt" value={dashboard.quests.approved} />
-            <SummaryRow label="Eingereicht" value={dashboard.quests.submitted} />
-            <Divider />
-            <SummaryRow label="Rewards aktiv" value={dashboard.totals.activeRewards} />
-            <SummaryRow label="Rewards eingeloest" value={dashboard.rewards.redeemed} />
-            <SummaryRow label="Coins gebunden" value={dashboard.rewards.coinsSpent} />
-          </Stack>
-        </Paper>
-      </Box>
+interface FamilyStatusPanelProps {
+  dashboard: DashboardResponse;
+}
 
-      <ChildStatsPanel loading={childStatsLoading} stats={childStats} />
-
-      <QuestTemplatesPanel
-        canManage={canManageChildren}
-        form={questForm}
-        quests={quests}
-        saving={questSaving}
-        suggestions={suggestions.quests}
-        onFormChange={onQuestFormChange}
-        onSuggestionSelect={onQuestSuggestionSelect}
-        onSubmit={onQuestSubmit}
-      />
-
-      <QuestAssignmentsPanel
-        assignments={assignments}
-        canManage={canManageChildren}
-        children={children}
-        completionSavingId={completionSavingId}
-        form={assignmentForm}
-        loading={assignmentLoading}
-        quests={quests}
-        saving={assignmentSaving}
-        onApprove={onAssignmentApprove}
-        onChildChange={onAssignmentChildChange}
-        onComplete={onAssignmentComplete}
-        onFormChange={onAssignmentFormChange}
-        onReject={onAssignmentReject}
-        onSubmit={onAssignmentSubmit}
-      />
-
-      <SelfServiceQuestsPanel
-        children={children}
-        completionSavingId={completionSavingId}
-        quests={quests}
-        selectedChildId={assignmentForm.childProfileId}
-        onComplete={onSelfServiceQuestComplete}
-      />
-
-      <RewardsPanel
-        canManage={canManageChildren}
-        form={rewardForm}
-        rewards={rewards}
-        saving={rewardSaving}
-        suggestions={suggestions.rewards}
-        onFormChange={onRewardFormChange}
-        onSuggestionSelect={onRewardSuggestionSelect}
-        onSubmit={onRewardSubmit}
-      />
-
-      <RewardShopPanel
-        children={children}
-        redeemingRewardId={redeemingRewardId}
-        selectedChildId={assignmentForm.childProfileId}
-        shopLoading={shopLoading}
-        shopRewards={shopRewards}
-        onRedeem={onRewardRedeem}
-      />
-
-      <RewardRedemptionsPanel
-        canManage={canManageChildren}
-        loading={redemptionLoading}
-        redemptions={rewardRedemptions}
-        savingId={redemptionSavingId}
-        onApprove={onRewardRedemptionApprove}
-        onCancel={onRewardRedemptionCancel}
-        onMarkRedeemed={onRewardRedemptionMarkRedeemed}
-        onReject={onRewardRedemptionReject}
-      />
-    </Stack>
+function FamilyStatusPanel({ dashboard }: FamilyStatusPanelProps) {
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <SectionTitle icon={<ShieldRoundedIcon />} title="Familienlage" />
+        <SummaryRow label="Eltern/Admins" value={dashboard.totals.parents} />
+        <SummaryRow label="Kinderkonten" value={dashboard.totals.childUsers} />
+        <Divider />
+        <SummaryRow label="Quest-Abschluesse" value={dashboard.quests.totalCompletions} />
+        <SummaryRow label="Bestaetigt" value={dashboard.quests.approved} />
+        <SummaryRow label="Eingereicht" value={dashboard.quests.submitted} />
+        <Divider />
+        <SummaryRow label="Rewards aktiv" value={dashboard.totals.activeRewards} />
+        <SummaryRow label="Rewards eingeloest" value={dashboard.rewards.redeemed} />
+        <SummaryRow label="Coins gebunden" value={dashboard.rewards.coinsSpent} />
+      </Stack>
+    </Paper>
   );
 }
 

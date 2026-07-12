@@ -237,17 +237,22 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Health nach Vorlagen-Dialog-/Bibliotheks-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 32 Reward-Vorlagen, 36 Quest-Vorlagen, Kategorien fuer beide Listen und keine doppelten IDs/Namen.
 - LXC-Browser-Test des Quest-Vorlagen-Dialogs erfolgreich: Dialog oeffnet, Suche filtert auf eine Vorlage, Auswahl fuellt das Questformular, Anlage funktioniert und die genutzte Vorlage wird danach aus dem Dialog ausgeblendet.
+- Frontend-Dashboard in Tabs aufgeteilt, damit die Startseite nicht mehr alle Workflows linear untereinander zeigt.
+- Eltern/Admin sehen Tabs fuer Uebersicht, Kinder, Quests, Shop und Freigaben.
+- Kinder sehen eine reduzierte Tab-Navigation mit Uebersicht, Quests und Shop.
+- Kinderverwaltung und Familienlage wurden in eigene Frontend-Panel-Komponenten gekapselt.
+- Frontend-Build nach Dashboard-Tab-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufraeumen.
+- Dashboard-Tab-Slice auf dem LXC deployen und im Browser fuer Eltern- und Kinderansicht testen.
 
 ## Naechster Schritt
 
-Als naechstes das Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufteilen.
+Als naechstes den Dashboard-Tab-Slice auf dem LXC deployen und im Browser fuer Eltern- und Kinderansicht testen.
 
 ## Architekturentscheidungen
 
@@ -294,6 +299,7 @@ Als naechstes das Dashboard in klarere Eltern-/Kind-Ansichten oder Tabs aufteile
 - Die Eltern-Bestaetigung fuer Reward-Einloesungen wechselt nur von `REQUESTED` zu `APPROVED`; Muenzen wurden bereits reserviert. `REDEEMED` markiert nur die reale Ausgabe der Belohnung und veraendert keine Muenzen.
 - Kinder-Statistiken sind ein API-Read-Model im `ChildrenModule`, damit das Frontend fuer Profil- und Dashboardansichten nicht mehrere Rohlisten zusammenfuehren muss.
 - Das Dashboard ist ein eigenes Read-Model im `DashboardModule`, damit die Startseite spaeter mit einem einzigen API-Aufruf die wichtigsten Familienzahlen laden kann.
+- Das Frontend-Dashboard nutzt Tabs als primaere Navigation zwischen Uebersicht, Kinderverwaltung, Quest-Workflows, Shop und Freigaben; Kinder-Logins erhalten bewusst eine reduzierte Tab-Auswahl.
 - Prisma Client wird im Backend mit `PrismaPg` aus `@prisma/adapter-pg` konstruiert, weil Prisma 7 einen Driver Adapter fuer PostgreSQL verlangt.
 - Docker-Builds nutzen Debian-slim Node-Images statt Alpine fuer Node-Stages, weil Vite/Rolldown und andere native npm-Abhaengigkeiten damit im Portainer-Build weniger an musl/Alpine-Bindings haengen.
 - Prisma Client wird im Backend-Runtime-Image nach `npm ci --omit=dev` erneut generiert, weil der generierte Client nicht automatisch Teil einer frischen Production-Installation ist.

@@ -97,6 +97,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Questformular um `Zuweisbar`/`Spontan` erweitert und Dashboard-Panel fuer spontane Quest-Einreichungen erstellt.
 - Vorschlagsbibliothek auf 32 Reward-Vorlagen und 36 Quest-Vorlagen erweitert.
 - Frontend-Vorschlaege in einen kompakten Dialog mit Suche, Kategorien und Duplikat-Ausblendung verschoben.
+- Frontend-Dashboard in getrennte Tabs fuer Uebersicht, Kinder, Quests, Shop und Freigaben aufgeteilt; Kinder-Logins sehen eine reduzierte Navigation.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -244,6 +245,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Portainer-Redeploy nach Vorlagen-Dialog-/Bibliotheks-Slice per API-Script erfolgreich.
 - LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 32 Reward-Vorlagen, 36 Quest-Vorlagen, Kategorien fuer beide Listen und keine doppelten IDs/Namen.
 - LXC-Browser-Test des Quest-Vorlagen-Dialogs erfolgreich: Dialog oeffnet, Suche filtert, Auswahl fuellt das Questformular, Anlage funktioniert und genutzte Vorlage wird danach ausgeblendet.
+- Frontend-Build nach Dashboard-Tab-Slice erfolgreich.
 
 ### Fixed
 
