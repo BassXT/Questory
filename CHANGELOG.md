@@ -75,6 +75,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Kinderstatistik-Panel im Dashboard mit Level, XP-Fortschritt, Muenzen, Quest-Zahlen und Reward-Ausgaben erstellt.
 - GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate und Workspace-Build erstellt.
 - Root-Script `npm run prisma:validate` fuer lokale und CI-Prisma-Validierung erstellt.
+- Wartungs-Script `deploy/portainer/cleanup-test-families.sh` fuer sichere Testfamilien-Aufraeumlaeufe auf dem Docker-LXC erstellt.
+- Testdaten-Aufraeumstrategie mit Dry-Run, Pattern, Altersgrenze, Limit, Pflicht-Bestaetigung und Backup-Hinweis in `DEPLOYMENT.md` dokumentiert.
 - Vite-Env-Typisierung fuer `import.meta.env` ergaenzt.
 - Node-Docker-Build-Images auf `node:20-bookworm-slim` umgestellt, um Portainer-Builds robuster zu machen.
 - Backend-Runtime-Dockerfile installiert OpenSSL und generiert Prisma Client fuer den Production-Container.
@@ -185,6 +187,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Browser-Test des Kinderstatistik-Panels unter `http://192.168.1.98:5173` erfolgreich: Statistik sichtbar, Backend-Werte geladen, keine Konsolenfehler, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 - Lokale CI-Befehle erfolgreich geprueft: `npm run prisma:validate`, `npm run prisma:generate` und `npm run build`.
 - Erster GitHub-Actions-CI-Lauf erfolgreich: `https://github.com/BassXT/Questory/actions/runs/29188728441`.
+- GitHub-Actions-CI um Shellscript-Syntaxcheck fuer `deploy/portainer/*.sh` erweitert.
 
 ### Fixed
 

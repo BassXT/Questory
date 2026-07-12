@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -169,17 +169,20 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Root-Script `npm run prisma:validate` fuer lokale und CI-Prisma-Validierung angelegt.
 - Lokale CI-Befehle erfolgreich geprueft: `npm run prisma:validate`, `npm run prisma:generate` und `npm run build`.
 - Erster GitHub-Actions-CI-Lauf fuer Commit `d9a7395` erfolgreich: `https://github.com/BassXT/Questory/actions/runs/29188728441`.
+- Wartungs-Script `deploy/portainer/cleanup-test-families.sh` fuer sichere Testfamilien-Aufraeumlaeufe auf dem Docker-LXC angelegt.
+- Testdaten-Aufraeumstrategie in `DEPLOYMENT.md` dokumentiert: Dry-Run, Pattern, Altersgrenze, Limit, Pflicht-Bestaetigung und Backup vor echter Loeschung.
+- GitHub-Actions-CI prueft Portainer-Shellscripts nun mit `sh -n`.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
-- Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
+- Testdaten-Aufraeum-Script auf dem Docker-LXC zuerst als Dry-Run ausfuehren und Ergebnis pruefen.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
 
 ## Naechster Schritt
 
-Als naechstes MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern, Testdaten-Aufraeumstrategie definieren und erste automatisierte Tests/CI vorbereiten.
+Als naechstes das Testdaten-Aufraeum-Script auf dem Docker-LXC im Dry-Run pruefen. Danach MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern und erste fachliche Backend-Tests vorbereiten.
 
 ## Architekturentscheidungen
 
@@ -227,6 +230,7 @@ Als naechstes MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zu
 - Lokale Portainer-Automation nutzt `.env.local` fuer API-Zugangsdaten. Das Script sucht den Stack ueber Portainer und verwendet den tatsaechlichen Stack-Endpoint, damit ein falsch gesetzter lokaler `PORTAINER_ENDPOINT_ID` nicht versehentlich den Redeploy blockiert, solange der Stackname eindeutig ist.
 - Die Quest-Zuweisungsliste enthaelt bewusst nur die neueste Completion pro Zuweisung. Fuer das MVP reicht das zur Statusanzeige und verhindert, dass das Frontend historische Completion-Listen selbst auswerten muss.
 - Die erste CI bleibt bewusst schlank: `npm ci`, Prisma-Validierung, Prisma Generate und Workspace-Build. E2E-Tests und Docker-Build-Pruefungen werden ergaenzt, sobald Teststrategie und Laufzeitkosten klarer sind.
+- Testdaten-Aufraeumung erfolgt vorerst als LXC-Wartungs-Script statt als API-Endpunkt. Dadurch gibt es keine versehentliche Loeschfunktion in der Familien-App; echte Loeschung verlangt Dry-Run-Pruefung, Backup-Empfehlung, Limit und explizite Bestaetigung.
 
 ## Bekannte Probleme
 

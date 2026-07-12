@@ -226,6 +226,39 @@ docker exec -i <postgres-container> pg_restore -U questory -d questory --clean -
 
 Ein Restore sollte erst an einer Testdatenbank oder mit bewusstem Wartungsfenster geprobt werden.
 
+## Testdaten aufraeumen
+
+Fuer Entwicklungs- und Browsertests entstehen viele Testfamilien. Diese duerfen nicht unkontrolliert wachsen, sollen aber auch nicht versehentlich echte Familiendaten loeschen. Dafuer gibt es ein Wartungs-Script:
+
+```text
+deploy/portainer/cleanup-test-families.sh
+```
+
+Das Script sucht den PostgreSQL-Container des Portainer-Stacks ueber Docker-Compose-Labels und arbeitet standardmaessig im Dry-Run. Der Default-Filter findet Familiennamen mit `2026`, weil die bisherigen automatischen Testfamilien Zeitstempel im Namen tragen.
+
+Dry-Run auf dem Docker-LXC:
+
+```bash
+cd /opt/questory/repo
+git pull --ff-only
+TEST_FAMILY_PATTERN='%2026%' MIN_AGE_DAYS=0 LIMIT=20 ./deploy/portainer/cleanup-test-families.sh
+```
+
+Erst wenn die angezeigten Familien wirklich geloescht werden sollen, vorher ein Backup erstellen und dann bewusst loeschen:
+
+```bash
+BACKUP_DIR=/opt/questory/backups RETENTION_DAYS=14 ./deploy/portainer/backup-postgres.sh
+TEST_FAMILY_PATTERN='%2026%' MIN_AGE_DAYS=0 LIMIT=20 EXECUTE=true CONFIRM=DELETE_TEST_FAMILIES ./deploy/portainer/cleanup-test-families.sh
+```
+
+Wichtige Schutzmechanismen:
+
+- Ohne `EXECUTE=true` wird nichts geloescht.
+- Ohne `CONFIRM=DELETE_TEST_FAMILIES` wird auch mit `EXECUTE=true` nichts geloescht.
+- `LIMIT` begrenzt jede Ausfuehrung.
+- `MIN_AGE_DAYS` kann genutzt werden, um sehr neue Testdaten stehenzulassen.
+- Geloescht wird die komplette Familie; alle verknuepften Benutzer, Kinder, Quests, Zuweisungen, Abschluesse, Rewards und Einloesungen werden durch Datenbank-Cascades mit entfernt.
+
 ## Migrationen
 
 Prisma-Migrationen liegen unter:
@@ -279,4 +312,5 @@ Die Backend-Logs bestaetigen, dass Prisma die Migration `20260709120000_init` er
 ## Naechste Deployment-Schritte
 
 1. Nach dem ersten automatischen Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-2. Danach erste fachliche Backend-Module fuer Auth, Familien und Benutzer planen.
+2. Testdaten-Aufraeumung zuerst mit Dry-Run auf dem Docker-LXC pruefen.
+3. Danach Docker-Build-Pruefung oder weitere CI-Haertung ergaenzen.
