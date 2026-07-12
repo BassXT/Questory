@@ -225,17 +225,20 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Frontend-Questformular um Schalter fuer `Zuweisbar` und `Spontan` erweitert.
 - Frontend-Dashboard zeigt spontane Quests fuer das ausgewaehlte Kind und erlaubt Einreichung ohne vorherige Zuweisung.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Spontane-Quests-Slice erfolgreich.
+- Portainer-Redeploy nach Spontane-Quests-Slice per API-Script erfolgreich.
+- LXC-Health nach Spontane-Quests-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer spontane Quests erfolgreich: `isAssignable: false` blockiert manuelle Zuweisung, spontane Einreichung erzeugt `SUBMITTED`, doppelte `ONE_TIME`-Einreichung wird vor und nach Bestaetigung geblockt, Bestaetigung vergibt XP/Muenzen, PIN-Kind darf eigene spontane Quest einreichen und fremdes Kind nicht.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Spontane-Quests-Slice auf dem LXC deployen und API/UI testen.
+- Ersten echten UI-Testlauf mit Spontane-Quests-Panel, Reward-Reservierung/Storno und Kinderlogin im Browser durchgehen.
 
 ## Naechster Schritt
 
-Als naechstes den Spontane-Quests-Slice auf dem LXC deployen und mit API/UI testen. Danach die ersten UX-Feinschliffe aus dem echten Testlauf priorisieren.
+Als naechstes einen echten UI-Testlauf im Browser durchgehen: Familie anlegen, Kind mit PIN einrichten, spontane Quest anlegen/einreichen/bestaetigen, Reward beantragen/stornieren/einloesen und dabei die ersten UX-Feinschliffe sammeln.
 
 ## Architekturentscheidungen
 
