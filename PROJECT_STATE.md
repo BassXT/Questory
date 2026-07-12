@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop- und Reward-Einloesungsverwaltungs-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Ein Kinderstatistik-Panel im Dashboard ist lokal implementiert und gegen das LXC-Backend getestet; Portainer-Redeploy und LXC-Test stehen noch aus. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -163,6 +163,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Frontend-Test der Reward-Einloesungsverwaltung unter `http://192.168.1.98:5173` erfolgreich: Anfrage bestaetigen, Coin-Abzug sichtbar machen, als eingeloest markieren, neue Anfrage ablehnen, Status nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Kinderstatistik-Panel im Dashboard angelegt: ausgewaehltes Kind, Level, XP-Fortschritt, Muenzen, Quest-Zahlen und Reward-Ausgaben aus `GET /api/children/:childId/stats` anzeigen.
 - Lokaler Frontend-Test gegen das LXC-Backend erfolgreich: Kinderstatistik sichtbar, Werte geladen, Reload stabil, keine Konsolenfehler und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy nach Frontend-Kinderstatistik-Slice per API-Script erfolgreich.
+- LXC-Frontend-Test des Kinderstatistik-Panels unter `http://192.168.1.98:5173` erfolgreich: Statistik sichtbar, Backend-Werte geladen, Reload stabil, keine Konsolenfehler und mobile Ansicht ohne horizontalen Overflow.
 
 ## Offene Aufgaben
 
@@ -170,11 +172,10 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Docker Compose Start pruefen.
 - Testdaten-Aufraeumstrategie oder Admin-Werkzeug fuer Testfamilien definieren.
 - Nach dem ersten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Portainer-Redeploy und LXC-Browser-Test fuer das Frontend-Kinderstatistik-Panel ausfuehren.
 
 ## Naechster Schritt
 
-Als naechstes das Frontend-Kinderstatistik-Panel per Portainer deployen und auf dem LXC testen. Danach MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern, Testdaten-Aufraeumstrategie definieren und erste automatisierte Tests/CI vorbereiten.
+Als naechstes MVP-Haertung fortsetzen: Oberflaeche straffen, leere/testreiche Zustaende verbessern, Testdaten-Aufraeumstrategie definieren und erste automatisierte Tests/CI vorbereiten.
 
 ## Architekturentscheidungen
 

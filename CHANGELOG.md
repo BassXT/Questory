@@ -179,6 +179,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Browser-Test der Reward-Einloesungsverwaltung unter `http://192.168.1.98:5173` erfolgreich: bestaetigen, als eingeloest markieren, ablehnen, Coin-Abzug, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 - Frontend-Build nach Kinderstatistik-Panel erfolgreich ausgefuehrt.
 - Lokaler Browser-Test des Kinderstatistik-Panels gegen das LXC-Backend erfolgreich: Statistik sichtbar, Backend-Werte geladen, keine Konsolenfehler, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
+- Portainer-Redeploy nach Frontend-Kinderstatistik-Slice per API-Script erfolgreich.
+- LXC-Browser-Test des Kinderstatistik-Panels unter `http://192.168.1.98:5173` erfolgreich: Statistik sichtbar, Backend-Werte geladen, keine Konsolenfehler, Reload-Persistenz und mobile Ansicht ohne horizontalen Overflow.
 
 ### Fixed
 
