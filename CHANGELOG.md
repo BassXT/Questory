@@ -246,6 +246,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 32 Reward-Vorlagen, 36 Quest-Vorlagen, Kategorien fuer beide Listen und keine doppelten IDs/Namen.
 - LXC-Browser-Test des Quest-Vorlagen-Dialogs erfolgreich: Dialog oeffnet, Suche filtert, Auswahl fuellt das Questformular, Anlage funktioniert und genutzte Vorlage wird danach ausgeblendet.
 - Frontend-Build nach Dashboard-Tab-Slice erfolgreich.
+- Portainer-Redeploy nach Dashboard-Tab-Slice per API-Script erfolgreich.
+- LXC-Health nach Dashboard-Tab-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Dashboard-Tab-Slice erfolgreich: Eltern sehen Uebersicht/Kinder/Quests/Shop/Freigaben, Kinder sehen nur Uebersicht/Quests/Shop und keine Eltern-Adminformulare.
 
 ### Fixed
 

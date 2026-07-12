@@ -242,17 +242,20 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Kinder sehen eine reduzierte Tab-Navigation mit Uebersicht, Quests und Shop.
 - Kinderverwaltung und Familienlage wurden in eigene Frontend-Panel-Komponenten gekapselt.
 - Frontend-Build nach Dashboard-Tab-Slice erfolgreich.
+- Portainer-Redeploy nach Dashboard-Tab-Slice per API-Script erfolgreich.
+- LXC-Health nach Dashboard-Tab-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Dashboard-Tab-Slice erfolgreich: Eltern sehen Uebersicht/Kinder/Quests/Shop/Freigaben, die Tabs zeigen die passenden Panels, Kinder sehen nur Uebersicht/Quests/Shop und keine Eltern-Adminformulare.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Dashboard-Tab-Slice auf dem LXC deployen und im Browser fuer Eltern- und Kinderansicht testen.
+- Naechste UX-Verbesserung fuer die Quest-/Shop-Flows priorisieren, zum Beispiel bessere Kind-Auswahl oder kompaktere Karten.
 
 ## Naechster Schritt
 
-Als naechstes den Dashboard-Tab-Slice auf dem LXC deployen und im Browser fuer Eltern- und Kinderansicht testen.
+Als naechstes die Quest-/Shop-Flows innerhalb der neuen Tabs weiter verfeinern, zum Beispiel mit besserer Kind-Auswahl, kompakteren Karten und klareren Statusanzeigen.
 
 ## Architekturentscheidungen
 
