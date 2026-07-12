@@ -97,6 +97,39 @@ Status: implementiert.
 
 Auth: Bearer Token erforderlich.
 
+### `POST /api/auth/child-login`
+
+Meldet ein Kind ohne E-Mail-Adresse ueber Familiencode, Kinderprofil und PIN an.
+
+Status: geplant.
+
+Geplanter Request:
+
+```json
+{
+  "familyCode": "ABCD-1234",
+  "childProfileId": "<child-profile-id>",
+  "pin": "1234"
+}
+```
+
+Geplante Response: wie `POST /api/auth/login`, aber mit Rolle `CHILD`.
+
+Hinweise:
+
+- Der Familiencode kann spaeter als QR-Code oder kurze Login-URL angezeigt werden.
+- Der Familiencode ist kein Passwort.
+- Die PIN wird nur gehasht gespeichert.
+- Kinder duerfen nach Login nur ihre eigenen Quests, ihren Shop und ihre eigenen Statistiken sehen.
+
+### `GET /api/auth/child-login/{familyCode}/children`
+
+Listet fuer einen Familiencode die fuer Kinderlogin freigegebenen Kinderprofile.
+
+Status: geplant.
+
+Hinweis: Die Antwort darf nur minimale Anzeigeinformationen enthalten, z.B. `id`, `displayName` und `avatarKey`.
+
 ## Families
 
 ### `GET /api/families/current`

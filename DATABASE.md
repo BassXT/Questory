@@ -71,6 +71,15 @@ Felder:
 - `createdAt`
 - `updatedAt`
 
+Geplante Erweiterung fuer Kinderlogin ohne E-Mail:
+
+- `Family.childLoginCode`: kurz lesbarer, eindeutiger Familiencode fuer Login und QR-Code.
+- `ChildProfile.pinHash`: Hash der Kinder-PIN, niemals Klartext.
+- `ChildProfile.pinEnabled`: steuert, ob ein Kind per PIN einloggen darf.
+- Optional spaeter: `pinUpdatedAt`, `pinFailedAttempts`, `pinLockedUntil`.
+
+Der Familiencode ist kein Geheimnis, sondern ein Locator fuer die Familie. Die PIN bleibt der eigentliche Authentifizierungsfaktor.
+
 ### Quest
 
 Repraesentiert eine Aufgabe oder Quest-Vorlage.

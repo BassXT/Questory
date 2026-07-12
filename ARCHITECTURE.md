@@ -168,6 +168,16 @@ Aktueller Stand:
 - Weitere Eltern und Kinderbenutzer koennen von `ADMIN` oder `PARENT` angelegt werden.
 - Reine Kinderprofile ohne Login sind ebenfalls moeglich, damit Familien schon Fortschritt und Aufgaben modellieren koennen, bevor ein eigener Kinder-Login existiert.
 
+Geplanter Kinderlogin:
+
+- Kinder sollen keine E-Mail-Adresse brauchen.
+- Familien erhalten einen kurz lesbaren Familiencode, der auch als QR-Code dargestellt werden kann.
+- Eltern aktivieren den Kinderlogin pro Kinderprofil und setzen eine Kinder-PIN.
+- Der Familiencode identifiziert nur die Familie; die PIN authentifiziert immer ein konkretes Kinderprofil.
+- Nach erfolgreichem PIN-Login gibt das Backend ein normales JWT mit Rolle `CHILD` aus, damit bestehende Guards und Kind-Scope-Regeln weiter genutzt werden koennen.
+- Fake-E-Mail-Adressen fuer Kinder werden vermieden. Falls das Datenmodell dafuer erweitert wird, sollen Login-Identitaet und E-Mail sauber getrennt werden.
+- QR-Codes werden erst im Frontend aus dem Familiencode oder einer Login-URL erzeugt; fuer den MVP-Start ist kein QR-Code-Bild in der Datenbank noetig.
+
 ## Docker
 
 Docker Compose ist der primaere Startpfad.
