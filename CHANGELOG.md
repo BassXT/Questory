@@ -210,6 +210,10 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Health nach Vorschlagsbibliothek-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer `GET /api/suggestions` erfolgreich: 8 Reward-Vorschlaege und 8 Quest-Vorschlaege fuer eine neue Eltern-Testfamilie geladen.
 - Prisma Generate, Prisma Validate und Backend-Build nach Kinderlogin-Datenmodell-Slice erfolgreich.
+- Frontend-Build nach Erweiterung des Kinderprofil-Typs erfolgreich.
+- Portainer-Redeploy nach Kinderlogin-Datenmodell-Slice per API-Script erfolgreich.
+- LXC-Health nach Kinderlogin-Datenmodell-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Kinderlogin-Datenmodell erfolgreich: neue Familie erhaelt gueltigen `childLoginCode`, neues Kinderprofil startet mit `pinEnabled: false`, `pinHash` wird nicht ausgeliefert.
 
 ### Fixed
 

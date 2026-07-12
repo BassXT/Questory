@@ -196,18 +196,23 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - `GET /api/families/current` liefert den `childLoginCode` mit aus.
 - Kinderprofil-Antworten liefern `pinEnabled` und `pinUpdatedAt`, aber keinen `pinHash`.
 - Prisma Generate, Prisma Validate und Backend-Build nach Kinderlogin-Datenmodell-Slice erfolgreich.
+- Frontend-Build nach Erweiterung des Kinderprofil-Typs erfolgreich.
+- Portainer-Redeploy nach Kinderlogin-Datenmodell-Slice per API-Script erfolgreich.
+- LXC-Health nach Kinderlogin-Datenmodell-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Kinderlogin-Datenmodell erfolgreich: neue Familie erhaelt gueltigen `childLoginCode`, neues Kinderprofil startet mit `pinEnabled: false`, `pinHash` wird nicht ausgeliefert.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Kinderlogin-Datenmodell auf dem LXC deployen und Migration/API testen.
+- Kinderlogin-PIN-Verwaltung fuer Eltern implementieren.
+- Kinderlogin-Endpunkte fuer Familiencode, Kinderauswahl und PIN-Login implementieren.
 - Zeitlich ungebundene/spontane Quests konzipieren, bei denen Kinder eine erledigte freie Aufgabe einreichen koennen.
 
 ## Naechster Schritt
 
-Als naechstes das Kinderlogin-Datenmodell auf dem LXC deployen und pruefen. Danach Login-Endpunkte und UI fuer Familiencode/QR/PIN als separate kleine Slices bauen.
+Als naechstes die Kinderlogin-PIN-Verwaltung fuer Eltern implementieren. Danach Login-Endpunkte und UI fuer Familiencode/QR/PIN als separate kleine Slices bauen.
 
 ## Architekturentscheidungen
 
@@ -236,6 +241,7 @@ Als naechstes das Kinderlogin-Datenmodell auf dem LXC deployen und pruefen. Dana
 - Rollenbasierte Autorisierung wird ueber `@Roles()` und `RolesGuard` umgesetzt. Feature-Module importieren dafuer das `AuthModule`.
 - Kinder koennen aktuell auf zwei Wegen abgebildet werden: als reines `ChildProfile` ohne Login oder als `User` mit Rolle `CHILD` plus verknuepftem `ChildProfile`. Der konkrete Kinder-Login/PIN-Flow wird spaeter entschieden.
 - Kinderlogin soll nicht ueber Fake-E-Mail-Adressen geloest werden. Geplant ist ein Familiencode als oeffentlicher Locator plus eine pro Kinderprofil gesetzte PIN; der erfolgreiche Login erzeugt ein `CHILD`-JWT.
+- Bestehende Familien aus der Zeit vor `20260712143000_child_login_model` koennen noch `childLoginCode = null` haben. Vor dem finalen Kinderlogin-Rollout braucht es entweder Backfill oder einen Eltern-Endpunkt zum Erzeugen/Rotieren des Codes.
 - Quest-Vorlagen gehoeren immer zu genau einer Familie. Einmalige Quests nutzen `QuestFrequency.NONE`; wiederkehrende Quests nutzen `DAILY`, `WEEKLY` oder `CUSTOM`.
 - Quest-Zuweisungen verbinden genau eine Quest mit genau einem Kinderprofil. Doppelte Zuweisungen derselben Quest an dasselbe Kind werden aktuell in der Anwendungsschicht abgelehnt.
 - Das Frontend speichert optionale Quest-Zuweisungs-Faelligkeitsdaten als mittags UTC (`T12:00:00.000Z`), damit reine Kalendertage in der deutschen Anzeige nicht durch Zeitzonen auf den Vortag oder Folgetag rutschen.
