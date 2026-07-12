@@ -249,17 +249,20 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Quest-Zuweisungen, spontane Quests und Shop-Belohnungen werden als kompaktere Karten mit klareren Status-, Reward- und Aktionsbereichen dargestellt.
 - Shop-Karten zeigen direkt, ob ein Reward bezahlbar ist oder wie viele Muenzen noch fehlen.
 - Frontend-Build nach Quest-/Shop-Karten-UX-Slice erfolgreich.
+- Portainer-Redeploy nach Quest-/Shop-Karten-UX-Slice per API-Script erfolgreich.
+- LXC-Health nach Quest-/Shop-Karten-UX-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Quest-/Shop-Karten-UX-Slice erfolgreich: Fokusleiste zeigt aktives Kind mit Muenzen, Questkarten zeigen Status/XP/Muenzen/Aktion, Shopkarten zeigen bezahlbare Rewards und fehlende Muenzen.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Quest-/Shop-Karten-UX-Slice auf dem LXC deployen und im Browser testen.
+- Naechste UX-Verbesserung priorisieren, zum Beispiel Freigaben kompakter machen oder Kind-Ansicht noch staerker spielerisch ausrichten.
 
 ## Naechster Schritt
 
-Als naechstes den Quest-/Shop-Karten-UX-Slice auf dem LXC deployen und im Browser testen.
+Als naechstes die Freigaben kompakter machen oder die Kind-Ansicht noch staerker spielerisch ausrichten.
 
 ## Architekturentscheidungen
 

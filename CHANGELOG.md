@@ -251,6 +251,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - LXC-Health nach Dashboard-Tab-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test des Dashboard-Tab-Slice erfolgreich: Eltern sehen Uebersicht/Kinder/Quests/Shop/Freigaben, Kinder sehen nur Uebersicht/Quests/Shop und keine Eltern-Adminformulare.
 - Frontend-Build nach Quest-/Shop-Karten-UX-Slice erfolgreich.
+- Portainer-Redeploy nach Quest-/Shop-Karten-UX-Slice per API-Script erfolgreich.
+- LXC-Health nach Quest-/Shop-Karten-UX-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Quest-/Shop-Karten-UX-Slice erfolgreich: Fokusleiste, Questkarten, spontane Aktion, bezahlbarer Reward und fehlende Muenzen werden korrekt angezeigt.
 
 ### Fixed
 
