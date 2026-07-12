@@ -297,16 +297,19 @@ function App() {
   const [quests, setQuests] = useState<QuestTemplate[]>([]);
   const [questAssignments, setQuestAssignments] = useState<QuestAssignment[]>([]);
   const [rewards, setRewards] = useState<Reward[]>([]);
+  const [rewardRedemptions, setRewardRedemptions] = useState<RewardRedemption[]>([]);
   const [shopRewards, setShopRewards] = useState<Reward[]>([]);
   const [authLoading, setAuthLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
   const [assignmentLoading, setAssignmentLoading] = useState(false);
+  const [redemptionLoading, setRedemptionLoading] = useState(false);
   const [shopLoading, setShopLoading] = useState(false);
   const [childSaving, setChildSaving] = useState(false);
   const [assignmentSaving, setAssignmentSaving] = useState(false);
   const [completionSavingId, setCompletionSavingId] = useState<string | null>(null);
   const [questSaving, setQuestSaving] = useState(false);
   const [rewardSaving, setRewardSaving] = useState(false);
+  const [redemptionSavingId, setRedemptionSavingId] = useState<string | null>(null);
   const [redeemingRewardId, setRedeemingRewardId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -321,6 +324,7 @@ function App() {
       setQuestAssignments([]);
       setQuestAssignmentForm(initialQuestAssignmentForm);
       setRewards([]);
+      setRewardRedemptions([]);
       setRewardForm(initialRewardForm);
       setShopRewards([]);
       return;
@@ -344,6 +348,7 @@ function App() {
       setChildren(childData);
       setQuests(questData);
       setRewards(rewardData);
+      await loadRewardRedemptions(activeToken, currentUser);
       await loadAssignmentsForChildren(activeToken, childData, questData, questAssignmentForm.childProfileId);
       setError(null);
     } catch (requestError) {
@@ -408,6 +413,7 @@ function App() {
       setChildren(childData);
       setQuests(questData);
       setRewards(rewardData);
+      await loadRewardRedemptions(token, user);
       await loadAssignmentsForChildren(token, childData, questData, preferredChildId);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
@@ -454,6 +460,24 @@ function App() {
     } finally {
       setAssignmentLoading(false);
       setShopLoading(false);
+    }
+  }
+
+  async function loadRewardRedemptions(activeToken: string, activeUser: AuthUser | null) {
+    if (activeUser?.role === 'CHILD') {
+      setRewardRedemptions([]);
+      return;
+    }
+
+    setRedemptionLoading(true);
+
+    try {
+      const redemptionData = await apiRequest<RewardRedemption[]>('/reward-redemptions', {
+        token: activeToken
+      });
+      setRewardRedemptions(redemptionData);
+    } finally {
+      setRedemptionLoading(false);
     }
   }
 
@@ -703,6 +727,70 @@ function App() {
     }
   }
 
+  async function approveRewardRedemption(redemptionId: string) {
+    if (!token) {
+      return;
+    }
+
+    setRedemptionSavingId(redemptionId);
+    setError(null);
+
+    try {
+      await apiRequest<RewardRedemption>(`/reward-redemptions/${redemptionId}/approve`, {
+        method: 'POST',
+        token
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setRedemptionSavingId(null);
+    }
+  }
+
+  async function rejectRewardRedemption(redemptionId: string) {
+    if (!token) {
+      return;
+    }
+
+    setRedemptionSavingId(redemptionId);
+    setError(null);
+
+    try {
+      await apiRequest<RewardRedemption>(`/reward-redemptions/${redemptionId}/reject`, {
+        method: 'POST',
+        token,
+        body: {}
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setRedemptionSavingId(null);
+    }
+  }
+
+  async function markRewardRedemptionRedeemed(redemptionId: string) {
+    if (!token) {
+      return;
+    }
+
+    setRedemptionSavingId(redemptionId);
+    setError(null);
+
+    try {
+      await apiRequest<RewardRedemption>(`/reward-redemptions/${redemptionId}/mark-redeemed`, {
+        method: 'POST',
+        token
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setRedemptionSavingId(null);
+    }
+  }
+
   function logout() {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
@@ -715,6 +803,7 @@ function App() {
     setQuestAssignments([]);
     setQuestAssignmentForm(initialQuestAssignmentForm);
     setRewards([]);
+    setRewardRedemptions([]);
     setRewardForm(initialRewardForm);
     setShopRewards([]);
   }
@@ -750,6 +839,9 @@ function App() {
               questSaving={questSaving}
               quests={quests}
               rewardForm={rewardForm}
+              redemptionLoading={redemptionLoading}
+              redemptionSavingId={redemptionSavingId}
+              rewardRedemptions={rewardRedemptions}
               rewardSaving={rewardSaving}
               rewards={rewards}
               redeemingRewardId={redeemingRewardId}
@@ -767,6 +859,9 @@ function App() {
               onQuestFormChange={setQuestForm}
               onQuestSubmit={submitQuest}
               onRewardFormChange={setRewardForm}
+              onRewardRedemptionApprove={approveRewardRedemption}
+              onRewardRedemptionMarkRedeemed={markRewardRedemptionRedeemed}
+              onRewardRedemptionReject={rejectRewardRedemption}
               onRewardRedeem={redeemReward}
               onRewardSubmit={submitReward}
             />
@@ -1004,7 +1099,10 @@ interface DashboardViewProps {
   questSaving: boolean;
   quests: QuestTemplate[];
   redeemingRewardId: string | null;
+  redemptionLoading: boolean;
+  redemptionSavingId: string | null;
   rewardForm: RewardFormState;
+  rewardRedemptions: RewardRedemption[];
   rewardSaving: boolean;
   rewards: Reward[];
   shopLoading: boolean;
@@ -1021,6 +1119,9 @@ interface DashboardViewProps {
   onQuestFormChange: (form: QuestFormState) => void;
   onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onRewardFormChange: (form: RewardFormState) => void;
+  onRewardRedemptionApprove: (redemptionId: string) => void;
+  onRewardRedemptionMarkRedeemed: (redemptionId: string) => void;
+  onRewardRedemptionReject: (redemptionId: string) => void;
   onRewardRedeem: (rewardId: string) => void;
   onRewardSubmit: (event: FormEvent<HTMLFormElement>) => void;
 }
@@ -1040,7 +1141,10 @@ function DashboardView({
   questSaving,
   quests,
   redeemingRewardId,
+  redemptionLoading,
+  redemptionSavingId,
   rewardForm,
+  rewardRedemptions,
   rewardSaving,
   rewards,
   shopLoading,
@@ -1057,6 +1161,9 @@ function DashboardView({
   onQuestFormChange,
   onQuestSubmit,
   onRewardFormChange,
+  onRewardRedemptionApprove,
+  onRewardRedemptionMarkRedeemed,
+  onRewardRedemptionReject,
   onRewardRedeem,
   onRewardSubmit
 }: DashboardViewProps) {
@@ -1228,7 +1335,80 @@ function DashboardView({
         shopRewards={shopRewards}
         onRedeem={onRewardRedeem}
       />
+
+      <RewardRedemptionsPanel
+        canManage={canManageChildren}
+        loading={redemptionLoading}
+        redemptions={rewardRedemptions}
+        savingId={redemptionSavingId}
+        onApprove={onRewardRedemptionApprove}
+        onMarkRedeemed={onRewardRedemptionMarkRedeemed}
+        onReject={onRewardRedemptionReject}
+      />
     </Stack>
+  );
+}
+
+interface RewardRedemptionsPanelProps {
+  canManage: boolean;
+  loading: boolean;
+  redemptions: RewardRedemption[];
+  savingId: string | null;
+  onApprove: (redemptionId: string) => void;
+  onMarkRedeemed: (redemptionId: string) => void;
+  onReject: (redemptionId: string) => void;
+}
+
+function RewardRedemptionsPanel({
+  canManage,
+  loading,
+  redemptions,
+  savingId,
+  onApprove,
+  onMarkRedeemed,
+  onReject
+}: RewardRedemptionsPanelProps) {
+  const requestedCount = redemptions.filter((redemption) => redemption.status === 'REQUESTED').length;
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<ShieldRoundedIcon />} title="Einloeseanfragen" />
+          <Chip icon={<StorefrontRoundedIcon />} label={`${requestedCount} offen`} variant="outlined" />
+        </Box>
+
+        {loading ? <LinearProgress /> : null}
+
+        <Box sx={{ display: 'grid', gap: 1.5 }}>
+          {redemptions.length > 0 ? (
+            redemptions.map((redemption) => (
+              <RewardRedemptionRow
+                canManage={canManage}
+                key={redemption.id}
+                redemption={redemption}
+                saving={savingId === redemption.id}
+                onApprove={onApprove}
+                onMarkRedeemed={onMarkRedeemed}
+                onReject={onReject}
+              />
+            ))
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">Noch keine Einloeseanfragen</Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
   );
 }
 
@@ -2093,6 +2273,89 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
   );
 }
 
+interface RewardRedemptionRowProps {
+  canManage: boolean;
+  redemption: RewardRedemption;
+  saving: boolean;
+  onApprove: (redemptionId: string) => void;
+  onMarkRedeemed: (redemptionId: string) => void;
+  onReject: (redemptionId: string) => void;
+}
+
+function RewardRedemptionRow({
+  canManage,
+  redemption,
+  saving,
+  onApprove,
+  onMarkRedeemed,
+  onReject
+}: RewardRedemptionRowProps) {
+  const canReview = canManage && redemption.status === 'REQUESTED';
+  const canMarkRedeemed = canManage && redemption.status === 'APPROVED';
+
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1.25,
+        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 1fr) auto auto auto auto' },
+        p: 1.5
+      }}
+    >
+      <Box sx={{ minWidth: 0 }}>
+        <Typography sx={{ fontWeight: 900 }} noWrap>
+          {redemption.reward.name}
+        </Typography>
+        <Typography color="text.secondary" noWrap variant="body2">
+          {redemption.childProfile.displayName} · {formatDateLabel(redemption.requestedAt)}
+        </Typography>
+      </Box>
+      <Chip icon={<PaidRoundedIcon />} label={redemption.coinCost} variant="outlined" />
+      <Chip
+        color={rewardRedemptionStatusColor(redemption.status)}
+        label={rewardRedemptionStatusLabel(redemption.status)}
+        variant={redemption.status === 'REQUESTED' ? 'filled' : 'outlined'}
+      />
+      {canReview ? (
+        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+          <Button
+            color="success"
+            disabled={saving}
+            onClick={() => onApprove(redemption.id)}
+            size="small"
+            variant="contained"
+          >
+            Bestaetigen
+          </Button>
+          <Button
+            color="error"
+            disabled={saving}
+            onClick={() => onReject(redemption.id)}
+            size="small"
+            variant="outlined"
+          >
+            Ablehnen
+          </Button>
+        </Stack>
+      ) : null}
+      {canMarkRedeemed ? (
+        <Button
+          disabled={saving}
+          onClick={() => onMarkRedeemed(redemption.id)}
+          size="small"
+          startIcon={<StorefrontRoundedIcon />}
+          variant="contained"
+        >
+          Ausgegeben
+        </Button>
+      ) : null}
+    </Box>
+  );
+}
+
 function completionStatusLabel(status: QuestCompletionStatus): string {
   switch (status) {
     case 'SUBMITTED':
@@ -2103,6 +2366,35 @@ function completionStatusLabel(status: QuestCompletionStatus): string {
       return 'Abgelehnt';
     default:
       return 'Offen';
+  }
+}
+
+function rewardRedemptionStatusLabel(status: RewardRedemptionStatus): string {
+  switch (status) {
+    case 'REQUESTED':
+      return 'Angefragt';
+    case 'APPROVED':
+      return 'Freigegeben';
+    case 'REJECTED':
+      return 'Abgelehnt';
+    case 'REDEEMED':
+      return 'Eingeloest';
+    default:
+      return 'Unbekannt';
+  }
+}
+
+function rewardRedemptionStatusColor(status: RewardRedemptionStatus): 'default' | 'success' | 'warning' | 'error' {
+  switch (status) {
+    case 'REQUESTED':
+      return 'warning';
+    case 'APPROVED':
+    case 'REDEEMED':
+      return 'success';
+    case 'REJECTED':
+      return 'error';
+    default:
+      return 'default';
   }
 }
 
