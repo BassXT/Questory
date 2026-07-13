@@ -111,6 +111,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 - Frontend-Build nach Reward-Motiv-Picker-Slice erfolgreich.
 - Alle 60 MDI/Iconify-Motiv-URLs des Reward-Pickers erfolgreich per HTTP geprueft.
+- Portainer-Redeploy nach Reward-Motiv-Picker-Slice per API-Script erfolgreich.
+- LXC-Health nach Reward-Motiv-Picker-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Reward-Motiv-Pickers erfolgreich: Dialog, Suche, Auswahl, `Bild-URL`-Uebernahme, Vorschau und Konsolenfehlerfreiheit geprueft.
 - `npm ci` erfolgreich ausgefuehrt.
 - `npm run prisma:generate` erfolgreich ausgefuehrt.
 - `npm run build` erfolgreich ausgefuehrt.

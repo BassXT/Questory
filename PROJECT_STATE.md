@@ -258,6 +258,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Reward- und Shop-Karten stellen Icon-Motive zentriert dar und schneiden freie Foto-URLs weiterhin als Cover zu.
 - Frontend-Build nach Reward-Motiv-Picker-Slice erfolgreich.
 - Alle 60 Iconify-MDI-URLs des Motiv-Pickers wurden per HTTP erfolgreich geprueft.
+- Portainer-Redeploy nach Reward-Motiv-Picker-Slice per API-Script erfolgreich.
+- LXC-Health nach Reward-Motiv-Picker-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Reward-Motiv-Pickers erfolgreich: Shop-Tab zeigt Motivbereich, Dialog zeigt 60 Motive mit Kategorien, Suche filtert auf `Switch-Zeit`, Auswahl schreibt die Iconify-URL in `Bild-URL`, Vorschau wird angezeigt und keine Konsolenfehler.
 
 ## Offene Aufgaben
 
