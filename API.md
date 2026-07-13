@@ -633,6 +633,7 @@ Hinweise:
 
 - `price` ist der Preis in Muenzen.
 - `imageUrl`, `category` und `maxRedemptions` sind optional.
+- `imageUrl` kann eine eigene Bild-URL oder eine vom Frontend-Motiv-Picker gesetzte MDI/Iconify-HTTPS-URL sein.
 - `isActive` und `requiresApproval` sind optional und standardmaessig `true`.
 - `maxRedemptions` begrenzt spaeter die maximale Anzahl von Einloesungen.
 

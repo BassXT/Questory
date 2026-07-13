@@ -115,6 +115,7 @@ Aktuell vorhanden:
 - API-Anbindung ueber `VITE_API_BASE_URL`
 - JWT-Session wird aktuell im Browser-`localStorage` gehalten
 - Vorschlagsbibliotheken fuellen bestehende Quest- und Reward-Formulare, legen aber nichts automatisch an
+- Reward-Bilder werden weiterhin als `imageUrl` gespeichert. Das Frontend bietet einen kuratierten MDI/Iconify-Motiv-Picker, der normale HTTPS-URLs eintraegt; freie Bild-URLs bleiben moeglich und eigenes Asset-Hosting wird spaeter separat entschieden.
 
 ## Datenbank
 

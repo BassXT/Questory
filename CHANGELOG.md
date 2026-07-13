@@ -8,6 +8,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Frontend-Reward-Formular um einen Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, Suche und Kategorie-Filter erweitert.
+- Reward-Vorlagen schlagen beim Auswaehlen automatisch ein passendes Motiv vor, bleiben aber als editierbares Formular erhalten.
 - Initiale Projekt-Dokumentation angelegt.
 - `README.md` mit Projektbeschreibung, Zielen, MVP, Stack und Roadmap erstellt.
 - `AGENTS.md` mit Arbeitsregeln fuer Codex und Mitentwickler erstellt.
@@ -107,6 +109,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Reward-Motiv-Picker-Slice erfolgreich.
+- Alle 60 MDI/Iconify-Motiv-URLs des Reward-Pickers erfolgreich per HTTP geprueft.
 - `npm ci` erfolgreich ausgefuehrt.
 - `npm run prisma:generate` erfolgreich ausgefuehrt.
 - `npm run build` erfolgreich ausgefuehrt.

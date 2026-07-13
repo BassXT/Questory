@@ -391,6 +391,79 @@ const emptySuggestions: SuggestionLibraryResponse = {
   quests: []
 };
 
+interface RewardVisualOption {
+  id: string;
+  label: string;
+  category: string;
+  icon: string;
+  color: string;
+  keywords: string[];
+  url: string;
+}
+
+const REWARD_VISUAL_OPTIONS = [
+  { id: 'ice-cream', label: 'Eis essen', category: 'Leckereien', icon: 'ice-cream', color: 'd45aa4', keywords: ['eis', 'ice', 'dessert'] },
+  { id: 'pizza', label: 'Pizza', category: 'Leckereien', icon: 'pizza', color: 'd96b24', keywords: ['pizza', 'essen'] },
+  { id: 'wish-dinner', label: 'Wunschessen', category: 'Leckereien', icon: 'silverware-fork-knife', color: '2f8f6f', keywords: ['wunschessen', 'essen', 'restaurant'] },
+  { id: 'popcorn', label: 'Popcorn', category: 'Leckereien', icon: 'popcorn', color: 'c9951a', keywords: ['popcorn', 'kino', 'film'] },
+  { id: 'cupcake', label: 'Cupcake', category: 'Leckereien', icon: 'cupcake', color: 'c45f8c', keywords: ['kuchen', 'cupcake', 'muffin'] },
+  { id: 'candy', label: 'Suessigkeit', category: 'Leckereien', icon: 'candy', color: 'bd4c9b', keywords: ['suess', 'bonbon', 'candy'] },
+  { id: 'cookie', label: 'Keks', category: 'Leckereien', icon: 'cookie', color: '9b6a36', keywords: ['keks', 'cookie'] },
+  { id: 'smoothie', label: 'Lieblingsdrink', category: 'Leckereien', icon: 'cup', color: '2d8fb8', keywords: ['drink', 'saft', 'smoothie'] },
+  { id: 'switch-time', label: 'Switch-Zeit', category: 'Medienzeit', icon: 'nintendo-switch', color: 'e14545', keywords: ['switch', 'nintendo', 'konsole'] },
+  { id: 'gamepad', label: 'Gaming-Zeit', category: 'Medienzeit', icon: 'gamepad-variant', color: '4f5bd5', keywords: ['gaming', 'spiel', 'zocken', 'konsole'] },
+  { id: 'movie-night', label: 'Filmabend', category: 'Medienzeit', icon: 'movie-open', color: '6a5acd', keywords: ['film', 'kino', 'movie'] },
+  { id: 'tablet-time', label: 'Tablet-Zeit', category: 'Medienzeit', icon: 'tablet-cellphone', color: '2568d8', keywords: ['tablet', 'app', 'medien'] },
+  { id: 'headphones', label: 'Hoergeschichte', category: 'Medienzeit', icon: 'headphones', color: '217c8f', keywords: ['hoerbuch', 'geschichte', 'musik'] },
+  { id: 'tv', label: 'Serienfolge', category: 'Medienzeit', icon: 'television-classic', color: '5d6978', keywords: ['serie', 'tv', 'fernsehen'] },
+  { id: 'music', label: 'Musikzeit', category: 'Medienzeit', icon: 'music', color: '9c4dcc', keywords: ['musik', 'song'] },
+  { id: 'camera', label: 'Foto-Mission', category: 'Medienzeit', icon: 'camera', color: '6f7a87', keywords: ['foto', 'kamera'] },
+  { id: 'playground', label: 'Spielplatz', category: 'Ausflug', icon: 'slide', color: 'e38b29', keywords: ['spielplatz', 'rutsche', 'ausflug'] },
+  { id: 'swim', label: 'Schwimmen', category: 'Ausflug', icon: 'swim', color: '188dd8', keywords: ['schwimmen', 'bad', 'pool'] },
+  { id: 'bike', label: 'Radtour', category: 'Ausflug', icon: 'bicycle', color: '2f8f6f', keywords: ['rad', 'fahrrad', 'tour'] },
+  { id: 'forest', label: 'Waldabenteuer', category: 'Ausflug', icon: 'forest', color: '3a8d4a', keywords: ['wald', 'abenteuer', 'natur'] },
+  { id: 'tent', label: 'Picknick', category: 'Ausflug', icon: 'tent', color: 'd87532', keywords: ['picknick', 'camping', 'zelt'] },
+  { id: 'museum', label: 'Museum', category: 'Ausflug', icon: 'bank', color: '7d6a3b', keywords: ['museum', 'ausstellung'] },
+  { id: 'train', label: 'Zugfahrt', category: 'Ausflug', icon: 'train', color: '4d72c8', keywords: ['zug', 'bahn', 'fahrt'] },
+  { id: 'map', label: 'Mini-Reise', category: 'Ausflug', icon: 'map-marker-path', color: 'c9583b', keywords: ['reise', 'ausflug', 'karte'] },
+  { id: 'paint', label: 'Malen', category: 'Kreativ', icon: 'palette', color: 'd04c73', keywords: ['malen', 'kunst', 'farbe'] },
+  { id: 'puzzle', label: 'Bauen', category: 'Kreativ', icon: 'puzzle', color: 'ca9b23', keywords: ['bauen', 'lego', 'puzzle'] },
+  { id: 'crafts', label: 'Bastelzeit', category: 'Kreativ', icon: 'content-cut', color: '2e9f9c', keywords: ['basteln', 'schere'] },
+  { id: 'book', label: 'Buch aussuchen', category: 'Kreativ', icon: 'book-open-page-variant', color: '7a5ccf', keywords: ['buch', 'lesen'] },
+  { id: 'story', label: 'Geschichtenzeit', category: 'Kreativ', icon: 'book-heart', color: 'bf4d74', keywords: ['geschichte', 'vorlesen'] },
+  { id: 'microphone', label: 'Karaoke', category: 'Kreativ', icon: 'microphone-variant', color: '8b55c9', keywords: ['karaoke', 'singen'] },
+  { id: 'brush', label: 'Kreativ-Projekt', category: 'Kreativ', icon: 'brush', color: 'd6603a', keywords: ['projekt', 'kreativ'] },
+  { id: 'blocks', label: 'Bausteine', category: 'Kreativ', icon: 'toy-brick', color: '3578c8', keywords: ['bausteine', 'lego'] },
+  { id: 'gift', label: 'Geschenk', category: 'Extras', icon: 'gift', color: 'd63f61', keywords: ['geschenk', 'ueberraschung'] },
+  { id: 'treasure', label: 'Schatzkiste', category: 'Extras', icon: 'treasure-chest', color: 'a9792b', keywords: ['schatz', 'kiste', 'loot'] },
+  { id: 'sticker', label: 'Sticker', category: 'Extras', icon: 'sticker', color: '38a6a5', keywords: ['sticker', 'sammeln'] },
+  { id: 'star', label: 'Sternbonus', category: 'Extras', icon: 'star-four-points', color: 'd2a818', keywords: ['stern', 'bonus'] },
+  { id: 'badge', label: 'Abzeichen', category: 'Extras', icon: 'shield-star', color: '496ec8', keywords: ['badge', 'abzeichen'] },
+  { id: 'sparkle', label: 'Ueberraschung', category: 'Extras', icon: 'auto-fix', color: '8e59cf', keywords: ['ueberraschung', 'magie'] },
+  { id: 'coins', label: 'Bonus-Muenzen', category: 'Extras', icon: 'hand-coin', color: 'c99719', keywords: ['muenzen', 'bonus'] },
+  { id: 'ticket', label: 'Extra-Ticket', category: 'Extras', icon: 'ticket-confirmation', color: 'd15d39', keywords: ['ticket', 'gutschein'] },
+  { id: 'family', label: 'Familienzeit', category: 'Gemeinsam', icon: 'account-group', color: '276d84', keywords: ['familie', 'gemeinsam'] },
+  { id: 'board-game', label: 'Spieleabend', category: 'Gemeinsam', icon: 'dice-multiple', color: '7f5cc4', keywords: ['spieleabend', 'brettspiel', 'wuerfel'] },
+  { id: 'home-cinema', label: 'Kuschelabend', category: 'Gemeinsam', icon: 'sofa', color: '9b6b55', keywords: ['kuscheln', 'sofa'] },
+  { id: 'restaurant', label: 'Restaurant', category: 'Gemeinsam', icon: 'food', color: 'c26b38', keywords: ['restaurant', 'essen'] },
+  { id: 'calendar', label: 'Wunsch-Tag', category: 'Gemeinsam', icon: 'calendar-star', color: '3878c5', keywords: ['tag', 'wunsch'] },
+  { id: 'walk', label: 'Spaziergang', category: 'Gemeinsam', icon: 'walk', color: '49905a', keywords: ['spaziergang', 'laufen'] },
+  { id: 'garden', label: 'Gartenzeit', category: 'Gemeinsam', icon: 'flower-tulip', color: '4b9c61', keywords: ['garten', 'blumen'] },
+  { id: 'heart', label: 'Eltern-Kind-Zeit', category: 'Gemeinsam', icon: 'heart', color: 'c84e70', keywords: ['eltern', 'kind', 'zeit'] },
+  { id: 'timer', label: 'Extra-Zeit', category: 'Zeitbonus', icon: 'timer-sand', color: '2f7fc0', keywords: ['zeit', 'extra'] },
+  { id: 'sleep-in', label: 'Laenger wach', category: 'Zeitbonus', icon: 'weather-night', color: '5264b8', keywords: ['wach', 'abend'] },
+  { id: 'alarm-off', label: 'Langsamer Morgen', category: 'Zeitbonus', icon: 'alarm-off', color: 'ad7e28', keywords: ['morgen', 'ausschlafen'] },
+  { id: 'pause', label: 'Pause-Karte', category: 'Zeitbonus', icon: 'pause-circle', color: '607d8b', keywords: ['pause', 'joker'] },
+  { id: 'choice', label: 'Du entscheidest', category: 'Zeitbonus', icon: 'gesture-tap-button', color: '348985', keywords: ['entscheiden', 'wahl'] },
+  { id: 'bath', label: 'Schaumbad', category: 'Zeitbonus', icon: 'bathtub', color: '4ba4d8', keywords: ['bad', 'schaumbad'] },
+  { id: 'sprout', label: 'Pflanzen-Projekt', category: 'Lernen', icon: 'sprout', color: '3d9144', keywords: ['pflanzen', 'lernen'] },
+  { id: 'rocket', label: 'Experiment', category: 'Lernen', icon: 'rocket-launch', color: 'd24a42', keywords: ['experiment', 'forschen'] },
+  { id: 'school', label: 'Lern-Abenteuer', category: 'Lernen', icon: 'school', color: '3467b7', keywords: ['lernen', 'schule'] },
+  { id: 'telescope', label: 'Sterne schauen', category: 'Lernen', icon: 'telescope', color: '4d5ab9', keywords: ['sterne', 'weltraum'] },
+  { id: 'magnify', label: 'Forscherauftrag', category: 'Lernen', icon: 'magnify-scan', color: '527c66', keywords: ['forschen', 'auftrag'] },
+  { id: 'robot', label: 'Technikzeit', category: 'Lernen', icon: 'robot-happy', color: '587087', keywords: ['technik', 'roboter'] }
+].map((option) => ({ ...option, url: createMdiIconUrl(option.icon, option.color) })) satisfies RewardVisualOption[];
+
 function App() {
   const [authMode, setAuthMode] = useState<AuthMode>('login');
   const [form, setForm] = useState<AuthFormState>(initialAuthForm);
@@ -1002,10 +1075,12 @@ function App() {
   }
 
   function applyRewardSuggestion(suggestion: RewardSuggestion) {
+    const visualOption = findRewardVisualForSuggestion(suggestion);
+
     setRewardForm({
       name: suggestion.name,
       description: suggestion.description,
-      imageUrl: '',
+      imageUrl: visualOption?.url ?? '',
       category: suggestion.category,
       price: String(suggestion.price),
       isActive: true,
@@ -2384,6 +2459,10 @@ function RewardsPanel({
                 type="number"
                 value={form.price}
               />
+              <RewardVisualPicker
+                value={form.imageUrl}
+                onChange={(imageUrl) => onFormChange({ ...form, imageUrl })}
+              />
               <TextField
                 autoComplete="off"
                 label="Bild-URL"
@@ -3084,6 +3163,254 @@ function SuggestionLibraryButton<TSuggestion extends { category: string; descrip
   );
 }
 
+interface RewardVisualPickerProps {
+  value: string;
+  onChange: (imageUrl: string) => void;
+}
+
+function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const [category, setCategory] = useState('Alle');
+  const selectedOption = useMemo(() => getRewardVisualOptionByUrl(value), [value]);
+  const categories = useMemo(
+    () => ['Alle', ...Array.from(new Set(REWARD_VISUAL_OPTIONS.map((option) => option.category))).sort()],
+    []
+  );
+  const visibleOptions = useMemo(() => {
+    const normalizedQuery = normalizeSuggestionLabel(query);
+
+    return REWARD_VISUAL_OPTIONS.filter((option) => {
+      const matchesCategory = category === 'Alle' || option.category === category;
+      const searchable = `${option.label} ${option.category} ${option.keywords.join(' ')} ${option.icon}`;
+      const matchesQuery =
+        normalizedQuery.length === 0 || normalizeSuggestionLabel(searchable).includes(normalizedQuery);
+
+      return matchesCategory && matchesQuery;
+    });
+  }, [category, query]);
+
+  function closeDialog() {
+    setOpen(false);
+    setQuery('');
+    setCategory('Alle');
+  }
+
+  return (
+    <>
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          border: '1px solid',
+          borderColor: 'divider',
+          borderRadius: 2,
+          gridColumn: { md: 'span 2' },
+          p: 1.25
+        }}
+      >
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={1.25}
+          sx={{ alignItems: { xs: 'stretch', sm: 'center' } }}
+        >
+          <Box
+            sx={{
+              alignItems: 'center',
+              aspectRatio: '1 / 1',
+              bgcolor: 'action.hover',
+              borderRadius: 2,
+              color: 'secondary.main',
+              display: 'flex',
+              justifyContent: 'center',
+              overflow: 'hidden',
+              width: 56
+            }}
+          >
+            {value ? (
+              <Box
+                alt=""
+                component="img"
+                src={value}
+                sx={{
+                  height: '100%',
+                  objectFit: isIconVisualUrl(value) ? 'contain' : 'cover',
+                  p: isIconVisualUrl(value) ? 1.1 : 0,
+                  width: '100%'
+                }}
+              />
+            ) : (
+              <AutoAwesomeRoundedIcon />
+            )}
+          </Box>
+          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+            <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Typography sx={{ fontWeight: 900 }} noWrap>
+                {selectedOption?.label ?? (value ? 'Eigenes Bild' : 'Motiv')}
+              </Typography>
+              <Chip
+                label={selectedOption?.category ?? (value ? 'URL' : 'Optional')}
+                size="small"
+                variant="outlined"
+              />
+            </Stack>
+            <Typography color="text.secondary" noWrap variant="body2">
+              {value || 'Motiv waehlen oder unten eigene Bild-URL eintragen'}
+            </Typography>
+          </Box>
+          <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
+            <Button onClick={() => setOpen(true)} size="small" startIcon={<AutoAwesomeRoundedIcon />} variant="outlined">
+              Motiv waehlen
+            </Button>
+            {value ? (
+              <Button color="inherit" onClick={() => onChange('')} size="small" variant="text">
+                Entfernen
+              </Button>
+            ) : null}
+          </Stack>
+        </Stack>
+      </Box>
+
+      <Dialog fullWidth maxWidth="md" onClose={closeDialog} open={open}>
+        <DialogTitle
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            gap: 1,
+            justifyContent: 'space-between',
+            pb: 1
+          }}
+        >
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
+            <Box sx={{ color: 'primary.main', display: 'grid', placeItems: 'center' }}>
+              <AutoAwesomeRoundedIcon />
+            </Box>
+            <Typography sx={{ fontWeight: 900 }} noWrap>
+              Motiv-Picker
+            </Typography>
+            <Chip label={`${REWARD_VISUAL_OPTIONS.length} Motive`} size="small" variant="outlined" />
+          </Stack>
+          <Tooltip title="Schliessen">
+            <IconButton aria-label="Schliessen" onClick={closeDialog} size="small">
+              <CloseRoundedIcon />
+            </IconButton>
+          </Tooltip>
+        </DialogTitle>
+        <DialogContent sx={{ display: 'grid', gap: 1.5, pt: 1 }}>
+          <TextField
+            autoComplete="off"
+            label="Suchen"
+            onChange={(event) => setQuery(event.target.value)}
+            size="small"
+            value={query}
+          />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            {categories.map((categoryOption) => (
+              <Chip
+                color={category === categoryOption ? 'primary' : 'default'}
+                key={categoryOption}
+                label={categoryOption}
+                onClick={() => setCategory(categoryOption)}
+                variant={category === categoryOption ? 'filled' : 'outlined'}
+              />
+            ))}
+          </Stack>
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 1,
+              gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', md: 'repeat(4, minmax(0, 1fr))' },
+              maxHeight: { xs: '58vh', md: '60vh' },
+              overflow: 'auto',
+              pr: 0.5
+            }}
+          >
+            {visibleOptions.length > 0 ? (
+              visibleOptions.map((option) => {
+                const selected = value === option.url;
+
+                return (
+                  <Button
+                    key={option.id}
+                    onClick={() => {
+                      onChange(option.url);
+                      closeDialog();
+                    }}
+                    sx={{
+                      alignItems: 'center',
+                      bgcolor: selected ? 'rgba(37, 104, 216, 0.08)' : 'background.paper',
+                      borderColor: selected ? 'primary.main' : 'divider',
+                      color: 'text.primary',
+                      display: 'grid',
+                      gap: 0.75,
+                      justifyContent: 'stretch',
+                      minHeight: 132,
+                      p: 1,
+                      textAlign: 'center'
+                    }}
+                    variant="outlined"
+                  >
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        aspectRatio: '1 / 1',
+                        bgcolor: 'action.hover',
+                        borderRadius: 2,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        justifySelf: 'center',
+                        width: 56
+                      }}
+                    >
+                      <Box
+                        alt=""
+                        component="img"
+                        src={option.url}
+                        sx={{ height: 38, objectFit: 'contain', width: 38 }}
+                      />
+                    </Box>
+                    <Typography sx={{ fontWeight: 900 }} noWrap variant="body2">
+                      {option.label}
+                    </Typography>
+                    <Typography color="text.secondary" noWrap variant="caption">
+                      {option.category}
+                    </Typography>
+                  </Button>
+                );
+              })
+            ) : (
+              <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, gridColumn: '1 / -1', p: 1.5 }}>
+                <Typography color="text.secondary">Kein passendes Motiv</Typography>
+              </Box>
+            )}
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+}
+
+function createMdiIconUrl(icon: string, color: string) {
+  return `https://api.iconify.design/mdi:${icon}.svg?color=%23${color}`;
+}
+
+function getRewardVisualOptionByUrl(url: string) {
+  return REWARD_VISUAL_OPTIONS.find((option) => option.url === url);
+}
+
+function isIconVisualUrl(url: string | null | undefined) {
+  return Boolean(url?.startsWith('https://api.iconify.design/mdi:'));
+}
+
+function findRewardVisualForSuggestion(suggestion: RewardSuggestion) {
+  const searchable = normalizeSuggestionLabel(`${suggestion.name} ${suggestion.description} ${suggestion.category}`);
+
+  return REWARD_VISUAL_OPTIONS.find((option) =>
+    [option.label, option.category, ...option.keywords].some((term) =>
+      searchable.includes(normalizeSuggestionLabel(term))
+    )
+  );
+}
+
 function normalizeSuggestionLabel(value: string) {
   return value.trim().toLowerCase().replace(/\s+/g, ' ');
 }
@@ -3364,7 +3691,12 @@ function RewardRow({ reward }: RewardRowProps) {
             alt=""
             component="img"
             src={reward.imageUrl}
-            sx={{ height: '100%', objectFit: 'cover', width: '100%' }}
+            sx={{
+              height: '100%',
+              objectFit: isIconVisualUrl(reward.imageUrl) ? 'contain' : 'cover',
+              p: isIconVisualUrl(reward.imageUrl) ? 1.35 : 0,
+              width: '100%'
+            }}
           />
         ) : (
           <StorefrontRoundedIcon />
@@ -3434,7 +3766,12 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
             alt=""
             component="img"
             src={reward.imageUrl}
-            sx={{ height: '100%', objectFit: 'cover', width: '100%' }}
+            sx={{
+              height: '100%',
+              objectFit: isIconVisualUrl(reward.imageUrl) ? 'contain' : 'cover',
+              p: isIconVisualUrl(reward.imageUrl) ? 1.35 : 0,
+              width: '100%'
+            }}
           />
         ) : (
           <StorefrontRoundedIcon />

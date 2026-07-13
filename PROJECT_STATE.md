@@ -1,12 +1,12 @@
 # PROJECT_STATE.md
 
-Letzte Aktualisierung: 2026-07-12
+Letzte Aktualisierung: 2026-07-13
 
 Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den aktuellen Projektstand, offene Aufgaben, Architekturentscheidungen und bekannte Probleme.
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Shop-Belohnungen besitzen jetzt einen aufgeraeumten Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, waehrend freie Bild-URLs weiterhin moeglich bleiben. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -252,13 +252,19 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Quest-/Shop-Karten-UX-Slice per API-Script erfolgreich.
 - LXC-Health nach Quest-/Shop-Karten-UX-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test des Quest-/Shop-Karten-UX-Slice erfolgreich: Fokusleiste zeigt aktives Kind mit Muenzen, Questkarten zeigen Status/XP/Muenzen/Aktion, Shopkarten zeigen bezahlbare Rewards und fehlende Muenzen.
+- Reward-Formular um einen Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, Suche und Kategorie-Filter erweitert.
+- Manuelle Reward-Bild-URLs bleiben erhalten; der Picker setzt nur eine normale HTTPS-`imageUrl`.
+- Reward-Vorlagen bekommen beim Auswaehlen nach Stichworten automatisch ein passendes Motiv vorgeschlagen.
+- Reward- und Shop-Karten stellen Icon-Motive zentriert dar und schneiden freie Foto-URLs weiterhin als Cover zu.
+- Frontend-Build nach Reward-Motiv-Picker-Slice erfolgreich.
+- Alle 60 Iconify-MDI-URLs des Motiv-Pickers wurden per HTTP erfolgreich geprueft.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Naechste UX-Verbesserung priorisieren, zum Beispiel Freigaben kompakter machen oder Kind-Ansicht noch staerker spielerisch ausrichten.
+- Naechste UX-Verbesserung priorisieren, zum Beispiel Freigaben kompakter machen, Kind-Ansicht staerker spielerisch ausrichten oder die Vorlagenbibliothek serverseitig editierbar machen.
 
 ## Naechster Schritt
 
@@ -303,6 +309,7 @@ Als naechstes die Freigaben kompakter machen oder die Kind-Ansicht noch staerker
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
+- Reward-Bilder bleiben als optionale `imageUrl` gespeichert. Das Frontend bietet zusaetzlich einen kuratierten Motiv-Picker, der MDI/Iconify-HTTPS-URLs eintraegt; eigene Bild-URLs sind weiterhin moeglich. Eigenes Upload-/Asset-Hosting ist bewusst noch nicht Teil des MVP-Slices.
 - Die Vorschlagsbibliothek ist aktuell statischer Backend-Inhalt ohne Datenbanktabelle. Vorschlaege fuellen nur Formulare; echte Familieninhalte entstehen erst beim Speichern als Quest oder Reward. Das Frontend zeigt Vorschlaege in einem Dialog mit Suche, Kategorie-Filter und Duplikat-Ausblendung statt als dauerhafte Flaeche im Formular.
 - Reward-Einloesungen speichern den Preis als `coinCost`, damit spaetere Preisaenderungen historische Einloesungen nicht veraendern.
 - Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. `REQUESTED` und `APPROVED` halten Muenzen gebunden, `REDEEMED` ist final, `REJECTED` und `CANCELLED` geben Muenzen wieder frei.
