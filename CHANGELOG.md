@@ -115,6 +115,12 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Backend- und Frontend-Build nach Kind-Dashboard-/Economy-Slice erfolgreich.
+- Vorlagenbibliothek geprueft: 44 Reward-Vorlagen, 58 Quest-Vorlagen, keine doppelten IDs, Rewardpreise 20-240 Coins, Quest-Coins 1-12.
+- Portainer-Redeploy nach Kind-Dashboard-/Economy-Slice per API-Script erfolgreich.
+- LXC-Health nach Kind-Dashboard-/Economy-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test der Suggestions erfolgreich: `Eis essen` 60 Coins und `Tisch abraeumen` 3 Coins.
+- LXC-Browser-Test erfolgreich: Abenteuerstatus, Avatar, Unlock-Spur, Profil-Button, Balance-Hinweise und keine Konsolenfehler.
 - Frontend-Build nach Reward-Motiv-Picker-Slice erfolgreich.
 - Alle 60 MDI/Iconify-Motiv-URLs des Reward-Pickers erfolgreich per HTTP geprueft.
 - Portainer-Redeploy nach Reward-Motiv-Picker-Slice per API-Script erfolgreich.

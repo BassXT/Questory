@@ -268,6 +268,11 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Vorschlagsbibliothek auf 44 Reward-Vorlagen und 58 Quest-Vorlagen erweitert.
 - Reward-Preise in den Vorschlaegen neu balanciert: Beispiel `Tisch abraeumen` gibt 3 Coins, `Eis essen` kostet 60 Coins.
 - Internetrecherche zu Chores/Rewards ausgewertet: klare Routinen, visuelle Charts, positive Verstaerkung, altersgerechte Aufgaben und groessere Rewards erst nach mehreren Punkten/Coins.
+- Backend- und Frontend-Build nach Kind-Dashboard-/Economy-Slice erfolgreich.
+- Portainer-Redeploy nach Kind-Dashboard-/Economy-Slice per API-Script erfolgreich.
+- LXC-Health nach Kind-Dashboard-/Economy-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test der Suggestions erfolgreich: 44 Rewards, 58 Quests, keine doppelte ID im lokalen Check, `Eis essen` 60 Coins, `Tisch abraeumen` 3 Coins.
+- LXC-Browser-Test erfolgreich: Abenteuerstatus, Avatar, naechster Unlock, Unlock-Spur, Profil-Button, Quests/Shop-Schnellzugriff, Balance-Hinweise und Konsolenfehlerfreiheit geprueft.
 
 ## Offene Aufgaben
 
