@@ -391,6 +391,43 @@ const emptySuggestions: SuggestionLibraryResponse = {
   quests: []
 };
 
+interface AvatarPreset {
+  key: string;
+  label: string;
+  role: string;
+  initials: string;
+  primary: string;
+  secondary: string;
+}
+
+interface AvatarUnlock {
+  level: number;
+  label: string;
+  slot: string;
+}
+
+const AVATAR_PRESETS: AvatarPreset[] = [
+  { key: 'trail-scout', label: 'Pfadfinder', role: 'Natur & Mut', initials: 'PF', primary: '#2568d8', secondary: '#2f8f6f' },
+  { key: 'star-maker', label: 'Sternenschmied', role: 'Kreativ & Ruhm', initials: 'SS', primary: '#7a5ccf', secondary: '#d04c73' },
+  { key: 'river-runner', label: 'Flusslaeufer', role: 'Fokus & Tempo', initials: 'FL', primary: '#188dd8', secondary: '#38a6a5' },
+  { key: 'ember-crafter', label: 'Funkenbauer', role: 'Bauen & Energie', initials: 'FB', primary: '#d87532', secondary: '#ca9b23' },
+  { key: 'cloud-tamer', label: 'Wolkenzaehmer', role: 'Ruhe & Fantasie', initials: 'WZ', primary: '#587087', secondary: '#9c4dcc' },
+  { key: 'gadget-hero', label: 'Gadget-Held', role: 'Technik & Tricks', initials: 'GH', primary: '#496ec8', secondary: '#607d8b' },
+  { key: 'garden-keeper', label: 'Gartenhueter', role: 'Natur & Pflege', initials: 'GH', primary: '#3a8d4a', secondary: '#a9792b' },
+  { key: 'moon-rider', label: 'Mondreiter', role: 'Abend & Abenteuer', initials: 'MR', primary: '#5264b8', secondary: '#6a5acd' }
+];
+
+const AVATAR_UNLOCKS: AvatarUnlock[] = [
+  { level: 2, label: 'Abenteuer-Muetze', slot: 'Outfit' },
+  { level: 3, label: 'Sticker-Rucksack', slot: 'Gadget' },
+  { level: 4, label: 'Helden-Cape', slot: 'Outfit' },
+  { level: 5, label: 'Sternen-Kompass', slot: 'Gadget' },
+  { level: 7, label: 'Forscherjacke', slot: 'Outfit' },
+  { level: 9, label: 'Leuchtende Schuhe', slot: 'Outfit' },
+  { level: 12, label: 'Mini-Drone', slot: 'Gadget' },
+  { level: 15, label: 'Legendenset', slot: 'Set' }
+];
+
 interface RewardVisualOption {
   id: string;
   label: string;
@@ -1773,7 +1810,12 @@ function DashboardView({
             gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1.35fr) minmax(320px, 0.65fr)' }
           }}
         >
-          <ChildStatsPanel loading={childStatsLoading} stats={childStats} />
+          <ChildStatsPanel
+            loading={childStatsLoading}
+            stats={childStats}
+            onOpenQuests={() => setActiveDashboardTab('quests')}
+            onOpenShop={() => setActiveDashboardTab('shop')}
+          />
           <FamilyStatusPanel dashboard={dashboard} />
         </Box>
       ) : null}
@@ -1790,6 +1832,10 @@ function DashboardView({
           maxXp={xpMax}
           selectedPinChild={selectedPinChild}
           selectedPinChildId={selectedPinChildId}
+          onChildOpen={(childProfileId) => {
+            onAssignmentChildChange(childProfileId);
+            setActiveDashboardTab('overview');
+          }}
           onChildFormChange={onChildFormChange}
           onChildPinDisable={onChildPinDisable}
           onChildPinFormChange={onChildPinFormChange}
@@ -1895,6 +1941,7 @@ interface ChildrenProfilesPanelProps {
   maxXp: number;
   selectedPinChild: ChildProfile | null;
   selectedPinChildId: string;
+  onChildOpen: (childProfileId: string) => void;
   onChildFormChange: (form: ChildFormState) => void;
   onChildPinDisable: (childProfileId: string) => void;
   onChildPinFormChange: (form: ChildPinFormState) => void;
@@ -1913,6 +1960,7 @@ function ChildrenProfilesPanel({
   maxXp,
   selectedPinChild,
   selectedPinChildId,
+  onChildOpen,
   onChildFormChange,
   onChildPinDisable,
   onChildPinFormChange,
@@ -1958,12 +2006,19 @@ function ChildrenProfilesPanel({
                 value={childForm.displayName}
               />
               <TextField
-                autoComplete="off"
-                label="Avatar-Key"
+                label="Avatar"
                 onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
+                select
                 size="small"
                 value={childForm.avatarKey}
-              />
+              >
+                <MenuItem value="">Automatisch</MenuItem>
+                {AVATAR_PRESETS.map((avatar) => (
+                  <MenuItem key={avatar.key} value={avatar.key}>
+                    {avatar.label}
+                  </MenuItem>
+                ))}
+              </TextField>
               <Button
                 disabled={childSaving}
                 startIcon={<PersonAddRoundedIcon />}
@@ -2040,7 +2095,9 @@ function ChildrenProfilesPanel({
 
         <Box sx={{ display: 'grid', gap: 1.5 }}>
           {childRows.length > 0 ? (
-            childRows.map((child) => <ChildRow child={child} key={child.id} maxXp={maxXp} />)
+            childRows.map((child) => (
+              <ChildRow child={child} key={child.id} maxXp={maxXp} onOpen={() => onChildOpen(child.id)} />
+            ))
           ) : (
             <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
               <Typography color="text.secondary">Noch keine Kinderprofile</Typography>
@@ -2145,11 +2202,14 @@ function RewardRedemptionsPanel({
 interface ChildStatsPanelProps {
   loading: boolean;
   stats: ChildStatsResponse | null;
+  onOpenQuests: () => void;
+  onOpenShop: () => void;
 }
 
-function ChildStatsPanel({ loading, stats }: ChildStatsPanelProps) {
+function ChildStatsPanel({ loading, stats, onOpenQuests, onOpenShop }: ChildStatsPanelProps) {
   const nextLevelXp = Math.max(stats?.progression.nextLevelXp ?? 1, 1);
   const xpProgress = stats ? Math.min((stats.progression.xp / nextLevelXp) * 100, 100) : 0;
+  const nextUnlock = stats ? getNextAvatarUnlock(stats.progression.level) : null;
 
   return (
     <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
@@ -2163,7 +2223,7 @@ function ChildStatsPanel({ loading, stats }: ChildStatsPanelProps) {
             justifyContent: 'space-between'
           }}
         >
-          <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Kinderstatistik" />
+          <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Abenteuerstatus" />
           <Chip
             icon={<PeopleAltRoundedIcon />}
             label={stats ? stats.child.displayName : 'Kein Kind'}
@@ -2178,19 +2238,60 @@ function ChildStatsPanel({ loading, stats }: ChildStatsPanelProps) {
             sx={{
               display: 'grid',
               gap: 1.5,
-              gridTemplateColumns: { xs: '1fr', lg: 'minmax(260px, 0.9fr) minmax(0, 1.1fr)' }
+              gridTemplateColumns: { xs: '1fr', lg: 'minmax(280px, 0.95fr) minmax(0, 1.05fr)' }
             }}
           >
-            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
-              <Stack spacing={1}>
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Typography sx={{ fontWeight: 900 }}>Level {stats.progression.level}</Typography>
-                  <Chip icon={<PaidRoundedIcon />} label={stats.progression.coins} variant="outlined" />
+            <Box
+              sx={{
+                background: 'linear-gradient(135deg, rgba(37, 104, 216, 0.14), rgba(47, 143, 111, 0.16))',
+                border: '1px solid',
+                borderColor: 'divider',
+                borderRadius: 2,
+                p: 1.5
+              }}
+            >
+              <Stack spacing={1.25}>
+                <Stack direction="row" spacing={1.5} sx={{ alignItems: 'center' }}>
+                  <AvatarBadge avatarKey={stats.child.avatarKey} name={stats.child.displayName} size="large" />
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography sx={{ fontWeight: 900 }} variant="h5" noWrap>
+                      {stats.child.displayName}
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      {resolveAvatarPreset(stats.child.avatarKey, stats.child.displayName).role}
+                    </Typography>
+                  </Box>
                 </Stack>
-                <LinearProgress value={xpProgress} variant="determinate" />
-                <Typography color="text.secondary" variant="body2">
-                  {stats.progression.xp} XP - noch {stats.progression.xpToNextLevel} XP bis Level {stats.progression.level + 1}
-                </Typography>
+
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+                  <Chip icon={<EmojiEventsRoundedIcon />} label={`Level ${stats.progression.level}`} variant="outlined" />
+                  <Chip icon={<PaidRoundedIcon />} label={`${stats.progression.coins} Muenzen`} variant="outlined" />
+                </Stack>
+
+                <Box>
+                  <LinearProgress value={xpProgress} variant="determinate" />
+                  <Typography color="text.secondary" sx={{ mt: 0.75 }} variant="body2">
+                    {stats.progression.xp} XP - noch {stats.progression.xpToNextLevel} XP bis Level {stats.progression.level + 1}
+                  </Typography>
+                </Box>
+
+                <Box sx={{ bgcolor: 'background.paper', borderRadius: 2, p: 1.25 }}>
+                  <Typography sx={{ fontWeight: 900 }} variant="body2">
+                    {nextUnlock ? `Naechster Unlock: ${nextUnlock.label}` : 'Alle Basis-Unlocks erreicht'}
+                  </Typography>
+                  <Typography color="text.secondary" variant="body2">
+                    {nextUnlock ? `${nextUnlock.slot} ab Level ${nextUnlock.level}` : 'Weitere Sets kommen mit dem Avatar-Builder.'}
+                  </Typography>
+                </Box>
+
+                <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                  <Button onClick={onOpenQuests} size="small" startIcon={<TaskAltRoundedIcon />} variant="contained">
+                    Quests
+                  </Button>
+                  <Button onClick={onOpenShop} size="small" startIcon={<StorefrontRoundedIcon />} variant="outlined">
+                    Shop
+                  </Button>
+                </Stack>
               </Stack>
             </Box>
 
@@ -2198,16 +2299,18 @@ function ChildStatsPanel({ loading, stats }: ChildStatsPanelProps) {
               sx={{
                 display: 'grid',
                 gap: 1,
-                gridTemplateColumns: { xs: 'repeat(2, minmax(0, 1fr))', md: 'repeat(3, minmax(0, 1fr))' }
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(2, minmax(0, 1fr))' }
               }}
             >
-              <StatTile label="Zuweisungen" value={stats.quests.assigned} />
-              <StatTile label="Bestaetigt" value={stats.quests.approved} />
-              <StatTile label="Eingereicht" value={stats.quests.submitted} />
-              <StatTile label="XP vergeben" value={stats.quests.xpGranted} />
-              <StatTile label="Rewards offen" value={stats.rewards.requested} />
-              <StatTile label="Coins gebunden" value={stats.rewards.coinsSpent} />
+              <StatTile label="Quest-Zuweisungen" value={stats.quests.assigned} />
+              <StatTile label="Bestaetigte Quests" value={stats.quests.approved} />
+              <StatTile label="Warten auf Freigabe" value={stats.quests.submitted} />
+              <StatTile label="Verdiente XP" value={stats.quests.xpGranted} />
+              <StatTile label="Reward-Anfragen" value={stats.rewards.requested} />
+              <StatTile label="Reservierte Coins" value={stats.rewards.coinsSpent} />
             </Box>
+
+            <AvatarUnlockTrack level={stats.progression.level} />
           </Box>
         ) : (
           <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
@@ -2216,6 +2319,121 @@ function ChildStatsPanel({ loading, stats }: ChildStatsPanelProps) {
         )}
       </Stack>
     </Paper>
+  );
+}
+
+interface AvatarUnlockTrackProps {
+  level: number;
+}
+
+function AvatarUnlockTrack({ level }: AvatarUnlockTrackProps) {
+  return (
+    <Box
+      sx={{
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1,
+        gridColumn: { lg: '1 / -1' },
+        p: 1.5
+      }}
+    >
+      <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography sx={{ fontWeight: 900 }}>Level schaltet Avatar-Teile frei</Typography>
+        <Chip label="XP-Pfad" size="small" variant="outlined" />
+      </Stack>
+      <Box
+        sx={{
+          display: 'grid',
+          gap: 1,
+          gridTemplateColumns: { xs: '1fr', sm: 'repeat(2, minmax(0, 1fr))', xl: 'repeat(4, minmax(0, 1fr))' }
+        }}
+      >
+        {AVATAR_UNLOCKS.slice(0, 8).map((unlock) => {
+          const unlocked = level >= unlock.level;
+
+          return (
+            <Box
+              key={`${unlock.level}-${unlock.label}`}
+              sx={{
+                bgcolor: unlocked ? 'background.paper' : 'rgba(255,255,255,0.55)',
+                border: '1px solid',
+                borderColor: unlocked ? 'primary.main' : 'divider',
+                borderRadius: 2,
+                p: 1.25
+              }}
+            >
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 900 }} variant="body2" noWrap>
+                  {unlock.label}
+                </Typography>
+                <Chip
+                  color={unlocked ? 'success' : 'default'}
+                  label={unlocked ? 'frei' : `Lvl ${unlock.level}`}
+                  size="small"
+                />
+              </Stack>
+              <Typography color="text.secondary" variant="caption">
+                {unlock.slot}
+              </Typography>
+            </Box>
+          );
+        })}
+      </Box>
+    </Box>
+  );
+}
+
+interface AvatarBadgeProps {
+  avatarKey: string | null;
+  name: string;
+  size: 'small' | 'large';
+}
+
+function AvatarBadge({ avatarKey, name, size }: AvatarBadgeProps) {
+  const avatar = resolveAvatarPreset(avatarKey, name);
+  const dimension = size === 'large' ? 92 : 48;
+  const fontSize = size === 'large' ? '1.45rem' : '0.8rem';
+
+  return (
+    <Box
+      sx={{
+        alignItems: 'center',
+        background: `linear-gradient(135deg, ${avatar.primary}, ${avatar.secondary})`,
+        border: '2px solid',
+        borderColor: 'background.paper',
+        borderRadius: '28%',
+        boxShadow: '0 10px 26px rgba(25, 42, 68, 0.18)',
+        color: 'common.white',
+        display: 'flex',
+        flexShrink: 0,
+        height: dimension,
+        justifyContent: 'center',
+        position: 'relative',
+        width: dimension
+      }}
+      title={avatar.label}
+    >
+      <Typography sx={{ fontSize, fontWeight: 950 }}>{avatar.initials}</Typography>
+      {size === 'large' ? (
+        <Box
+          sx={{
+            bgcolor: 'background.paper',
+            borderRadius: 999,
+            bottom: 6,
+            color: 'primary.main',
+            display: 'grid',
+            height: 24,
+            placeItems: 'center',
+            position: 'absolute',
+            right: 6,
+            width: 24
+          }}
+        >
+          <AutoAwesomeRoundedIcon sx={{ fontSize: 16 }} />
+        </Box>
+      ) : null}
+    </Box>
   );
 }
 
@@ -2233,6 +2451,41 @@ function StatTile({ label, value }: StatTileProps) {
       <Typography sx={{ fontWeight: 900 }} variant="h6">
         {value}
       </Typography>
+    </Box>
+  );
+}
+
+interface EconomyHintPanelProps {
+  mode: 'quests' | 'rewards';
+}
+
+function EconomyHintPanel({ mode }: EconomyHintPanelProps) {
+  const hints =
+    mode === 'quests'
+      ? ['Routine 1-3 Coins', 'echte Hilfe 4-7 Coins', 'Wochenziel 8-12 Coins']
+      : ['kleine Extras 25-50', 'Familienzeit 80-130', 'Ausfluege 150+'];
+
+  return (
+    <Box
+      sx={{
+        alignItems: { xs: 'stretch', sm: 'center' },
+        bgcolor: 'action.hover',
+        borderRadius: 2,
+        display: 'flex',
+        flexDirection: { xs: 'column', sm: 'row' },
+        gap: 1,
+        justifyContent: 'space-between',
+        p: 1.25
+      }}
+    >
+      <Typography color="text.secondary" variant="body2">
+        {mode === 'quests' ? 'Coin-Balance fuer Quests' : 'Preis-Balance fuer Rewards'}
+      </Typography>
+      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+        {hints.map((hint) => (
+          <Chip key={hint} label={hint} size="small" variant="outlined" />
+        ))}
+      </Stack>
     </Box>
   );
 }
@@ -2262,10 +2515,13 @@ function ChildFocusBar({ children, selectedChildId, onChildChange }: ChildFocusB
         borderRadius: 2,
         display: 'grid',
         gap: 1.25,
-        gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 0.8fr) minmax(0, 1fr)' },
+        gridTemplateColumns: { xs: '1fr', md: '56px minmax(220px, 0.8fr) minmax(0, 1fr)' },
         p: 1.25
       }}
     >
+      {selectedChild ? (
+        <AvatarBadge avatarKey={selectedChild.avatarKey} name={selectedChild.displayName} size="small" />
+      ) : null}
       <TextField
         label="Aktives Kind"
         onChange={(event) => onChildChange(event.target.value)}
@@ -2416,6 +2672,7 @@ function RewardsPanel({
               title="Shop-Bibliothek"
               onSelect={onSuggestionSelect}
             />
+            <EconomyHintPanel mode="rewards" />
             <Box
               component="form"
               onSubmit={onSubmit}
@@ -2739,6 +2996,7 @@ function QuestTemplatesPanel({
               title="Quest-Bibliothek"
               onSelect={onSuggestionSelect}
             />
+            <EconomyHintPanel mode="quests" />
             <Box
               component="form"
               onSubmit={onSubmit}
@@ -3479,9 +3737,10 @@ interface ChildRowProps {
     pinEnabled: boolean;
   };
   maxXp: number;
+  onOpen: () => void;
 }
 
-function ChildRow({ child, maxXp }: ChildRowProps) {
+function ChildRow({ child, maxXp, onOpen }: ChildRowProps) {
   const progress = Math.min((child.xp / maxXp) * 100, 100);
 
   return (
@@ -3491,10 +3750,11 @@ function ChildRow({ child, maxXp }: ChildRowProps) {
         borderRadius: 2,
         display: 'grid',
         gap: 1,
-        gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 0.7fr) minmax(0, 1fr) auto auto' },
+        gridTemplateColumns: { xs: '1fr', md: '56px minmax(180px, 0.7fr) minmax(0, 1fr) auto auto auto' },
         p: 1.5
       }}
     >
+      <AvatarBadge avatarKey={child.avatarKey} name={child.displayName} size="small" />
       <Box sx={{ minWidth: 0 }}>
         <Typography sx={{ fontWeight: 900 }} noWrap>
           {child.displayName}
@@ -3511,6 +3771,9 @@ function ChildRow({ child, maxXp }: ChildRowProps) {
       </Stack>
       <Chip color={child.pinEnabled ? 'success' : 'default'} label={child.pinEnabled ? 'PIN' : 'Keine PIN'} variant="outlined" />
       <Chip icon={<PaidRoundedIcon />} label={child.coins} variant="outlined" />
+      <Button onClick={onOpen} size="small" variant="outlined">
+        Profil
+      </Button>
     </Box>
   );
 }
@@ -4056,6 +4319,35 @@ function resolveSelectedQuestId(quests: QuestTemplate[], preferredQuestId: strin
   }
 
   return activeQuests[0]?.id ?? '';
+}
+
+function resolveAvatarPreset(avatarKey: string | null | undefined, displayName: string): AvatarPreset {
+  const preset = AVATAR_PRESETS.find((avatar) => avatar.key === avatarKey);
+
+  if (preset) {
+    return preset;
+  }
+
+  const fallback = AVATAR_PRESETS[Math.abs(hashString(displayName)) % AVATAR_PRESETS.length];
+  const initials = displayName
+    .split(/\s+/)
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0]?.toUpperCase())
+    .join('');
+
+  return {
+    ...fallback,
+    initials: initials || fallback.initials
+  };
+}
+
+function getNextAvatarUnlock(level: number) {
+  return AVATAR_UNLOCKS.find((unlock) => unlock.level > level) ?? null;
+}
+
+function hashString(value: string) {
+  return Array.from(value).reduce((hash, char) => (hash * 31 + char.charCodeAt(0)) | 0, 0);
 }
 
 async function apiRequest<T>(path: string, options: ApiRequestOptions = {}): Promise<T> {

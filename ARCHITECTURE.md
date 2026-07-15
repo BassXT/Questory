@@ -116,6 +116,8 @@ Aktuell vorhanden:
 - JWT-Session wird aktuell im Browser-`localStorage` gehalten
 - Vorschlagsbibliotheken fuellen bestehende Quest- und Reward-Formulare, legen aber nichts automatisch an
 - Reward-Bilder werden weiterhin als `imageUrl` gespeichert. Das Frontend bietet einen kuratierten MDI/Iconify-Motiv-Picker, der normale HTTPS-URLs eintraegt; freie Bild-URLs bleiben moeglich und eigenes Asset-Hosting wird spaeter separat entschieden.
+- `avatarKey` ist aktuell eine Avatar-Preset-ID am Kinderprofil. Das Frontend nutzt sie fuer sichtbare Avatar-Identitaet; ein spaeter echter Avatar-Builder soll daraus Inventar, freigeschaltete Kleidung/Gadgets und ausgeruestete Teile ableiten.
+- Eltern/Admin koennen im Eltern-Dashboard ein Kinderprofil oeffnen und von dort Quests oder Shop fuer dieses Kind bedienen. Der umgekehrte Weg vom Kinderbereich in den Elternbereich bleibt durch getrennte JWT-Rollen geschuetzt und benoetigt Eltern-/Admin-Authentifizierung.
 
 ## Datenbank
 
@@ -132,6 +134,8 @@ Der Prisma Client Generator schreibt nach `apps/backend/src/generated/prisma`. B
 Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. Status `REQUESTED` und `APPROVED` halten die Muenzen gebunden, `REDEEMED` ist final. Status `REJECTED` und `CANCELLED` geben die Muenzen wieder frei. Dadurch kann ein Kind denselben Muenzenstand nicht mehrfach parallel im Shop ausgeben.
 
 Die erste Vorschlagsbibliothek ist statischer, versionierter Backend-Inhalt ohne eigene Datenbanktabelle. Familien kopieren Vorschlaege bewusst in eigene Quest- oder Reward-Daten, indem sie das vorausgefuellte Formular speichern.
+
+XP und Coins haben bewusst getrennte Rollen: XP dient der langfristigen Progression mit Leveln und Avatar-/Gadget-Unlocks; Coins sind die kurzfristige Shop-Waehrung. Die kuratierten Vorschlaege halten Alltagsroutinen niedrig und groessere Rewards teuer, damit sich Familienbelohnungen ueber mehrere Quests verdient anfuehlen.
 
 Quest-Vorlagen trennen planbare Zuweisungen und spontane Einreichungen ueber `isAssignable` und `isSelfService`. Spontane Quests verwenden bewusst dieselben Tabellen `QuestAssignment` und `QuestCompletion` wie geplante Quests, damit Elternfreigabe, XP-/Muenzen-Vergabe und Statistiken ohne paralleles Sondermodell funktionieren.
 

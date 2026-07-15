@@ -29,7 +29,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Eis essen',
     description: 'Ein gemeinsamer Ausflug zur Eisdiele oder ein besonderes Eis zuhause.',
     category: 'Ausflug',
-    price: 20,
+    price: 60,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -38,7 +38,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: '30 Minuten Switch',
     description: 'Zusaetzliche Spielzeit fuer die Konsole nach Elternfreigabe.',
     category: 'Medienzeit',
-    price: 30,
+    price: 45,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -47,7 +47,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Filmabend',
     description: 'Das Kind darf einen passenden Film fuer den Familienabend aussuchen.',
     category: 'Familienzeit',
-    price: 45,
+    price: 120,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -56,7 +56,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Wunschessen',
     description: 'Ein frei waehlbares Lieblingsessen in der naechsten Woche.',
     category: 'Essen',
-    price: 50,
+    price: 130,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -65,7 +65,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: '15 Minuten laenger wach bleiben',
     description: 'Ein kleiner Abendbonus an einem passenden Tag.',
     category: 'Bonuszeit',
-    price: 25,
+    price: 35,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -74,7 +74,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Brettspiel aussuchen',
     description: 'Das Kind bestimmt das naechste gemeinsame Spiel.',
     category: 'Familienzeit',
-    price: 15,
+    price: 25,
     requiresApproval: false,
     maxRedemptions: null
   },
@@ -83,7 +83,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Kleine Ueberraschung',
     description: 'Eine kleine, vorher abgesprochene Ueberraschung aus der Familien-Schatzkiste.',
     category: 'Sammeln',
-    price: 35,
+    price: 70,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -92,7 +92,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Spielplatz-Ausflug',
     description: 'Ein geplanter Ausflug zu einem Lieblingsspielplatz.',
     category: 'Ausflug',
-    price: 40,
+    price: 85,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -101,7 +101,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Pfannkuchen-Fruehstueck',
     description: 'Am Wochenende gibt es ein besonderes Fruehstueck nach Wunsch.',
     category: 'Essen',
-    price: 55,
+    price: 95,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -110,7 +110,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Pizzaabend',
     description: 'Ein Pizzaabend mit gemeinsam ausgesuchten Belaegen.',
     category: 'Essen',
-    price: 60,
+    price: 115,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -119,7 +119,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Nachtisch aussuchen',
     description: 'Das Kind entscheidet ueber einen passenden Nachtisch.',
     category: 'Essen',
-    price: 25,
+    price: 45,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -128,7 +128,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Extra Hoergeschichte',
     description: 'Eine zusaetzliche Hoergeschichte vor dem Schlafen.',
     category: 'Abend',
-    price: 18,
+    price: 25,
     requiresApproval: false,
     maxRedemptions: null
   },
@@ -137,7 +137,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Vorlesebuch bestimmen',
     description: 'Das Kind waehlt das Buch fuer die gemeinsame Vorlesezeit.',
     category: 'Abend',
-    price: 15,
+    price: 20,
     requiresApproval: false,
     maxRedemptions: null
   },
@@ -146,7 +146,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Familien-Radtour',
     description: 'Eine geplante Radtour mit kurzer Pause an einem Lieblingsort.',
     category: 'Ausflug',
-    price: 70,
+    price: 120,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -155,7 +155,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Bibliotheksbesuch',
     description: 'Gemeinsam neue Buecher oder Hoerspiele aussuchen.',
     category: 'Ausflug',
-    price: 35,
+    price: 70,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -164,7 +164,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Schwimmbad-Ausflug',
     description: 'Ein Familienausflug ins Schwimmbad, wenn es zeitlich passt.',
     category: 'Ausflug',
-    price: 90,
+    price: 150,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -173,7 +173,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Bastelset nutzen',
     description: 'Ein kleines Bastelprojekt aus vorhandenen Materialien aussuchen.',
     category: 'Kreativ',
-    price: 30,
+    price: 65,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -182,7 +182,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Lego-Challenge mit Eltern',
     description: 'Eine gemeinsame Bau-Challenge mit einem kleinen Thema.',
     category: 'Kreativ',
-    price: 35,
+    price: 70,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -191,7 +191,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Malnachmittag',
     description: 'Zeit fuer Farben, Papier und ein ruhiges Kreativprojekt.',
     category: 'Kreativ',
-    price: 30,
+    price: 60,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -200,7 +200,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Pflanze aussuchen',
     description: 'Eine kleine Pflanze oder Samen fuer Balkon, Garten oder Fensterbank aussuchen.',
     category: 'Natur',
-    price: 45,
+    price: 80,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -209,7 +209,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Mini-Picknick',
     description: 'Ein kleines Picknick im Garten, Park oder Wohnzimmer.',
     category: 'Familienzeit',
-    price: 40,
+    price: 85,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -218,7 +218,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Musik im Auto bestimmen',
     description: 'Das Kind waehlt fuer eine passende Fahrt die Musik aus.',
     category: 'Bonuszeit',
-    price: 10,
+    price: 20,
     requiresApproval: false,
     maxRedemptions: null
   },
@@ -227,7 +227,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Freund einladen',
     description: 'Ein Treffen mit einem Freund oder einer Freundin planen.',
     category: 'Freizeit',
-    price: 80,
+    price: 140,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -236,7 +236,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Wohnzimmer-Parcours',
     description: 'Ein sicherer Bewegungsparcours mit Elternfreigabe.',
     category: 'Bewegung',
-    price: 25,
+    price: 40,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -245,7 +245,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Schatzkisten-Auswahl',
     description: 'Ein kleines Teil aus einer vorbereiteten Schatzkiste aussuchen.',
     category: 'Sammeln',
-    price: 28,
+    price: 55,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -254,7 +254,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Stickerbogen',
     description: 'Ein kleiner Stickerbogen oder eine vorhandene Sammelkarte.',
     category: 'Sammeln',
-    price: 22,
+    price: 35,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -263,7 +263,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: '15 Minuten Medienzeit',
     description: 'Kurze Zusatzzeit fuer eine abgesprochene App, Serie oder ein Spiel.',
     category: 'Medienzeit',
-    price: 18,
+    price: 30,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -272,7 +272,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: '45 Minuten Medienzeit',
     description: 'Laengere Zusatzzeit fuer einen passenden Tag.',
     category: 'Medienzeit',
-    price: 45,
+    price: 75,
     requiresApproval: true,
     maxRedemptions: null
   },
@@ -281,7 +281,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Wochenend-Aktivitaet waehlen',
     description: 'Das Kind sucht aus zwei bis drei passenden Familienoptionen aus.',
     category: 'Familienzeit',
-    price: 75,
+    price: 150,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -290,7 +290,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: '1:1 Zeit mit Mama oder Papa',
     description: 'Eine feste Zeit nur mit einem Elternteil und einer passenden Aktivitaet.',
     category: 'Familienzeit',
-    price: 65,
+    price: 100,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -299,7 +299,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Museum oder Ausstellung',
     description: 'Ein Ausflug zu einem kindgerechten Museum oder einer Ausstellung.',
     category: 'Ausflug',
-    price: 95,
+    price: 160,
     requiresApproval: true,
     maxRedemptions: 1
   },
@@ -308,7 +308,115 @@ const rewardSuggestions: RewardSuggestion[] = [
     name: 'Kleines Extra-Budget',
     description: 'Ein kleiner Zuschuss fuer ein vorher abgesprochenes Spielzeug oder Heft.',
     category: 'Sammeln',
-    price: 100,
+    price: 180,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'special-cereal',
+    name: 'Lieblings-Muesli aussuchen',
+    description: 'Beim naechsten Einkauf ein besonderes Fruehstueck aussuchen.',
+    category: 'Essen',
+    price: 40,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'pillow-fort',
+    name: 'Kissenburg-Abend',
+    description: 'Gemeinsam eine Kissenburg bauen und darin lesen oder spielen.',
+    category: 'Familienzeit',
+    price: 45,
+    requiresApproval: true,
+    maxRedemptions: null
+  },
+  {
+    id: 'smoothie-choice',
+    name: 'Smoothie aussuchen',
+    description: 'Ein Smoothie oder Milchshake aus passenden Zutaten nach Wunsch.',
+    category: 'Essen',
+    price: 50,
+    requiresApproval: true,
+    maxRedemptions: null
+  },
+  {
+    id: 'family-baking',
+    name: 'Backprojekt',
+    description: 'Kekse, Muffins oder Kuchen gemeinsam planen und backen.',
+    category: 'Kreativ',
+    price: 85,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'science-kit',
+    name: 'Forscher-Experiment',
+    description: 'Ein kleines Experiment oder Forscherprojekt mit Elternbegleitung.',
+    category: 'Lernen',
+    price: 130,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'bookshop-budget',
+    name: 'Buchladen-Budget',
+    description: 'Ein abgesprochener Zuschuss fuer Buch, Comic oder Magazin.',
+    category: 'Sammeln',
+    price: 150,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'mini-golf',
+    name: 'Minigolf',
+    description: 'Ein geplanter Minigolf-Ausflug oder eine vergleichbare Aktivitaet.',
+    category: 'Ausflug',
+    price: 170,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'sleepover-request',
+    name: 'Uebernachtungs-Wunsch',
+    description: 'Eine Uebernachtung bei Freunden oder zuhause anfragen und planen.',
+    category: 'Freizeit',
+    price: 180,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'zoo-trip',
+    name: 'Zoo oder Tierpark',
+    description: 'Ein groesserer Familienausflug zu Zoo, Tierpark oder Wildgehege.',
+    category: 'Ausflug',
+    price: 220,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'aquarium-trip',
+    name: 'Aquarium oder Erlebniswelt',
+    description: 'Ein besonderer Ausflug, der mehrere Wochen Sparen wert sein soll.',
+    category: 'Ausflug',
+    price: 240,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'pajama-day',
+    name: 'Pyjama-Morgen',
+    description: 'Ein ruhiger Morgen mit langsamem Start an einem passenden Tag.',
+    category: 'Bonuszeit',
+    price: 90,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'garden-camp',
+    name: 'Garten-Camp',
+    description: 'Zelt, Decken oder Picknick-Setup fuer ein kleines Zuhause-Abenteuer.',
+    category: 'Abenteuer',
+    price: 110,
     requiresApproval: true,
     maxRedemptions: 1
   }
@@ -708,6 +816,248 @@ const questSuggestions: QuestSuggestion[] = [
     type: QuestType.ONE_TIME,
     frequency: QuestFrequency.NONE,
     xpReward: 12,
+    coinReward: 2,
+    requiresApproval: true
+  },
+  {
+    id: 'clear-table',
+    title: 'Tisch abraeumen',
+    description: 'Nach dem Essen Teller, Besteck und Glaeser an den richtigen Platz bringen.',
+    category: 'Haushalt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 15,
+    coinReward: 3,
+    requiresApproval: true
+  },
+  {
+    id: 'wipe-table',
+    title: 'Tisch abwischen',
+    description: 'Den Esstisch nach dem Essen sauber abwischen.',
+    category: 'Haushalt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 10,
+    coinReward: 2,
+    requiresApproval: true
+  },
+  {
+    id: 'vacuum-own-room',
+    title: 'Zimmer saugen',
+    description: 'Den Boden freiraeumen und das eigene Zimmer oder einen Bereich saugen.',
+    category: 'Haushalt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 30,
+    coinReward: 6,
+    requiresApproval: true
+  },
+  {
+    id: 'fold-towels',
+    title: 'Handtuecher falten',
+    description: 'Saubere Handtuecher ordentlich falten und stapeln.',
+    category: 'Haushalt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 22,
+    coinReward: 4,
+    requiresApproval: true
+  },
+  {
+    id: 'sort-socks',
+    title: 'Socken sortieren',
+    description: 'Gewaschene Socken paarweise sortieren und weglegen.',
+    category: 'Haushalt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 18,
+    coinReward: 3,
+    requiresApproval: true
+  },
+  {
+    id: 'meal-prep-safe',
+    title: 'Beim Essen vorbereiten',
+    description: 'Eine sichere Kuechenaufgabe uebernehmen, zum Beispiel waschen, ruehren oder sortieren.',
+    category: 'Familie',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 25,
+    coinReward: 5,
+    requiresApproval: true
+  },
+  {
+    id: 'lunch-box',
+    title: 'Brotdose vorbereiten',
+    description: 'Brotdose, Flasche oder Snack fuer den naechsten Tag mit vorbereiten.',
+    category: 'Schule',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.CUSTOM,
+    xpReward: 18,
+    coinReward: 3,
+    requiresApproval: true
+  },
+  {
+    id: 'pet-walk-short',
+    title: 'Kurze Haustier-Runde',
+    description: 'Mit einem Haustier nach Absprache eine kleine Aufgabe draussen uebernehmen.',
+    category: 'Verantwortung',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 30,
+    coinReward: 6,
+    requiresApproval: true
+  },
+  {
+    id: 'recycling-station',
+    title: 'Recycling sortieren',
+    description: 'Papier, Pfand oder Verpackungen sortieren und vorbereiten.',
+    category: 'Haushalt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 22,
+    coinReward: 4,
+    requiresApproval: true
+  },
+  {
+    id: 'bathroom-sink',
+    title: 'Waschbecken reinigen',
+    description: 'Das Waschbecken mit Elternfreigabe sauber machen und Sachen wegraeumen.',
+    category: 'Haushalt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 30,
+    coinReward: 6,
+    requiresApproval: true
+  },
+  {
+    id: 'weekly-reading-streak',
+    title: 'Lese-Wochenziel',
+    description: 'An mehreren Tagen lesen und am Ende der Woche kurz erzaehlen, worum es ging.',
+    category: 'Lernen',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.WEEKLY,
+    xpReward: 45,
+    coinReward: 9,
+    requiresApproval: true
+  },
+  {
+    id: 'math-practice',
+    title: 'Mathe-Minimission',
+    description: 'Eine kurze Matheuebung oder Lernapp-Einheit konzentriert erledigen.',
+    category: 'Lernen',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.CUSTOM,
+    xpReward: 20,
+    coinReward: 4,
+    requiresApproval: true
+  },
+  {
+    id: 'creative-page',
+    title: 'Kreativseite gestalten',
+    description: 'Eine Zeichnung, Collage oder kleine Bastelseite fertigstellen.',
+    category: 'Kreativ',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 25,
+    coinReward: 5,
+    requiresApproval: true
+  },
+  {
+    id: 'desk-deep-reset',
+    title: 'Schreibtisch-Reset gross',
+    description: 'Schreibtisch, Schublade und Materialien gruendlich sortieren.',
+    category: 'Schule',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 40,
+    coinReward: 8,
+    requiresApproval: true
+  },
+  {
+    id: 'donation-bag',
+    title: 'Spendenbeutel vorbereiten',
+    description: 'Mit Elternhilfe Dinge aussuchen, die weitergegeben werden koennen.',
+    category: 'Verantwortung',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 40,
+    coinReward: 8,
+    requiresApproval: true
+  },
+  {
+    id: 'calm-bedtime',
+    title: 'Ruhige Abendroutine',
+    description: 'Abendroutine ohne Streit und mit allen vereinbarten Schritten schaffen.',
+    category: 'Routine',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.CUSTOM,
+    xpReward: 18,
+    coinReward: 3,
+    requiresApproval: true
+  },
+  {
+    id: 'prepare-breakfast',
+    title: 'Fruehstueck mit vorbereiten',
+    description: 'Eine kleine Aufgabe beim Fruehstueck uebernehmen, zum Beispiel decken oder Obst waschen.',
+    category: 'Familie',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 20,
+    coinReward: 4,
+    requiresApproval: true
+  },
+  {
+    id: 'sports-practice-ready',
+    title: 'Training selbst vorbereiten',
+    description: 'Sachen fuer Sport, Verein oder Hobby rechtzeitig pruefen und einpacken.',
+    category: 'Verantwortung',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.CUSTOM,
+    xpReward: 22,
+    coinReward: 4,
+    requiresApproval: true
+  },
+  {
+    id: 'family-helper-hour',
+    title: 'Familien-Helferstunde',
+    description: 'Eine groessere gemeinsame Aufgabe im Haushalt eine Weile mittragen.',
+    category: 'Familie',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 55,
+    coinReward: 11,
+    requiresApproval: true
+  },
+  {
+    id: 'weekly-challenge',
+    title: 'Wochen-Challenge',
+    description: 'Ein vorher vereinbartes Wochenziel mit mehreren kleinen Schritten abschliessen.',
+    category: 'Challenge',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.WEEKLY,
+    xpReward: 60,
+    coinReward: 12,
+    requiresApproval: true
+  },
+  {
+    id: 'season-gear-ready',
+    title: 'Sachen fuer morgen bereit',
+    description: 'Jacke, Schuhe, Sport- oder Wettersachen passend fuer den naechsten Tag bereitlegen.',
+    category: 'Routine',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.CUSTOM,
+    xpReward: 15,
+    coinReward: 3,
+    requiresApproval: true
+  },
+  {
+    id: 'thank-you-mission',
+    title: 'Danke-Mission',
+    description: 'Sich bewusst bei jemandem bedanken oder eine kleine Anerkennung aussprechen.',
+    category: 'Sozial',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 15,
     coinReward: 2,
     requiresApproval: true
   }

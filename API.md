@@ -320,6 +320,7 @@ Hinweise:
 - Das Frontend nutzt sie als Formularvorlagen; gespeichert wird erst ueber `POST /api/quests` oder `POST /api/rewards`.
 - Die Bibliothek ist bewusst statisch im Backend versioniert, bis klar ist, ob Familien eigene Bibliotheken oder einen optionalen Generator pflegen sollen.
 - Vorschlaege sind kategorisiert, damit das Frontend sie in einem kompakten Dialog filtern kann.
+- Die kuratierten Coin-Werte orientieren sich an einer Sparlogik: kleine Routinen bringen wenige Coins, groessere Extras und Ausfluege kosten deutlich mehr.
 
 Response:
 
@@ -331,7 +332,7 @@ Response:
       "name": "Eis essen",
       "description": "Ein gemeinsamer Ausflug zur Eisdiele oder ein besonderes Eis zuhause.",
       "category": "Ausflug",
-      "price": 20,
+      "price": 60,
       "requiresApproval": true,
       "maxRedemptions": null
     }

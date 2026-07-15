@@ -1,12 +1,12 @@
 # PROJECT_STATE.md
 
-Letzte Aktualisierung: 2026-07-13
+Letzte Aktualisierung: 2026-07-15
 
 Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den aktuellen Projektstand, offene Aufgaben, Architekturentscheidungen und bekannte Probleme.
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Shop-Belohnungen besitzen jetzt einen aufgeraeumten Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, waehrend freie Bild-URLs weiterhin moeglich bleiben. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Shop-Belohnungen besitzen jetzt einen aufgeraeumten Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, waehrend freie Bild-URLs weiterhin moeglich bleiben. Das Kind-Dashboard zeigt nun Abenteuerstatus, Avatar-Preset, XP-Fortschritt, naechste Avatar-Unlocks und Schnellzugriff auf Quests/Shop; Eltern koennen Kinderprofile direkt oeffnen, waehrend Kinder fuer Eltern/Admin-Funktionen weiterhin Eltern-Authentifizierung brauchen. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -261,17 +261,24 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Reward-Motiv-Picker-Slice per API-Script erfolgreich.
 - LXC-Health nach Reward-Motiv-Picker-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test des Reward-Motiv-Pickers erfolgreich: Shop-Tab zeigt Motivbereich, Dialog zeigt 60 Motive mit Kategorien, Suche filtert auf `Switch-Zeit`, Auswahl schreibt die Iconify-URL in `Bild-URL`, Vorschau wird angezeigt und keine Konsolenfehler.
+- Kind-Dashboard zur Abenteuerstatus-Ansicht ausgebaut: Avatar-Preset, Rolle, Level, XP-Fortschritt, naechster Avatar-Unlock, Unlock-Spur und Schnellzugriff auf Quests/Shop.
+- Kinderprofile nutzen im Frontend statt freiem `Avatar-Key` eine Auswahl aus Avatar-Presets; bestehende freie Werte fallen deterministisch auf ein Preset zurueck.
+- Eltern/Admin koennen aus der Kinderliste ein Kinderprofil oeffnen und danach Quests/Shop fuer dieses Kind bedienen.
+- Quest- und Reward-Formulare zeigen kompakte Coin-Balance-Leitplanken fuer eigene Vorlagen.
+- Vorschlagsbibliothek auf 44 Reward-Vorlagen und 58 Quest-Vorlagen erweitert.
+- Reward-Preise in den Vorschlaegen neu balanciert: Beispiel `Tisch abraeumen` gibt 3 Coins, `Eis essen` kostet 60 Coins.
+- Internetrecherche zu Chores/Rewards ausgewertet: klare Routinen, visuelle Charts, positive Verstaerkung, altersgerechte Aufgaben und groessere Rewards erst nach mehreren Punkten/Coins.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Naechste UX-Verbesserung priorisieren, zum Beispiel Freigaben kompakter machen, Kind-Ansicht staerker spielerisch ausrichten oder die Vorlagenbibliothek serverseitig editierbar machen.
+- Naechste UX-Verbesserung priorisieren, zum Beispiel echten Avatar-Builder mit Inventar/ausgeruesteten Teilen modellieren, Freigaben kompakter machen oder die Vorlagenbibliothek serverseitig editierbar machen.
 
 ## Naechster Schritt
 
-Als naechstes die Freigaben kompakter machen oder die Kind-Ansicht noch staerker spielerisch ausrichten.
+Als naechstes den echten Avatar-Builder modellieren: Avatar-Katalog, Level-Unlocks, Kinder-Inventar und ausgeruestete Kleidung/Gadgets.
 
 ## Architekturentscheidungen
 
@@ -300,6 +307,7 @@ Als naechstes die Freigaben kompakter machen oder die Kind-Ansicht noch staerker
 - Rollenbasierte Autorisierung wird ueber `@Roles()` und `RolesGuard` umgesetzt. Feature-Module importieren dafuer das `AuthModule`.
 - Kinder koennen aktuell auf zwei Wegen abgebildet werden: als reines `ChildProfile` ohne Login oder als `User` mit Rolle `CHILD` plus verknuepftem `ChildProfile`. Der konkrete Kinder-Login/PIN-Flow wird spaeter entschieden.
 - Kinderlogin soll nicht ueber Fake-E-Mail-Adressen geloest werden. Geplant ist ein Familiencode als oeffentlicher Locator plus eine pro Kinderprofil gesetzte PIN; der erfolgreiche Login erzeugt ein `CHILD`-JWT.
+- Der Weg vom Kinderbereich in Eltern/Admin-Funktionen darf nicht ohne Eltern-/Admin-Passwort moeglich sein. Kinder-JWTs bleiben auf Kind-Scope beschraenkt; ein spaeter Elternbereich-Dialog muss eine echte Eltern-Authentifizierung ausloesen.
 - PIN-basierter Kinderlogin erzeugt ein JWT mit `role: CHILD` und `childProfileId`. API-Scope-Pruefungen muessen fuer Kinder entweder `childProfileId` oder den alten `userId`-basierten Kinder-User akzeptieren.
 - Bestehende Familien aus der Zeit vor `20260712143000_child_login_model` koennen noch `childLoginCode = null` haben. Vor dem finalen Kinderlogin-Rollout braucht es entweder Backfill oder einen Eltern-Endpunkt zum Erzeugen/Rotieren des Codes.
 - Quest-Vorlagen gehoeren immer zu genau einer Familie. Einmalige Quests nutzen `QuestFrequency.NONE`; wiederkehrende Quests nutzen `DAILY`, `WEEKLY` oder `CUSTOM`.
@@ -309,6 +317,8 @@ Als naechstes die Freigaben kompakter machen oder die Kind-Ansicht noch staerker
 - Das Frontend speichert optionale Quest-Zuweisungs-Faelligkeitsdaten als mittags UTC (`T12:00:00.000Z`), damit reine Kalendertage in der deutschen Anzeige nicht durch Zeitzonen auf den Vortag oder Folgetag rutschen.
 - Quest-Abschluesse starten als `SUBMITTED`. XP und Muenzen bleiben bis zur Eltern-Bestaetigung bei `0`, damit Progression in einem eigenen, testbaren Slice umgesetzt wird.
 - Level werden serverseitig nach `floor(sqrt(totalXp / 100)) + 1` berechnet und bei der Quest-Bestaetigung aktualisiert.
+- XP und Coins haben getrennte Rollen: XP dient langfristig Leveln, Avatar-Unlocks, Gadgets und spaeter Gebieten; Coins bleiben die kurzfristige Shop-Waehrung fuer echte Belohnungen.
+- `avatarKey` ist aktuell eine Avatar-Preset-ID am Kinderprofil. Das Frontend nutzt sie fuer sichtbare Identitaet; ein echter Avatar-Builder mit Inventar und ausgeruesteten Teilen braucht spaeter eigene Datenbanktabellen.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.

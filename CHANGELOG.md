@@ -8,6 +8,12 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Kind-Dashboard zur Abenteuerstatus-Ansicht mit Avatar-Preset, XP-Fortschritt, Unlock-Vorschau und Schnellzugriff auf Quests/Shop erweitert.
+- Kinderprofil-Anlage nutzt Avatar-Presets statt freiem Avatar-Key-Feld.
+- Eltern/Admin koennen Kinderprofile aus der Kinderliste oeffnen und auf Quests/Shop fuer dieses Kind wechseln.
+- Quest- und Reward-Formulare zeigen Coin-Balance-Leitplanken.
+- Vorschlagsbibliothek auf 44 Reward-Vorlagen und 58 Quest-Vorlagen erweitert.
+- Reward-Preise in der Vorschlagsbibliothek strenger balanciert, damit groessere Belohnungen mehrere Quests erfordern.
 - Frontend-Reward-Formular um einen Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, Suche und Kategorie-Filter erweitert.
 - Reward-Vorlagen schlagen beim Auswaehlen automatisch ein passendes Motiv vor, bleiben aber als editierbares Formular erhalten.
 - Initiale Projekt-Dokumentation angelegt.
