@@ -124,6 +124,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach DiceBear/Avataaars-Renderer-Integration erfolgreich.
+- Portainer-Redeploy nach DiceBear/Avataaars-Renderer-Integration per API-Script erfolgreich.
+- LXC-Health nach DiceBear/Avataaars-Renderer-Integration erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des DiceBear/Avataaars-Renderers erfolgreich: Avatar-Tab, Haar-Auswahl, Data-URI-SVG-Bild und Konsolenfehlerfreiheit geprueft.
 - Frontend-Build nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich.
 - Portainer-Redeploy nach Avatar-Haarlayer-/Gesichts-Slice per API-Script erfolgreich.
 - LXC-Health nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
