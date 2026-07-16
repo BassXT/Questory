@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Vorschau zur Ganzkoerperbuehne erweitert: Toon Head rendert Kopf/Gesicht/Haare, Questory rendert Koerper, Oberteil, Hose, Schuhe, Hintergruende und Gadgets als eigene SVG-Layer.
 - Avatar-Renderer von DiceBear/Avataaars auf DiceBear/Toon Head umgestellt; der Stil wirkt cartooniger und kindgerechter, bleibt aber weiterhin self-hosted ueber lokale npm-Pakete.
 - Avatar-Renderer auf DiceBear/Avataaars umgestellt; Questory-Loadout-Items werden nun auf professionelle Avatar-Optionen fuer Haare, Gesicht, Kleidung, Brillen, Farben und Hintergruende gemappt.
 - Avatar-Kopfpartie weiter verfeinert: Haare werden jetzt in Rueck- und Vorderlayer getrennt, am Gesicht geclippt und mit besser passenden Ueberdeckungen fuer Ohren, Stirn und Wangen gerendert.
@@ -124,6 +125,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Ganzkoerper-Avatarbuehne erfolgreich.
 - Frontend-Build nach Toon-Head-Renderer-Umstellung erfolgreich.
 - Portainer-Redeploy nach Toon-Head-Renderer-Umstellung per API-Script erfolgreich.
 - LXC-Health nach Toon-Head-Renderer-Umstellung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.

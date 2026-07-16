@@ -339,6 +339,14 @@ function AvatarPreview({
   const shoes = getEquippedItem(equippedItems, itemsByKey, 'shoes');
   const glasses = getEquippedItem(equippedItems, itemsByKey, 'glasses');
   const gadget = getEquippedItem(equippedItems, itemsByKey, 'gadget');
+  const skin = body?.colorPrimary ?? '#f2b28d';
+  const skinShadow = body?.colorSecondary ?? '#d98a62';
+  const topColor = top?.colorPrimary ?? '#2568d8';
+  const topAccent = top?.colorSecondary ?? '#1d4f9f';
+  const bottomColor = bottom?.colorPrimary ?? '#355f9f';
+  const bottomAccent = bottom?.colorSecondary ?? '#233f6c';
+  const shoeColor = shoes?.colorPrimary ?? '#d63f61';
+  const shoeAccent = shoes?.colorSecondary ?? '#8f263d';
   const avatarDataUri = useMemo(
     () =>
       createAvatar(toonHead, {
@@ -360,19 +368,19 @@ function AvatarPreview({
     [background, body, childName, equippedItems, eyes, hair, top]
   );
   const equipmentChips = [
-    bottom ? `Hose: ${bottom.name}` : null,
-    shoes ? `Schuhe: ${shoes.name}` : null,
+    glasses ? `Brille: ${glasses.name}` : null,
     gadget ? `Gadget: ${gadget.name}` : null
   ].filter(Boolean);
 
   return (
     <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 390, width: '100%' }}>
       <Box
-        component="img"
-        alt={getAvatarAlt(childName)}
-        src={avatarDataUri}
+        component="svg"
+        aria-label={getAvatarAlt(childName)}
+        role="img"
+        viewBox="0 0 360 520"
         sx={{
-          aspectRatio: '1 / 1',
+          aspectRatio: '9 / 13',
           bgcolor: background?.colorPrimary ?? '#d9f2df',
           border: '10px solid',
           borderColor: 'rgba(255,255,255,0.46)',
@@ -382,7 +390,67 @@ function AvatarPreview({
           maxWidth: 390,
           width: '100%'
         }}
-      />
+      >
+        <defs>
+          <linearGradient id="questory-full-bg" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor={background?.colorPrimary ?? '#d9f2df'} />
+            <stop offset="100%" stopColor={background?.colorSecondary ?? '#8dd3a5'} />
+          </linearGradient>
+          <linearGradient id="questory-full-skin" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor={lightenColor(skin, 0.14)} />
+            <stop offset="100%" stopColor={skin} />
+          </linearGradient>
+          <linearGradient id="questory-full-top" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor={lightenColor(topColor, 0.16)} />
+            <stop offset="100%" stopColor={topColor} />
+          </linearGradient>
+          <linearGradient id="questory-full-bottom" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor={lightenColor(bottomColor, 0.12)} />
+            <stop offset="100%" stopColor={bottomColor} />
+          </linearGradient>
+          <linearGradient id="questory-full-shoes" x1="0" x2="1" y1="0" y2="1">
+            <stop offset="0%" stopColor={lightenColor(shoeColor, 0.12)} />
+            <stop offset="100%" stopColor={shoeColor} />
+          </linearGradient>
+          <filter id="questory-full-shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="14" stdDeviation="12" floodColor="#1b2a3f" floodOpacity="0.2" />
+          </filter>
+          <filter id="questory-full-soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
+            <feDropShadow dx="0" dy="7" stdDeviation="5" floodColor="#1b2a3f" floodOpacity="0.18" />
+          </filter>
+          <clipPath id="questory-full-head-clip">
+            <circle cx="180" cy="118" r="76" />
+          </clipPath>
+        </defs>
+        <rect width="360" height="520" rx="34" fill="url(#questory-full-bg)" />
+        <rect x="18" y="18" width="324" height="484" rx="27" fill="#ffffff" opacity="0.16" />
+        <FullAvatarBackground itemKey={background?.key} />
+        <ellipse cx="180" cy="454" rx="108" ry="22" fill="#203047" opacity="0.15" />
+
+        <g filter="url(#questory-full-shadow)">
+          <FullAvatarBackGadget item={gadget} />
+          <path d="M156 165 H204 V210 H156 Z" fill="url(#questory-full-skin)" />
+          <path d="M157 178 C167 188 193 188 203 178 V211 H157 Z" fill={skinShadow} opacity="0.25" />
+
+          <path d="M116 203 C132 189 228 189 244 203 L229 319 C213 333 147 333 131 319 Z" fill="url(#questory-full-top)" />
+          <path d="M132 214 C147 228 213 228 228 214" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.34" />
+          <FullAvatarTopDetails itemKey={top?.key} accent={topAccent} color={topColor} />
+
+          <path d="M123 214 C101 247 106 302 128 328 C136 337 148 327 140 316 C124 292 128 252 144 226 Z" fill="url(#questory-full-skin)" />
+          <path d="M237 214 C259 247 254 302 232 328 C224 337 212 327 220 316 C236 292 232 252 216 226 Z" fill="url(#questory-full-skin)" />
+          <circle cx="132" cy="329" r="13" fill="url(#questory-full-skin)" />
+          <circle cx="228" cy="329" r="13" fill="url(#questory-full-skin)" />
+
+          <FullAvatarBottom itemKey={bottom?.key} accent={bottomAccent} />
+          <FullAvatarShoes itemKey={shoes?.key} accent={shoeAccent} />
+
+          <circle cx="180" cy="120" r="82" fill="#ffffff" opacity="0.48" />
+          <image href={avatarDataUri} x="66" y="-10" width="228" height="228" clipPath="url(#questory-full-head-clip)" />
+          <circle cx="180" cy="120" r="77" fill="none" stroke="#ffffff" strokeWidth="7" opacity="0.42" />
+
+          <FullAvatarFrontGadget item={gadget} />
+        </g>
+      </Box>
       {equipmentChips.length > 0 ? (
         <Stack direction="row" spacing={0.75} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
           {equipmentChips.map((label) => (
@@ -478,6 +546,216 @@ function stripHex(color: string) {
 
 function getAvatarAlt(childName: string) {
   return childName.toLowerCase().includes('avatar') ? childName : `${childName} Avatar`;
+}
+
+function FullAvatarBackground({ itemKey }: { itemKey: string | undefined }) {
+  if (itemKey === 'background-night') {
+    return (
+      <g>
+        <path d="M28 398 C88 368 151 392 194 357 C238 322 286 350 332 314 V500 H28 Z" fill="#18213d" opacity="0.22" />
+        <g fill="#fff9d8" opacity="0.9">
+          <circle cx="58" cy="73" r="4" />
+          <circle cx="306" cy="68" r="3" />
+          <circle cx="294" cy="170" r="2.5" />
+          <path d="M69 151 L76 165 L92 167 L80 177 L83 193 L69 184 L55 193 L58 177 L46 167 L62 165 Z" />
+          <path d="M288 106 C270 106 258 93 258 76 C248 87 248 113 266 125 C280 134 298 126 304 111 C300 114 294 106 288 106 Z" />
+        </g>
+      </g>
+    );
+  }
+
+  if (itemKey === 'background-lab') {
+    return (
+      <g fill="none" stroke="#ffffff" strokeWidth="5" opacity="0.43">
+        <path d="M35 96 H114 V45" />
+        <path d="M246 44 V126 H325" />
+        <path d="M49 226 H105" />
+        <path d="M255 218 H312" />
+        <circle cx="114" cy="45" r="9" fill="#ffffff" stroke="none" />
+        <circle cx="246" cy="126" r="9" fill="#ffffff" stroke="none" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'background-room') {
+    return (
+      <g opacity="0.48">
+        <rect x="28" y="365" width="304" height="86" rx="22" fill="#ffffff" />
+        <rect x="48" y="274" width="68" height="54" rx="10" fill="#ffffff" />
+        <rect x="252" y="264" width="58" height="96" rx="13" fill="#ffffff" />
+        <path d="M49 326 H116 M253 356 H310" stroke="#d49a67" strokeLinecap="round" strokeWidth="5" opacity="0.45" />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <path d="M25 399 C82 360 132 381 180 351 C227 321 272 344 335 306 V500 H25 Z" fill="#ffffff" opacity="0.28" />
+      <g fill="#ffffff" opacity="0.38">
+        <circle cx="56" cy="350" r="39" />
+        <circle cx="301" cy="340" r="48" />
+        <circle cx="315" cy="299" r="21" />
+      </g>
+    </g>
+  );
+}
+
+function FullAvatarTopDetails({ itemKey, accent, color }: { itemKey: string | undefined; accent: string; color: string }) {
+  if (itemKey === 'top-armor-gold') {
+    return (
+      <g>
+        <path d="M141 214 H219 L207 296 H153 Z" fill={accent} opacity="0.82" />
+        <path d="M158 232 H202 M153 254 H207 M150 278 H210" stroke={lightenColor(color, 0.35)} strokeLinecap="round" strokeWidth="4" opacity="0.65" />
+        <circle cx="180" cy="249" r="9" fill="#fff3b0" opacity="0.9" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'top-jacket-orange') {
+    return (
+      <g>
+        <path d="M126 208 H157 L151 318 H124 Z M203 208 H234 L236 318 H209 Z" fill={accent} opacity="0.72" />
+        <path d="M158 219 L180 244 L202 219" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.52" />
+        <circle cx="180" cy="260" r="4" fill="#ffffff" opacity="0.72" />
+        <circle cx="180" cy="286" r="4" fill="#ffffff" opacity="0.72" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'top-cape-purple') {
+    return (
+      <g>
+        <path d="M106 208 C92 267 100 354 143 400 L168 326 L142 220 Z" fill={accent} opacity="0.78" />
+        <path d="M143 220 L180 255 L217 220" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.9" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'top-shirt-green') {
+    return (
+      <g>
+        <path d="M145 234 C160 247 200 247 215 234" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.5" />
+        <path d="M148 284 H212" stroke="#ffffff" strokeLinecap="round" strokeWidth="4" opacity="0.32" />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <path d="M149 224 L180 252 L211 224" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.75" />
+      <path d="M148 280 H212" stroke="#ffffff" strokeLinecap="round" strokeWidth="4" opacity="0.28" />
+    </g>
+  );
+}
+
+function FullAvatarBottom({ itemKey, accent }: { itemKey: string | undefined; accent: string }) {
+  if (itemKey === 'bottom-shorts') {
+    return (
+      <g>
+        <path d="M130 310 C148 323 212 323 230 310 L220 354 H188 L180 329 L172 354 H140 Z" fill="url(#questory-full-bottom)" />
+        <path d="M145 361 V414 M215 361 V414" stroke="url(#questory-full-skin)" strokeLinecap="round" strokeWidth="27" />
+        <path d="M139 340 H221" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.36" />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <path d="M130 309 C150 322 210 322 230 309 L221 420 H188 L181 332 L172 420 H139 Z" fill="url(#questory-full-bottom)" />
+      <path d="M180 331 V417" stroke={darkenColor(accent, 0.1)} strokeLinecap="round" strokeWidth="4" opacity="0.25" />
+      {itemKey === 'bottom-space' ? (
+        <g fill={accent} opacity="0.86">
+          <circle cx="154" cy="354" r="5" />
+          <circle cx="207" cy="386" r="4" />
+          <path d="M193 342 L197 350 L206 351 L199 357 L201 366 L193 361 L185 366 L187 357 L180 351 L189 350 Z" />
+        </g>
+      ) : null}
+      {itemKey === 'bottom-cargo' ? (
+        <g fill={accent} opacity="0.78">
+          <rect x="141" y="361" width="23" height="18" rx="5" />
+          <rect x="198" y="361" width="23" height="18" rx="5" />
+        </g>
+      ) : null}
+    </g>
+  );
+}
+
+function FullAvatarShoes({ itemKey, accent }: { itemKey: string | undefined; accent: string }) {
+  return (
+    <g>
+      <ellipse cx="151" cy="431" rx="34" ry="13" fill="url(#questory-full-shoes)" />
+      <ellipse cx="209" cy="431" rx="34" ry="13" fill="url(#questory-full-shoes)" />
+      {itemKey === 'shoes-glow' ? (
+        <g>
+          <ellipse cx="151" cy="438" rx="30" ry="5" fill={accent} opacity="0.85" />
+          <ellipse cx="209" cy="438" rx="30" ry="5" fill={accent} opacity="0.85" />
+        </g>
+      ) : (
+        <g fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="3" opacity="0.62">
+          <path d="M138 428 H159" />
+          <path d="M200 428 H221" />
+        </g>
+      )}
+    </g>
+  );
+}
+
+function FullAvatarBackGadget({ item }: { item: AvatarItem | undefined }) {
+  if (item?.key !== 'gadget-backpack') {
+    return null;
+  }
+
+  return (
+    <g transform="translate(109 216)" filter="url(#questory-full-soft-shadow)">
+      <rect x="0" y="0" width="56" height="110" rx="20" fill={item.colorPrimary ?? '#d04c73'} />
+      <path d="M12 22 H44" stroke={item.colorSecondary ?? '#7a5ccf'} strokeLinecap="round" strokeWidth="6" opacity="0.75" />
+      <circle cx="38" cy="69" r="9" fill={item.colorSecondary ?? '#7a5ccf'} opacity="0.85" />
+    </g>
+  );
+}
+
+function FullAvatarFrontGadget({ item }: { item: AvatarItem | undefined }) {
+  if (!item || item.key === 'gadget-backpack') {
+    return null;
+  }
+
+  const color = item.colorPrimary ?? '#7d8da8';
+  const accent = item.colorSecondary ?? '#f4c95d';
+
+  if (item.key === 'gadget-drone') {
+    return (
+      <g transform="translate(254 101)" filter="url(#questory-full-soft-shadow)">
+        <rect x="0" y="15" width="48" height="23" rx="10" fill={color} />
+        <circle cx="-6" cy="14" r="15" fill="none" stroke={accent} strokeWidth="4" />
+        <circle cx="54" cy="14" r="15" fill="none" stroke={accent} strokeWidth="4" />
+        <circle cx="24" cy="26" r="4" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-robot') {
+    return (
+      <g transform="translate(251 345)" filter="url(#questory-full-soft-shadow)">
+        <rect x="0" y="8" width="54" height="58" rx="14" fill={color} />
+        <rect x="15" y="0" width="24" height="13" rx="6" fill={accent} />
+        <circle cx="18" cy="31" r="4" fill={accent} />
+        <circle cx="36" cy="31" r="4" fill={accent} />
+        <path d="M18 47 H36" stroke={accent} strokeLinecap="round" strokeWidth="4" />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-compass') {
+    return (
+      <g transform="translate(246 342)" filter="url(#questory-full-soft-shadow)">
+        <circle cx="25" cy="25" r="25" fill={color} />
+        <circle cx="25" cy="25" r="18" fill="#ffffff" opacity="0.22" />
+        <path d="M25 8 L36 27 L25 43 L14 27 Z" fill={accent} />
+      </g>
+    );
+  }
+
+  return null;
 }
 
 function BackgroundDetails({ itemKey }: { itemKey: string | undefined }) {
