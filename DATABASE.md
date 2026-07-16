@@ -16,6 +16,9 @@ QuestAssignment 1--n QuestCompletion
 Family 1--n Reward
 ChildProfile 1--n RewardRedemption
 Reward 1--n RewardRedemption
+ChildProfile 1--n ChildAvatarItem
+ChildProfile 1--0..1 ChildAvatarLoadout
+AvatarItem 1--n ChildAvatarItem
 ```
 
 ## Tabellen
@@ -215,6 +218,65 @@ Muenzlogik:
 - `REJECTED` und `CANCELLED` schreiben diese Muenzen wieder gut.
 - `REDEEMED` ist final und kann nicht mehr storniert werden.
 
+### AvatarItem
+
+Repraesentiert ein globales Avatar-Bauteil im self-hosted Katalog.
+
+Felder:
+
+- `key`
+- `slot`
+- `name`
+- `description`
+- `requiredLevel`
+- `rarity`
+- `layerOrder`
+- `colorPrimary`
+- `colorSecondary`
+- `isActive`
+- `createdAt`
+- `updatedAt`
+
+Slots:
+
+- `background`
+- `body`
+- `hair`
+- `eyes`
+- `bottom`
+- `top`
+- `shoes`
+- `glasses`
+- `gadget`
+
+`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` ist fuer spaetere Renderer/Asset-Pipelines vorbereitet.
+
+### ChildAvatarItem
+
+Repraesentiert manuell oder spaeter durch Events freigeschaltete Avatar-Items eines Kindes.
+
+Felder:
+
+- `childProfileId`
+- `itemKey`
+- `unlockedAt`
+- `source`
+
+Der zusammengesetzte Primaerschluessel ist `childProfileId + itemKey`. Level-Freischaltungen werden nicht fuer jedes Kind materialisiert; sie werden beim Lesen aus `AvatarItem.requiredLevel` berechnet. Diese Tabelle bleibt fuer Spezial-Unlocks, Events, Badges oder Eltern-Freischaltungen reserviert.
+
+### ChildAvatarLoadout
+
+Speichert die aktuell ausgeruesteten Avatar-Items eines Kindes.
+
+Felder:
+
+- `childProfileId`
+- `equippedItems`
+- `createdAt`
+- `updatedAt`
+
+`equippedItems` ist JSON, damit Slots ohne Migration erweitert werden koennen. Das Backend validiert beim Speichern, dass Item-Key, Slot und Freischaltung zusammenpassen.
+
 ## Migrationen
 
 Die erste Prisma-Migration wurde erzeugt:
@@ -229,6 +291,7 @@ Weitere Migrationen:
 apps/backend/prisma/migrations/20260712122000_reward_redemption_reservations/migration.sql
 apps/backend/prisma/migrations/20260712143000_child_login_model/migration.sql
 apps/backend/prisma/migrations/20260712162000_spontaneous_quests/migration.sql
+apps/backend/prisma/migrations/20260716103000_avatar_builder/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:
@@ -255,7 +318,6 @@ Die Formel wird bei der Eltern-Bestaetigung eines Quest-Abschlusses nach Vergabe
 
 - Badge
 - Streak
-- AvatarItem
 - Collectible
 - AdventureArea
 - SeasonalEvent

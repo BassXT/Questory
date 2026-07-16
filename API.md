@@ -302,6 +302,94 @@ Hinweis: Der gespeicherte PIN-Hash wird entfernt, `pinEnabled` wird auf `false` 
 
 Aktualisiert ein Kinderprofil.
 
+## Avatar
+
+### `GET /api/children/{childId}/avatar`
+
+Liefert den Avatar-Katalog, freigeschaltete Items und aktuell ausgeruestete Teile fuer ein Kind.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`, `CHILD`
+
+Hinweise:
+
+- Eltern/Admin koennen Avatare aller Kinder der aktuellen Familie abrufen.
+- Kinder mit eigenem Login koennen nur den eigenen Avatar abrufen.
+- Items werden automatisch ueber das Kinder-Level freigeschaltet; spaetere manuelle Inventar-Freischaltungen sind ueber `ChildAvatarItem` vorbereitet.
+- `equippedItems` ist eine Slot-zu-Item-Key-Map, zum Beispiel `top -> top-hoodie-blue`.
+
+Response-Auszug:
+
+```json
+{
+  "child": {
+    "id": "<child-profile-id>",
+    "displayName": "Mika",
+    "level": 3,
+    "xp": 260,
+    "coins": 42
+  },
+  "slots": ["background", "body", "hair", "eyes", "bottom", "top", "shoes", "glasses", "gadget"],
+  "equippedItems": {
+    "background": "background-meadow",
+    "body": "body-sunrise",
+    "hair": "hair-swoop",
+    "eyes": "eyes-bright",
+    "bottom": "bottom-jeans",
+    "top": "top-hoodie-blue",
+    "shoes": "shoes-sneaker-red"
+  },
+  "unlockedItemKeys": ["background-meadow", "body-sunrise"],
+  "items": [
+    {
+      "key": "top-hoodie-blue",
+      "slot": "top",
+      "name": "Blauer Hoodie",
+      "requiredLevel": 1,
+      "rarity": "COMMON",
+      "layerOrder": 50,
+      "colorPrimary": "#3978d8",
+      "colorSecondary": "#f4c95d",
+      "isUnlocked": true,
+      "unlockReason": "LEVEL"
+    }
+  ]
+}
+```
+
+### `PUT /api/children/{childId}/avatar/loadout`
+
+Speichert die ausgeruesteten Avatar-Items fuer ein Kind.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`, `CHILD`
+
+Hinweise:
+
+- Jedes Item muss existieren, zum angegebenen Slot passen und fuer das Kind freigeschaltet sein.
+- Unbekannte Slots oder gesperrte Items werden mit `400 Bad Request` abgelehnt.
+- Kinder koennen nur den eigenen Avatar bearbeiten.
+
+Request:
+
+```json
+{
+  "equippedItems": {
+    "top": "top-jacket-orange",
+    "bottom": "bottom-cargo",
+    "glasses": "glasses-round"
+  }
+}
+```
+
+Response: wie `GET /api/children/{childId}/avatar`.
+
 ## Suggestions
 
 ### `GET /api/suggestions`

@@ -8,6 +8,11 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Datenmodell mit globalem `AvatarItem`-Katalog, `ChildAvatarItem` fuer Spezial-Unlocks und `ChildAvatarLoadout` fuer ausgeruestete Teile erstellt.
+- Prisma-Migration `20260716103000_avatar_builder` mit 33 initialen Avatar-Items fuer Hintergruende, Figur, Haare, Augen, Kleidung, Schuhe, Brillen und Gadgets erstellt.
+- Backend-`AvatarModule` mit `GET /api/children/{childId}/avatar` und `PUT /api/children/{childId}/avatar/loadout` erstellt.
+- Frontend-Dashboard um einen Avatar-Tab fuer Eltern/Admin und Kinder erweitert.
+- Self-hosted SVG-Avatar-Werkstatt mit Slot-Auswahl, Level-Locks, Farbswatches, Vorschau und Loadout-Speichern erstellt.
 - Kind-Dashboard zur Abenteuerstatus-Ansicht mit Avatar-Preset, XP-Fortschritt, Unlock-Vorschau und Schnellzugriff auf Quests/Shop erweitert.
 - Kinderprofil-Anlage nutzt Avatar-Presets statt freiem Avatar-Key-Feld.
 - Eltern/Admin koennen Kinderprofile aus der Kinderliste oeffnen und auf Quests/Shop fuer dieses Kind wechseln.
@@ -115,6 +120,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Avatar-Builder-Slice erfolgreich.
 - Backend- und Frontend-Build nach Kind-Dashboard-/Economy-Slice erfolgreich.
 - Vorlagenbibliothek geprueft: 44 Reward-Vorlagen, 58 Quest-Vorlagen, keine doppelten IDs, Rewardpreise 20-240 Coins, Quest-Coins 1-12.
 - Portainer-Redeploy nach Kind-Dashboard-/Economy-Slice per API-Script erfolgreich.

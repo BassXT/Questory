@@ -35,12 +35,13 @@ import {
   Typography
 } from '@mui/material';
 import { FormEvent, ReactNode, useEffect, useMemo, useState } from 'react';
+import { AvatarBuilderPanel, AvatarResponse } from './avatar-builder';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000/api';
 const TOKEN_STORAGE_KEY = 'questory.accessToken';
 
 type AuthMode = 'login' | 'register' | 'child';
-type DashboardTab = 'overview' | 'children' | 'quests' | 'shop' | 'approvals';
+type DashboardTab = 'overview' | 'children' | 'avatar' | 'quests' | 'shop' | 'approvals';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
 type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
@@ -517,6 +518,7 @@ function App() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [dashboard, setDashboard] = useState<DashboardResponse | null>(null);
   const [childStats, setChildStats] = useState<ChildStatsResponse | null>(null);
+  const [avatar, setAvatar] = useState<AvatarResponse | null>(null);
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [quests, setQuests] = useState<QuestTemplate[]>([]);
   const [questAssignments, setQuestAssignments] = useState<QuestAssignment[]>([]);
@@ -528,6 +530,7 @@ function App() {
   const [childStatsLoading, setChildStatsLoading] = useState(false);
   const [dashboardLoading, setDashboardLoading] = useState(false);
   const [assignmentLoading, setAssignmentLoading] = useState(false);
+  const [avatarLoading, setAvatarLoading] = useState(false);
   const [redemptionLoading, setRedemptionLoading] = useState(false);
   const [shopLoading, setShopLoading] = useState(false);
   const [childSaving, setChildSaving] = useState(false);
@@ -538,6 +541,7 @@ function App() {
   const [rewardSaving, setRewardSaving] = useState(false);
   const [redemptionSavingId, setRedemptionSavingId] = useState<string | null>(null);
   const [redeemingRewardId, setRedeemingRewardId] = useState<string | null>(null);
+  const [avatarSaving, setAvatarSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const isAuthenticated = Boolean(token);
@@ -547,6 +551,7 @@ function App() {
       setUser(null);
       setDashboard(null);
       setChildStats(null);
+      setAvatar(null);
       setChildLoginProfiles([]);
       setChildLoginForm(initialChildLoginForm);
       setChildren([]);
@@ -731,16 +736,18 @@ function App() {
     if (!childProfileId) {
       setQuestAssignments([]);
       setChildStats(null);
+      setAvatar(null);
       setShopRewards([]);
       return;
     }
 
     setAssignmentLoading(true);
     setChildStatsLoading(true);
+    setAvatarLoading(true);
     setShopLoading(true);
 
     try {
-      const [assignments, childShopRewards, stats] = await Promise.all([
+      const [assignments, childShopRewards, stats, avatarData] = await Promise.all([
         apiRequest<QuestAssignment[]>(`/children/${childProfileId}/quest-assignments`, {
           token: activeToken
         }),
@@ -749,14 +756,19 @@ function App() {
         }),
         apiRequest<ChildStatsResponse>(`/children/${childProfileId}/stats`, {
           token: activeToken
+        }),
+        apiRequest<AvatarResponse>(`/children/${childProfileId}/avatar`, {
+          token: activeToken
         })
       ]);
       setQuestAssignments(assignments);
       setShopRewards(childShopRewards);
       setChildStats(stats);
+      setAvatar(avatarData);
     } finally {
       setAssignmentLoading(false);
       setChildStatsLoading(false);
+      setAvatarLoading(false);
       setShopLoading(false);
     }
   }
@@ -799,11 +811,12 @@ function App() {
     setQuestAssignmentForm((currentForm) => ({ ...currentForm, childProfileId }));
     setAssignmentLoading(true);
     setChildStatsLoading(true);
+    setAvatarLoading(true);
     setShopLoading(true);
     setError(null);
 
     try {
-      const [assignments, childShopRewards, stats] = await Promise.all([
+      const [assignments, childShopRewards, stats, avatarData] = await Promise.all([
         apiRequest<QuestAssignment[]>(`/children/${childProfileId}/quest-assignments`, {
           token
         }),
@@ -812,16 +825,21 @@ function App() {
         }),
         apiRequest<ChildStatsResponse>(`/children/${childProfileId}/stats`, {
           token
+        }),
+        apiRequest<AvatarResponse>(`/children/${childProfileId}/avatar`, {
+          token
         })
       ]);
       setQuestAssignments(assignments);
       setShopRewards(childShopRewards);
       setChildStats(stats);
+      setAvatar(avatarData);
     } catch (requestError) {
       setError(toErrorMessage(requestError));
     } finally {
       setAssignmentLoading(false);
       setChildStatsLoading(false);
+      setAvatarLoading(false);
       setShopLoading(false);
     }
   }
@@ -1235,12 +1253,37 @@ function App() {
     }
   }
 
+  async function saveAvatarLoadout(equippedItems: Record<string, string>) {
+    if (!token || !questAssignmentForm.childProfileId) {
+      return;
+    }
+
+    setAvatarSaving(true);
+    setError(null);
+
+    try {
+      const avatarData = await apiRequest<AvatarResponse>(`/children/${questAssignmentForm.childProfileId}/avatar/loadout`, {
+        method: 'PUT',
+        token,
+        body: {
+          equippedItems
+        }
+      });
+      setAvatar(avatarData);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setAvatarSaving(false);
+    }
+  }
+
   function logout() {
     localStorage.removeItem(TOKEN_STORAGE_KEY);
     setToken(null);
     setUser(null);
     setDashboard(null);
     setChildStats(null);
+    setAvatar(null);
     setChildLoginForm(initialChildLoginForm);
     setChildLoginProfiles([]);
     setChildren([]);
@@ -1277,6 +1320,9 @@ function App() {
               childPinForm={childPinForm}
               childPinSaving={childPinSaving}
               childSaving={childSaving}
+              avatar={avatar}
+              avatarLoading={avatarLoading}
+              avatarSaving={avatarSaving}
               childStats={childStats}
               childStatsLoading={childStatsLoading}
               children={children}
@@ -1324,6 +1370,7 @@ function App() {
               onRewardRedeem={redeemReward}
               onRewardSuggestionSelect={applyRewardSuggestion}
               onRewardSubmit={submitReward}
+              onAvatarSave={saveAvatarLoadout}
             />
           ) : (
             <AuthView
@@ -1629,6 +1676,9 @@ interface DashboardViewProps {
   assignmentLoading: boolean;
   assignmentSaving: boolean;
   assignments: QuestAssignment[];
+  avatar: AvatarResponse | null;
+  avatarLoading: boolean;
+  avatarSaving: boolean;
   childForm: ChildFormState;
   childPinForm: ChildPinFormState;
   childPinSaving: boolean;
@@ -1659,6 +1709,7 @@ interface DashboardViewProps {
   onAssignmentFormChange: (form: QuestAssignmentFormState) => void;
   onAssignmentReject: (assignmentId: string, completionId: string) => void;
   onAssignmentSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onAvatarSave: (equippedItems: Record<string, string>) => void;
   onSelfServiceQuestComplete: (questId: string) => void;
   onChildFormChange: (form: ChildFormState) => void;
   onChildPinDisable: (childProfileId: string) => void;
@@ -1683,6 +1734,9 @@ function DashboardView({
   assignmentLoading,
   assignmentSaving,
   assignments,
+  avatar,
+  avatarLoading,
+  avatarSaving,
   childForm,
   childPinForm,
   childPinSaving,
@@ -1713,6 +1767,7 @@ function DashboardView({
   onAssignmentFormChange,
   onAssignmentReject,
   onAssignmentSubmit,
+  onAvatarSave,
   onSelfServiceQuestComplete,
   onChildFormChange,
   onChildPinDisable,
@@ -1742,12 +1797,14 @@ function DashboardView({
         ? [
             { label: 'Uebersicht', value: 'overview' as DashboardTab },
             { label: 'Kinder', value: 'children' as DashboardTab },
+            { label: 'Avatar', value: 'avatar' as DashboardTab },
             { label: 'Quests', value: 'quests' as DashboardTab },
             { label: 'Shop', value: 'shop' as DashboardTab },
             { label: 'Freigaben', value: 'approvals' as DashboardTab }
           ]
         : [
             { label: 'Uebersicht', value: 'overview' as DashboardTab },
+            { label: 'Avatar', value: 'avatar' as DashboardTab },
             { label: 'Quests', value: 'quests' as DashboardTab },
             { label: 'Shop', value: 'shop' as DashboardTab }
           ],
@@ -1813,6 +1870,7 @@ function DashboardView({
           <ChildStatsPanel
             loading={childStatsLoading}
             stats={childStats}
+            onOpenAvatar={() => setActiveDashboardTab('avatar')}
             onOpenQuests={() => setActiveDashboardTab('quests')}
             onOpenShop={() => setActiveDashboardTab('shop')}
           />
@@ -1841,6 +1899,18 @@ function DashboardView({
           onChildPinFormChange={onChildPinFormChange}
           onChildPinSubmit={onChildPinSubmit}
           onChildSubmit={onChildSubmit}
+        />
+      ) : null}
+
+      {activeDashboardTab === 'avatar' ? (
+        <AvatarBuilderPanel
+          avatar={avatar}
+          children={children}
+          loading={avatarLoading}
+          saving={avatarSaving}
+          selectedChildId={assignmentForm.childProfileId}
+          onChildChange={onAssignmentChildChange}
+          onSave={onAvatarSave}
         />
       ) : null}
 
@@ -2202,11 +2272,12 @@ function RewardRedemptionsPanel({
 interface ChildStatsPanelProps {
   loading: boolean;
   stats: ChildStatsResponse | null;
+  onOpenAvatar: () => void;
   onOpenQuests: () => void;
   onOpenShop: () => void;
 }
 
-function ChildStatsPanel({ loading, stats, onOpenQuests, onOpenShop }: ChildStatsPanelProps) {
+function ChildStatsPanel({ loading, stats, onOpenAvatar, onOpenQuests, onOpenShop }: ChildStatsPanelProps) {
   const nextLevelXp = Math.max(stats?.progression.nextLevelXp ?? 1, 1);
   const xpProgress = stats ? Math.min((stats.progression.xp / nextLevelXp) * 100, 100) : 0;
   const nextUnlock = stats ? getNextAvatarUnlock(stats.progression.level) : null;
@@ -2285,6 +2356,9 @@ function ChildStatsPanel({ loading, stats, onOpenQuests, onOpenShop }: ChildStat
                 </Box>
 
                 <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                  <Button onClick={onOpenAvatar} size="small" startIcon={<AutoAwesomeRoundedIcon />} variant="contained">
+                    Avatar
+                  </Button>
                   <Button onClick={onOpenQuests} size="small" startIcon={<TaskAltRoundedIcon />} variant="contained">
                     Quests
                   </Button>
@@ -4287,7 +4361,7 @@ function SummaryRow({ label, value }: SummaryRowProps) {
 }
 
 interface ApiRequestOptions {
-  method?: 'GET' | 'POST';
+  method?: 'GET' | 'POST' | 'PUT';
   token?: string;
   body?: unknown;
 }

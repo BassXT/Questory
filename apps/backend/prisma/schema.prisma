@@ -85,10 +85,51 @@ model ChildProfile {
   coins             Int                @default(0)
   questAssignments  QuestAssignment[]
   rewardRedemptions RewardRedemption[]
+  avatarItems       ChildAvatarItem[]
+  avatarLoadout     ChildAvatarLoadout?
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
 
   @@index([familyId])
+}
+
+model AvatarItem {
+  key           String            @id
+  slot          String
+  name          String
+  description   String?
+  requiredLevel Int               @default(1)
+  rarity        String            @default("COMMON")
+  layerOrder    Int
+  colorPrimary  String?
+  colorSecondary String?
+  isActive      Boolean           @default(true)
+  childItems    ChildAvatarItem[]
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  @@index([slot])
+  @@index([requiredLevel])
+}
+
+model ChildAvatarItem {
+  childProfileId String
+  childProfile   ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  itemKey        String
+  item           AvatarItem   @relation(fields: [itemKey], references: [key], onDelete: Cascade)
+  unlockedAt     DateTime     @default(now())
+  source         String       @default("MANUAL")
+
+  @@id([childProfileId, itemKey])
+  @@index([itemKey])
+}
+
+model ChildAvatarLoadout {
+  childProfileId String       @id
+  childProfile   ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  equippedItems  Json
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 }
 
 model Quest {
