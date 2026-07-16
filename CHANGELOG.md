@@ -121,6 +121,10 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Avatar-Builder-Slice erfolgreich.
+- Portainer-Redeploy nach Avatar-Builder-Slice per API-Script erfolgreich.
+- LXC-Health nach Avatar-Builder-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Avatar-Builder erfolgreich: 33 Avatar-Items, 13 Level-1-Unlocks, Loadout-Speicherung und Reload-Persistenz geprueft.
+- LXC-Browser-Test des Avatar-Builders erfolgreich: Avatar-Tab, Werkstatt, Speichern, Reload, Level-Lock und Konsolenfehlerfreiheit geprueft.
 - Backend- und Frontend-Build nach Kind-Dashboard-/Economy-Slice erfolgreich.
 - Vorlagenbibliothek geprueft: 44 Reward-Vorlagen, 58 Quest-Vorlagen, keine doppelten IDs, Rewardpreise 20-240 Coins, Quest-Coins 1-12.
 - Portainer-Redeploy nach Kind-Dashboard-/Economy-Slice per API-Script erfolgreich.
