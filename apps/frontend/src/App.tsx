@@ -300,7 +300,6 @@ interface ChildLoginFormState {
 
 interface ChildFormState {
   displayName: string;
-  avatarKey: string;
   gender: string;
   birthDate: string;
 }
@@ -355,7 +354,6 @@ const initialChildLoginForm: ChildLoginFormState = {
 
 const initialChildForm: ChildFormState = {
   displayName: '',
-  avatarKey: '',
   gender: 'UNSPECIFIED',
   birthDate: ''
 };
@@ -418,16 +416,16 @@ interface AvatarUnlock {
 const AVATAR_PRESETS: AvatarPreset[] = [
   { key: 'trail-scout', label: 'Pfadfinder', role: 'Natur & Mut', initials: 'PF', primary: '#2568d8', secondary: '#2f8f6f' },
   { key: 'star-maker', label: 'Sternenschmied', role: 'Kreativ & Ruhm', initials: 'SS', primary: '#7a5ccf', secondary: '#d04c73' },
-  { key: 'river-runner', label: 'Flusslaeufer', role: 'Fokus & Tempo', initials: 'FL', primary: '#188dd8', secondary: '#38a6a5' },
+  { key: 'river-runner', label: 'Flussläufer', role: 'Fokus & Tempo', initials: 'FL', primary: '#188dd8', secondary: '#38a6a5' },
   { key: 'ember-crafter', label: 'Funkenbauer', role: 'Bauen & Energie', initials: 'FB', primary: '#d87532', secondary: '#ca9b23' },
-  { key: 'cloud-tamer', label: 'Wolkenzaehmer', role: 'Ruhe & Fantasie', initials: 'WZ', primary: '#587087', secondary: '#9c4dcc' },
+  { key: 'cloud-tamer', label: 'Wolkenzähmer', role: 'Ruhe & Fantasie', initials: 'WZ', primary: '#587087', secondary: '#9c4dcc' },
   { key: 'gadget-hero', label: 'Gadget-Held', role: 'Technik & Tricks', initials: 'GH', primary: '#496ec8', secondary: '#607d8b' },
-  { key: 'garden-keeper', label: 'Gartenhueter', role: 'Natur & Pflege', initials: 'GH', primary: '#3a8d4a', secondary: '#a9792b' },
+  { key: 'garden-keeper', label: 'Gartenhüter', role: 'Natur & Pflege', initials: 'GH', primary: '#3a8d4a', secondary: '#a9792b' },
   { key: 'moon-rider', label: 'Mondreiter', role: 'Abend & Abenteuer', initials: 'MR', primary: '#5264b8', secondary: '#6a5acd' }
 ];
 
 const AVATAR_UNLOCKS: AvatarUnlock[] = [
-  { level: 2, label: 'Abenteuer-Muetze', slot: 'Outfit' },
+  { level: 2, label: 'Abenteuer-Mütze', slot: 'Outfit' },
   { level: 3, label: 'Sticker-Rucksack', slot: 'Gadget' },
   { level: 4, label: 'Helden-Cape', slot: 'Outfit' },
   { level: 5, label: 'Sternen-Kompass', slot: 'Gadget' },
@@ -453,14 +451,14 @@ const REWARD_VISUAL_OPTIONS = [
   { id: 'wish-dinner', label: 'Wunschessen', category: 'Leckereien', icon: 'silverware-fork-knife', color: '2f8f6f', keywords: ['wunschessen', 'essen', 'restaurant'] },
   { id: 'popcorn', label: 'Popcorn', category: 'Leckereien', icon: 'popcorn', color: 'c9951a', keywords: ['popcorn', 'kino', 'film'] },
   { id: 'cupcake', label: 'Cupcake', category: 'Leckereien', icon: 'cupcake', color: 'c45f8c', keywords: ['kuchen', 'cupcake', 'muffin'] },
-  { id: 'candy', label: 'Suessigkeit', category: 'Leckereien', icon: 'candy', color: 'bd4c9b', keywords: ['suess', 'bonbon', 'candy'] },
+  { id: 'candy', label: 'Süßigkeit', category: 'Leckereien', icon: 'candy', color: 'bd4c9b', keywords: ['suess', 'bonbon', 'candy'] },
   { id: 'cookie', label: 'Keks', category: 'Leckereien', icon: 'cookie', color: '9b6a36', keywords: ['keks', 'cookie'] },
   { id: 'smoothie', label: 'Lieblingsdrink', category: 'Leckereien', icon: 'cup', color: '2d8fb8', keywords: ['drink', 'saft', 'smoothie'] },
   { id: 'switch-time', label: 'Switch-Zeit', category: 'Medienzeit', icon: 'nintendo-switch', color: 'e14545', keywords: ['switch', 'nintendo', 'konsole'] },
   { id: 'gamepad', label: 'Gaming-Zeit', category: 'Medienzeit', icon: 'gamepad-variant', color: '4f5bd5', keywords: ['gaming', 'spiel', 'zocken', 'konsole'] },
   { id: 'movie-night', label: 'Filmabend', category: 'Medienzeit', icon: 'movie-open', color: '6a5acd', keywords: ['film', 'kino', 'movie'] },
   { id: 'tablet-time', label: 'Tablet-Zeit', category: 'Medienzeit', icon: 'tablet-cellphone', color: '2568d8', keywords: ['tablet', 'app', 'medien'] },
-  { id: 'headphones', label: 'Hoergeschichte', category: 'Medienzeit', icon: 'headphones', color: '217c8f', keywords: ['hoerbuch', 'geschichte', 'musik'] },
+  { id: 'headphones', label: 'Hörgeschichte', category: 'Medienzeit', icon: 'headphones', color: '217c8f', keywords: ['hoerbuch', 'geschichte', 'musik'] },
   { id: 'tv', label: 'Serienfolge', category: 'Medienzeit', icon: 'television-classic', color: '5d6978', keywords: ['serie', 'tv', 'fernsehen'] },
   { id: 'music', label: 'Musikzeit', category: 'Medienzeit', icon: 'music', color: '9c4dcc', keywords: ['musik', 'song'] },
   { id: 'camera', label: 'Foto-Mission', category: 'Medienzeit', icon: 'camera', color: '6f7a87', keywords: ['foto', 'kamera'] },
@@ -485,8 +483,8 @@ const REWARD_VISUAL_OPTIONS = [
   { id: 'sticker', label: 'Sticker', category: 'Extras', icon: 'sticker', color: '38a6a5', keywords: ['sticker', 'sammeln'] },
   { id: 'star', label: 'Sternbonus', category: 'Extras', icon: 'star-four-points', color: 'd2a818', keywords: ['stern', 'bonus'] },
   { id: 'badge', label: 'Abzeichen', category: 'Extras', icon: 'shield-star', color: '496ec8', keywords: ['badge', 'abzeichen'] },
-  { id: 'sparkle', label: 'Ueberraschung', category: 'Extras', icon: 'auto-fix', color: '8e59cf', keywords: ['ueberraschung', 'magie'] },
-  { id: 'coins', label: 'Bonus-Muenzen', category: 'Extras', icon: 'hand-coin', color: 'c99719', keywords: ['muenzen', 'bonus'] },
+  { id: 'sparkle', label: 'Überraschung', category: 'Extras', icon: 'auto-fix', color: '8e59cf', keywords: ['ueberraschung', 'magie'] },
+  { id: 'coins', label: 'Bonus-Münzen', category: 'Extras', icon: 'hand-coin', color: 'c99719', keywords: ['muenzen', 'bonus'] },
   { id: 'ticket', label: 'Extra-Ticket', category: 'Extras', icon: 'ticket-confirmation', color: 'd15d39', keywords: ['ticket', 'gutschein'] },
   { id: 'family', label: 'Familienzeit', category: 'Gemeinsam', icon: 'account-group', color: '276d84', keywords: ['familie', 'gemeinsam'] },
   { id: 'board-game', label: 'Spieleabend', category: 'Gemeinsam', icon: 'dice-multiple', color: '7f5cc4', keywords: ['spieleabend', 'brettspiel', 'wuerfel'] },
@@ -497,7 +495,7 @@ const REWARD_VISUAL_OPTIONS = [
   { id: 'garden', label: 'Gartenzeit', category: 'Gemeinsam', icon: 'flower-tulip', color: '4b9c61', keywords: ['garten', 'blumen'] },
   { id: 'heart', label: 'Eltern-Kind-Zeit', category: 'Gemeinsam', icon: 'heart', color: 'c84e70', keywords: ['eltern', 'kind', 'zeit'] },
   { id: 'timer', label: 'Extra-Zeit', category: 'Zeitbonus', icon: 'timer-sand', color: '2f7fc0', keywords: ['zeit', 'extra'] },
-  { id: 'sleep-in', label: 'Laenger wach', category: 'Zeitbonus', icon: 'weather-night', color: '5264b8', keywords: ['wach', 'abend'] },
+  { id: 'sleep-in', label: 'Länger wach', category: 'Zeitbonus', icon: 'weather-night', color: '5264b8', keywords: ['wach', 'abend'] },
   { id: 'alarm-off', label: 'Langsamer Morgen', category: 'Zeitbonus', icon: 'alarm-off', color: 'ad7e28', keywords: ['morgen', 'ausschlafen'] },
   { id: 'pause', label: 'Pause-Karte', category: 'Zeitbonus', icon: 'pause-circle', color: '607d8b', keywords: ['pause', 'joker'] },
   { id: 'choice', label: 'Du entscheidest', category: 'Zeitbonus', icon: 'gesture-tap-button', color: '348985', keywords: ['entscheiden', 'wahl'] },
@@ -868,7 +866,6 @@ function App() {
         token,
         body: {
           displayName: childForm.displayName,
-          avatarKey: childForm.avatarKey || undefined,
           gender: childForm.gender !== 'UNSPECIFIED' ? childForm.gender : undefined,
           birthDate: childForm.birthDate || undefined
         }
@@ -1660,7 +1657,7 @@ function AuthView({
               Quest-Zentrale
             </Typography>
             <Typography color="text.secondary">
-              XP, Muenzen, Belohnungen und Familienfortschritt.
+              XP, Münzen, Belohnungen und Familienfortschritt.
             </Typography>
           </Box>
           <Box
@@ -1671,9 +1668,9 @@ function AuthView({
             }}
           >
             <FeatureTile icon={<TaskAltRoundedIcon />} label="Quests" value="Missionen" />
-            <FeatureTile icon={<PaidRoundedIcon />} label="Muenzen" value="Shop" />
+            <FeatureTile icon={<PaidRoundedIcon />} label="Münzen" value="Shop" />
             <FeatureTile icon={<EmojiEventsRoundedIcon />} label="Level" value="Fortschritt" />
-            <FeatureTile icon={<StorefrontRoundedIcon />} label="Rewards" value="Einloesen" />
+            <FeatureTile icon={<StorefrontRoundedIcon />} label="Rewards" value="Einlösen" />
           </Box>
         </Stack>
       </Paper>
@@ -1805,7 +1802,7 @@ function DashboardView({
     () =>
       canManageChildren
         ? [
-            { label: 'Uebersicht', value: 'overview' as DashboardTab },
+            { label: 'Übersicht', value: 'overview' as DashboardTab },
             { label: 'Kinder', value: 'children' as DashboardTab },
             { label: 'Avatar', value: 'avatar' as DashboardTab },
             { label: 'Quests', value: 'quests' as DashboardTab },
@@ -1813,7 +1810,7 @@ function DashboardView({
             { label: 'Freigaben', value: 'approvals' as DashboardTab }
           ]
         : [
-            { label: 'Uebersicht', value: 'overview' as DashboardTab },
+            { label: 'Übersicht', value: 'overview' as DashboardTab },
             { label: 'Avatar', value: 'avatar' as DashboardTab },
             { label: 'Quests', value: 'quests' as DashboardTab },
             { label: 'Shop', value: 'shop' as DashboardTab }
@@ -1852,7 +1849,7 @@ function DashboardView({
       >
         <MetricCard icon={<PeopleAltRoundedIcon />} label="Kinder" value={dashboard.totals.children} />
         <MetricCard icon={<TaskAltRoundedIcon />} label="Aktive Quests" value={dashboard.totals.activeQuests} />
-        <MetricCard icon={<PaidRoundedIcon />} label="Muenzen" value={dashboard.totals.coins} />
+        <MetricCard icon={<PaidRoundedIcon />} label="Münzen" value={dashboard.totals.coins} />
         <MetricCard icon={<StorefrontRoundedIcon />} label="Offene Rewards" value={dashboard.rewards.requested} />
       </Box>
 
@@ -2073,7 +2070,7 @@ function ChildrenProfilesPanel({
                 borderRadius: 2,
                 display: 'grid',
                 gap: 1.25,
-                gridTemplateColumns: { xs: '1fr', md: 'minmax(160px, 1fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) auto' },
+                gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) auto' },
                 p: 1.5
               }}
             >
@@ -2085,20 +2082,6 @@ function ChildrenProfilesPanel({
                 size="small"
                 value={childForm.displayName}
               />
-              <TextField
-                label="Profilabzeichen"
-                onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
-                select
-                size="small"
-                value={childForm.avatarKey}
-              >
-                <MenuItem value="">Automatisch</MenuItem>
-                {AVATAR_PRESETS.map((avatar) => (
-                  <MenuItem key={avatar.key} value={avatar.key}>
-                    {avatar.label}
-                  </MenuItem>
-                ))}
-              </TextField>
               <TextField
                 label="Geschlecht"
                 onChange={(event) => onChildFormChange({ ...childForm, gender: event.target.value })}
@@ -2221,8 +2204,8 @@ function FamilyStatusPanel({ dashboard }: FamilyStatusPanelProps) {
         <SummaryRow label="Eltern/Admins" value={dashboard.totals.parents} />
         <SummaryRow label="Kinderkonten" value={dashboard.totals.childUsers} />
         <Divider />
-        <SummaryRow label="Quest-Abschluesse" value={dashboard.quests.totalCompletions} />
-        <SummaryRow label="Bestaetigt" value={dashboard.quests.approved} />
+        <SummaryRow label="Quest-Abschlüsse" value={dashboard.quests.totalCompletions} />
+        <SummaryRow label="Bestätigt" value={dashboard.quests.approved} />
         <SummaryRow label="Eingereicht" value={dashboard.quests.submitted} />
         <Divider />
         <SummaryRow label="Rewards aktiv" value={dashboard.totals.activeRewards} />
@@ -2268,7 +2251,7 @@ function RewardRedemptionsPanel({
             justifyContent: 'space-between'
           }}
         >
-          <SectionTitle icon={<ShieldRoundedIcon />} title="Einloeseanfragen" />
+          <SectionTitle icon={<ShieldRoundedIcon />} title="Einlöseanfragen" />
           <Chip icon={<StorefrontRoundedIcon />} label={`${requestedCount} offen`} variant="outlined" />
         </Box>
 
@@ -2290,7 +2273,7 @@ function RewardRedemptionsPanel({
             ))
           ) : (
             <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
-              <Typography color="text.secondary">Noch keine Einloeseanfragen</Typography>
+              <Typography color="text.secondary">Noch keine Einlöseanfragen</Typography>
             </Box>
           )}
         </Box>
@@ -2366,7 +2349,7 @@ function ChildStatsPanel({ loading, stats, onOpenAvatar, onOpenQuests, onOpenSho
 
                 <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <Chip icon={<EmojiEventsRoundedIcon />} label={`Level ${stats.progression.level}`} variant="outlined" />
-                  <Chip icon={<PaidRoundedIcon />} label={`${stats.progression.coins} Muenzen`} variant="outlined" />
+                  <Chip icon={<PaidRoundedIcon />} label={`${stats.progression.coins} Münzen`} variant="outlined" />
                 </Stack>
 
                 <Box>
@@ -2407,7 +2390,7 @@ function ChildStatsPanel({ loading, stats, onOpenAvatar, onOpenQuests, onOpenSho
               }}
             >
               <StatTile label="Quest-Zuweisungen" value={stats.quests.assigned} />
-              <StatTile label="Bestaetigte Quests" value={stats.quests.approved} />
+              <StatTile label="Bestätigte Quests" value={stats.quests.approved} />
               <StatTile label="Warten auf Freigabe" value={stats.quests.submitted} />
               <StatTile label="Verdiente XP" value={stats.quests.xpGranted} />
               <StatTile label="Reward-Anfragen" value={stats.rewards.requested} />
@@ -2418,7 +2401,7 @@ function ChildStatsPanel({ loading, stats, onOpenAvatar, onOpenQuests, onOpenSho
           </Box>
         ) : (
           <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
-            <Typography color="text.secondary">Noch kein Kind fuer Statistiken ausgewaehlt</Typography>
+            <Typography color="text.secondary">Noch kein Kind für Statistiken ausgewählt</Typography>
           </Box>
         )}
       </Stack>
@@ -2583,7 +2566,7 @@ function EconomyHintPanel({ mode }: EconomyHintPanelProps) {
       }}
     >
       <Typography color="text.secondary" variant="body2">
-        {mode === 'quests' ? 'Coin-Balance fuer Quests' : 'Preis-Balance fuer Rewards'}
+        {mode === 'quests' ? 'Coin-Balance für Quests' : 'Preis-Balance für Rewards'}
       </Typography>
       <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
         {hints.map((hint) => (
@@ -2606,7 +2589,7 @@ function ChildFocusBar({ children, selectedChildId, onChildChange }: ChildFocusB
   if (children.length === 0) {
     return (
       <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.25 }}>
-        <Typography color="text.secondary">Noch kein Kind ausgewaehlt</Typography>
+        <Typography color="text.secondary">Noch kein Kind ausgewählt</Typography>
       </Box>
     );
   }
@@ -2642,7 +2625,7 @@ function ChildFocusBar({ children, selectedChildId, onChildChange }: ChildFocusB
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
         <Chip icon={<EmojiEventsRoundedIcon />} label={selectedChild ? `Level ${selectedChild.level}` : 'Kein Level'} variant="outlined" />
         <Chip label={selectedChild ? `${selectedChild.xp} XP` : '0 XP'} variant="outlined" />
-        <Chip icon={<PaidRoundedIcon />} label={selectedChild ? `${selectedChild.coins} Muenzen` : '0 Muenzen'} variant="outlined" />
+        <Chip icon={<PaidRoundedIcon />} label={selectedChild ? `${selectedChild.coins} Münzen` : '0 Münzen'} variant="outlined" />
       </Stack>
     </Box>
   );
@@ -2686,7 +2669,7 @@ function RewardShopPanel({
             <Chip icon={<StorefrontRoundedIcon />} label={`${shopRewards.length} im Shop`} variant="outlined" />
             <Chip
               icon={<PaidRoundedIcon />}
-              label={selectedChild ? `${selectedChild.coins} Muenzen` : 'Kein Kind'}
+              label={selectedChild ? `${selectedChild.coins} Münzen` : 'Kein Kind'}
               variant="outlined"
             />
           </Stack>
@@ -2716,7 +2699,7 @@ function RewardShopPanel({
           ) : (
             <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
               <Typography color="text.secondary">
-                {selectedChild ? 'Noch keine aktiven Belohnungen im Shop' : 'Noch kein Kind fuer den Shop ausgewaehlt'}
+                {selectedChild ? 'Noch keine aktiven Belohnungen im Shop' : 'Noch kein Kind für den Shop ausgewählt'}
               </Typography>
             </Box>
           )}
@@ -2771,7 +2754,7 @@ function RewardsPanel({
               actionLabel="Vorlagen"
               existingLabels={rewards.map((reward) => reward.name)}
               getLabel={(suggestion) => suggestion.name}
-              getMeta={(suggestion) => `${suggestion.price} Muenzen`}
+              getMeta={(suggestion) => `${suggestion.price} Münzen`}
               suggestions={suggestions}
               title="Shop-Bibliothek"
               onSelect={onSuggestionSelect}
@@ -2833,7 +2816,7 @@ function RewardsPanel({
                 value={form.imageUrl}
               />
               <TextField
-                label="Max. Einloesungen"
+                label="Max. Einlösungen"
                 onChange={(event) => onFormChange({ ...form, maxRedemptions: event.target.value })}
                 size="small"
                 slotProps={{ htmlInput: { min: 1, max: 10000 } }}
@@ -2849,7 +2832,7 @@ function RewardsPanel({
                       size="small"
                     />
                   }
-                  label="Bestaetigung"
+                  label="Bestätigung"
                 />
                 <FormControlLabel
                   control={
@@ -3040,7 +3023,7 @@ function QuestAssignmentsPanel({
           ) : (
             <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
               <Typography color="text.secondary">
-                {children.length === 0 ? 'Noch kein Kind fuer Zuweisungen' : 'Noch keine Quest-Zuweisungen'}
+                {children.length === 0 ? 'Noch kein Kind für Zuweisungen' : 'Noch keine Quest-Zuweisungen'}
               </Typography>
             </Box>
           )}
@@ -3094,7 +3077,7 @@ function QuestTemplatesPanel({
               existingLabels={quests.map((quest) => quest.title)}
               getLabel={(suggestion) => suggestion.title}
               getMeta={(suggestion) =>
-                `${suggestion.type === 'ONE_TIME' ? 'Einmalig' : 'Wiederkehrend'} | ${suggestion.xpReward} XP | ${suggestion.coinReward} Muenzen`
+                `${suggestion.type === 'ONE_TIME' ? 'Einmalig' : 'Wiederkehrend'} | ${suggestion.xpReward} XP | ${suggestion.coinReward} Münzen`
               }
               suggestions={suggestions}
               title="Quest-Bibliothek"
@@ -3154,8 +3137,8 @@ function QuestTemplatesPanel({
                 value={form.type === 'ONE_TIME' ? 'NONE' : form.frequency}
               >
                 <MenuItem value="NONE">Kein Rhythmus</MenuItem>
-                <MenuItem value="DAILY">Taeglich</MenuItem>
-                <MenuItem value="WEEKLY">Woechentlich</MenuItem>
+                <MenuItem value="DAILY">Täglich</MenuItem>
+                <MenuItem value="WEEKLY">Wöchentlich</MenuItem>
                 <MenuItem value="CUSTOM">Individuell</MenuItem>
               </TextField>
               <TextField
@@ -3168,7 +3151,7 @@ function QuestTemplatesPanel({
                 value={form.xpReward}
               />
               <TextField
-                label="Muenzen"
+                label="Münzen"
                 onChange={(event) => onFormChange({ ...form, coinReward: event.target.value })}
                 required
                 size="small"
@@ -3185,7 +3168,7 @@ function QuestTemplatesPanel({
                       size="small"
                     />
                   }
-                  label="Bestaetigung"
+                  label="Bestätigung"
                 />
                 <FormControlLabel
                   control={
@@ -3299,7 +3282,7 @@ function SelfServiceQuestsPanel({
           ) : (
             <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
               <Typography color="text.secondary">
-                {selectedChild ? 'Noch keine spontanen Quests aktiv' : 'Noch kein Kind fuer spontane Quests ausgewaehlt'}
+                {selectedChild ? 'Noch keine spontanen Quests aktiv' : 'Noch kein Kind für spontane Quests ausgewählt'}
               </Typography>
             </Box>
           )}
@@ -3443,8 +3426,8 @@ function SuggestionLibraryButton<TSuggestion extends { category: string; descrip
             </Typography>
             <Chip label={`${availableSuggestions.length} offen`} size="small" variant="outlined" />
           </Stack>
-          <Tooltip title="Schliessen">
-            <IconButton aria-label="Schliessen" onClick={closeDialog} size="small">
+          <Tooltip title="Schließen">
+            <IconButton aria-label="Schließen" onClick={closeDialog} size="small">
               <CloseRoundedIcon />
             </IconButton>
           </Tooltip>
@@ -3616,12 +3599,12 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
               />
             </Stack>
             <Typography color="text.secondary" noWrap variant="body2">
-              {value || 'Motiv waehlen oder unten eigene Bild-URL eintragen'}
+              {value || 'Motiv wählen oder unten eigene Bild-URL eintragen'}
             </Typography>
           </Box>
           <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
             <Button onClick={() => setOpen(true)} size="small" startIcon={<AutoAwesomeRoundedIcon />} variant="outlined">
-              Motiv waehlen
+              Motiv wählen
             </Button>
             {value ? (
               <Button color="inherit" onClick={() => onChange('')} size="small" variant="text">
@@ -3651,8 +3634,8 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
             </Typography>
             <Chip label={`${REWARD_VISUAL_OPTIONS.length} Motive`} size="small" variant="outlined" />
           </Stack>
-          <Tooltip title="Schliessen">
-            <IconButton aria-label="Schliessen" onClick={closeDialog} size="small">
+          <Tooltip title="Schließen">
+            <IconButton aria-label="Schließen" onClick={closeDialog} size="small">
               <CloseRoundedIcon />
             </IconButton>
           </Tooltip>
@@ -4005,7 +3988,7 @@ function QuestAssignmentRow({
             size="small"
             variant="contained"
           >
-            Bestaetigen
+            Bestätigen
           </Button>
           <Button
             color="error"
@@ -4084,7 +4067,7 @@ function RewardRow({ reward }: RewardRowProps) {
       </Box>
       <Chip icon={<PaidRoundedIcon />} label={reward.price} variant="outlined" />
       <Chip label={reward.category || 'Allgemein'} variant="outlined" />
-      <Chip label={reward.requiresApproval ? 'Mit Bestaetigung' : 'Sofort'} variant="outlined" />
+      <Chip label={reward.requiresApproval ? 'Mit Bestätigung' : 'Sofort'} variant="outlined" />
       <Chip label={reward.maxRedemptions ? `Max. ${reward.maxRedemptions}` : 'Unbegrenzt'} variant="outlined" />
     </Box>
   );
@@ -4099,7 +4082,7 @@ interface RewardShopRowProps {
 
 function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProps) {
   const canAfford = child.coins >= reward.price;
-  const actionLabel = reward.requiresApproval ? 'Beantragen' : 'Einloesen';
+  const actionLabel = reward.requiresApproval ? 'Beantragen' : 'Einlösen';
   const missingCoins = Math.max(reward.price - child.coins, 0);
 
   return (
@@ -4157,7 +4140,7 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
         </Box>
         <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
           <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
-          <Chip color={canAfford ? 'success' : 'warning'} label={canAfford ? 'Bezahlbar' : `Noch ${missingCoins} Muenzen`} size="small" variant={canAfford ? 'filled' : 'outlined'} />
+          <Chip color={canAfford ? 'success' : 'warning'} label={canAfford ? 'Bezahlbar' : `Noch ${missingCoins} Münzen`} size="small" variant={canAfford ? 'filled' : 'outlined'} />
           <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} size="small" variant="outlined" />
         </Stack>
         <Button
@@ -4232,7 +4215,7 @@ function RewardRedemptionRow({
             size="small"
             variant="contained"
           >
-            Bestaetigen
+            Bestätigen
           </Button>
           <Button
             color="error"
@@ -4287,7 +4270,7 @@ function completionStatusLabel(status: QuestCompletionStatus): string {
     case 'SUBMITTED':
       return 'Eingereicht';
     case 'APPROVED':
-      return 'Bestaetigt';
+      return 'Bestätigt';
     case 'REJECTED':
       return 'Abgelehnt';
     default:
@@ -4306,7 +4289,7 @@ function rewardRedemptionStatusLabel(status: RewardRedemptionStatus): string {
     case 'CANCELLED':
       return 'Storniert';
     case 'REDEEMED':
-      return 'Eingeloest';
+      return 'Eingelöst';
     default:
       return 'Unbekannt';
   }
@@ -4343,9 +4326,9 @@ function completionStatusColor(status: QuestCompletionStatus): 'default' | 'succ
 function frequencyLabel(frequency: QuestFrequency): string {
   switch (frequency) {
     case 'DAILY':
-      return 'Taeglich';
+      return 'Täglich';
     case 'WEEKLY':
-      return 'Woechentlich';
+      return 'Wöchentlich';
     case 'CUSTOM':
       return 'Individuell';
     case 'NONE':
@@ -4481,3 +4464,4 @@ function toErrorMessage(error: unknown): string {
 }
 
 export default App;
+

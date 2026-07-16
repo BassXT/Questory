@@ -335,6 +335,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Prisma-Migration `20260716193000_child_profile_details_and_avatar_extras` angelegt: Kinderprofile erhalten optionale Stammdaten `gender` und `birthDate`; der Avatar-Katalog erhaelt den neuen Slot `mouth` sowie weitere Tiere, Gadgets und Waffen.
 - Avatar-Werkstatt um den Slot `Mund` erweitert; Mundauswahl, Mundfarbe, neue Begleiter, Gadgets und Waffen werden in der Pixelart-Vorschau gemappt.
 - Kinderprofil-Anlage im Frontend um `Geschlecht` und `Geburtsdatum` erweitert; das alte Avatar-Preset-Dropdown heisst nun `Profilabzeichen`, damit es nicht mit dem echten Avatar-Builder verwechselt wird.
+- Profilabzeichen-Auswahl aus der Kinderprofil-Anlage entfernt; neue Kinder erhalten ihr kleines Listen-Badge automatisch aus dem bestehenden Fallback.
+- Sichtbare Frontend-Texte wurden in einem ersten Sweep wieder mit Umlauten geschrieben, unter anderem Münzen, Bestätigen, Übersicht, Einlösen und Auswahltexte.
+- Frontend-Build nach Profilabzeichen-Entfernung und Umlaut-Sweep erfolgreich.
 - Eltern/Admin muessen nicht in den Kinderlogin wechseln: der Elternbereich kann Quests, Shop, Freigaben, Statistiken und Avatare fuer jedes Kind ueber den Familienkontext verwalten.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Kinderprofil-/Avatar-Extras-Slice erfolgreich.
 - Portainer-Redeploy nach Kinderprofil-/Avatar-Extras-Slice per API-Script erfolgreich.

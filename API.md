@@ -247,13 +247,12 @@ Request:
 ```json
 {
   "displayName": "Mia",
-  "avatarKey": "starter-fox",
   "gender": "GIRL",
   "birthDate": "2018-05-21"
 }
 ```
 
-`avatarKey` ist nur noch ein Profilabzeichen fuer kleine Listen/Badges; der echte Avatar wird ueber den Avatar-Builder gepflegt. `gender` ist optional und akzeptiert `GIRL`, `BOY`, `DIVERSE` oder `UNSPECIFIED`. `birthDate` ist optional im ISO-Datumsformat.
+Das Profilabzeichen wird im Frontend automatisch aus dem Namen abgeleitet; der echte Avatar wird ueber den Avatar-Builder gepflegt. `gender` ist optional und akzeptiert `GIRL`, `BOY`, `DIVERSE` oder `UNSPECIFIED`. `birthDate` ist optional im ISO-Datumsformat.
 
 Response enthaelt `gender`, `birthDate`, `pinEnabled` und `pinUpdatedAt`, aber niemals `pinHash`.
 

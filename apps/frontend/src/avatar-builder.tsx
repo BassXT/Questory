@@ -195,7 +195,7 @@ export function AvatarBuilderPanel({
           </TextField>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Chip label={selectedChild ? `${selectedChild.xp} XP` : '0 XP'} variant="outlined" />
-            <Chip label={selectedChild ? `${selectedChild.coins} Muenzen` : '0 Muenzen'} variant="outlined" />
+            <Chip label={selectedChild ? `${selectedChild.coins} Münzen` : '0 Münzen'} variant="outlined" />
             <Chip label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
           </Stack>
         </Box>
@@ -278,7 +278,7 @@ export function AvatarBuilderPanel({
           </Box>
         ) : (
           <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
-            <Typography color="text.secondary">Noch kein Kind fuer den Avatar ausgewaehlt</Typography>
+            <Typography color="text.secondary">Noch kein Kind für den Avatar ausgewählt</Typography>
           </Box>
         )}
       </Stack>
@@ -326,7 +326,7 @@ function AvatarItemOption({ active, item, onSelect }: AvatarItemOptionProps) {
         />
       </Stack>
       <Typography color="text.secondary" sx={{ minHeight: 38 }} variant="body2">
-        {item?.description ?? 'Kein Extra fuer diesen Slot.'}
+        {item?.description ?? 'Kein Extra für diesen Slot.'}
       </Typography>
       {item ? (
         <Stack direction="row" spacing={0.75}>
@@ -1830,3 +1830,4 @@ function rarityLabel(rarity: string) {
 
   return labels[rarity] ?? rarity;
 }
+

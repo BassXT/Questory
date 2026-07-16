@@ -16,6 +16,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Kinderprofile um optionale Stammdaten `gender` und `birthDate` erweitert.
 - Avatar-Katalog um den Slot `mouth`, zusaetzliche Mundausdruecke, weitere Tiere, Gadgets und Waffen erweitert.
 - Frontend-Kinderprofilformular um Geschlecht und Geburtsdatum erweitert; das alte Avatar-Preset-Feld heisst nun Profilabzeichen.
+- Profilabzeichen-Auswahl aus der Kinderprofil-Anlage entfernt; kleine Listen-Badges werden automatisch aus dem bestehenden Fallback bestimmt.
+- Sichtbare Frontend-Texte in einem ersten Sweep auf echte deutsche Umlaute umgestellt.
 - Avatar-Vorschau zur Ganzkoerperbuehne erweitert: Toon Head rendert Kopf/Gesicht/Haare, Questory rendert Koerper, Oberteil, Hose, Schuhe, Hintergruende und Gadgets als eigene SVG-Layer.
 - Avatar-Renderer von DiceBear/Avataaars auf DiceBear/Toon Head umgestellt; der Stil wirkt cartooniger und kindgerechter, bleibt aber weiterhin self-hosted ueber lokale npm-Pakete.
 - Avatar-Renderer auf DiceBear/Avataaars umgestellt; Questory-Loadout-Items werden nun auf professionelle Avatar-Optionen fuer Haare, Gesicht, Kleidung, Brillen, Farben und Hintergruende gemappt.
@@ -143,6 +145,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Build nach Pixelart-Koerperausrichtung erfolgreich.
 - Frontend-Build, Backend-Build und Prisma Validate nach Avatar-Katalog-Erweiterung erfolgreich.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Kinderprofil-/Avatar-Extras-Slice erfolgreich.
+- Frontend-Build nach Profilabzeichen-Entfernung und Umlaut-Sweep erfolgreich.
 - Portainer-Redeploy nach Kinderprofil-/Avatar-Extras-Slice per API-Script erfolgreich.
 - LXC-Health nach Kinderprofil-/Avatar-Extras-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test nach Kinderprofil-/Avatar-Extras-Slice erfolgreich: 139 Avatar-Items, 8 Mund-Items, 11 Tiere, 12 Gadgets, 6 Waffen und Kinderprofilfelder `gender`/`birthDate` geprueft.
