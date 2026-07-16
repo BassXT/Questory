@@ -71,6 +71,8 @@ Felder:
 - `userId`
 - `displayName`
 - `avatarKey`
+- `gender`
+- `birthDate`
 - `pinHash`
 - `pinEnabled`
 - `pinUpdatedAt`
@@ -88,6 +90,8 @@ Kinderlogin ohne E-Mail:
 - Optional spaeter: `pinFailedAttempts`, `pinLockedUntil`.
 
 Der Familiencode ist kein Geheimnis, sondern ein Locator fuer die Familie. Die PIN bleibt der eigentliche Authentifizierungsfaktor.
+
+`avatarKey` ist nur noch ein leichtes Profilabzeichen fuer Listen und kleine Badges. Der eigentliche Avatar wird ueber `AvatarItem` und `ChildAvatarLoadout` gebaut. `gender` ist ein optionaler Stammdatenwert fuer spaetere geschlechterspezifische Avatar-Vorschlaege und Auswertungen; `birthDate` ist optional und wird fuer altersgerechte Vorschlaege vorbereitet.
 
 ### Quest
 
@@ -295,6 +299,7 @@ apps/backend/prisma/migrations/20260712122000_reward_redemption_reservations/mig
 apps/backend/prisma/migrations/20260712143000_child_login_model/migration.sql
 apps/backend/prisma/migrations/20260712162000_spontaneous_quests/migration.sql
 apps/backend/prisma/migrations/20260716103000_avatar_builder/migration.sql
+apps/backend/prisma/migrations/20260716193000_child_profile_details_and_avatar_extras/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:

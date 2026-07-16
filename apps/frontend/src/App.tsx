@@ -69,6 +69,8 @@ interface DashboardChild {
   id: string;
   displayName: string;
   avatarKey: string | null;
+  gender: string | null;
+  birthDate: string | null;
   pinEnabled: boolean;
   pinUpdatedAt: string | null;
   level: number;
@@ -118,6 +120,8 @@ interface ChildProfile {
   userId: string | null;
   displayName: string;
   avatarKey: string | null;
+  gender: string | null;
+  birthDate: string | null;
   pinEnabled: boolean;
   pinUpdatedAt: string | null;
   level: number;
@@ -297,6 +301,8 @@ interface ChildLoginFormState {
 interface ChildFormState {
   displayName: string;
   avatarKey: string;
+  gender: string;
+  birthDate: string;
 }
 
 interface ChildPinFormState {
@@ -349,7 +355,9 @@ const initialChildLoginForm: ChildLoginFormState = {
 
 const initialChildForm: ChildFormState = {
   displayName: '',
-  avatarKey: ''
+  avatarKey: '',
+  gender: 'UNSPECIFIED',
+  birthDate: ''
 };
 
 const initialChildPinForm: ChildPinFormState = {
@@ -860,7 +868,9 @@ function App() {
         token,
         body: {
           displayName: childForm.displayName,
-          avatarKey: childForm.avatarKey || undefined
+          avatarKey: childForm.avatarKey || undefined,
+          gender: childForm.gender !== 'UNSPECIFIED' ? childForm.gender : undefined,
+          birthDate: childForm.birthDate || undefined
         }
       });
       setChildForm(initialChildForm);
@@ -2063,7 +2073,7 @@ function ChildrenProfilesPanel({
                 borderRadius: 2,
                 display: 'grid',
                 gap: 1.25,
-                gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(160px, 0.8fr) auto' },
+                gridTemplateColumns: { xs: '1fr', md: 'minmax(160px, 1fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) minmax(150px, 0.8fr) auto' },
                 p: 1.5
               }}
             >
@@ -2076,7 +2086,7 @@ function ChildrenProfilesPanel({
                 value={childForm.displayName}
               />
               <TextField
-                label="Avatar"
+                label="Profilabzeichen"
                 onChange={(event) => onChildFormChange({ ...childForm, avatarKey: event.target.value })}
                 select
                 size="small"
@@ -2089,6 +2099,26 @@ function ChildrenProfilesPanel({
                   </MenuItem>
                 ))}
               </TextField>
+              <TextField
+                label="Geschlecht"
+                onChange={(event) => onChildFormChange({ ...childForm, gender: event.target.value })}
+                select
+                size="small"
+                value={childForm.gender}
+              >
+                <MenuItem value="UNSPECIFIED">Keine Angabe</MenuItem>
+                <MenuItem value="GIRL">Mädchen</MenuItem>
+                <MenuItem value="BOY">Junge</MenuItem>
+                <MenuItem value="DIVERSE">Divers</MenuItem>
+              </TextField>
+              <TextField
+                label="Geburtsdatum"
+                onChange={(event) => onChildFormChange({ ...childForm, birthDate: event.target.value })}
+                size="small"
+                slotProps={{ inputLabel: { shrink: true } }}
+                type="date"
+                value={childForm.birthDate}
+              />
               <Button
                 disabled={childSaving}
                 startIcon={<PersonAddRoundedIcon />}

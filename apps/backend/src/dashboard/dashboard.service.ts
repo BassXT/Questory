@@ -7,6 +7,8 @@ const dashboardChildSelect = {
   id: true,
   displayName: true,
   avatarKey: true,
+  gender: true,
+  birthDate: true,
   level: true,
   xp: true,
   coins: true

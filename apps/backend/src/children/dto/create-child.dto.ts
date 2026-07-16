@@ -1,4 +1,4 @@
-import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsDateString, IsIn, IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class CreateChildDto {
   @IsString()
@@ -10,4 +10,13 @@ export class CreateChildDto {
   @IsString()
   @MaxLength(80)
   avatarKey?: string;
+
+  @IsOptional()
+  @IsString()
+  @IsIn(['GIRL', 'BOY', 'DIVERSE', 'UNSPECIFIED'])
+  gender?: string;
+
+  @IsOptional()
+  @IsDateString()
+  birthDate?: string;
 }

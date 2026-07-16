@@ -13,6 +13,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Pixelart-Avatar-Katalog um zusaetzliche Haare, Huete, Oberteile, Hosen, Schuhe, Brillen, Gadgets, Waffen und Tiere erweitert, darunter Katze, Hund, Loewe, Tiger und Elefant.
 - Pixelart-Avatar-Katalog um 53 weitere Items erweitert: mehr Frisuren/Haarfarben, Augenfarben, Blickvarianten, Huete, gemusterte Oberteile, Kleider, Roecke und Hosen.
 - Pixelart-Avatar-Renderer fuer Augenfarben, neue DiceBear-Hair-/Hat-Mappings, Kleid-Overlays und zusaetzliche Pixelmuster erweitert.
+- Kinderprofile um optionale Stammdaten `gender` und `birthDate` erweitert.
+- Avatar-Katalog um den Slot `mouth`, zusaetzliche Mundausdruecke, weitere Tiere, Gadgets und Waffen erweitert.
+- Frontend-Kinderprofilformular um Geschlecht und Geburtsdatum erweitert; das alte Avatar-Preset-Feld heisst nun Profilabzeichen.
 - Avatar-Vorschau zur Ganzkoerperbuehne erweitert: Toon Head rendert Kopf/Gesicht/Haare, Questory rendert Koerper, Oberteil, Hose, Schuhe, Hintergruende und Gadgets als eigene SVG-Layer.
 - Avatar-Renderer von DiceBear/Avataaars auf DiceBear/Toon Head umgestellt; der Stil wirkt cartooniger und kindgerechter, bleibt aber weiterhin self-hosted ueber lokale npm-Pakete.
 - Avatar-Renderer auf DiceBear/Avataaars umgestellt; Questory-Loadout-Items werden nun auf professionelle Avatar-Optionen fuer Haare, Gesicht, Kleidung, Brillen, Farben und Hintergruende gemappt.
@@ -139,6 +142,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Build nach Pixelart-Halskorrektur erfolgreich.
 - Frontend-Build nach Pixelart-Koerperausrichtung erfolgreich.
 - Frontend-Build, Backend-Build und Prisma Validate nach Avatar-Katalog-Erweiterung erfolgreich.
+- Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Kinderprofil-/Avatar-Extras-Slice erfolgreich.
 - Portainer-Redeploy nach Avatar-Katalog-Erweiterung per API-Script erfolgreich.
 - LXC-Health nach Avatar-Katalog-Erweiterung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Avatar-Katalog-Erweiterung erfolgreich: 118 Avatar-Items geladen, darunter 26 Haare, 12 Augen, 12 Huete, 21 Oberteile und 13 Unterteile.

@@ -77,6 +77,8 @@ model ChildProfile {
   user              User?              @relation(fields: [userId], references: [id], onDelete: SetNull)
   displayName       String
   avatarKey         String?
+  gender            String?
+  birthDate         DateTime?
   pinHash           String?
   pinEnabled        Boolean            @default(false)
   pinUpdatedAt      DateTime?

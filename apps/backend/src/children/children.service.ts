@@ -12,6 +12,8 @@ const childSelect = {
   userId: true,
   displayName: true,
   avatarKey: true,
+  gender: true,
+  birthDate: true,
   pinEnabled: true,
   pinUpdatedAt: true,
   level: true,
@@ -37,7 +39,9 @@ export class ChildrenService {
       data: {
         familyId: user.familyId,
         displayName: dto.displayName.trim(),
-        avatarKey: dto.avatarKey?.trim() || null
+        avatarKey: dto.avatarKey?.trim() || null,
+        gender: dto.gender && dto.gender !== 'UNSPECIFIED' ? dto.gender : null,
+        birthDate: dto.birthDate ? new Date(dto.birthDate) : null
       },
       select: childSelect
     });

@@ -23,6 +23,7 @@ export type AvatarSlot =
   | 'body'
   | 'hair'
   | 'eyes'
+  | 'mouth'
   | 'hat'
   | 'bottom'
   | 'top'
@@ -83,6 +84,7 @@ const slotLabels: Record<AvatarSlot, string> = {
   body: 'Figur',
   hair: 'Haare',
   eyes: 'Augen',
+  mouth: 'Mund',
   hat: 'Hut',
   top: 'Oberteil',
   bottom: 'Hose',
@@ -93,7 +95,7 @@ const slotLabels: Record<AvatarSlot, string> = {
   pet: 'Tier'
 };
 
-const slotOrder: AvatarSlot[] = ['background', 'body', 'hair', 'eyes', 'hat', 'top', 'bottom', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'];
+const slotOrder: AvatarSlot[] = ['background', 'body', 'hair', 'eyes', 'mouth', 'hat', 'top', 'bottom', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'];
 const optionalSlots = new Set<AvatarSlot>(['hat', 'glasses', 'gadget', 'weapon', 'pet']);
 
 export function AvatarBuilderPanel({
@@ -349,6 +351,7 @@ function AvatarPreview({
   const body = getEquippedItem(equippedItems, itemsByKey, 'body');
   const hair = getEquippedItem(equippedItems, itemsByKey, 'hair');
   const eyes = getEquippedItem(equippedItems, itemsByKey, 'eyes');
+  const mouth = getEquippedItem(equippedItems, itemsByKey, 'mouth');
   const hat = getEquippedItem(equippedItems, itemsByKey, 'hat');
   const top = getEquippedItem(equippedItems, itemsByKey, 'top');
   const bottom = getEquippedItem(equippedItems, itemsByKey, 'bottom');
@@ -374,7 +377,8 @@ function AvatarPreview({
         hair: [resolvePixelHair(hair?.key)],
         eyes: [resolvePixelEyes(eyes?.key)],
         eyesColor: [stripHex(eyes?.colorPrimary ?? '#28384f')],
-        mouth: [resolvePixelMouth(eyes?.key)],
+        mouth: [resolvePixelMouth(mouth?.key ?? eyes?.key)],
+        mouthColor: [stripHex(mouth?.colorPrimary ?? '#9a5a4a')],
         clothing: [resolvePixelClothing(top?.key)],
         clothingColor: [stripHex(top?.colorPrimary ?? '#2568d8')],
         glasses: [resolvePixelGlasses(glasses?.key)],
@@ -386,7 +390,7 @@ function AvatarPreview({
         accessoriesProbability: 0,
         beardProbability: 0
       }).toDataUri(),
-    [body, childName, equippedItems, eyes, glasses, hair, hat, top]
+    [body, childName, equippedItems, eyes, glasses, hair, hat, mouth, top]
   );
   const equipmentChips = [
     hat ? `Hut: ${hat.name}` : null,
@@ -526,6 +530,22 @@ function resolvePixelEyes(itemKey: string | undefined) {
 
 function resolvePixelMouth(itemKey: string | undefined) {
   switch (itemKey) {
+    case 'mouth-grin':
+      return 'happy08';
+    case 'mouth-soft':
+      return 'happy02';
+    case 'mouth-focus':
+      return 'happy09';
+    case 'mouth-laugh':
+      return 'happy13';
+    case 'mouth-surprise':
+      return 'happy11';
+    case 'mouth-brave':
+      return 'happy10';
+    case 'mouth-magic':
+      return 'happy12';
+    case 'mouth-smile':
+      return 'happy04';
     case 'eyes-smile':
     case 'eyes-blue':
     case 'eyes-green':
@@ -966,6 +986,56 @@ function PixelGadgetFront({ item }: { item: AvatarItem | undefined }) {
     );
   }
 
+  if (item.key === 'gadget-lantern') {
+    return (
+      <g>
+        <rect x="24" y="27" width="4" height="5" fill={color} />
+        <rect x="25" y="26" width="2" height="1" fill={accent} />
+        <rect x="25" y="29" width="2" height="2" fill="#fff3b0" />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-camera') {
+    return (
+      <g>
+        <rect x="23" y="30" width="6" height="4" fill={color} />
+        <rect x="25" y="31" width="2" height="2" fill={accent} />
+        <rect x="24" y="29" width="2" height="1" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-sketchbook') {
+    return (
+      <g>
+        <rect x="23" y="29" width="5" height="6" fill={color} />
+        <rect x="24" y="30" width="3" height="1" fill={accent} />
+        <rect x="24" y="32" width="2" height="1" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-telescope') {
+    return (
+      <g>
+        <rect x="23" y="25" width="6" height="2" fill={color} />
+        <rect x="28" y="24" width="1" height="1" fill={accent} />
+        <rect x="24" y="27" width="1" height="6" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-crystal') {
+    return (
+      <g>
+        <rect x="25" y="28" width="2" height="1" fill={accent} />
+        <rect x="24" y="29" width="4" height="4" fill={color} />
+        <rect x="25" y="30" width="2" height="2" fill="#ffffff" opacity="0.35" />
+      </g>
+    );
+  }
+
   return (
     <g>
       <rect x="23" y="29" width="5" height="5" fill={color} />
@@ -1011,6 +1081,28 @@ function PixelWeapon({ item }: { item: AvatarItem | undefined }) {
     );
   }
 
+  if (item.key === 'weapon-bow') {
+    return (
+      <g>
+        <rect x="4" y="22" width="1" height="10" fill={color} />
+        <rect x="5" y="23" width="1" height="2" fill={accent} />
+        <rect x="5" y="29" width="1" height="2" fill={accent} />
+        <rect x="6" y="26" width="1" height="1" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'weapon-rocket') {
+    return (
+      <g>
+        <rect x="4" y="21" width="3" height="9" fill={color} />
+        <rect x="5" y="19" width="1" height="2" fill={accent} />
+        <rect x="3" y="28" width="1" height="2" fill={accent} />
+        <rect x="7" y="28" width="1" height="2" fill={accent} />
+      </g>
+    );
+  }
+
   return <rect x="5" y="22" width="1" height="15" fill={color} />;
 }
 
@@ -1036,18 +1128,57 @@ function PixelPet({ item }: { item: AvatarItem | undefined }) {
     );
   }
 
-  const isCat = item.key === 'pet-cat';
+  if (item.key === 'pet-panda') {
+    return (
+      <g>
+        <rect x={baseX} y={baseY - 2} width="6" height="4" fill={color} />
+        <rect x={baseX + 1} y={baseY - 5} width="4" height="4" fill={color} />
+        <rect x={baseX} y={baseY - 6} width="1" height="1" fill={accent} />
+        <rect x={baseX + 5} y={baseY - 6} width="1" height="1" fill={accent} />
+        <rect x={baseX + 1} y={baseY - 4} width="1" height="1" fill={accent} />
+        <rect x={baseX + 4} y={baseY - 4} width="1" height="1" fill={accent} />
+        <rect x={baseX + 1} y={baseY + 2} width="1" height="2" fill={accent} />
+        <rect x={baseX + 4} y={baseY + 2} width="1" height="2" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'pet-robot') {
+    return (
+      <g>
+        <rect x={baseX} y={baseY - 3} width="6" height="5" fill={color} />
+        <rect x={baseX + 1} y={baseY - 5} width="4" height="3" fill={color} />
+        <rect x={baseX + 1} y={baseY - 4} width="1" height="1" fill={accent} />
+        <rect x={baseX + 4} y={baseY - 4} width="1" height="1" fill={accent} />
+        <rect x={baseX + 2} y={baseY - 6} width="2" height="1" fill={accent} />
+        <rect x={baseX + 1} y={baseY + 2} width="1" height="2" fill={accent} />
+        <rect x={baseX + 4} y={baseY + 2} width="1" height="2" fill={accent} />
+      </g>
+    );
+  }
+
+  const isCat = item.key === 'pet-cat' || item.key === 'pet-fox' || item.key === 'pet-bunny';
   const isTiger = item.key === 'pet-tiger';
   const isLion = item.key === 'pet-lion';
+  const isDragon = item.key === 'pet-dragon';
+  const isUnicorn = item.key === 'pet-unicorn';
 
   return (
     <g>
       <rect x={baseX} y={baseY - 2} width="6" height="4" fill={color} />
       <rect x={baseX + 1} y={baseY - 5} width="4" height="4" fill={color} />
-      {isCat || isTiger ? (
+      {isCat || isTiger || isDragon || isUnicorn ? (
         <g>
           <rect x={baseX} y={baseY - 6} width="1" height="1" fill={color} />
           <rect x={baseX + 5} y={baseY - 6} width="1" height="1" fill={color} />
+        </g>
+      ) : null}
+      {isUnicorn ? <rect x={baseX + 3} y={baseY - 7} width="1" height="2" fill={accent} /> : null}
+      {isDragon ? (
+        <g>
+          <rect x={baseX + 6} y={baseY - 4} width="2" height="2" fill={accent} />
+          <rect x={baseX + 1} y={baseY - 7} width="1" height="1" fill={accent} />
+          <rect x={baseX + 4} y={baseY - 7} width="1" height="1" fill={accent} />
         </g>
       ) : null}
       {isLion ? <rect x={baseX} y={baseY - 6} width="6" height="6" fill={accent} opacity="0.8" /> : null}

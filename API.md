@@ -247,11 +247,15 @@ Request:
 ```json
 {
   "displayName": "Mia",
-  "avatarKey": "starter-fox"
+  "avatarKey": "starter-fox",
+  "gender": "GIRL",
+  "birthDate": "2018-05-21"
 }
 ```
 
-Response enthaelt `pinEnabled` und `pinUpdatedAt`, aber niemals `pinHash`.
+`avatarKey` ist nur noch ein Profilabzeichen fuer kleine Listen/Badges; der echte Avatar wird ueber den Avatar-Builder gepflegt. `gender` ist optional und akzeptiert `GIRL`, `BOY`, `DIVERSE` oder `UNSPECIFIED`. `birthDate` ist optional im ISO-Datumsformat.
+
+Response enthaelt `gender`, `birthDate`, `pinEnabled` und `pinUpdatedAt`, aber niemals `pinHash`.
 
 ### `GET /api/children/{childId}`
 
@@ -320,7 +324,7 @@ Hinweise:
 - Kinder mit eigenem Login koennen nur den eigenen Avatar abrufen.
 - Items werden automatisch ueber das Kinder-Level freigeschaltet; spaetere manuelle Inventar-Freischaltungen sind ueber `ChildAvatarItem` vorbereitet.
 - `equippedItems` ist eine Slot-zu-Item-Key-Map, zum Beispiel `top -> top-hoodie-blue`.
-- Aktive Slots sind `background`, `body`, `hair`, `eyes`, `hat`, `bottom`, `top`, `shoes`, `glasses`, `gadget`, `weapon` und `pet`.
+- Aktive Slots sind `background`, `body`, `hair`, `eyes`, `mouth`, `hat`, `bottom`, `top`, `shoes`, `glasses`, `gadget`, `weapon` und `pet`.
 
 Response-Auszug:
 
@@ -333,12 +337,13 @@ Response-Auszug:
     "xp": 260,
     "coins": 42
   },
-  "slots": ["background", "body", "hair", "eyes", "hat", "bottom", "top", "shoes", "glasses", "gadget", "weapon", "pet"],
+  "slots": ["background", "body", "hair", "eyes", "mouth", "hat", "bottom", "top", "shoes", "glasses", "gadget", "weapon", "pet"],
   "equippedItems": {
     "background": "background-meadow",
     "body": "body-sunrise",
     "hair": "hair-swoop",
     "eyes": "eyes-bright",
+    "mouth": "mouth-smile",
     "bottom": "bottom-jeans",
     "top": "top-hoodie-blue",
     "shoes": "shoes-sneaker-red",

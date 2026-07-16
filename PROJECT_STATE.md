@@ -332,17 +332,24 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Avatar-Katalog-Erweiterung per API-Script erfolgreich.
 - LXC-Health nach Avatar-Katalog-Erweiterung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Avatar-Katalog-Erweiterung erfolgreich: 118 Avatar-Items geladen, darunter 26 Haare, 12 Augen, 12 Huete, 21 Oberteile, 13 Unterteile und weiterhin Tiere/Waffen/Gadgets.
+- Prisma-Migration `20260716193000_child_profile_details_and_avatar_extras` angelegt: Kinderprofile erhalten optionale Stammdaten `gender` und `birthDate`; der Avatar-Katalog erhaelt den neuen Slot `mouth` sowie weitere Tiere, Gadgets und Waffen.
+- Avatar-Werkstatt um den Slot `Mund` erweitert; Mundauswahl, Mundfarbe, neue Begleiter, Gadgets und Waffen werden in der Pixelart-Vorschau gemappt.
+- Kinderprofil-Anlage im Frontend um `Geschlecht` und `Geburtsdatum` erweitert; das alte Avatar-Preset-Dropdown heisst nun `Profilabzeichen`, damit es nicht mit dem echten Avatar-Builder verwechselt wird.
+- Eltern/Admin muessen nicht in den Kinderlogin wechseln: der Elternbereich kann Quests, Shop, Freigaben, Statistiken und Avatare fuer jedes Kind ueber den Familienkontext verwalten.
+- Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Kinderprofil-/Avatar-Extras-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Naechste UX-Verbesserung priorisieren, zum Beispiel Freigaben kompakter machen, Avatar-Items erweitern oder die Vorlagenbibliothek serverseitig editierbar machen.
+- Naechste UX-Verbesserung priorisieren, zum Beispiel Umlaute in der gesamten UI nachziehen, Freigaben kompakter machen oder die Vorlagenbibliothek serverseitig editierbar machen.
 
 ## Naechster Schritt
 
 Als naechstes den alten Toon-Head/Ganzkoerper-Hybrid-Code aus `avatar-builder.tsx` aufraeumen und den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen. Danach ein wiederholbares Playwright-Smoke-Test-Setup fuer Login, Avatar-Tab, Slot-Auswahl und Konsolenfehlerfreiheit ergaenzen.
+
+Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep erfolgen, um sichtbare deutsche Texte wieder mit Umlauten zu schreiben.
 
 ## Architekturentscheidungen
 

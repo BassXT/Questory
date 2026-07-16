@@ -4,13 +4,14 @@ import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateAvatarLoadoutDto } from './dto/update-avatar-loadout.dto';
 
-const avatarSlots = ['background', 'body', 'hair', 'eyes', 'hat', 'bottom', 'top', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'] as const;
+const avatarSlots = ['background', 'body', 'hair', 'eyes', 'mouth', 'hat', 'bottom', 'top', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'] as const;
 
 const defaultEquippedItems: Record<string, string> = {
   background: 'background-meadow',
   body: 'body-sunrise',
   hair: 'hair-swoop',
   eyes: 'eyes-bright',
+  mouth: 'mouth-smile',
   bottom: 'bottom-jeans',
   top: 'top-hoodie-blue',
   shoes: 'shoes-sneaker-red'
@@ -22,6 +23,8 @@ const avatarChildSelect = {
   userId: true,
   displayName: true,
   avatarKey: true,
+  gender: true,
+  birthDate: true,
   level: true,
   xp: true,
   coins: true
