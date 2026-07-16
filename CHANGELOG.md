@@ -122,6 +122,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Avatar-Renderer-Politur erfolgreich.
+- Portainer-Redeploy nach Avatar-Renderer-Politur per API-Script erfolgreich.
+- LXC-Health nach Avatar-Renderer-Politur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des polierten Avatar-Renderers erfolgreich: SVG sichtbar, item-spezifische Details gerendert, Level-Lock aktiv und keine Konsolenfehler.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Avatar-Builder-Slice erfolgreich.
 - Portainer-Redeploy nach Avatar-Builder-Slice per API-Script erfolgreich.
 - LXC-Health nach Avatar-Builder-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
