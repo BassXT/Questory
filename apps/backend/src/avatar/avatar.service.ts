@@ -4,7 +4,7 @@ import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { UpdateAvatarLoadoutDto } from './dto/update-avatar-loadout.dto';
 
-const avatarSlots = ['background', 'body', 'hair', 'eyes', 'bottom', 'top', 'shoes', 'glasses', 'gadget'] as const;
+const avatarSlots = ['background', 'body', 'hair', 'eyes', 'hat', 'bottom', 'top', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'] as const;
 
 const defaultEquippedItems: Record<string, string> = {
   background: 'background-meadow',

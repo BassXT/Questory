@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Shop-Belohnungen besitzen jetzt einen aufgeraeumten Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, waehrend freie Bild-URLs weiterhin moeglich bleiben. Das Kind-Dashboard zeigt Abenteuerstatus, XP-Fortschritt, naechste Avatar-Unlocks und Schnellzugriff auf Avatar/Quests/Shop; Eltern koennen Kinderprofile direkt oeffnen, waehrend Kinder fuer Eltern/Admin-Funktionen weiterhin Eltern-Authentifizierung brauchen. Ein erster echter Avatar-Builder ist auf dem LXC deployed und getestet: Datenbank-Katalog, Level-Unlocks, vorbereitetes Kinder-Inventar und gespeicherte Loadouts. Der urspruengliche selbst gezeichnete SVG-Renderer wurde erst durch DiceBear/Avataaars und danach durch DiceBear/Toon Head ersetzt. Aktuell nutzt Questory einen Hybrid-Renderer: Toon Head fuer Kopf/Gesicht/Haare und eigene SVG-Layer fuer Koerper, Oberteil, Hose, Schuhe, Hintergrund und Gadgets. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Shop-Belohnungen besitzen jetzt einen aufgeraeumten Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, waehrend freie Bild-URLs weiterhin moeglich bleiben. Das Kind-Dashboard zeigt Abenteuerstatus, XP-Fortschritt, naechste Avatar-Unlocks und Schnellzugriff auf Avatar/Quests/Shop; Eltern koennen Kinderprofile direkt oeffnen, waehrend Kinder fuer Eltern/Admin-Funktionen weiterhin Eltern-Authentifizierung brauchen. Ein erster echter Avatar-Builder ist auf dem LXC deployed und getestet: Datenbank-Katalog, Level-Unlocks, vorbereitetes Kinder-Inventar und gespeicherte Loadouts. Nach mehreren Renderer-Spikes ist Pixelart jetzt die aktive Richtung: DiceBear Pixel Art fuer Kopf/Gesicht/Haar/Hut/Brille und Questory-eigene Pixel-SVG-Layer fuer Koerper, Kleidung, Schuhe, Waffen, Gadgets und Tiere. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -312,6 +312,11 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Ganzkoerper-Avatarbuehne per API-Script erfolgreich.
 - LXC-Health nach Ganzkoerper-Avatarbuehne erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test der Ganzkoerper-Avatarbuehne erfolgreich: Avatar-Tab, sichtbare Hose/Schuhe, eingebetteter Toon-Head-Kopf, kompakte Vorschau im Viewport und Konsolenfehlerfreiheit geprueft.
+- Avatar-Renderer auf Pixelart umgestellt: `@dicebear/pixel-art` ersetzt Toon Head fuer Kopf/Gesicht/Haar/Hut/Brille.
+- Avatar-API-Slots um `hat`, `weapon` und `pet` erweitert.
+- Prisma-Migration `20260716124500_avatar_pixel_items` mit zusaetzlichen Pixel-Haaren, Hueten, Oberteilen, Hosen, Schuhen, Brillen, Gadgets, Waffen und Tieren angelegt.
+- Pixelart-Ganzkoerper-Sprite rendert Kleidung, Schuhe, Waffen, Gadgets und Tiere wie Katze, Hund, Loewe, Tiger und Elefant als einheitliche Pixel-SVG-Layer.
+- Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
 
 ## Offene Aufgaben
 
@@ -322,7 +327,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes Brillen als echtes Kopf-Overlay pruefen oder den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
+Als naechstes den Pixelart-Avatar-Slice auf dem LXC deployen und im Browser pruefen. Danach bei Gefallen den alten Toon-Head/Ganzkoerper-Hybrid-Code aus `avatar-builder.tsx` aufraeumen und den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
 
 ## Architekturentscheidungen
 
@@ -363,7 +368,7 @@ Als naechstes Brillen als echtes Kopf-Overlay pruefen oder den Avatar-Builder pe
 - Level werden serverseitig nach `floor(sqrt(totalXp / 100)) + 1` berechnet und bei der Quest-Bestaetigung aktualisiert.
 - XP und Coins haben getrennte Rollen: XP dient langfristig Leveln, Avatar-Unlocks, Gadgets und spaeter Gebieten; Coins bleiben die kurzfristige Shop-Waehrung fuer echte Belohnungen.
 - `avatarKey` bleibt als einfache Avatar-Preset-ID fuer kleine Badges erhalten. Der echte Avatar-Builder nutzt `AvatarItem` als globalen Katalog, Level-Freischaltungen ueber `requiredLevel`, optionale Spezial-Unlocks ueber `ChildAvatarItem` und gespeicherte Ausruestung ueber `ChildAvatarLoadout.equippedItems`.
-- Die visuelle Avatar-Darstellung nutzt `@dicebear/core` und `@dicebear/toon-head` ueber lokale npm-Pakete fuer Kopf/Gesicht/Haare. Koerper, Kleidung, Hosen, Schuhe, Hintergruende und Gadgets werden in Questory als eigene SVG-Layer gerendert. Das vermeidet externe API-Abhaengigkeit, nutzt professionelle Kopf-Assets und macht die Ausruestungs-Slots im Avatar sichtbar.
+- Die visuelle Avatar-Darstellung nutzt `@dicebear/core` und `@dicebear/pixel-art` ueber lokale npm-Pakete fuer Kopf/Gesicht/Haar/Hut/Brille. Koerper, Kleidung, Hosen, Schuhe, Hintergruende, Gadgets, Waffen und Tiere werden in Questory als eigene Pixel-SVG-Layer gerendert. Das vermeidet externe API-Abhaengigkeit und haelt alle Ausruestungen in einem gemeinsamen Rasterstil.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
@@ -393,7 +398,7 @@ Als naechstes Brillen als echtes Kopf-Overlay pruefen oder den Avatar-Builder pe
 - Erste CI-Konfiguration vorhanden und erster GitHub-Lauf erfolgreich.
 - Port `3000` ist auf dem LXC bereits belegt; Questory nutzt fuer das Backend aktuell `3001`.
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
-- Der Frontend-Hauptchunk ist nach DiceBear/Toon Head weiterhin groesser als vor dem Avatar-Renderer-Slice. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
+- Der Frontend-Hauptchunk ist nach DiceBear Pixel Art weiterhin groesser als vor dem Avatar-Renderer-Slice. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
 
 ## Ideen fuer spaeter
 

@@ -243,11 +243,14 @@ Slots:
 - `body`
 - `hair`
 - `eyes`
+- `hat`
 - `bottom`
 - `top`
 - `shoes`
 - `glasses`
 - `gadget`
+- `weapon`
+- `pet`
 
 `requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` ist fuer spaetere Renderer/Asset-Pipelines vorbereitet.
 

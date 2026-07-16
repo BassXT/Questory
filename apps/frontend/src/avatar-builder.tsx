@@ -4,7 +4,7 @@ import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import { createAvatar } from '@dicebear/core';
-import * as toonHead from '@dicebear/toon-head';
+import * as pixelArt from '@dicebear/pixel-art';
 import {
   Box,
   Button,
@@ -18,7 +18,19 @@ import {
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 
-export type AvatarSlot = 'background' | 'body' | 'hair' | 'eyes' | 'bottom' | 'top' | 'shoes' | 'glasses' | 'gadget';
+export type AvatarSlot =
+  | 'background'
+  | 'body'
+  | 'hair'
+  | 'eyes'
+  | 'hat'
+  | 'bottom'
+  | 'top'
+  | 'shoes'
+  | 'glasses'
+  | 'gadget'
+  | 'weapon'
+  | 'pet';
 
 export interface AvatarItem {
   key: string;
@@ -71,15 +83,18 @@ const slotLabels: Record<AvatarSlot, string> = {
   body: 'Figur',
   hair: 'Haare',
   eyes: 'Augen',
+  hat: 'Hut',
   top: 'Oberteil',
   bottom: 'Hose',
   shoes: 'Schuhe',
   glasses: 'Brille',
-  gadget: 'Gadget'
+  gadget: 'Gadget',
+  weapon: 'Waffe',
+  pet: 'Tier'
 };
 
-const slotOrder: AvatarSlot[] = ['background', 'body', 'hair', 'eyes', 'top', 'bottom', 'shoes', 'glasses', 'gadget'];
-const optionalSlots = new Set<AvatarSlot>(['glasses', 'gadget']);
+const slotOrder: AvatarSlot[] = ['background', 'body', 'hair', 'eyes', 'hat', 'top', 'bottom', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'];
+const optionalSlots = new Set<AvatarSlot>(['hat', 'glasses', 'gadget', 'weapon', 'pet']);
 
 export function AvatarBuilderPanel({
   avatar,
@@ -334,122 +349,86 @@ function AvatarPreview({
   const body = getEquippedItem(equippedItems, itemsByKey, 'body');
   const hair = getEquippedItem(equippedItems, itemsByKey, 'hair');
   const eyes = getEquippedItem(equippedItems, itemsByKey, 'eyes');
+  const hat = getEquippedItem(equippedItems, itemsByKey, 'hat');
   const top = getEquippedItem(equippedItems, itemsByKey, 'top');
   const bottom = getEquippedItem(equippedItems, itemsByKey, 'bottom');
   const shoes = getEquippedItem(equippedItems, itemsByKey, 'shoes');
   const glasses = getEquippedItem(equippedItems, itemsByKey, 'glasses');
   const gadget = getEquippedItem(equippedItems, itemsByKey, 'gadget');
+  const weapon = getEquippedItem(equippedItems, itemsByKey, 'weapon');
+  const pet = getEquippedItem(equippedItems, itemsByKey, 'pet');
   const skin = body?.colorPrimary ?? '#f2b28d';
-  const skinShadow = body?.colorSecondary ?? '#d98a62';
   const topColor = top?.colorPrimary ?? '#2568d8';
   const topAccent = top?.colorSecondary ?? '#1d4f9f';
   const bottomColor = bottom?.colorPrimary ?? '#355f9f';
   const bottomAccent = bottom?.colorSecondary ?? '#233f6c';
   const shoeColor = shoes?.colorPrimary ?? '#d63f61';
   const shoeAccent = shoes?.colorSecondary ?? '#8f263d';
-  const avatarDataUri = useMemo(
+  const pixelHeadDataUri = useMemo(
     () =>
-      createAvatar(toonHead, {
+      createAvatar(pixelArt, {
         seed: `${childName}:${Object.values(equippedItems).join(':')}`,
-        backgroundColor: [stripHex(background?.colorPrimary ?? '#d9f2df')],
+        backgroundColor: ['transparent'],
         skinColor: [stripHex(body?.colorPrimary ?? '#f2b28d')],
         hairColor: [stripHex(hair?.colorPrimary ?? '#5b3826')],
-        hair: [resolveToonHeadHair(hair?.key)],
-        hairProbability: 100,
-        rearHair: [resolveToonHeadRearHair(hair?.key)],
-        rearHairProbability: shouldUseToonHeadRearHair(hair?.key) ? 100 : 0,
-        eyes: [resolveToonHeadEyes(eyes?.key)],
-        eyebrows: [resolveToonHeadEyebrows(eyes?.key)],
-        mouth: [resolveToonHeadMouth(eyes?.key)],
-        clothes: [resolveToonHeadClothes(top?.key)],
-        clothesColor: [stripHex(top?.colorPrimary ?? '#2568d8')],
+        hair: [resolvePixelHair(hair?.key)],
+        eyes: [resolvePixelEyes(eyes?.key)],
+        mouth: [resolvePixelMouth(eyes?.key)],
+        clothing: [resolvePixelClothing(top?.key)],
+        clothingColor: [stripHex(top?.colorPrimary ?? '#2568d8')],
+        glasses: [resolvePixelGlasses(glasses?.key)],
+        glassesColor: [stripHex(glasses?.colorPrimary ?? '#233044')],
+        glassesProbability: glasses ? 100 : 0,
+        hat: [resolvePixelHat(hat?.key)],
+        hatColor: [stripHex(hat?.colorPrimary ?? '#d63f61')],
+        hatProbability: hat ? 100 : 0,
+        accessoriesProbability: 0,
         beardProbability: 0
       }).toDataUri(),
-    [background, body, childName, equippedItems, eyes, hair, top]
+    [body, childName, equippedItems, eyes, glasses, hair, hat, top]
   );
   const equipmentChips = [
+    hat ? `Hut: ${hat.name}` : null,
     glasses ? `Brille: ${glasses.name}` : null,
-    gadget ? `Gadget: ${gadget.name}` : null
+    gadget ? `Gadget: ${gadget.name}` : null,
+    weapon ? `Waffe: ${weapon.name}` : null,
+    pet ? `Tier: ${pet.name}` : null
   ].filter(Boolean);
 
   return (
-    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 310, width: '100%' }}>
+    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 360, width: '100%' }}>
       <Box
         component="svg"
         aria-label={getAvatarAlt(childName)}
         role="img"
-        viewBox="0 0 360 520"
+        shapeRendering="crispEdges"
+        viewBox="0 0 32 48"
         sx={{
-          aspectRatio: '9 / 13',
+          aspectRatio: '2 / 3',
           bgcolor: background?.colorPrimary ?? '#d9f2df',
           border: '10px solid',
           borderColor: 'rgba(255,255,255,0.46)',
           borderRadius: 4,
           boxShadow: '0 18px 45px rgba(23, 32, 51, 0.18)',
           display: 'block',
-          maxWidth: 310,
+          imageRendering: 'pixelated',
+          maxWidth: 360,
           width: '100%'
         }}
       >
-        <defs>
-          <linearGradient id="questory-full-bg" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={background?.colorPrimary ?? '#d9f2df'} />
-            <stop offset="100%" stopColor={background?.colorSecondary ?? '#8dd3a5'} />
-          </linearGradient>
-          <linearGradient id="questory-full-skin" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(skin, 0.14)} />
-            <stop offset="100%" stopColor={skin} />
-          </linearGradient>
-          <linearGradient id="questory-full-top" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(topColor, 0.16)} />
-            <stop offset="100%" stopColor={topColor} />
-          </linearGradient>
-          <linearGradient id="questory-full-bottom" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(bottomColor, 0.12)} />
-            <stop offset="100%" stopColor={bottomColor} />
-          </linearGradient>
-          <linearGradient id="questory-full-shoes" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(shoeColor, 0.12)} />
-            <stop offset="100%" stopColor={shoeColor} />
-          </linearGradient>
-          <filter id="questory-full-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="14" stdDeviation="12" floodColor="#1b2a3f" floodOpacity="0.2" />
-          </filter>
-          <filter id="questory-full-soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="7" stdDeviation="5" floodColor="#1b2a3f" floodOpacity="0.18" />
-          </filter>
-          <clipPath id="questory-full-head-clip">
-            <circle cx="180" cy="118" r="76" />
-          </clipPath>
-        </defs>
-        <rect width="360" height="520" rx="34" fill="url(#questory-full-bg)" />
-        <rect x="18" y="18" width="324" height="484" rx="27" fill="#ffffff" opacity="0.16" />
-        <FullAvatarBackground itemKey={background?.key} />
-        <ellipse cx="180" cy="454" rx="108" ry="22" fill="#203047" opacity="0.15" />
-
-        <g filter="url(#questory-full-shadow)">
-          <FullAvatarBackGadget item={gadget} />
-          <path d="M156 165 H204 V210 H156 Z" fill="url(#questory-full-skin)" />
-          <path d="M157 178 C167 188 193 188 203 178 V211 H157 Z" fill={skinShadow} opacity="0.25" />
-
-          <path d="M116 203 C132 189 228 189 244 203 L229 319 C213 333 147 333 131 319 Z" fill="url(#questory-full-top)" />
-          <path d="M132 214 C147 228 213 228 228 214" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.34" />
-          <FullAvatarTopDetails itemKey={top?.key} accent={topAccent} color={topColor} />
-
-          <path d="M123 214 C101 247 106 302 128 328 C136 337 148 327 140 316 C124 292 128 252 144 226 Z" fill="url(#questory-full-skin)" />
-          <path d="M237 214 C259 247 254 302 232 328 C224 337 212 327 220 316 C236 292 232 252 216 226 Z" fill="url(#questory-full-skin)" />
-          <circle cx="132" cy="329" r="13" fill="url(#questory-full-skin)" />
-          <circle cx="228" cy="329" r="13" fill="url(#questory-full-skin)" />
-
-          <FullAvatarBottom itemKey={bottom?.key} accent={bottomAccent} />
-          <FullAvatarShoes itemKey={shoes?.key} accent={shoeAccent} />
-
-          <circle cx="180" cy="120" r="82" fill="#ffffff" opacity="0.48" />
-          <image href={avatarDataUri} x="66" y="-10" width="228" height="228" clipPath="url(#questory-full-head-clip)" />
-          <circle cx="180" cy="120" r="77" fill="none" stroke="#ffffff" strokeWidth="7" opacity="0.42" />
-
-          <FullAvatarFrontGadget item={gadget} />
-        </g>
+        <rect width="32" height="48" fill={background?.colorPrimary ?? '#d9f2df'} />
+        <PixelBackground itemKey={background?.key} color={background?.colorSecondary ?? '#8dd3a5'} />
+        <rect x="4" y="42" width="24" height="2" fill="#203047" opacity="0.18" />
+        <PixelPet item={pet} />
+        <PixelWeapon item={weapon} />
+        <PixelGadgetBack item={gadget} />
+        <rect x="12" y="17" width="8" height="4" fill={skin} />
+        <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
+        <PixelArms skin={skin} />
+        <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
+        <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
+        <image href={pixelHeadDataUri} x="8" y="2" width="16" height="16" />
+        <PixelGadgetFront item={gadget} />
       </Box>
       {equipmentChips.length > 0 ? (
         <Stack direction="row" spacing={0.75} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
@@ -462,82 +441,392 @@ function AvatarPreview({
   );
 }
 
-function resolveToonHeadHair(itemKey: string | undefined) {
+function resolvePixelHair(itemKey: string | undefined) {
   switch (itemKey) {
+    case 'hair-pixel-long':
+      return 'long05';
+    case 'hair-pixel-wild':
+      return 'short20';
+    case 'hair-pixel-blue':
+      return 'short13';
     case 'hair-buns':
-      return 'bun';
+      return 'long19';
     case 'hair-curly':
-      return 'spiky';
+      return 'short15';
     case 'hair-silver':
-      return 'sideComed';
+      return 'long09';
     default:
-      return 'undercut';
+      return 'short01';
   }
 }
 
-function resolveToonHeadRearHair(itemKey: string | undefined) {
-  switch (itemKey) {
-    case 'hair-buns':
-      return 'shoulderHigh';
-    case 'hair-curly':
-      return 'neckHigh';
-    case 'hair-silver':
-      return 'longWavy';
-    default:
-      return 'neckHigh';
-  }
-}
-
-function shouldUseToonHeadRearHair(itemKey: string | undefined) {
-  return itemKey === 'hair-buns' || itemKey === 'hair-curly' || itemKey === 'hair-silver';
-}
-
-function resolveToonHeadEyes(itemKey: string | undefined) {
+function resolvePixelEyes(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
-      return 'happy';
+      return 'variant01';
     case 'eyes-focus':
-      return 'humble';
+      return 'variant09';
     default:
-      return 'wide';
+      return 'variant08';
   }
 }
 
-function resolveToonHeadEyebrows(itemKey: string | undefined) {
+function resolvePixelMouth(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
-      return 'happy';
+      return 'happy04';
     case 'eyes-focus':
-      return 'neutral';
+      return 'happy09';
     default:
-      return 'raised';
+      return 'happy01';
   }
 }
 
-function resolveToonHeadMouth(itemKey: string | undefined) {
+function resolvePixelClothing(itemKey: string | undefined) {
   switch (itemKey) {
-    case 'eyes-smile':
-      return 'laugh';
-    case 'eyes-focus':
-      return 'smile';
-    default:
-      return 'smile';
-  }
-}
-
-function resolveToonHeadClothes(itemKey: string | undefined) {
-  switch (itemKey) {
+    case 'top-pixel-striped':
+      return 'variant14';
+    case 'top-pixel-mage':
+      return 'variant19';
+    case 'top-pixel-armor':
+      return 'variant21';
+    case 'top-pixel-red':
+      return 'variant05';
     case 'top-shirt-green':
-      return 'tShirt';
+      return 'variant04';
     case 'top-jacket-orange':
-      return 'openJacket';
+      return 'variant12';
     case 'top-cape-purple':
-      return 'dress';
+      return 'variant18';
     case 'top-armor-gold':
-      return 'turtleNeck';
+      return 'variant23';
     default:
-      return 'shirt';
+      return 'variant01';
   }
+}
+
+function resolvePixelGlasses(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'glasses-pixel-magic':
+    case 'glasses-goggles':
+      return 'light04';
+    case 'glasses-pixel-dark':
+    case 'glasses-star':
+      return 'dark05';
+    default:
+      return 'dark01';
+  }
+}
+
+function resolvePixelHat(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'hat-crown-gold':
+      return 'variant07';
+    case 'hat-wizard-blue':
+      return 'variant10';
+    case 'hat-helmet-iron':
+      return 'variant08';
+    default:
+      return 'variant01';
+  }
+}
+
+function PixelBackground({ itemKey, color }: { itemKey: string | undefined; color: string }) {
+  if (itemKey === 'background-night') {
+    return (
+      <g>
+        <rect x="0" y="0" width="32" height="48" fill="#25304f" />
+        <rect x="4" y="6" width="1" height="1" fill="#fff9d8" />
+        <rect x="25" y="5" width="1" height="1" fill="#fff9d8" />
+        <rect x="27" y="13" width="1" height="1" fill="#fff9d8" />
+        <rect x="6" y="36" width="20" height="7" fill="#18213d" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'background-room') {
+    return (
+      <g>
+        <rect x="0" y="0" width="32" height="48" fill="#f3e1c8" />
+        <rect x="3" y="31" width="26" height="12" fill="#d9a96d" opacity="0.55" />
+        <rect x="4" y="23" width="6" height="5" fill="#fff7e8" />
+        <rect x="24" y="21" width="4" height="11" fill="#fff7e8" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'background-lab') {
+    return (
+      <g>
+        <rect x="0" y="0" width="32" height="48" fill="#d7ecf2" />
+        <rect x="4" y="8" width="7" height="1" fill="#ffffff" />
+        <rect x="10" y="4" width="1" height="5" fill="#ffffff" />
+        <rect x="22" y="8" width="1" height="7" fill="#ffffff" />
+        <rect x="22" y="14" width="7" height="1" fill="#ffffff" />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <rect x="0" y="0" width="32" height="48" fill="#d9f2df" />
+      <rect x="0" y="34" width="32" height="14" fill={color} opacity="0.48" />
+      <rect x="4" y="36" width="5" height="5" fill="#ffffff" opacity="0.35" />
+      <rect x="24" y="35" width="5" height="5" fill="#ffffff" opacity="0.35" />
+    </g>
+  );
+}
+
+function PixelTop({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
+  return (
+    <g>
+      <rect x="10" y="19" width="12" height="10" fill={color} />
+      <rect x="9" y="20" width="3" height="8" fill={color} />
+      <rect x="20" y="20" width="3" height="8" fill={color} />
+      <rect x="13" y="19" width="6" height="2" fill={accent} opacity="0.75" />
+      {itemKey === 'top-pixel-striped' ? (
+        <g>
+          <rect x="10" y="22" width="12" height="1" fill={accent} />
+          <rect x="10" y="26" width="12" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-pixel-mage' || itemKey === 'top-cape-purple' ? <rect x="8" y="20" width="2" height="12" fill={accent} opacity="0.85" /> : null}
+      {itemKey === 'top-pixel-armor' || itemKey === 'top-armor-gold' ? (
+        <g>
+          <rect x="12" y="21" width="8" height="5" fill={accent} opacity="0.8" />
+          <rect x="15" y="22" width="2" height="2" fill="#fff3b0" />
+        </g>
+      ) : null}
+    </g>
+  );
+}
+
+function PixelArms({ skin }: { skin: string }) {
+  return (
+    <g>
+      <rect x="8" y="22" width="2" height="8" fill={skin} />
+      <rect x="22" y="22" width="2" height="8" fill={skin} />
+      <rect x="7" y="29" width="3" height="2" fill={skin} />
+      <rect x="22" y="29" width="3" height="2" fill={skin} />
+    </g>
+  );
+}
+
+function PixelBottom({ itemKey, color, accent, skin }: { itemKey: string | undefined; color: string; accent: string; skin: string }) {
+  if (itemKey === 'bottom-shorts') {
+    return (
+      <g>
+        <rect x="10" y="29" width="12" height="4" fill={color} />
+        <rect x="10" y="33" width="4" height="3" fill={color} />
+        <rect x="18" y="33" width="4" height="3" fill={color} />
+        <rect x="11" y="36" width="3" height="5" fill={skin} />
+        <rect x="18" y="36" width="3" height="5" fill={skin} />
+      </g>
+    );
+  }
+
+  if (itemKey === 'bottom-pixel-skirt') {
+    return (
+      <g>
+        <rect x="10" y="29" width="12" height="3" fill={color} />
+        <rect x="9" y="32" width="14" height="4" fill={color} />
+        <rect x="11" y="36" width="3" height="5" fill={skin} />
+        <rect x="18" y="36" width="3" height="5" fill={skin} />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <rect x="10" y="29" width="12" height="4" fill={color} />
+      <rect x="10" y="33" width="5" height="8" fill={color} />
+      <rect x="17" y="33" width="5" height="8" fill={color} />
+      <rect x="15" y="33" width="2" height="8" fill="#000000" opacity="0.14" />
+      {itemKey === 'bottom-space' || itemKey === 'bottom-pixel-royal' ? <rect x="11" y="31" width="10" height="1" fill={accent} /> : null}
+      {itemKey === 'bottom-cargo' ? (
+        <g>
+          <rect x="10" y="35" width="3" height="2" fill={accent} />
+          <rect x="19" y="35" width="3" height="2" fill={accent} />
+        </g>
+      ) : null}
+    </g>
+  );
+}
+
+function PixelShoes({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
+  return (
+    <g>
+      <rect x="9" y="41" width="6" height="2" fill={color} />
+      <rect x="17" y="41" width="6" height="2" fill={color} />
+      <rect x="8" y="43" width="7" height="2" fill={color} />
+      <rect x="17" y="43" width="7" height="2" fill={color} />
+      {itemKey === 'shoes-glow' || itemKey === 'shoes-pixel-gold' ? (
+        <g>
+          <rect x="8" y="45" width="7" height="1" fill={accent} />
+          <rect x="17" y="45" width="7" height="1" fill={accent} />
+        </g>
+      ) : null}
+    </g>
+  );
+}
+
+function PixelGadgetBack({ item }: { item: AvatarItem | undefined }) {
+  if (item?.key !== 'gadget-backpack') {
+    return null;
+  }
+
+  return (
+    <g>
+      <rect x="7" y="21" width="4" height="10" fill={item.colorPrimary ?? '#d04c73'} />
+      <rect x="8" y="23" width="2" height="1" fill={item.colorSecondary ?? '#7a5ccf'} />
+    </g>
+  );
+}
+
+function PixelGadgetFront({ item }: { item: AvatarItem | undefined }) {
+  if (!item || item.key === 'gadget-backpack') {
+    return null;
+  }
+
+  const color = item.colorPrimary ?? '#7d8da8';
+  const accent = item.colorSecondary ?? '#f4c95d';
+
+  if (item.key === 'gadget-robot') {
+    return (
+      <g>
+        <rect x="24" y="33" width="5" height="5" fill={color} />
+        <rect x="25" y="32" width="3" height="1" fill={accent} />
+        <rect x="25" y="35" width="1" height="1" fill={accent} />
+        <rect x="27" y="35" width="1" height="1" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-drone') {
+    return (
+      <g>
+        <rect x="24" y="9" width="5" height="2" fill={color} />
+        <rect x="23" y="8" width="1" height="1" fill={accent} />
+        <rect x="29" y="8" width="1" height="1" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-pixel-book') {
+    return (
+      <g>
+        <rect x="23" y="28" width="4" height="5" fill={color} />
+        <rect x="25" y="28" width="1" height="5" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'gadget-pixel-potion') {
+    return (
+      <g>
+        <rect x="24" y="29" width="3" height="1" fill={accent} />
+        <rect x="23" y="30" width="5" height="5" fill={color} />
+        <rect x="24" y="31" width="3" height="2" fill="#ffffff" opacity="0.35" />
+      </g>
+    );
+  }
+
+  return (
+    <g>
+      <rect x="23" y="29" width="5" height="5" fill={color} />
+      <rect x="24" y="30" width="3" height="3" fill={accent} />
+    </g>
+  );
+}
+
+function PixelWeapon({ item }: { item: AvatarItem | undefined }) {
+  if (!item) {
+    return null;
+  }
+
+  const color = item.colorPrimary ?? '#8b5a2b';
+  const accent = item.colorSecondary ?? '#f2c94c';
+
+  if (item.key === 'weapon-sword') {
+    return (
+      <g>
+        <rect x="5" y="20" width="1" height="15" fill="#8ea0b8" />
+        <rect x="4" y="31" width="3" height="1" fill={accent} />
+        <rect x="5" y="34" width="1" height="3" fill={color} />
+      </g>
+    );
+  }
+
+  if (item.key === 'weapon-shield') {
+    return (
+      <g>
+        <rect x="4" y="25" width="4" height="7" fill={color} />
+        <rect x="5" y="27" width="2" height="2" fill={accent} />
+      </g>
+    );
+  }
+
+  if (item.key === 'weapon-wand') {
+    return (
+      <g>
+        <rect x="5" y="22" width="1" height="12" fill={color} />
+        <rect x="4" y="20" width="3" height="1" fill={accent} />
+        <rect x="5" y="19" width="1" height="3" fill={accent} />
+      </g>
+    );
+  }
+
+  return <rect x="5" y="22" width="1" height="15" fill={color} />;
+}
+
+function PixelPet({ item }: { item: AvatarItem | undefined }) {
+  if (!item) {
+    return null;
+  }
+
+  const color = item.colorPrimary ?? '#f2a65a';
+  const accent = item.colorSecondary ?? '#4a321f';
+  const baseX = 22;
+  const baseY = 35;
+
+  if (item.key === 'pet-elephant') {
+    return (
+      <g>
+        <rect x={baseX} y={baseY - 3} width="7" height="5" fill={color} />
+        <rect x={baseX - 2} y={baseY - 2} width="3" height="3" fill={color} />
+        <rect x={baseX - 3} y={baseY} width="2" height="3" fill={color} />
+        <rect x={baseX + 1} y={baseY + 2} width="1" height="3" fill={accent} />
+        <rect x={baseX + 5} y={baseY + 2} width="1" height="3" fill={accent} />
+      </g>
+    );
+  }
+
+  const isCat = item.key === 'pet-cat';
+  const isTiger = item.key === 'pet-tiger';
+  const isLion = item.key === 'pet-lion';
+
+  return (
+    <g>
+      <rect x={baseX} y={baseY - 2} width="6" height="4" fill={color} />
+      <rect x={baseX + 1} y={baseY - 5} width="4" height="4" fill={color} />
+      {isCat || isTiger ? (
+        <g>
+          <rect x={baseX} y={baseY - 6} width="1" height="1" fill={color} />
+          <rect x={baseX + 5} y={baseY - 6} width="1" height="1" fill={color} />
+        </g>
+      ) : null}
+      {isLion ? <rect x={baseX} y={baseY - 6} width="6" height="6" fill={accent} opacity="0.8" /> : null}
+      {isTiger ? (
+        <g>
+          <rect x={baseX + 2} y={baseY - 2} width="1" height="4" fill={accent} />
+          <rect x={baseX + 5} y={baseY - 2} width="1" height="4" fill={accent} />
+        </g>
+      ) : null}
+      <rect x={baseX + 1} y={baseY + 2} width="1" height="2" fill={accent} />
+      <rect x={baseX + 4} y={baseY + 2} width="1" height="2" fill={accent} />
+      <rect x={baseX + 6} y={baseY - 1} width="2" height="1" fill={accent} />
+    </g>
+  );
 }
 
 function stripHex(color: string) {

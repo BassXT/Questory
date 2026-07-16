@@ -8,6 +8,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Pixelart-Avatar-Renderer eingefuehrt: DiceBear Pixel Art rendert Kopf/Gesicht/Haar/Hut/Brille, Questory rendert Koerper, Kleidung, Schuhe, Waffen, Gadgets und Tiere als eigene Pixel-SVG-Layer.
+- Avatar-Slots `hat`, `weapon` und `pet` ergaenzt.
+- Pixelart-Avatar-Katalog um zusaetzliche Haare, Huete, Oberteile, Hosen, Schuhe, Brillen, Gadgets, Waffen und Tiere erweitert, darunter Katze, Hund, Loewe, Tiger und Elefant.
 - Avatar-Vorschau zur Ganzkoerperbuehne erweitert: Toon Head rendert Kopf/Gesicht/Haare, Questory rendert Koerper, Oberteil, Hose, Schuhe, Hintergruende und Gadgets als eigene SVG-Layer.
 - Avatar-Renderer von DiceBear/Avataaars auf DiceBear/Toon Head umgestellt; der Stil wirkt cartooniger und kindgerechter, bleibt aber weiterhin self-hosted ueber lokale npm-Pakete.
 - Avatar-Renderer auf DiceBear/Avataaars umgestellt; Questory-Loadout-Items werden nun auf professionelle Avatar-Optionen fuer Haare, Gesicht, Kleidung, Brillen, Farben und Hintergruende gemappt.
@@ -125,6 +128,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
 - Frontend-Build nach Ganzkoerper-Avatarbuehne erfolgreich.
 - Portainer-Redeploy nach Ganzkoerper-Avatarbuehne per API-Script erfolgreich.
 - LXC-Health nach Ganzkoerper-Avatarbuehne erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.

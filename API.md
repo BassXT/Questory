@@ -320,6 +320,7 @@ Hinweise:
 - Kinder mit eigenem Login koennen nur den eigenen Avatar abrufen.
 - Items werden automatisch ueber das Kinder-Level freigeschaltet; spaetere manuelle Inventar-Freischaltungen sind ueber `ChildAvatarItem` vorbereitet.
 - `equippedItems` ist eine Slot-zu-Item-Key-Map, zum Beispiel `top -> top-hoodie-blue`.
+- Aktive Slots sind `background`, `body`, `hair`, `eyes`, `hat`, `bottom`, `top`, `shoes`, `glasses`, `gadget`, `weapon` und `pet`.
 
 Response-Auszug:
 
@@ -332,7 +333,7 @@ Response-Auszug:
     "xp": 260,
     "coins": 42
   },
-  "slots": ["background", "body", "hair", "eyes", "bottom", "top", "shoes", "glasses", "gadget"],
+  "slots": ["background", "body", "hair", "eyes", "hat", "bottom", "top", "shoes", "glasses", "gadget", "weapon", "pet"],
   "equippedItems": {
     "background": "background-meadow",
     "body": "body-sunrise",
@@ -340,7 +341,8 @@ Response-Auszug:
     "eyes": "eyes-bright",
     "bottom": "bottom-jeans",
     "top": "top-hoodie-blue",
-    "shoes": "shoes-sneaker-red"
+    "shoes": "shoes-sneaker-red",
+    "pet": "pet-cat"
   },
   "unlockedItemKeys": ["background-meadow", "body-sunrise"],
   "items": [
