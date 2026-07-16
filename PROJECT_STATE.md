@@ -353,6 +353,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Mobile-Polish per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`, alter Testlogin weiterhin HTTP `401`.
 - Mobile-Nachbesserung aus echtem iPhone-Test umgesetzt: Die Uebersicht zeigt nun alle Kinder als swipebare Kinderkarten, Familienlage zaehlt echte Kinderprofile separat von Kinder-Logins, der Shop-Tab trennt Shop und Belohnungsverwaltung in Untertabs, Shopkarten sind auf Mobile schmaler und der Avatar-Builder skaliert die Vorschau auf kleinen Displays herunter.
 - Frontend-Build nach Mobile-Nachbesserung erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
+- Portainer-Redeploy nach Mobile-Nachbesserung per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`, alter Testlogin weiterhin HTTP `401`.
 
 ## Offene Aufgaben
 
