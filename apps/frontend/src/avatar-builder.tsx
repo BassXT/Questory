@@ -4,7 +4,7 @@ import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import { createAvatar } from '@dicebear/core';
-import * as avataaars from '@dicebear/avataaars';
+import * as toonHead from '@dicebear/toon-head';
 import {
   Box,
   Button,
@@ -341,26 +341,23 @@ function AvatarPreview({
   const gadget = getEquippedItem(equippedItems, itemsByKey, 'gadget');
   const avatarDataUri = useMemo(
     () =>
-      createAvatar(avataaars, {
+      createAvatar(toonHead, {
         seed: `${childName}:${Object.values(equippedItems).join(':')}`,
-        style: ['circle'],
         backgroundColor: [stripHex(background?.colorPrimary ?? '#d9f2df')],
         skinColor: [stripHex(body?.colorPrimary ?? '#f2b28d')],
         hairColor: [stripHex(hair?.colorPrimary ?? '#5b3826')],
-        top: [resolveDiceBearTop(hair?.key)],
-        eyes: [resolveDiceBearEyes(eyes?.key)],
-        eyebrows: [resolveDiceBearEyebrows(eyes?.key)],
-        mouth: [resolveDiceBearMouth(eyes?.key)],
-        clothing: [resolveDiceBearClothing(top?.key)],
+        hair: [resolveToonHeadHair(hair?.key)],
+        hairProbability: 100,
+        rearHair: [resolveToonHeadRearHair(hair?.key)],
+        rearHairProbability: shouldUseToonHeadRearHair(hair?.key) ? 100 : 0,
+        eyes: [resolveToonHeadEyes(eyes?.key)],
+        eyebrows: [resolveToonHeadEyebrows(eyes?.key)],
+        mouth: [resolveToonHeadMouth(eyes?.key)],
+        clothes: [resolveToonHeadClothes(top?.key)],
         clothesColor: [stripHex(top?.colorPrimary ?? '#2568d8')],
-        clothingGraphic: [resolveDiceBearGraphic(gadget?.key)],
-        accessories: glasses ? [resolveDiceBearAccessories(glasses.key)] : ['round'],
-        accessoriesColor: [stripHex(glasses?.colorPrimary ?? '#233044')],
-        accessoriesProbability: glasses ? 100 : 0,
-        facialHairProbability: 0,
-        topProbability: 100
+        beardProbability: 0
       }).toDataUri(),
-    [background, body, childName, equippedItems, eyes, gadget, glasses, hair, top]
+    [background, body, childName, equippedItems, eyes, hair, top]
   );
   const equipmentChips = [
     bottom ? `Hose: ${bottom.name}` : null,
@@ -372,7 +369,7 @@ function AvatarPreview({
     <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 390, width: '100%' }}>
       <Box
         component="img"
-        alt={`${childName} Avatar`}
+        alt={getAvatarAlt(childName)}
         src={avatarDataUri}
         sx={{
           aspectRatio: '1 / 1',
@@ -397,93 +394,90 @@ function AvatarPreview({
   );
 }
 
-function resolveDiceBearTop(itemKey: string | undefined) {
+function resolveToonHeadHair(itemKey: string | undefined) {
   switch (itemKey) {
     case 'hair-buns':
       return 'bun';
     case 'hair-curly':
-      return 'curly';
+      return 'spiky';
     case 'hair-silver':
-      return 'straightAndStrand';
+      return 'sideComed';
     default:
-      return 'shortWaved';
+      return 'undercut';
   }
 }
 
-function resolveDiceBearEyes(itemKey: string | undefined) {
+function resolveToonHeadRearHair(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'hair-buns':
+      return 'shoulderHigh';
+    case 'hair-curly':
+      return 'neckHigh';
+    case 'hair-silver':
+      return 'longWavy';
+    default:
+      return 'neckHigh';
+  }
+}
+
+function shouldUseToonHeadRearHair(itemKey: string | undefined) {
+  return itemKey === 'hair-buns' || itemKey === 'hair-curly' || itemKey === 'hair-silver';
+}
+
+function resolveToonHeadEyes(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
       return 'happy';
     case 'eyes-focus':
-      return 'squint';
+      return 'humble';
     default:
-      return 'default';
+      return 'wide';
   }
 }
 
-function resolveDiceBearEyebrows(itemKey: string | undefined) {
+function resolveToonHeadEyebrows(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
-      return 'raisedExcitedNatural';
+      return 'happy';
     case 'eyes-focus':
-      return 'flatNatural';
+      return 'neutral';
     default:
-      return 'defaultNatural';
+      return 'raised';
   }
 }
 
-function resolveDiceBearMouth(itemKey: string | undefined) {
+function resolveToonHeadMouth(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
-      return 'twinkle';
+      return 'laugh';
     case 'eyes-focus':
-      return 'serious';
+      return 'smile';
     default:
       return 'smile';
   }
 }
 
-function resolveDiceBearClothing(itemKey: string | undefined) {
+function resolveToonHeadClothes(itemKey: string | undefined) {
   switch (itemKey) {
     case 'top-shirt-green':
-      return 'shirtCrewNeck';
+      return 'tShirt';
     case 'top-jacket-orange':
-      return 'blazerAndShirt';
+      return 'openJacket';
     case 'top-cape-purple':
-      return 'shirtVNeck';
+      return 'dress';
     case 'top-armor-gold':
-      return 'blazerAndSweater';
+      return 'turtleNeck';
     default:
-      return 'hoodie';
-  }
-}
-
-function resolveDiceBearAccessories(itemKey: string) {
-  switch (itemKey) {
-    case 'glasses-star':
-      return 'sunglasses';
-    case 'glasses-goggles':
-      return 'wayfarers';
-    default:
-      return 'round';
-  }
-}
-
-function resolveDiceBearGraphic(itemKey: string | undefined) {
-  switch (itemKey) {
-    case 'gadget-backpack':
-      return 'bear';
-    case 'gadget-robot':
-      return 'skullOutline';
-    case 'gadget-drone':
-      return 'bat';
-    default:
-      return 'diamond';
+      return 'shirt';
   }
 }
 
 function stripHex(color: string) {
   return color.replace('#', '').trim();
+}
+
+function getAvatarAlt(childName: string) {
+  return childName.toLowerCase().includes('avatar') ? childName : `${childName} Avatar`;
 }
 
 function BackgroundDetails({ itemKey }: { itemKey: string | undefined }) {

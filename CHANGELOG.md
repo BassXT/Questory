@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Renderer von DiceBear/Avataaars auf DiceBear/Toon Head umgestellt; der Stil wirkt cartooniger und kindgerechter, bleibt aber weiterhin self-hosted ueber lokale npm-Pakete.
 - Avatar-Renderer auf DiceBear/Avataaars umgestellt; Questory-Loadout-Items werden nun auf professionelle Avatar-Optionen fuer Haare, Gesicht, Kleidung, Brillen, Farben und Hintergruende gemappt.
 - Avatar-Kopfpartie weiter verfeinert: Haare werden jetzt in Rueck- und Vorderlayer getrennt, am Gesicht geclippt und mit besser passenden Ueberdeckungen fuer Ohren, Stirn und Wangen gerendert.
 - Avatar-Vorschau optisch ueberarbeitet: groessere illustrierte Buehne, weichere Spielfigur-Proportionen, detaillierteres Gesicht, Arme/Haende, Kleidungsschnitte, Schuhdetails und item-spezifische Hintergruende/Gadgets.
@@ -123,6 +124,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Toon-Head-Renderer-Umstellung erfolgreich.
 - Frontend-Build nach DiceBear/Avataaars-Renderer-Integration erfolgreich.
 - Portainer-Redeploy nach DiceBear/Avataaars-Renderer-Integration per API-Script erfolgreich.
 - LXC-Health nach DiceBear/Avataaars-Renderer-Integration erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.

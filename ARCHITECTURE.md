@@ -90,7 +90,7 @@ Technologien:
 - TypeScript
 - Vite
 - Material UI
-- DiceBear mit Avataaars-Style fuer den Avatar-Renderer
+- DiceBear mit Toon-Head-Style fuer den Avatar-Renderer
 
 Ziel:
 
@@ -119,7 +119,7 @@ Aktuell vorhanden:
 - Vorschlagsbibliotheken fuellen bestehende Quest- und Reward-Formulare, legen aber nichts automatisch an
 - Reward-Bilder werden weiterhin als `imageUrl` gespeichert. Das Frontend bietet einen kuratierten MDI/Iconify-Motiv-Picker, der normale HTTPS-URLs eintraegt; freie Bild-URLs bleiben moeglich und eigenes Asset-Hosting wird spaeter separat entschieden.
 - `avatarKey` bleibt als einfache Preset-ID fuer kleine Badges erhalten. Der echte Avatar-Builder nutzt nun einen serverseitigen Avatar-Katalog, Level-Unlocks und `ChildAvatarLoadout` fuer ausgeruestete Kleidung, Brillen, Schuhe, Hintergruende und Gadgets.
-- Der Avatar-Builder ist in `apps/frontend/src/avatar-builder.tsx` gekapselt. Die visuelle Darstellung nutzt `@dicebear/core` und den einzelnen Stil `@dicebear/avataaars` als lokale npm-Pakete, nicht die externe DiceBear-HTTP-API; dadurch bleibt der Renderer self-hosted und reproduzierbar, ohne die komplette DiceBear-Collection zu buendeln.
+- Der Avatar-Builder ist in `apps/frontend/src/avatar-builder.tsx` gekapselt. Die visuelle Darstellung nutzt `@dicebear/core` und den einzelnen Stil `@dicebear/toon-head` als lokale npm-Pakete, nicht die externe DiceBear-HTTP-API; dadurch bleibt der Renderer self-hosted und reproduzierbar, ohne die komplette DiceBear-Collection zu buendeln.
 - Eltern/Admin koennen im Eltern-Dashboard ein Kinderprofil oeffnen und von dort Quests oder Shop fuer dieses Kind bedienen. Der umgekehrte Weg vom Kinderbereich in den Elternbereich bleibt durch getrennte JWT-Rollen geschuetzt und benoetigt Eltern-/Admin-Authentifizierung.
 
 ## Datenbank
@@ -140,7 +140,7 @@ Die erste Vorschlagsbibliothek ist statischer, versionierter Backend-Inhalt ohne
 
 XP und Coins haben bewusst getrennte Rollen: XP dient der langfristigen Progression mit Leveln und Avatar-/Gadget-Unlocks; Coins sind die kurzfristige Shop-Waehrung. Die kuratierten Vorschlaege halten Alltagsroutinen niedrig und groessere Rewards teuer, damit sich Familienbelohnungen ueber mehrere Quests verdient anfuehlen.
 
-Avatar-Items sind ein globaler Katalog in der Datenbank. Level-Freischaltungen werden beim Lesen aus `AvatarItem.requiredLevel` berechnet; `ChildAvatarItem` ist fuer manuelle, Event- oder Spezial-Unlocks vorbereitet. Ausgeruestete Teile liegen pro Kind in `ChildAvatarLoadout.equippedItems` als validiertes JSON. Das Frontend mappt diese Questory-Item-Keys auf DiceBear/Avataaars-Optionen fuer Haare, Kleidung, Gesicht, Brillen, Farben und Hintergruende. Slots ohne direkte Avataaars-Entsprechung, zum Beispiel Hosen und Schuhe, bleiben im Loadout erhalten und werden aktuell als Ausruestungs-Chips angezeigt.
+Avatar-Items sind ein globaler Katalog in der Datenbank. Level-Freischaltungen werden beim Lesen aus `AvatarItem.requiredLevel` berechnet; `ChildAvatarItem` ist fuer manuelle, Event- oder Spezial-Unlocks vorbereitet. Ausgeruestete Teile liegen pro Kind in `ChildAvatarLoadout.equippedItems` als validiertes JSON. Das Frontend mappt diese Questory-Item-Keys auf DiceBear/Toon-Head-Optionen fuer Haare, Kleidung, Gesicht, Farben und Hintergruende. Slots ohne direkte Toon-Head-Entsprechung, zum Beispiel Hosen, Schuhe, Brillen und Gadgets, bleiben im Loadout erhalten und werden aktuell als Ausruestungs-Chips angezeigt. Ein echter Ganzkoerper-Avatar braucht spaeter einen eigenen Questory-Renderer oder eine passende freie Full-body-Asset-Basis.
 
 Quest-Vorlagen trennen planbare Zuweisungen und spontane Einreichungen ueber `isAssignable` und `isSelfService`. Spontane Quests verwenden bewusst dieselben Tabellen `QuestAssignment` und `QuestCompletion` wie geplante Quests, damit Elternfreigabe, XP-/Muenzen-Vergabe und Statistiken ohne paralleles Sondermodell funktionieren.
 
