@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Vorschau optisch ueberarbeitet: groessere illustrierte Buehne, weichere Spielfigur-Proportionen, detaillierteres Gesicht, Arme/Haende, Kleidungsschnitte, Schuhdetails und item-spezifische Hintergruende/Gadgets.
 - Avatar-Datenmodell mit globalem `AvatarItem`-Katalog, `ChildAvatarItem` fuer Spezial-Unlocks und `ChildAvatarLoadout` fuer ausgeruestete Teile erstellt.
 - Prisma-Migration `20260716103000_avatar_builder` mit 33 initialen Avatar-Items fuer Hintergruende, Figur, Haare, Augen, Kleidung, Schuhe, Brillen und Gadgets erstellt.
 - Backend-`AvatarModule` mit `GET /api/children/{childId}/avatar` und `PUT /api/children/{childId}/avatar/loadout` erstellt.
@@ -120,6 +121,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Avatar-Renderer-Politur erfolgreich.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Avatar-Builder-Slice erfolgreich.
 - Portainer-Redeploy nach Avatar-Builder-Slice per API-Script erfolgreich.
 - LXC-Health nach Avatar-Builder-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
