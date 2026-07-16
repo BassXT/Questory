@@ -6,7 +6,7 @@ Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den
 
 ## Aktueller Projektstand
 
-Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Shop-Belohnungen besitzen jetzt einen aufgeraeumten Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, waehrend freie Bild-URLs weiterhin moeglich bleiben. Das Kind-Dashboard zeigt Abenteuerstatus, XP-Fortschritt, naechste Avatar-Unlocks und Schnellzugriff auf Avatar/Quests/Shop; Eltern koennen Kinderprofile direkt oeffnen, waehrend Kinder fuer Eltern/Admin-Funktionen weiterhin Eltern-Authentifizierung brauchen. Ein erster echter Avatar-Builder ist auf dem LXC deployed und getestet: Datenbank-Katalog, Level-Unlocks, vorbereitetes Kinder-Inventar, gespeicherte Loadouts und eine self-hosted SVG-Werkstatt mit Kleidung, Brillen, Hosen, Schuhen, Hintergruenden und Gadgets. Die Avatar-Vorschau wurde optisch von einer abstrakten Formensprache zu einer weicheren, illustrativeren Spielfigur weiterentwickelt und die Haar-/Gesichtslayer werden gezielt verfeinert. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
+Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde angelegt und ein erstes Scaffold fuer Backend, Frontend, Prisma und Docker Compose existiert. Lokale Dependencies, Prisma Generate, Backend-Build, Frontend-Build und HTTP-Start wurden erfolgreich geprueft. Der Portainer Stack wurde auf dem Docker-LXC deployed und per HTTP geprueft. Auth, Familienkontext, Benutzerliste, rollenbasierte Guards, Kinderprofil-APIs, Quest-Vorlagen-APIs, Quest-Zuweisungen, Quest-Abschluss-Einreichungen, Eltern-Bestaetigung mit XP-/Muenzen-Vergabe, Quest-Ablehnung, Reward-Verwaltung, Reward-Shop, Reward-Einloesung/Beantragung, Reward-Einloesungsverwaltung fuer Eltern, Kinder-Statistik und Dashboard-Summary sind auf dem LXC implementiert und getestet. Das Frontend besitzt ein echtes Login-/Registrierungs-, Dashboard-, Kinderprofil-, Quest-Vorlagen-, Quest-Zuweisungs-, Quest-Abschluss-, Elternfreigabe-, Reward-Verwaltungs-, Reward-Shop-, Reward-Einloesungsverwaltungs- und Kinderstatistik-Grundlayout mit API-Anbindung und wurde auf dem LXC getestet. Reward-Einloesungen reservieren Muenzen nun sofort, koennen vor Ausgabe storniert werden und geben Muenzen bei Ablehnung/Storno zurueck. Shop-Belohnungen besitzen jetzt einen aufgeraeumten Motiv-Picker mit 60 kuratierten MDI/Iconify-Motiven, waehrend freie Bild-URLs weiterhin moeglich bleiben. Das Kind-Dashboard zeigt Abenteuerstatus, XP-Fortschritt, naechste Avatar-Unlocks und Schnellzugriff auf Avatar/Quests/Shop; Eltern koennen Kinderprofile direkt oeffnen, waehrend Kinder fuer Eltern/Admin-Funktionen weiterhin Eltern-Authentifizierung brauchen. Ein erster echter Avatar-Builder ist auf dem LXC deployed und getestet: Datenbank-Katalog, Level-Unlocks, vorbereitetes Kinder-Inventar und gespeicherte Loadouts. Der urspruengliche selbst gezeichnete SVG-Renderer wird durch DiceBear/Avataaars als self-hosted npm-Renderer ersetzt, damit Haare, Gesicht, Kleidung und Accessoires professioneller wirken. Eine erste GitHub-Actions-CI fuer Prisma-Validierung, Prisma Generate, Shellscript-Syntaxcheck und Workspace-Build ist angelegt, lokal verifiziert und auf GitHub erfolgreich gelaufen. Eine sichere Testdaten-Aufraeumstrategie fuer den LXC ist als Dry-Run-first-Script dokumentiert. Portainer-Redeploys koennen lokal per API-Script ausgeloest werden. Docker ist lokal auf Windows weiterhin nicht im PATH verfuegbar.
 
 ## Bereits umgesetzt
 
@@ -296,6 +296,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Avatar-Haarlayer-/Gesichts-Slice per API-Script erfolgreich.
 - LXC-Health nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test des Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Haar-Auswahl sichtbar, vorderes Haar geclippt, keine sichtbare Ripple-Ueberlagerung und keine Konsolenfehler.
+- Frontend-Avatar-Renderer auf DiceBear/Avataaars umgestellt; Questory-Item-Keys werden auf professionelle Avataaars-Optionen fuer Haare, Gesicht, Kleidung, Brillen, Farben und Hintergruende gemappt.
+- Hosen, Schuhe und Gadgets bleiben Teil des Questory-Loadouts; Slots ohne direkte Avataaars-Entsprechung werden aktuell als Ausruestungs-Chips unter der Avatar-Vorschau angezeigt.
+- Frontend-Build nach DiceBear/Avataaars-Renderer-Integration erfolgreich.
 
 ## Offene Aufgaben
 
@@ -306,7 +309,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes den Avatar-Builder fachlich weiter ausbauen: mehr Assets/Items, verschiedene Koerper-/Gesichtsformen, Unlock-Pfade und optional Eltern-Freischaltungen.
+Als naechstes den DiceBear/Avataaars-Renderer auf dem LXC deployen und im Browser pruefen. Danach Avatar-Builder lazy laden, damit der groessere Renderer nicht den initialen Haupt-Chunk belastet.
 
 ## Architekturentscheidungen
 
@@ -347,6 +350,7 @@ Als naechstes den Avatar-Builder fachlich weiter ausbauen: mehr Assets/Items, ve
 - Level werden serverseitig nach `floor(sqrt(totalXp / 100)) + 1` berechnet und bei der Quest-Bestaetigung aktualisiert.
 - XP und Coins haben getrennte Rollen: XP dient langfristig Leveln, Avatar-Unlocks, Gadgets und spaeter Gebieten; Coins bleiben die kurzfristige Shop-Waehrung fuer echte Belohnungen.
 - `avatarKey` bleibt als einfache Avatar-Preset-ID fuer kleine Badges erhalten. Der echte Avatar-Builder nutzt `AvatarItem` als globalen Katalog, Level-Freischaltungen ueber `requiredLevel`, optionale Spezial-Unlocks ueber `ChildAvatarItem` und gespeicherte Ausruestung ueber `ChildAvatarLoadout.equippedItems`.
+- Die visuelle Avatar-Darstellung nutzt `@dicebear/core` und `@dicebear/avataaars` ueber lokale npm-Pakete. Das vermeidet externe API-Abhaengigkeit, nutzt professionelle Avatar-Assets statt selbst gezeichneter SVG-Pfade und buendelt nicht die komplette DiceBear-Collection.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
@@ -376,6 +380,7 @@ Als naechstes den Avatar-Builder fachlich weiter ausbauen: mehr Assets/Items, ve
 - Erste CI-Konfiguration vorhanden und erster GitHub-Lauf erfolgreich.
 - Port `3000` ist auf dem LXC bereits belegt; Questory nutzt fuer das Backend aktuell `3001`.
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
+- Der Frontend-Hauptchunk ist nach DiceBear/Avataaars groesser geworden. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
 
 ## Ideen fuer spaeter
 

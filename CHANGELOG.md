@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Renderer auf DiceBear/Avataaars umgestellt; Questory-Loadout-Items werden nun auf professionelle Avatar-Optionen fuer Haare, Gesicht, Kleidung, Brillen, Farben und Hintergruende gemappt.
 - Avatar-Kopfpartie weiter verfeinert: Haare werden jetzt in Rueck- und Vorderlayer getrennt, am Gesicht geclippt und mit besser passenden Ueberdeckungen fuer Ohren, Stirn und Wangen gerendert.
 - Avatar-Vorschau optisch ueberarbeitet: groessere illustrierte Buehne, weichere Spielfigur-Proportionen, detaillierteres Gesicht, Arme/Haende, Kleidungsschnitte, Schuhdetails und item-spezifische Hintergruende/Gadgets.
 - Avatar-Datenmodell mit globalem `AvatarItem`-Katalog, `ChildAvatarItem` fuer Spezial-Unlocks und `ChildAvatarLoadout` fuer ausgeruestete Teile erstellt.
@@ -122,6 +123,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach DiceBear/Avataaars-Renderer-Integration erfolgreich.
 - Frontend-Build nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich.
 - Portainer-Redeploy nach Avatar-Haarlayer-/Gesichts-Slice per API-Script erfolgreich.
 - LXC-Health nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.

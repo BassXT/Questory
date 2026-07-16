@@ -10,6 +10,8 @@
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {
+    "@dicebear/avataaars": "^9.4.3",
+    "@dicebear/core": "^9.4.3",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^9.2.0",

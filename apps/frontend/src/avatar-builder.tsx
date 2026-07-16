@@ -3,6 +3,8 @@ import CheckroomRoundedIcon from '@mui/icons-material/CheckroomRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
+import { createAvatar } from '@dicebear/core';
+import * as avataaars from '@dicebear/avataaars';
 import {
   Box,
   Button,
@@ -202,7 +204,7 @@ export function AvatarBuilderPanel({
                 p: 1.5
               }}
             >
-              <AvatarPreview equippedItems={draftLoadout} itemsByKey={itemsByKey} />
+              <AvatarPreview childName={avatar.child.displayName} equippedItems={draftLoadout} itemsByKey={itemsByKey} />
               <Stack direction="row" spacing={1} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
                 <Chip icon={<PaletteRoundedIcon />} label={avatar.child.displayName} variant="outlined" />
                 <Chip label={`Level ${avatar.child.level}`} variant="outlined" />
@@ -320,9 +322,11 @@ function AvatarItemOption({ active, item, onSelect }: AvatarItemOptionProps) {
 }
 
 function AvatarPreview({
+  childName,
   equippedItems,
   itemsByKey
 }: {
+  childName: string;
   equippedItems: Record<string, string>;
   itemsByKey: Map<string, AvatarItem>;
 }) {
@@ -335,114 +339,151 @@ function AvatarPreview({
   const shoes = getEquippedItem(equippedItems, itemsByKey, 'shoes');
   const glasses = getEquippedItem(equippedItems, itemsByKey, 'glasses');
   const gadget = getEquippedItem(equippedItems, itemsByKey, 'gadget');
-  const skin = body?.colorPrimary ?? '#f0b07a';
-  const skinShadow = body?.colorSecondary ?? '#d99061';
-  const hairColor = hair?.colorPrimary ?? '#5b3827';
-  const topColor = top?.colorPrimary ?? '#3978d8';
-  const topAccent = top?.colorSecondary ?? '#f4c95d';
-  const bottomColor = bottom?.colorPrimary ?? '#2f5f9b';
-  const shoeColor = shoes?.colorPrimary ?? '#cf4f44';
-  const eyeColor = eyes?.colorPrimary ?? '#2b3848';
+  const avatarDataUri = useMemo(
+    () =>
+      createAvatar(avataaars, {
+        seed: `${childName}:${Object.values(equippedItems).join(':')}`,
+        style: ['circle'],
+        backgroundColor: [stripHex(background?.colorPrimary ?? '#d9f2df')],
+        skinColor: [stripHex(body?.colorPrimary ?? '#f2b28d')],
+        hairColor: [stripHex(hair?.colorPrimary ?? '#5b3826')],
+        top: [resolveDiceBearTop(hair?.key)],
+        eyes: [resolveDiceBearEyes(eyes?.key)],
+        eyebrows: [resolveDiceBearEyebrows(eyes?.key)],
+        mouth: [resolveDiceBearMouth(eyes?.key)],
+        clothing: [resolveDiceBearClothing(top?.key)],
+        clothesColor: [stripHex(top?.colorPrimary ?? '#2568d8')],
+        clothingGraphic: [resolveDiceBearGraphic(gadget?.key)],
+        accessories: glasses ? [resolveDiceBearAccessories(glasses.key)] : ['round'],
+        accessoriesColor: [stripHex(glasses?.colorPrimary ?? '#233044')],
+        accessoriesProbability: glasses ? 100 : 0,
+        facialHairProbability: 0,
+        topProbability: 100
+      }).toDataUri(),
+    [background, body, childName, equippedItems, eyes, gadget, glasses, hair, top]
+  );
+  const equipmentChips = [
+    bottom ? `Hose: ${bottom.name}` : null,
+    shoes ? `Schuhe: ${shoes.name}` : null,
+    gadget ? `Gadget: ${gadget.name}` : null
+  ].filter(Boolean);
 
   return (
-    <Box sx={{ aspectRatio: '8 / 9', maxWidth: 390, width: '100%' }}>
-      <svg aria-label="Avatar Vorschau" role="img" viewBox="0 0 320 360" width="100%" height="100%">
-        <defs>
-          <linearGradient id="avatar-bg" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={background?.colorPrimary ?? '#b9e7d3'} />
-            <stop offset="100%" stopColor={background?.colorSecondary ?? '#78a9e6'} />
-          </linearGradient>
-          <linearGradient id="avatar-skin" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(skin, 0.14)} />
-            <stop offset="100%" stopColor={skin} />
-          </linearGradient>
-          <linearGradient id="avatar-top" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(topColor, 0.16)} />
-            <stop offset="100%" stopColor={topColor} />
-          </linearGradient>
-          <linearGradient id="avatar-bottom" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(bottomColor, 0.12)} />
-            <stop offset="100%" stopColor={bottomColor} />
-          </linearGradient>
-          <linearGradient id="avatar-shoes" x1="0" x2="1" y1="0" y2="1">
-            <stop offset="0%" stopColor={lightenColor(shoeColor, 0.12)} />
-            <stop offset="100%" stopColor={shoeColor} />
-          </linearGradient>
-          <filter id="avatar-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="12" stdDeviation="10" floodColor="#1b2a3f" floodOpacity="0.22" />
-          </filter>
-          <filter id="avatar-soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
-            <feDropShadow dx="0" dy="5" stdDeviation="4" floodColor="#1b2a3f" floodOpacity="0.18" />
-          </filter>
-          <clipPath id="avatar-face-clip">
-            <path d="M160 45 C191 45 213 68 213 101 C213 138 190 162 160 162 C130 162 107 138 107 101 C107 68 129 45 160 45 Z" />
-          </clipPath>
-        </defs>
-        <rect width="320" height="360" rx="34" fill="url(#avatar-bg)" />
-        <rect x="16" y="16" width="288" height="328" rx="26" fill="#ffffff" opacity="0.18" />
-        <BackgroundDetails itemKey={background?.key} />
-        <ellipse cx="160" cy="314" rx="94" ry="19" fill="#203047" opacity="0.16" />
-
-        {top?.key === 'top-cape-purple' ? (
-          <path d="M108 143 C70 173 64 257 99 303 L132 269 L132 155 Z" fill={topAccent} filter="url(#avatar-soft-shadow)" opacity="0.9" />
-        ) : null}
-        {gadget?.key === 'gadget-backpack' ? (
-          <g filter="url(#avatar-soft-shadow)">
-            <rect x="91" y="157" width="52" height="102" rx="20" fill={gadget.colorPrimary ?? '#6f7d8d'} />
-            <path d="M101 177 H132" stroke={gadget.colorSecondary ?? '#f4c95d'} strokeLinecap="round" strokeWidth="6" opacity="0.75" />
-            <circle cx="124" cy="223" r="9" fill={gadget.colorSecondary ?? '#f4c95d'} opacity="0.8" />
-          </g>
-        ) : null}
-
-        <g filter="url(#avatar-shadow)">
-          <path d="M120 146 C132 137 148 133 160 133 C172 133 188 137 200 146 L191 178 C181 171 139 171 129 178 Z" fill="url(#avatar-skin)" />
-          <path d="M100 169 C88 192 85 223 96 247 C101 259 115 254 112 240 C106 215 111 193 126 174 Z" fill="url(#avatar-skin)" />
-          <path d="M220 169 C232 192 235 223 224 247 C219 259 205 254 208 240 C214 215 209 193 194 174 Z" fill="url(#avatar-skin)" />
-          <circle cx="102" cy="249" r="13" fill="url(#avatar-skin)" />
-          <circle cx="218" cy="249" r="13" fill="url(#avatar-skin)" />
-
-          <path d="M111 167 C116 143 136 132 160 132 C184 132 204 143 209 167 L219 252 C222 276 204 292 180 292 H140 C116 292 98 276 101 252 Z" fill="url(#avatar-top)" />
-          <path d="M123 171 C138 184 182 184 197 171 L189 259 H131 Z" fill={topAccent} opacity={top?.key === 'top-shirt-green' ? 0.44 : 0.2} />
-          <path d="M122 170 C128 154 143 147 160 147 C177 147 192 154 198 170" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.34" />
-          <TopDetails itemKey={top?.key} accent={topAccent} color={topColor} />
-
-          <path d="M126 253 C139 260 151 260 158 253 V314 H125 C116 292 116 270 126 253 Z" fill="url(#avatar-bottom)" />
-          <path d="M162 253 C169 260 181 260 194 253 C204 270 204 292 195 314 H162 Z" fill="url(#avatar-bottom)" />
-          <path d="M160 259 V311" stroke="#172033" strokeLinecap="round" strokeWidth="3" opacity="0.16" />
-          <BottomDetails itemKey={bottom?.key} accent={bottom?.colorSecondary ?? '#95f2d9'} />
-
-          <ellipse cx="137" cy="318" rx="29" ry="12" fill="url(#avatar-shoes)" />
-          <ellipse cx="183" cy="318" rx="29" ry="12" fill="url(#avatar-shoes)" />
-          <ShoeDetails itemKey={shoes?.key} accent={shoes?.colorSecondary ?? '#f4c542'} />
-
-          <HairBackShape itemKey={hair?.key} color={hairColor} accent={hair?.colorSecondary ?? '#7b4b34'} />
-          <circle cx="107" cy="104" r="10" fill="url(#avatar-skin)" />
-          <circle cx="213" cy="104" r="10" fill="url(#avatar-skin)" />
-          <path
-            d="M160 45 C191 45 213 68 213 101 C213 138 190 162 160 162 C130 162 107 138 107 101 C107 68 129 45 160 45 Z"
-            fill="url(#avatar-skin)"
-          />
-          <path
-            d="M113 105 C121 136 144 153 171 150 C193 147 207 132 211 109 C202 143 179 163 147 157 C129 153 117 135 113 105 Z"
-            fill={skinShadow}
-            opacity="0.22"
-          />
-          <circle cx="135" cy="110" r="6" fill="#f3a0a0" opacity="0.35" />
-          <circle cx="185" cy="110" r="6" fill="#f3a0a0" opacity="0.35" />
-          <HairFrontShape itemKey={hair?.key} color={hairColor} accent={hair?.colorSecondary ?? '#7b4b34'} />
-          <path d="M132 88 C139 84 146 84 152 88" fill="none" stroke={darkenColor(hairColor, 0.25)} strokeLinecap="round" strokeWidth="4" opacity="0.48" />
-          <path d="M168 88 C175 84 182 84 188 88" fill="none" stroke={darkenColor(hairColor, 0.25)} strokeLinecap="round" strokeWidth="4" opacity="0.48" />
-          <EyeShape itemKey={eyes?.key} color={eyeColor} />
-          <path d="M158 98 C154 108 154 114 161 116" fill="none" stroke={skinShadow} strokeLinecap="round" strokeWidth="3" opacity="0.45" />
-          <path d="M146 125 C154 132 166 132 174 125" fill="none" stroke="#7a3e3b" strokeLinecap="round" strokeWidth="4" />
-          <path d="M127 71 C139 58 168 54 190 66" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.18" />
-          <GlassesShape item={glasses} />
-        </g>
-
-        <GadgetShape item={gadget} />
-      </svg>
+    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 390, width: '100%' }}>
+      <Box
+        component="img"
+        alt={`${childName} Avatar`}
+        src={avatarDataUri}
+        sx={{
+          aspectRatio: '1 / 1',
+          bgcolor: background?.colorPrimary ?? '#d9f2df',
+          border: '10px solid',
+          borderColor: 'rgba(255,255,255,0.46)',
+          borderRadius: 4,
+          boxShadow: '0 18px 45px rgba(23, 32, 51, 0.18)',
+          display: 'block',
+          maxWidth: 390,
+          width: '100%'
+        }}
+      />
+      {equipmentChips.length > 0 ? (
+        <Stack direction="row" spacing={0.75} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
+          {equipmentChips.map((label) => (
+            <Chip key={label} label={label} size="small" variant="outlined" />
+          ))}
+        </Stack>
+      ) : null}
     </Box>
   );
+}
+
+function resolveDiceBearTop(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'hair-buns':
+      return 'bun';
+    case 'hair-curly':
+      return 'curly';
+    case 'hair-silver':
+      return 'straightAndStrand';
+    default:
+      return 'shortWaved';
+  }
+}
+
+function resolveDiceBearEyes(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'eyes-smile':
+      return 'happy';
+    case 'eyes-focus':
+      return 'squint';
+    default:
+      return 'default';
+  }
+}
+
+function resolveDiceBearEyebrows(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'eyes-smile':
+      return 'raisedExcitedNatural';
+    case 'eyes-focus':
+      return 'flatNatural';
+    default:
+      return 'defaultNatural';
+  }
+}
+
+function resolveDiceBearMouth(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'eyes-smile':
+      return 'twinkle';
+    case 'eyes-focus':
+      return 'serious';
+    default:
+      return 'smile';
+  }
+}
+
+function resolveDiceBearClothing(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'top-shirt-green':
+      return 'shirtCrewNeck';
+    case 'top-jacket-orange':
+      return 'blazerAndShirt';
+    case 'top-cape-purple':
+      return 'shirtVNeck';
+    case 'top-armor-gold':
+      return 'blazerAndSweater';
+    default:
+      return 'hoodie';
+  }
+}
+
+function resolveDiceBearAccessories(itemKey: string) {
+  switch (itemKey) {
+    case 'glasses-star':
+      return 'sunglasses';
+    case 'glasses-goggles':
+      return 'wayfarers';
+    default:
+      return 'round';
+  }
+}
+
+function resolveDiceBearGraphic(itemKey: string | undefined) {
+  switch (itemKey) {
+    case 'gadget-backpack':
+      return 'bear';
+    case 'gadget-robot':
+      return 'skullOutline';
+    case 'gadget-drone':
+      return 'bat';
+    default:
+      return 'diamond';
+  }
+}
+
+function stripHex(color: string) {
+  return color.replace('#', '').trim();
 }
 
 function BackgroundDetails({ itemKey }: { itemKey: string | undefined }) {
