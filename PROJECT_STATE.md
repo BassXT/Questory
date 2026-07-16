@@ -304,6 +304,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Browser-Test des DiceBear/Avataaars-Renderers erfolgreich: Avatar-Tab, Haar-Auswahl, Data-URI-SVG-Bild und Konsolenfehlerfreiheit geprueft.
 - Frontend-Avatar-Renderer von DiceBear/Avataaars auf DiceBear/Toon Head umgestellt; Questory-Item-Keys werden auf Toon-Head-Optionen fuer Haare, Gesicht, Kleidung und Farben gemappt.
 - Frontend-Build nach Toon-Head-Renderer-Umstellung erfolgreich.
+- Portainer-Redeploy nach Toon-Head-Renderer-Umstellung per API-Script erfolgreich.
+- LXC-Health nach Toon-Head-Renderer-Umstellung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Toon-Head-Renderers erfolgreich: Avatar-Tab, Haar-Auswahl, Data-URI-SVG-Bild und Konsolenfehlerfreiheit geprueft.
 
 ## Offene Aufgaben
 
@@ -314,7 +317,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes den Toon-Head-Renderer auf dem LXC deployen und im Browser pruefen. Danach entscheiden, ob Toon Head als Kopf-/Oberkoerper-Stil reicht oder ob Questory spaeter einen eigenen Ganzkoerper-Renderer beziehungsweise eine echte freie Full-body-Asset-Basis braucht.
+Als naechstes entscheiden, ob Toon Head als aktueller Kopf-/Oberkoerper-Stil fuer den MVP reicht. Falls ja, sollte der Avatar-Builder per React Lazy Loading bzw. Code-Splitting geladen werden. Falls nein, braucht Questory spaeter einen eigenen Ganzkoerper-Renderer beziehungsweise eine echte freie Full-body-Asset-Basis.
 
 ## Architekturentscheidungen
 

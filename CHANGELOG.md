@@ -125,6 +125,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Toon-Head-Renderer-Umstellung erfolgreich.
+- Portainer-Redeploy nach Toon-Head-Renderer-Umstellung per API-Script erfolgreich.
+- LXC-Health nach Toon-Head-Renderer-Umstellung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Toon-Head-Renderers erfolgreich: Avatar-Tab, Haar-Auswahl, Data-URI-SVG-Bild und Konsolenfehlerfreiheit geprueft.
 - Frontend-Build nach DiceBear/Avataaars-Renderer-Integration erfolgreich.
 - Portainer-Redeploy nach DiceBear/Avataaars-Renderer-Integration per API-Script erfolgreich.
 - LXC-Health nach DiceBear/Avataaars-Renderer-Integration erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
