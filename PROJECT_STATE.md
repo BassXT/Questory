@@ -323,6 +323,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Pixelart-Avatar-Vorschau korrigiert: der zusaetzliche hautfarbene Halsblock unter dem DiceBear-Kopf wurde entfernt, damit Kopf und Shirt sauberer ineinandergreifen.
 - Portainer-Redeploy nach Pixelart-Halskorrektur per API-Script erfolgreich.
 - LXC-Health nach Pixelart-Halskorrektur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Pixelart-Koerper-Layer um eine Pixelreihe nach oben gezogen, damit die helle Trennlinie zwischen DiceBear-Kopf und Shirt verschwindet.
 
 ## Offene Aufgaben
 

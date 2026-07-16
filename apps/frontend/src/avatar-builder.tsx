@@ -420,14 +420,18 @@ function AvatarPreview({
         <PixelBackground itemKey={background?.key} color={background?.colorSecondary ?? '#8dd3a5'} />
         <rect x="4" y="42" width="24" height="2" fill="#203047" opacity="0.18" />
         <PixelPet item={pet} />
-        <PixelWeapon item={weapon} />
-        <PixelGadgetBack item={gadget} />
-        <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
-        <PixelArms skin={skin} />
-        <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
-        <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
+        <g transform="translate(0 -1)">
+          <PixelWeapon item={weapon} />
+          <PixelGadgetBack item={gadget} />
+          <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
+          <PixelArms skin={skin} />
+          <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
+          <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
+        </g>
         <image href={pixelHeadDataUri} x="8" y="2" width="16" height="16" />
-        <PixelGadgetFront item={gadget} />
+        <g transform="translate(0 -1)">
+          <PixelGadgetFront item={gadget} />
+        </g>
       </Box>
       {equipmentChips.length > 0 ? (
         <Stack direction="row" spacing={0.75} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
