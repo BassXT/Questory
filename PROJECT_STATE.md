@@ -293,6 +293,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Avatar-Kopfpartie weiter verfeinert: Haare sind in Rueck- und Vorderlayer getrennt, das vordere Haar wird am Gesicht geclippt und Ueberdeckungen fuer Ohren/Stirn/Wangen passen besser.
 - Avatar-Item-Karten zeigen nach Auswahl keinen grossen MUI-Ripple-Kreis mehr ueber dem Karteninhalt.
 - Frontend-Build nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich.
+- Portainer-Redeploy nach Avatar-Haarlayer-/Gesichts-Slice per API-Script erfolgreich.
+- LXC-Health nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Haar-Auswahl sichtbar, vorderes Haar geclippt, keine sichtbare Ripple-Ueberlagerung und keine Konsolenfehler.
 
 ## Offene Aufgaben
 
@@ -303,7 +306,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes den Avatar-Haarlayer-/Gesichts-Slice auf dem LXC deployen und im Browser gegen mehrere Frisuren pruefen.
+Als naechstes den Avatar-Builder fachlich weiter ausbauen: mehr Assets/Items, verschiedene Koerper-/Gesichtsformen, Unlock-Pfade und optional Eltern-Freischaltungen.
 
 ## Architekturentscheidungen
 

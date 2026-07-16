@@ -123,6 +123,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich.
+- Portainer-Redeploy nach Avatar-Haarlayer-/Gesichts-Slice per API-Script erfolgreich.
+- LXC-Health nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test des Avatar-Haarlayer-/Gesichts-Slice erfolgreich: Haar-Auswahl sichtbar, vorderes Haar geclippt, keine sichtbare Ripple-Ueberlagerung und keine Konsolenfehler.
 - Frontend-Build nach Avatar-Renderer-Politur erfolgreich.
 - Portainer-Redeploy nach Avatar-Renderer-Politur per API-Script erfolgreich.
 - LXC-Health nach Avatar-Renderer-Politur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
