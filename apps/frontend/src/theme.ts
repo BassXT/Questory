@@ -49,10 +49,41 @@ export const questoryTheme = createTheme({
     }
   },
   components: {
+    MuiCssBaseline: {
+      styleOverrides: {
+        'html, body, #root': {
+          maxWidth: '100%',
+          overflowX: 'hidden'
+        },
+        '*': {
+          boxSizing: 'border-box'
+        }
+      }
+    },
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: 8
+          borderRadius: 8,
+          minWidth: 0
+        }
+      }
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          maxWidth: '100%'
+        },
+        label: {
+          overflow: 'hidden',
+          textOverflow: 'ellipsis'
+        }
+      }
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          margin: 12,
+          maxWidth: 'calc(100% - 24px)'
         }
       }
     },

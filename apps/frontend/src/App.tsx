@@ -1308,7 +1308,7 @@ function App() {
 
   return (
     <Box component="main" sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
-      <Container maxWidth="xl" sx={{ py: { xs: 2, md: 3 } }}>
+      <Container maxWidth="xl" sx={{ px: { xs: 1.25, sm: 2, md: 3 }, py: { xs: 1.5, md: 3 } }}>
         <Stack spacing={2.5}>
           <AppHeader
             dashboard={dashboard}
@@ -1420,10 +1420,12 @@ function AppHeader({
     <Paper elevation={0} sx={{ px: { xs: 2, md: 2.5 }, py: 1.5 }}>
       <Box
         sx={{
-          alignItems: 'center',
+          alignItems: { xs: 'stretch', sm: 'center' },
           display: 'flex',
           gap: 2,
-          justifyContent: 'space-between'
+          flexDirection: { xs: 'column', sm: 'row' },
+          justifyContent: 'space-between',
+          minWidth: 0
         }}
       >
         <Box sx={{ alignItems: 'center', display: 'flex', gap: 1.5, minWidth: 0 }}>
@@ -1452,7 +1454,7 @@ function AppHeader({
         </Box>
 
         {isAuthenticated ? (
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', justifyContent: { xs: 'flex-end', sm: 'flex-start' } }}>
             <Chip
               icon={<ShieldRoundedIcon />}
               label={user?.role ?? 'SESSION'}
@@ -1534,8 +1536,11 @@ function AuthView({
         <Stack component="form" onSubmit={onSubmit} spacing={2.25}>
           <Tabs
             onChange={(_, value: AuthMode) => onAuthModeChange(value)}
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+            sx={{ '& .MuiTab-root': { minWidth: { xs: 88, sm: 120 }, px: { xs: 1, sm: 2 } } }}
             value={authMode}
-            variant="fullWidth"
+            variant="scrollable"
           >
             <Tab icon={<LoginRoundedIcon />} iconPosition="start" label="Login" value="login" />
             <Tab icon={<EmojiEventsRoundedIcon />} iconPosition="start" label="Kind" value="child" />
@@ -1857,6 +1862,15 @@ function DashboardView({
         <Tabs
           onChange={(_, value: DashboardTab) => setActiveDashboardTab(value)}
           scrollButtons="auto"
+          allowScrollButtonsMobile
+          sx={{
+            minHeight: 44,
+            '& .MuiTab-root': {
+              minHeight: 44,
+              minWidth: { xs: 88, sm: 110 },
+              px: { xs: 1.25, sm: 2 }
+            }
+          }}
           value={activeDashboardTab}
           variant="scrollable"
         >
@@ -2105,7 +2119,7 @@ function ChildrenProfilesPanel({
               <Button
                 disabled={childSaving}
                 startIcon={<PersonAddRoundedIcon />}
-                sx={{ minHeight: 40 }}
+                sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
                 type="submit"
                 variant="contained"
               >
@@ -2149,14 +2163,14 @@ function ChildrenProfilesPanel({
                   type="password"
                   value={childPinForm.pin}
                 />
-                <Stack direction="row" spacing={1} sx={{ alignItems: 'center' }}>
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
                   <Chip
                     color={selectedPinChild?.pinEnabled ? 'success' : 'default'}
                     label={selectedPinChild?.pinEnabled ? 'PIN aktiv' : 'PIN aus'}
                     variant="outlined"
                   />
                 </Stack>
-                <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ alignItems: 'stretch' }}>
                   <Button disabled={childPinSaving} size="small" type="submit" variant="contained">
                     PIN speichern
                   </Button>
@@ -2568,7 +2582,17 @@ function EconomyHintPanel({ mode }: EconomyHintPanelProps) {
       <Typography color="text.secondary" variant="body2">
         {mode === 'quests' ? 'Coin-Balance für Quests' : 'Preis-Balance für Rewards'}
       </Typography>
-      <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{
+          flexWrap: { xs: 'nowrap', sm: 'wrap' },
+          overflowX: { xs: 'auto', sm: 'visible' },
+          pb: { xs: 0.25, sm: 0 },
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' }
+        }}
+      >
         {hints.map((hint) => (
           <Chip key={hint} label={hint} size="small" variant="outlined" />
         ))}
@@ -2823,7 +2847,7 @@ function RewardsPanel({
                 type="number"
                 value={form.maxRedemptions}
               />
-              <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap' }}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -2848,7 +2872,7 @@ function RewardsPanel({
               <Button
                 disabled={saving}
                 startIcon={<StorefrontRoundedIcon />}
-                sx={{ minHeight: 40 }}
+                sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
                 type="submit"
                 variant="contained"
               >
@@ -2990,7 +3014,7 @@ function QuestAssignmentsPanel({
             <Button
               disabled={!canAssign || saving}
               startIcon={<TaskAltRoundedIcon />}
-              sx={{ minHeight: 40 }}
+              sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
               type="submit"
               variant="contained"
             >
@@ -3159,7 +3183,7 @@ function QuestTemplatesPanel({
                 type="number"
                 value={form.coinReward}
               />
-              <Stack direction="row" spacing={1.25} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap' }}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -3204,7 +3228,7 @@ function QuestTemplatesPanel({
               <Button
                 disabled={saving}
                 startIcon={<TaskAltRoundedIcon />}
-                sx={{ minHeight: 40 }}
+                sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
                 type="submit"
                 variant="contained"
               >
@@ -3312,7 +3336,11 @@ function SelfServiceQuestRow({ quest, saving, onComplete }: SelfServiceQuestRowP
       }}
     >
       <Stack spacing={0.75}>
-        <Stack direction="row" spacing={1} sx={{ alignItems: 'flex-start', justifyContent: 'space-between' }}>
+        <Stack
+          direction={{ xs: 'column', sm: 'row' }}
+          spacing={1}
+          sx={{ alignItems: { xs: 'stretch', sm: 'flex-start' }, justifyContent: 'space-between', minWidth: 0 }}
+        >
           <Box sx={{ minWidth: 0 }}>
             <Typography sx={{ fontWeight: 900 }} noWrap>
               {quest.title}
@@ -3424,7 +3452,7 @@ function SuggestionLibraryButton<TSuggestion extends { category: string; descrip
             <Typography sx={{ fontWeight: 900 }} noWrap>
               {title}
             </Typography>
-            <Chip label={`${availableSuggestions.length} offen`} size="small" variant="outlined" />
+            <Chip label={`${availableSuggestions.length} offen`} size="small" sx={{ display: { xs: 'none', sm: 'inline-flex' } }} variant="outlined" />
           </Stack>
           <Tooltip title="Schließen">
             <IconButton aria-label="Schließen" onClick={closeDialog} size="small">
@@ -3432,7 +3460,7 @@ function SuggestionLibraryButton<TSuggestion extends { category: string; descrip
             </IconButton>
           </Tooltip>
         </DialogTitle>
-        <DialogContent sx={{ display: 'grid', gap: 1.5, pt: 1 }}>
+        <DialogContent sx={{ display: 'grid', gap: 1.5, maxHeight: { xs: 'calc(100dvh - 96px)', sm: 'none' }, pt: 1 }}>
           <TextField
             autoComplete="off"
             label="Suchen"
@@ -3440,7 +3468,17 @@ function SuggestionLibraryButton<TSuggestion extends { category: string; descrip
             size="small"
             value={query}
           />
-          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              flexWrap: { xs: 'nowrap', sm: 'wrap' },
+              overflowX: { xs: 'auto', sm: 'visible' },
+              pb: { xs: 0.5, sm: 0 },
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': { display: 'none' }
+            }}
+          >
             {categories.map((categoryOption) => (
               <Chip
                 color={category === categoryOption ? 'primary' : 'default'}
@@ -3476,13 +3514,14 @@ function SuggestionLibraryButton<TSuggestion extends { category: string; descrip
                     display: 'grid',
                     gap: 0.75,
                     justifyContent: 'stretch',
+                    minWidth: 0,
                     minHeight: 112,
                     p: 1.25,
                     textAlign: 'left'
                   }}
                   variant="outlined"
                 >
-                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between', minWidth: 0 }}>
                     <Typography sx={{ fontWeight: 900 }} noWrap>
                       {getLabel(suggestion)}
                     </Typography>
@@ -3602,12 +3641,12 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
               {value || 'Motiv wählen oder unten eigene Bild-URL eintragen'}
             </Typography>
           </Box>
-          <Stack direction="row" spacing={1} sx={{ flexShrink: 0 }}>
-            <Button onClick={() => setOpen(true)} size="small" startIcon={<AutoAwesomeRoundedIcon />} variant="outlined">
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ flexShrink: 0 }}>
+            <Button onClick={() => setOpen(true)} size="small" startIcon={<AutoAwesomeRoundedIcon />} sx={{ width: { xs: '100%', sm: 'auto' } }} variant="outlined">
               Motiv wählen
             </Button>
             {value ? (
-              <Button color="inherit" onClick={() => onChange('')} size="small" variant="text">
+              <Button color="inherit" onClick={() => onChange('')} size="small" sx={{ width: { xs: '100%', sm: 'auto' } }} variant="text">
                 Entfernen
               </Button>
             ) : null}
@@ -3632,7 +3671,7 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
             <Typography sx={{ fontWeight: 900 }} noWrap>
               Motiv-Picker
             </Typography>
-            <Chip label={`${REWARD_VISUAL_OPTIONS.length} Motive`} size="small" variant="outlined" />
+            <Chip label={`${REWARD_VISUAL_OPTIONS.length} Motive`} size="small" sx={{ display: { xs: 'none', sm: 'inline-flex' } }} variant="outlined" />
           </Stack>
           <Tooltip title="Schließen">
             <IconButton aria-label="Schließen" onClick={closeDialog} size="small">
@@ -3640,7 +3679,7 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
             </IconButton>
           </Tooltip>
         </DialogTitle>
-        <DialogContent sx={{ display: 'grid', gap: 1.5, pt: 1 }}>
+        <DialogContent sx={{ display: 'grid', gap: 1.5, maxHeight: { xs: 'calc(100dvh - 96px)', sm: 'none' }, pt: 1 }}>
           <TextField
             autoComplete="off"
             label="Suchen"
@@ -3648,7 +3687,17 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
             size="small"
             value={query}
           />
-          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{
+              flexWrap: { xs: 'nowrap', sm: 'wrap' },
+              overflowX: { xs: 'auto', sm: 'visible' },
+              pb: { xs: 0.5, sm: 0 },
+              scrollbarWidth: 'none',
+              '&::-webkit-scrollbar': { display: 'none' }
+            }}
+          >
             {categories.map((categoryOption) => (
               <Chip
                 color={category === categoryOption ? 'primary' : 'default'}
@@ -3688,6 +3737,7 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
                       display: 'grid',
                       gap: 0.75,
                       justifyContent: 'stretch',
+                      minWidth: 0,
                       minHeight: 132,
                       p: 1,
                       textAlign: 'center'
@@ -3969,23 +4019,29 @@ function QuestAssignmentRow({
         </Stack>
       </Stack>
 
-      <Stack direction="row" spacing={0.75} sx={{ alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}>
+      <Stack
+        direction={{ xs: 'column', sm: 'row' }}
+        spacing={0.75}
+        sx={{ alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap', justifyContent: 'space-between' }}
+      >
         <Button
           disabled={completionSaving || hasBlockingCompletion}
           onClick={() => onComplete(assignment.id)}
           size="small"
           startIcon={<TaskAltRoundedIcon />}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
           variant={hasBlockingCompletion ? 'outlined' : 'contained'}
         >
           {hasBlockingCompletion ? statusLabel : completionButtonLabel}
         </Button>
       {canReview && latestCompletion ? (
-        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={0.75} sx={{ width: { xs: '100%', sm: 'auto' } }}>
           <Button
             color="success"
             disabled={completionSaving}
             onClick={() => onApprove(assignment.id, latestCompletion.id)}
             size="small"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
             variant="contained"
           >
             Bestätigen
@@ -3995,6 +4051,7 @@ function QuestAssignmentRow({
             disabled={completionSaving}
             onClick={() => onReject(assignment.id, latestCompletion.id)}
             size="small"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
             variant="outlined"
           >
             Ablehnen
@@ -4148,6 +4205,7 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
           onClick={() => onRedeem(reward.id)}
           size="small"
           startIcon={<StorefrontRoundedIcon />}
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
           variant={canAfford ? 'contained' : 'outlined'}
         >
           {canAfford ? actionLabel : 'Noch sparen'}
@@ -4207,12 +4265,13 @@ function RewardRedemptionRow({
         variant={redemption.status === 'REQUESTED' ? 'filled' : 'outlined'}
       />
       {canReview ? (
-        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={0.75} sx={{ width: { xs: '100%', sm: 'auto' } }}>
           <Button
             color="success"
             disabled={saving}
             onClick={() => onApprove(redemption.id)}
             size="small"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
             variant="contained"
           >
             Bestätigen
@@ -4222,6 +4281,7 @@ function RewardRedemptionRow({
             disabled={saving}
             onClick={() => onReject(redemption.id)}
             size="small"
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
             variant="outlined"
           >
             Ablehnen
@@ -4229,12 +4289,13 @@ function RewardRedemptionRow({
         </Stack>
       ) : null}
       {canMarkRedeemed ? (
-        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={0.75} sx={{ width: { xs: '100%', sm: 'auto' } }}>
           <Button
             disabled={saving}
             onClick={() => onMarkRedeemed(redemption.id)}
             size="small"
             startIcon={<StorefrontRoundedIcon />}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
             variant="contained"
           >
             Ausgegeben
@@ -4244,6 +4305,7 @@ function RewardRedemptionRow({
               disabled={saving}
               onClick={() => onCancel(redemption.id)}
               size="small"
+              sx={{ width: { xs: '100%', sm: 'auto' } }}
               variant="outlined"
             >
               Stornieren
@@ -4256,6 +4318,7 @@ function RewardRedemptionRow({
           disabled={saving}
           onClick={() => onCancel(redemption.id)}
           size="small"
+          sx={{ width: { xs: '100%', sm: 'auto' } }}
           variant="outlined"
         >
           Stornieren

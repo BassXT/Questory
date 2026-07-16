@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Frontend-Mobile-Polish fuer iPhone-Breiten: scrollbare Auth-/Dashboard-Tabs, swipebare Kategorie- und Avatar-Slot-Leisten, kompaktere Dialoge, vollbreite mobile Formular-/Kartenaktionen und globaler horizontaler Overflow-Schutz.
 - Pixelart-Avatar-Renderer eingefuehrt: DiceBear Pixel Art rendert Kopf/Gesicht/Haar/Hut/Brille, Questory rendert Koerper, Kleidung, Schuhe, Waffen, Gadgets und Tiere als eigene Pixel-SVG-Layer.
 - Avatar-Slots `hat`, `weapon` und `pet` ergaenzt.
 - Pixelart-Avatar-Katalog um zusaetzliche Haare, Huete, Oberteile, Hosen, Schuhe, Brillen, Gadgets, Waffen und Tiere erweitert, darunter Katze, Hund, Loewe, Tiger und Elefant.
@@ -140,6 +141,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - LXC-Datenbank-Full-Reset fuer einen frischen Testlauf erfolgreich ausgefuehrt: vorheriges SQL-Backup lokal abgelegt, alle Familien-/Account-/Tenant-Daten geloescht, globale 139 Avatar-Items erhalten, Backend-Health OK, Frontend HTTP `200`, alter Testlogin HTTP `401`.
 - Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
 - Frontend-Build nach Pixelart-Halskorrektur erfolgreich.

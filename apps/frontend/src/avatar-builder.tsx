@@ -238,7 +238,17 @@ export function AvatarBuilderPanel({
             </Box>
 
             <Stack spacing={1.5}>
-              <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+              <Stack
+                direction="row"
+                spacing={1}
+                sx={{
+                  flexWrap: { xs: 'nowrap', md: 'wrap' },
+                  overflowX: { xs: 'auto', md: 'visible' },
+                  pb: { xs: 0.5, md: 0 },
+                  scrollbarWidth: 'none',
+                  '&::-webkit-scrollbar': { display: 'none' }
+                }}
+              >
                 {visibleSlots.map((slot) => (
                   <Chip
                     color={selectedSlot === slot ? 'primary' : 'default'}
@@ -307,6 +317,7 @@ function AvatarItemOption({ active, item, onSelect }: AvatarItemOptionProps) {
         display: 'grid',
         gap: 0.75,
         justifyContent: 'stretch',
+        minWidth: 0,
         minHeight: 108,
         p: 1.25,
         textAlign: 'left'
