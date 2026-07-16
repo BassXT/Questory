@@ -293,6 +293,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Avatar-Item-Karten zeigen nach Auswahl keinen grossen MUI-Ripple-Kreis mehr ueber dem Karteninhalt.
 - Prisma Client Importpfad fuer Portainer/Docker-Builds stabilisiert, damit `npm run build -w apps/backend` nicht vom internen `@prisma/client/.prisma` Layout abhaengt.
 
 ### Known Issues

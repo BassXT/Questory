@@ -291,6 +291,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Health nach Avatar-Renderer-Politur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-Browser-Test des polierten Avatar-Renderers erfolgreich: SVG sichtbar, item-spezifische Details gerendert, Level-Lock aktiv und keine Konsolenfehler.
 - Avatar-Kopfpartie weiter verfeinert: Haare sind in Rueck- und Vorderlayer getrennt, das vordere Haar wird am Gesicht geclippt und Ueberdeckungen fuer Ohren/Stirn/Wangen passen besser.
+- Avatar-Item-Karten zeigen nach Auswahl keinen grossen MUI-Ripple-Kreis mehr ueber dem Karteninhalt.
 - Frontend-Build nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich.
 
 ## Offene Aufgaben

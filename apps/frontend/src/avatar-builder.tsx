@@ -279,6 +279,7 @@ function AvatarItemOption({ active, item, onSelect }: AvatarItemOptionProps) {
   return (
     <Button
       disabled={locked}
+      disableRipple
       onClick={onSelect}
       sx={{
         alignItems: 'stretch',
