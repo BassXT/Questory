@@ -321,6 +321,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Health nach Pixelart-Avatar-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Pixelart-Avatar-Slice erfolgreich: 65 Avatar-Items geladen, Slots enthalten `hat`, `weapon` und `pet`, Katalog enthaelt 5 Tiere, 4 Waffen und 4 Huete.
 - Pixelart-Avatar-Vorschau korrigiert: der zusaetzliche hautfarbene Halsblock unter dem DiceBear-Kopf wurde entfernt, damit Kopf und Shirt sauberer ineinandergreifen.
+- Portainer-Redeploy nach Pixelart-Halskorrektur per API-Script erfolgreich.
+- LXC-Health nach Pixelart-Halskorrektur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
