@@ -90,7 +90,7 @@ Technologien:
 - TypeScript
 - Vite
 - Material UI
-- DiceBear mit Toon-Head-Style fuer den Avatar-Renderer
+- DiceBear Pixel Art fuer Kopf/Gesicht/Haar/Hut/Brille im Avatar-Renderer
 
 Ziel:
 

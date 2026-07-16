@@ -129,6 +129,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
+- Portainer-Redeploy nach Pixelart-Avatar-Slice per API-Script erfolgreich.
+- LXC-Health nach Pixelart-Avatar-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Pixelart-Avatar-Slice erfolgreich: 65 Avatar-Items, Slots `hat`/`weapon`/`pet`, 5 Tiere, 4 Waffen und 4 Huete geprueft.
 - Frontend-Build nach Ganzkoerper-Avatarbuehne erfolgreich.
 - Portainer-Redeploy nach Ganzkoerper-Avatarbuehne per API-Script erfolgreich.
 - LXC-Health nach Ganzkoerper-Avatarbuehne erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.

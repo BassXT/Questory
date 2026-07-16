@@ -317,6 +317,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Prisma-Migration `20260716124500_avatar_pixel_items` mit zusaetzlichen Pixel-Haaren, Hueten, Oberteilen, Hosen, Schuhen, Brillen, Gadgets, Waffen und Tieren angelegt.
 - Pixelart-Ganzkoerper-Sprite rendert Kleidung, Schuhe, Waffen, Gadgets und Tiere wie Katze, Hund, Loewe, Tiger und Elefant als einheitliche Pixel-SVG-Layer.
 - Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
+- Portainer-Redeploy nach Pixelart-Avatar-Slice per API-Script erfolgreich.
+- LXC-Health nach Pixelart-Avatar-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Pixelart-Avatar-Slice erfolgreich: 65 Avatar-Items geladen, Slots enthalten `hat`, `weapon` und `pet`, Katalog enthaelt 5 Tiere, 4 Waffen und 4 Huete.
 
 ## Offene Aufgaben
 
@@ -327,7 +330,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes den Pixelart-Avatar-Slice auf dem LXC deployen und im Browser pruefen. Danach bei Gefallen den alten Toon-Head/Ganzkoerper-Hybrid-Code aus `avatar-builder.tsx` aufraeumen und den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
+Als naechstes den alten Toon-Head/Ganzkoerper-Hybrid-Code aus `avatar-builder.tsx` aufraeumen und den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen. Danach ein wiederholbares Playwright-Smoke-Test-Setup fuer Login, Avatar-Tab, Slot-Auswahl und Konsolenfehlerfreiheit ergaenzen.
 
 ## Architekturentscheidungen
 
@@ -395,6 +398,7 @@ Als naechstes den Pixelart-Avatar-Slice auf dem LXC deployen und im Browser prue
 - `npm audit` meldet 3 moderate Findings ueber `@hono/node-server`, transitiv ueber Prisma-Dev-Abhaengigkeiten. `npm audit fix --force` wuerde Prisma auf `6.19.3` downgraden und wird deshalb nicht automatisch ausgefuehrt.
 - `npm ci` zeigt eine Engine-Warnung fuer `@prisma/streams-local`, weil diese transitive Prisma-Abhaengigkeit Node `>=22` erwartet. Build und Generate funktionieren unter Node `20.19.6`.
 - Noch keine Tests vorhanden.
+- Ein ad-hoc Playwright-Test via `npx` scheitert lokal aktuell an der Moduluaufloesung von `@playwright/test`, weil Playwright noch nicht als Projekt-Dev-Dependency mit eigener Config eingerichtet ist.
 - Erste CI-Konfiguration vorhanden und erster GitHub-Lauf erfolgreich.
 - Port `3000` ist auf dem LXC bereits belegt; Questory nutzt fuer das Backend aktuell `3001`.
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
