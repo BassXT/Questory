@@ -136,6 +136,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
 - Frontend-Build nach Pixelart-Halskorrektur erfolgreich.
 - Frontend-Build nach Pixelart-Koerperausrichtung erfolgreich.
+- Portainer-Redeploy nach Pixelart-Koerperausrichtung per API-Script erfolgreich.
+- LXC-Health nach Pixelart-Koerperausrichtung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Portainer-Redeploy nach Pixelart-Halskorrektur per API-Script erfolgreich.
 - LXC-Health nach Pixelart-Halskorrektur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Portainer-Redeploy nach Pixelart-Avatar-Slice per API-Script erfolgreich.

@@ -324,6 +324,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Pixelart-Halskorrektur per API-Script erfolgreich.
 - LXC-Health nach Pixelart-Halskorrektur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Pixelart-Koerper-Layer um eine Pixelreihe nach oben gezogen, damit die helle Trennlinie zwischen DiceBear-Kopf und Shirt verschwindet.
+- Portainer-Redeploy nach Pixelart-Koerperausrichtung per API-Script erfolgreich.
+- LXC-Health nach Pixelart-Koerperausrichtung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
