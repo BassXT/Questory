@@ -146,6 +146,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Build, Backend-Build und Prisma Validate nach Avatar-Katalog-Erweiterung erfolgreich.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Kinderprofil-/Avatar-Extras-Slice erfolgreich.
 - Frontend-Build nach Profilabzeichen-Entfernung und Umlaut-Sweep erfolgreich.
+- Portainer-Redeploy nach Profilabzeichen-Entfernung und Umlaut-Sweep per API-Script erfolgreich.
+- LXC-Health nach Profilabzeichen-Entfernung und Umlaut-Sweep erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Portainer-Redeploy nach Kinderprofil-/Avatar-Extras-Slice per API-Script erfolgreich.
 - LXC-Health nach Kinderprofil-/Avatar-Extras-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test nach Kinderprofil-/Avatar-Extras-Slice erfolgreich: 139 Avatar-Items, 8 Mund-Items, 11 Tiere, 12 Gadgets, 6 Waffen und Kinderprofilfelder `gender`/`birthDate` geprueft.
