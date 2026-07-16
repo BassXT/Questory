@@ -139,6 +139,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Build nach Pixelart-Halskorrektur erfolgreich.
 - Frontend-Build nach Pixelart-Koerperausrichtung erfolgreich.
 - Frontend-Build, Backend-Build und Prisma Validate nach Avatar-Katalog-Erweiterung erfolgreich.
+- Portainer-Redeploy nach Avatar-Katalog-Erweiterung per API-Script erfolgreich.
+- LXC-Health nach Avatar-Katalog-Erweiterung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Avatar-Katalog-Erweiterung erfolgreich: 118 Avatar-Items geladen, darunter 26 Haare, 12 Augen, 12 Huete, 21 Oberteile und 13 Unterteile.
 - Portainer-Redeploy nach Pixelart-Koerperausrichtung per API-Script erfolgreich.
 - LXC-Health nach Pixelart-Koerperausrichtung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Portainer-Redeploy nach Pixelart-Halskorrektur per API-Script erfolgreich.

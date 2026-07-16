@@ -329,6 +329,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Prisma-Migration `20260716191000_avatar_pixel_catalog_expansion` mit 53 zusaetzlichen Pixel-Avatar-Items angelegt: 18 Frisuren/Haarfarben, 9 Augenfarben/-ausdruecke, 8 Huete, 12 Oberteile/Kleider und 6 Unterteile.
 - Pixelart-Renderer erweitert: neue Haar-/Augen-/Hut-Keys werden auf DiceBear Pixel Art gemappt, Augenfarbe wird ueber `eyesColor` gesetzt und Muster/Kleider werden als Questory-eigene Pixel-SVG-Layer gerendert.
 - Frontend-Build, Backend-Build und Prisma Validate nach Avatar-Katalog-Erweiterung erfolgreich.
+- Portainer-Redeploy nach Avatar-Katalog-Erweiterung per API-Script erfolgreich.
+- LXC-Health nach Avatar-Katalog-Erweiterung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-API-Test fuer Avatar-Katalog-Erweiterung erfolgreich: 118 Avatar-Items geladen, darunter 26 Haare, 12 Augen, 12 Huete, 21 Oberteile, 13 Unterteile und weiterhin Tiere/Waffen/Gadgets.
 
 ## Offene Aufgaben
 
