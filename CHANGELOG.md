@@ -142,6 +142,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
+- Portainer-Redeploy nach Mobile-Polish erfolgreich; LXC-Backend-Health OK, Frontend HTTP `200`, alter Testlogin HTTP `401`.
 - LXC-Datenbank-Full-Reset fuer einen frischen Testlauf erfolgreich ausgefuehrt: vorheriges SQL-Backup lokal abgelegt, alle Familien-/Account-/Tenant-Daten geloescht, globale 139 Avatar-Items erhalten, Backend-Health OK, Frontend HTTP `200`, alter Testlogin HTTP `401`.
 - Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
 - Frontend-Build nach Pixelart-Halskorrektur erfolgreich.

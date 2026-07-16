@@ -350,6 +350,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Health nach Datenbank-Full-Reset erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`, alter Testlogin wird mit HTTP `401` abgelehnt.
 - Frontend-Mobile-Polish umgesetzt: Container-Padding fuer kleine Displays reduziert, Header und Auth-/Dashboard-Tabs mobil umbrech- bzw. scrollfaehig gemacht, lange Dialogfilter und Avatar-Slots als swipebare Leisten umgesetzt, mobile Formular-/Kartenaktionen vollbreit gestapelt und globaler horizontaler Overflow-Schutz im Theme ergaenzt.
 - Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
+- Portainer-Redeploy nach Mobile-Polish per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`, alter Testlogin weiterhin HTTP `401`.
 
 ## Offene Aufgaben
 
