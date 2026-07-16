@@ -373,7 +373,7 @@ function AvatarPreview({
   ].filter(Boolean);
 
   return (
-    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 390, width: '100%' }}>
+    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 310, width: '100%' }}>
       <Box
         component="svg"
         aria-label={getAvatarAlt(childName)}
@@ -387,7 +387,7 @@ function AvatarPreview({
           borderRadius: 4,
           boxShadow: '0 18px 45px rgba(23, 32, 51, 0.18)',
           display: 'block',
-          maxWidth: 390,
+          maxWidth: 310,
           width: '100%'
         }}
       >
