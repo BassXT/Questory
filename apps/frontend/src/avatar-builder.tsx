@@ -373,6 +373,9 @@ function AvatarPreview({
           <filter id="avatar-soft-shadow" x="-30%" y="-30%" width="160%" height="160%">
             <feDropShadow dx="0" dy="5" stdDeviation="4" floodColor="#1b2a3f" floodOpacity="0.18" />
           </filter>
+          <clipPath id="avatar-face-clip">
+            <path d="M160 45 C191 45 213 68 213 101 C213 138 190 162 160 162 C130 162 107 138 107 101 C107 68 129 45 160 45 Z" />
+          </clipPath>
         </defs>
         <rect width="320" height="360" rx="34" fill="url(#avatar-bg)" />
         <rect x="16" y="16" width="288" height="328" rx="26" fill="#ffffff" opacity="0.18" />
@@ -411,17 +414,27 @@ function AvatarPreview({
           <ellipse cx="183" cy="318" rx="29" ry="12" fill="url(#avatar-shoes)" />
           <ShoeDetails itemKey={shoes?.key} accent={shoes?.colorSecondary ?? '#f4c542'} />
 
-          <circle cx="112" cy="105" r="9" fill="url(#avatar-skin)" />
-          <circle cx="208" cy="105" r="9" fill="url(#avatar-skin)" />
-          <circle cx="160" cy="97" r="54" fill="url(#avatar-skin)" />
-          <path d="M117 105 C124 133 144 149 170 147 C190 143 204 130 210 108 C200 139 178 158 147 153 C130 149 119 132 117 105 Z" fill={skinShadow} opacity="0.26" />
+          <HairBackShape itemKey={hair?.key} color={hairColor} accent={hair?.colorSecondary ?? '#7b4b34'} />
+          <circle cx="107" cy="104" r="10" fill="url(#avatar-skin)" />
+          <circle cx="213" cy="104" r="10" fill="url(#avatar-skin)" />
+          <path
+            d="M160 45 C191 45 213 68 213 101 C213 138 190 162 160 162 C130 162 107 138 107 101 C107 68 129 45 160 45 Z"
+            fill="url(#avatar-skin)"
+          />
+          <path
+            d="M113 105 C121 136 144 153 171 150 C193 147 207 132 211 109 C202 143 179 163 147 157 C129 153 117 135 113 105 Z"
+            fill={skinShadow}
+            opacity="0.22"
+          />
           <circle cx="135" cy="110" r="6" fill="#f3a0a0" opacity="0.35" />
           <circle cx="185" cy="110" r="6" fill="#f3a0a0" opacity="0.35" />
-          <HairShape itemKey={hair?.key} color={hairColor} accent={hair?.colorSecondary ?? '#7b4b34'} />
+          <HairFrontShape itemKey={hair?.key} color={hairColor} accent={hair?.colorSecondary ?? '#7b4b34'} />
+          <path d="M132 88 C139 84 146 84 152 88" fill="none" stroke={darkenColor(hairColor, 0.25)} strokeLinecap="round" strokeWidth="4" opacity="0.48" />
+          <path d="M168 88 C175 84 182 84 188 88" fill="none" stroke={darkenColor(hairColor, 0.25)} strokeLinecap="round" strokeWidth="4" opacity="0.48" />
           <EyeShape itemKey={eyes?.key} color={eyeColor} />
           <path d="M158 98 C154 108 154 114 161 116" fill="none" stroke={skinShadow} strokeLinecap="round" strokeWidth="3" opacity="0.45" />
           <path d="M146 125 C154 132 166 132 174 125" fill="none" stroke="#7a3e3b" strokeLinecap="round" strokeWidth="4" />
-          <path d="M126 76 C136 58 166 52 190 66" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.22" />
+          <path d="M127 71 C139 58 168 54 190 66" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.18" />
           <GlassesShape item={glasses} />
         </g>
 
@@ -487,25 +500,25 @@ function BackgroundDetails({ itemKey }: { itemKey: string | undefined }) {
   );
 }
 
-function HairShape({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
+function HairBackShape({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
   if (itemKey === 'hair-buns') {
     return (
-      <g fill={color}>
-        <circle cx="113" cy="74" r="20" />
-        <circle cx="207" cy="74" r="20" />
-        <path d="M110 93 C118 40 202 40 210 93 C194 74 126 74 110 93 Z" />
-        <path d="M125 59 C141 48 176 47 196 62" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.45" />
+      <g>
+        <circle cx="111" cy="77" r="24" fill={darkenColor(color, 0.05)} />
+        <circle cx="209" cy="77" r="24" fill={darkenColor(color, 0.05)} />
+        <path d="M111 101 C113 47 207 47 209 101 C191 75 129 75 111 101 Z" fill={color} />
+        <path d="M126 56 C144 45 178 45 196 58" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.34" />
       </g>
     );
   }
 
   if (itemKey === 'hair-curly') {
     return (
-      <g fill={color}>
-        {[113, 131, 149, 167, 185, 203].map((x, index) => (
-          <circle cx={x} cy={66 + (index % 2) * 8} r="17" key={x} />
+      <g>
+        {[110, 128, 146, 164, 182, 200, 211].map((x, index) => (
+          <circle cx={x} cy={70 + (index % 2) * 9} r="18" fill={color} key={x} />
         ))}
-        <path d="M107 92 C124 67 193 64 213 92 C197 81 124 81 107 92 Z" fill={accent} opacity="0.42" />
+        <path d="M108 97 C122 65 198 62 213 97 C194 83 128 83 108 97 Z" fill={accent} opacity="0.36" />
       </g>
     );
   }
@@ -513,16 +526,55 @@ function HairShape({ itemKey, color, accent }: { itemKey: string | undefined; co
   if (itemKey === 'hair-silver') {
     return (
       <g>
-        <path d="M103 94 C111 40 177 27 213 72 C196 65 168 78 153 102 C139 82 120 82 103 94 Z" fill={color} />
-        <path d="M153 45 C143 65 145 84 154 104" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="8" opacity="0.82" />
+        <path d="M103 101 C109 41 179 25 216 73 C196 68 171 78 155 103 C140 83 121 84 103 101 Z" fill={color} />
+        <path d="M106 102 C112 134 134 157 160 158 C131 163 105 139 96 112 Z" fill={darkenColor(color, 0.16)} opacity="0.82" />
       </g>
     );
   }
 
   return (
     <g>
-      <path d="M103 96 C108 43 177 34 212 72 C194 69 171 80 157 104 C142 84 121 85 103 96 Z" fill={color} />
-      <path d="M125 57 C146 45 181 49 199 68" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.34" />
+      <path d="M102 101 C107 42 176 32 215 72 C196 70 173 80 158 104 C143 84 121 86 102 101 Z" fill={color} />
+      <path d="M106 103 C113 134 135 157 160 158 C130 163 105 139 96 113 Z" fill={darkenColor(color, 0.12)} opacity="0.72" />
+    </g>
+  );
+}
+
+function HairFrontShape({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
+  if (itemKey === 'hair-buns') {
+    return (
+      <g clipPath="url(#avatar-face-clip)">
+        <path d="M111 92 C122 59 198 59 209 92 C195 78 176 76 160 83 C144 76 125 78 111 92 Z" fill={color} />
+        <path d="M116 91 C130 76 151 75 160 84 C170 74 191 76 205 92" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="5" opacity="0.45" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'hair-curly') {
+    return (
+      <g clipPath="url(#avatar-face-clip)">
+        {[117, 135, 153, 171, 189, 205].map((x, index) => (
+          <circle cx={x} cy={83 + (index % 2) * 7} r="16" fill={color} key={x} />
+        ))}
+        <path d="M112 99 C130 84 187 82 208 98" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.32" />
+      </g>
+    );
+  }
+
+  if (itemKey === 'hair-silver') {
+    return (
+      <g clipPath="url(#avatar-face-clip)">
+        <path d="M105 92 C115 47 180 34 214 75 C192 69 169 81 154 104 C139 85 120 84 105 92 Z" fill={color} />
+        <path d="M153 45 C142 66 145 86 155 106" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="9" opacity="0.9" />
+      </g>
+    );
+  }
+
+  return (
+    <g clipPath="url(#avatar-face-clip)">
+      <path d="M104 94 C110 44 177 34 214 73 C195 70 171 80 156 104 C143 83 122 85 104 94 Z" fill={color} />
+      <path d="M123 59 C145 46 181 50 201 69" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.34" />
+      <path d="M119 90 C134 78 147 82 158 104" fill="none" stroke={darkenColor(color, 0.18)} strokeLinecap="round" strokeWidth="5" opacity="0.42" />
     </g>
   );
 }
@@ -745,6 +797,15 @@ function lightenColor(color: string, amount: number) {
   const lightened = channels.map((channel) => Math.min(255, Math.round(channel + (255 - channel) * amount)));
 
   return `#${lightened.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
+}
+
+function darkenColor(color: string, amount: number) {
+  const hex = color.startsWith('#') ? color.slice(1) : color;
+  const normalizedHex = hex.length === 3 ? hex.split('').map((char) => `${char}${char}`).join('') : hex.padEnd(6, '0').slice(0, 6);
+  const channels = [0, 2, 4].map((index) => parseInt(normalizedHex.slice(index, index + 2), 16));
+  const darkened = channels.map((channel) => Math.max(0, Math.round(channel * (1 - amount))));
+
+  return `#${darkened.map((channel) => channel.toString(16).padStart(2, '0')).join('')}`;
 }
 
 function ColorSwatch({ color }: { color: string }) {

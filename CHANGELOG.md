@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Kopfpartie weiter verfeinert: Haare werden jetzt in Rueck- und Vorderlayer getrennt, am Gesicht geclippt und mit besser passenden Ueberdeckungen fuer Ohren, Stirn und Wangen gerendert.
 - Avatar-Vorschau optisch ueberarbeitet: groessere illustrierte Buehne, weichere Spielfigur-Proportionen, detaillierteres Gesicht, Arme/Haende, Kleidungsschnitte, Schuhdetails und item-spezifische Hintergruende/Gadgets.
 - Avatar-Datenmodell mit globalem `AvatarItem`-Katalog, `ChildAvatarItem` fuer Spezial-Unlocks und `ChildAvatarLoadout` fuer ausgeruestete Teile erstellt.
 - Prisma-Migration `20260716103000_avatar_builder` mit 33 initialen Avatar-Items fuer Hintergruende, Figur, Haare, Augen, Kleidung, Schuhe, Brillen und Gadgets erstellt.
@@ -121,6 +122,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Avatar-Haarlayer-/Gesichts-Slice erfolgreich.
 - Frontend-Build nach Avatar-Renderer-Politur erfolgreich.
 - Portainer-Redeploy nach Avatar-Renderer-Politur per API-Script erfolgreich.
 - LXC-Health nach Avatar-Renderer-Politur erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
