@@ -326,6 +326,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Pixelart-Koerper-Layer um eine Pixelreihe nach oben gezogen, damit die helle Trennlinie zwischen DiceBear-Kopf und Shirt verschwindet.
 - Portainer-Redeploy nach Pixelart-Koerperausrichtung per API-Script erfolgreich.
 - LXC-Health nach Pixelart-Koerperausrichtung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Prisma-Migration `20260716191000_avatar_pixel_catalog_expansion` mit 53 zusaetzlichen Pixel-Avatar-Items angelegt: 18 Frisuren/Haarfarben, 9 Augenfarben/-ausdruecke, 8 Huete, 12 Oberteile/Kleider und 6 Unterteile.
+- Pixelart-Renderer erweitert: neue Haar-/Augen-/Hut-Keys werden auf DiceBear Pixel Art gemappt, Augenfarbe wird ueber `eyesColor` gesetzt und Muster/Kleider werden als Questory-eigene Pixel-SVG-Layer gerendert.
+- Frontend-Build, Backend-Build und Prisma Validate nach Avatar-Katalog-Erweiterung erfolgreich.
 
 ## Offene Aufgaben
 

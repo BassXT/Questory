@@ -373,6 +373,7 @@ function AvatarPreview({
         hairColor: [stripHex(hair?.colorPrimary ?? '#5b3826')],
         hair: [resolvePixelHair(hair?.key)],
         eyes: [resolvePixelEyes(eyes?.key)],
+        eyesColor: [stripHex(eyes?.colorPrimary ?? '#28384f')],
         mouth: [resolvePixelMouth(eyes?.key)],
         clothing: [resolvePixelClothing(top?.key)],
         clothingColor: [stripHex(top?.colorPrimary ?? '#2568d8')],
@@ -426,6 +427,7 @@ function AvatarPreview({
           <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
           <PixelArms skin={skin} />
           <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
+          <PixelDressOverlay itemKey={top?.key} color={topColor} accent={topAccent} skin={skin} />
           <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
         </g>
         <image href={pixelHeadDataUri} x="8" y="2" width="16" height="16" />
@@ -446,6 +448,42 @@ function AvatarPreview({
 
 function resolvePixelHair(itemKey: string | undefined) {
   switch (itemKey) {
+    case 'hair-pixel-crop-blond':
+      return 'short05';
+    case 'hair-pixel-crop-black':
+      return 'short02';
+    case 'hair-pixel-bob-brown':
+      return 'long04';
+    case 'hair-pixel-bob-red':
+      return 'long06';
+    case 'hair-pixel-ponytail-gold':
+      return 'long13';
+    case 'hair-pixel-ponytail-black':
+      return 'long14';
+    case 'hair-pixel-curls-chestnut':
+      return 'short15';
+    case 'hair-pixel-curls-blond':
+      return 'short16';
+    case 'hair-pixel-braids-brown':
+      return 'long19';
+    case 'hair-pixel-braids-purple':
+      return 'long20';
+    case 'hair-pixel-spikes-black':
+      return 'short20';
+    case 'hair-pixel-spikes-green':
+      return 'short22';
+    case 'hair-pixel-long-rose':
+      return 'long08';
+    case 'hair-pixel-long-silver':
+      return 'long09';
+    case 'hair-pixel-buns-gold':
+      return 'long18';
+    case 'hair-pixel-buns-teal':
+      return 'long21';
+    case 'hair-pixel-afro-dark':
+      return 'short23';
+    case 'hair-pixel-afro-copper':
+      return 'short24';
     case 'hair-pixel-long':
       return 'long05';
     case 'hair-pixel-wild':
@@ -466,9 +504,21 @@ function resolvePixelHair(itemKey: string | undefined) {
 function resolvePixelEyes(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
+    case 'eyes-blue':
+    case 'eyes-green':
+    case 'eyes-brown':
+    case 'eyes-gray':
+    case 'eyes-amber':
+    case 'eyes-violet':
       return 'variant01';
     case 'eyes-focus':
       return 'variant09';
+    case 'eyes-wink':
+      return 'variant05';
+    case 'eyes-sleepy':
+      return 'variant10';
+    case 'eyes-star':
+      return 'variant12';
     default:
       return 'variant08';
   }
@@ -477,9 +527,21 @@ function resolvePixelEyes(itemKey: string | undefined) {
 function resolvePixelMouth(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
+    case 'eyes-blue':
+    case 'eyes-green':
+    case 'eyes-brown':
+    case 'eyes-gray':
+    case 'eyes-amber':
+    case 'eyes-violet':
       return 'happy04';
     case 'eyes-focus':
       return 'happy09';
+    case 'eyes-wink':
+      return 'happy03';
+    case 'eyes-sleepy':
+      return 'happy10';
+    case 'eyes-star':
+      return 'happy13';
     default:
       return 'happy01';
   }
@@ -487,6 +549,29 @@ function resolvePixelMouth(itemKey: string | undefined) {
 
 function resolvePixelClothing(itemKey: string | undefined) {
   switch (itemKey) {
+    case 'top-checker-red':
+      return 'variant08';
+    case 'top-dots-teal':
+      return 'variant10';
+    case 'top-star-blue':
+      return 'variant11';
+    case 'top-rainbow':
+      return 'variant16';
+    case 'top-overalls-denim':
+      return 'variant22';
+    case 'top-hoodie-mint':
+      return 'variant06';
+    case 'top-sweater-heart':
+      return 'variant13';
+    case 'top-jacket-space':
+      return 'variant17';
+    case 'top-dress-sun':
+    case 'top-dress-flower':
+      return 'variant09';
+    case 'top-dress-night':
+      return 'variant20';
+    case 'top-royal-coat':
+      return 'variant18';
     case 'top-pixel-striped':
       return 'variant14';
     case 'top-pixel-mage':
@@ -523,15 +608,33 @@ function resolvePixelGlasses(itemKey: string | undefined) {
 
 function resolvePixelHat(itemKey: string | undefined) {
   switch (itemKey) {
+    case 'hat-beanie-teal':
+      return 'variant02';
+    case 'hat-beanie-yellow':
+      return 'variant03';
+    case 'hat-flower-crown':
+      return 'variant04';
+    case 'hat-explorer':
+      return 'variant05';
+    case 'hat-headphones':
+      return 'variant06';
     case 'hat-crown-gold':
       return 'variant07';
+    case 'hat-party':
+      return 'variant09';
     case 'hat-wizard-blue':
+    case 'hat-witch-purple':
       return 'variant10';
     case 'hat-helmet-iron':
+    case 'hat-dragon-hood':
       return 'variant08';
     default:
       return 'variant01';
   }
+}
+
+function isDressTop(itemKey: string | undefined) {
+  return itemKey === 'top-dress-sun' || itemKey === 'top-dress-flower' || itemKey === 'top-dress-night';
 }
 
 function PixelBackground({ itemKey, color }: { itemKey: string | undefined; color: string }) {
@@ -587,17 +690,120 @@ function PixelTop({ itemKey, color, accent }: { itemKey: string | undefined; col
       <rect x="9" y="20" width="3" height="8" fill={color} />
       <rect x="20" y="20" width="3" height="8" fill={color} />
       <rect x="13" y="19" width="6" height="2" fill={accent} opacity="0.75" />
-      {itemKey === 'top-pixel-striped' ? (
+      {itemKey === 'top-pixel-striped' || itemKey === 'top-rainbow' ? (
         <g>
           <rect x="10" y="22" width="12" height="1" fill={accent} />
-          <rect x="10" y="26" width="12" height="1" fill={accent} />
+          <rect x="10" y="24" width="12" height="1" fill={itemKey === 'top-rainbow' ? '#38a6a5' : accent} />
+          <rect x="10" y="26" width="12" height="1" fill={itemKey === 'top-rainbow' ? '#f2c94c' : accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-checker-red' ? (
+        <g>
+          <rect x="10" y="21" width="3" height="2" fill={accent} />
+          <rect x="16" y="21" width="3" height="2" fill={accent} />
+          <rect x="13" y="24" width="3" height="2" fill={accent} />
+          <rect x="19" y="24" width="3" height="2" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-dots-teal' ? (
+        <g>
+          <rect x="12" y="22" width="1" height="1" fill={accent} />
+          <rect x="18" y="22" width="1" height="1" fill={accent} />
+          <rect x="15" y="25" width="1" height="1" fill={accent} />
+          <rect x="20" y="26" width="1" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-star-blue' ? (
+        <g>
+          <rect x="15" y="22" width="2" height="1" fill={accent} />
+          <rect x="14" y="23" width="4" height="1" fill={accent} />
+          <rect x="15" y="24" width="2" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-overalls-denim' ? (
+        <g>
+          <rect x="12" y="19" width="2" height="10" fill={accent} />
+          <rect x="18" y="19" width="2" height="10" fill={accent} />
+          <rect x="13" y="25" width="6" height="4" fill={accent} />
+          <rect x="14" y="22" width="1" height="1" fill="#fff3b0" />
+          <rect x="18" y="22" width="1" height="1" fill="#fff3b0" />
+        </g>
+      ) : null}
+      {itemKey === 'top-hoodie-mint' ? <rect x="13" y="25" width="6" height="2" fill={accent} opacity="0.82" /> : null}
+      {itemKey === 'top-sweater-heart' ? (
+        <g>
+          <rect x="15" y="23" width="1" height="1" fill={accent} />
+          <rect x="17" y="23" width="1" height="1" fill={accent} />
+          <rect x="15" y="24" width="3" height="1" fill={accent} />
+          <rect x="16" y="25" width="1" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-jacket-space' ? (
+        <g>
+          <rect x="10" y="20" width="2" height="9" fill={accent} />
+          <rect x="20" y="20" width="2" height="9" fill={accent} />
+          <rect x="16" y="23" width="1" height="1" fill="#fff3b0" />
+          <rect x="18" y="26" width="1" height="1" fill="#fff3b0" />
+        </g>
+      ) : null}
+      {isDressTop(itemKey) ? (
+        <g>
+          <rect x="11" y="19" width="10" height="2" fill={accent} opacity="0.75" />
+          <rect x="12" y="25" width="8" height="3" fill={accent} opacity="0.6" />
+          {itemKey === 'top-dress-flower' ? <rect x="16" y="22" width="1" height="1" fill={accent} /> : null}
+          {itemKey === 'top-dress-night' ? <rect x="17" y="23" width="1" height="1" fill="#fff3b0" /> : null}
         </g>
       ) : null}
       {itemKey === 'top-pixel-mage' || itemKey === 'top-cape-purple' ? <rect x="8" y="20" width="2" height="12" fill={accent} opacity="0.85" /> : null}
+      {itemKey === 'top-royal-coat' ? (
+        <g>
+          <rect x="9" y="20" width="2" height="13" fill={accent} />
+          <rect x="21" y="20" width="2" height="13" fill={accent} />
+          <rect x="15" y="21" width="2" height="7" fill="#fff3b0" />
+        </g>
+      ) : null}
       {itemKey === 'top-pixel-armor' || itemKey === 'top-armor-gold' ? (
         <g>
           <rect x="12" y="21" width="8" height="5" fill={accent} opacity="0.8" />
           <rect x="15" y="22" width="2" height="2" fill="#fff3b0" />
+        </g>
+      ) : null}
+    </g>
+  );
+}
+
+function PixelDressOverlay({
+  itemKey,
+  color,
+  accent,
+  skin
+}: {
+  itemKey: string | undefined;
+  color: string;
+  accent: string;
+  skin: string;
+}) {
+  if (!isDressTop(itemKey)) {
+    return null;
+  }
+
+  return (
+    <g>
+      <rect x="10" y="28" width="12" height="4" fill={color} />
+      <rect x="9" y="32" width="14" height="5" fill={color} />
+      <rect x="8" y="35" width="16" height="2" fill={accent} opacity="0.75" />
+      <rect x="11" y="37" width="3" height="4" fill={skin} />
+      <rect x="18" y="37" width="3" height="4" fill={skin} />
+      {itemKey === 'top-dress-flower' ? (
+        <g>
+          <rect x="13" y="31" width="1" height="1" fill={accent} />
+          <rect x="19" y="33" width="1" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-dress-night' ? (
+        <g>
+          <rect x="13" y="31" width="1" height="1" fill="#fff3b0" />
+          <rect x="18" y="34" width="1" height="1" fill="#fff3b0" />
         </g>
       ) : null}
     </g>
@@ -616,7 +822,7 @@ function PixelArms({ skin }: { skin: string }) {
 }
 
 function PixelBottom({ itemKey, color, accent, skin }: { itemKey: string | undefined; color: string; accent: string; skin: string }) {
-  if (itemKey === 'bottom-shorts') {
+  if (itemKey === 'bottom-shorts' || itemKey === 'bottom-yellow-shorts') {
     return (
       <g>
         <rect x="10" y="29" width="12" height="4" fill={color} />
@@ -628,11 +834,23 @@ function PixelBottom({ itemKey, color, accent, skin }: { itemKey: string | undef
     );
   }
 
-  if (itemKey === 'bottom-pixel-skirt') {
+  if (itemKey === 'bottom-pixel-skirt' || itemKey === 'bottom-striped-skirt' || itemKey === 'bottom-flower-skirt' || itemKey === 'bottom-rainbow-skirt') {
     return (
       <g>
         <rect x="10" y="29" width="12" height="3" fill={color} />
         <rect x="9" y="32" width="14" height="4" fill={color} />
+        {itemKey === 'bottom-striped-skirt' || itemKey === 'bottom-rainbow-skirt' ? (
+          <g>
+            <rect x="10" y="33" width="12" height="1" fill={accent} />
+            <rect x="11" y="35" width="10" height="1" fill={itemKey === 'bottom-rainbow-skirt' ? '#38a6a5' : accent} />
+          </g>
+        ) : null}
+        {itemKey === 'bottom-flower-skirt' ? (
+          <g>
+            <rect x="13" y="33" width="1" height="1" fill={accent} />
+            <rect x="19" y="34" width="1" height="1" fill={accent} />
+          </g>
+        ) : null}
         <rect x="11" y="36" width="3" height="5" fill={skin} />
         <rect x="18" y="36" width="3" height="5" fill={skin} />
       </g>
@@ -646,6 +864,20 @@ function PixelBottom({ itemKey, color, accent, skin }: { itemKey: string | undef
       <rect x="17" y="33" width="5" height="8" fill={color} />
       <rect x="15" y="33" width="2" height="8" fill="#000000" opacity="0.14" />
       {itemKey === 'bottom-space' || itemKey === 'bottom-pixel-royal' ? <rect x="11" y="31" width="10" height="1" fill={accent} /> : null}
+      {itemKey === 'bottom-purple-leggings' ? (
+        <g>
+          <rect x="10" y="36" width="5" height="1" fill={accent} />
+          <rect x="17" y="36" width="5" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'bottom-checker-pants' ? (
+        <g>
+          <rect x="10" y="34" width="3" height="2" fill={accent} />
+          <rect x="18" y="34" width="3" height="2" fill={accent} />
+          <rect x="13" y="38" width="2" height="2" fill={accent} />
+          <rect x="20" y="38" width="2" height="2" fill={accent} />
+        </g>
+      ) : null}
       {itemKey === 'bottom-cargo' ? (
         <g>
           <rect x="10" y="35" width="3" height="2" fill={accent} />
