@@ -126,9 +126,14 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
 - `JwtModule` Export fuer Feature-Module mit JWT Guards ergaenzt.
 
+### Fixed
+
+- Sichtbaren hautfarbenen Halsblock in der Pixelart-Avatar-Vorschau entfernt, damit der DiceBear-Pixelkopf sauberer auf dem Shirt sitzt.
+
 ### Verified
 
 - Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.
+- Frontend-Build nach Pixelart-Halskorrektur erfolgreich.
 - Portainer-Redeploy nach Pixelart-Avatar-Slice per API-Script erfolgreich.
 - LXC-Health nach Pixelart-Avatar-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Pixelart-Avatar-Slice erfolgreich: 65 Avatar-Items, Slots `hat`/`weapon`/`pet`, 5 Tiere, 4 Waffen und 4 Huete geprueft.

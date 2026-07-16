@@ -422,7 +422,6 @@ function AvatarPreview({
         <PixelPet item={pet} />
         <PixelWeapon item={weapon} />
         <PixelGadgetBack item={gadget} />
-        <rect x="12" y="17" width="8" height="4" fill={skin} />
         <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
         <PixelArms skin={skin} />
         <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />

@@ -320,6 +320,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Pixelart-Avatar-Slice per API-Script erfolgreich.
 - LXC-Health nach Pixelart-Avatar-Slice erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - LXC-API-Test fuer Pixelart-Avatar-Slice erfolgreich: 65 Avatar-Items geladen, Slots enthalten `hat`, `weapon` und `pet`, Katalog enthaelt 5 Tiere, 4 Waffen und 4 Huete.
+- Pixelart-Avatar-Vorschau korrigiert: der zusaetzliche hautfarbene Halsblock unter dem DiceBear-Kopf wurde entfernt, damit Kopf und Shirt sauberer ineinandergreifen.
 
 ## Offene Aufgaben
 
@@ -399,6 +400,7 @@ Als naechstes den alten Toon-Head/Ganzkoerper-Hybrid-Code aus `avatar-builder.ts
 - `npm ci` zeigt eine Engine-Warnung fuer `@prisma/streams-local`, weil diese transitive Prisma-Abhaengigkeit Node `>=22` erwartet. Build und Generate funktionieren unter Node `20.19.6`.
 - Noch keine Tests vorhanden.
 - Ein ad-hoc Playwright-Test via `npx` scheitert lokal aktuell an der Moduluaufloesung von `@playwright/test`, weil Playwright noch nicht als Projekt-Dev-Dependency mit eigener Config eingerichtet ist.
+- `npm ci` kann unter Windows bei halb geloeschten `node_modules`-Ordnern an `ENOTEMPTY` haengen; im aktuellen Lauf wurde ein haengender npm-Prozess beendet und `npm rebuild` erfolgreich ausgefuehrt.
 - Erste CI-Konfiguration vorhanden und erster GitHub-Lauf erfolgreich.
 - Port `3000` ist auf dem LXC bereits belegt; Questory nutzt fuer das Backend aktuell `3001`.
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
