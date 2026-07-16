@@ -126,6 +126,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Ganzkoerper-Avatarbuehne erfolgreich.
+- Portainer-Redeploy nach Ganzkoerper-Avatarbuehne per API-Script erfolgreich.
+- LXC-Health nach Ganzkoerper-Avatarbuehne erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test der Ganzkoerper-Avatarbuehne erfolgreich: Avatar-Tab, sichtbare Hose/Schuhe, eingebetteter Toon-Head-Kopf, kompakte Vorschau im Viewport und Konsolenfehlerfreiheit geprueft.
 - Frontend-Build nach Toon-Head-Renderer-Umstellung erfolgreich.
 - Portainer-Redeploy nach Toon-Head-Renderer-Umstellung per API-Script erfolgreich.
 - LXC-Health nach Toon-Head-Renderer-Umstellung erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.

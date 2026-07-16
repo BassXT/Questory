@@ -309,6 +309,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Browser-Test des Toon-Head-Renderers erfolgreich: Avatar-Tab, Haar-Auswahl, Data-URI-SVG-Bild und Konsolenfehlerfreiheit geprueft.
 - Avatar-Vorschau zu einer Ganzkoerperbuehne erweitert: Toon Head rendert Kopf/Gesicht/Haare, Questory rendert Koerper, Oberteil, Hose, Schuhe, Hintergruende und Gadgets als eigene SVG-Layer.
 - Frontend-Build nach Ganzkoerper-Avatarbuehne erfolgreich.
+- Portainer-Redeploy nach Ganzkoerper-Avatarbuehne per API-Script erfolgreich.
+- LXC-Health nach Ganzkoerper-Avatarbuehne erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- LXC-Browser-Test der Ganzkoerper-Avatarbuehne erfolgreich: Avatar-Tab, sichtbare Hose/Schuhe, eingebetteter Toon-Head-Kopf, kompakte Vorschau im Viewport und Konsolenfehlerfreiheit geprueft.
 
 ## Offene Aufgaben
 
@@ -319,7 +322,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes die Ganzkoerper-Avatarbuehne auf dem LXC deployen und im Browser pruefen. Danach Brillen als echtes Kopf-Overlay pruefen oder den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
+Als naechstes Brillen als echtes Kopf-Overlay pruefen oder den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
 
 ## Architekturentscheidungen
 
