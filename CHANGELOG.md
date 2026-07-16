@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Mobile-Nachbesserung fuer den ersten echten Testlauf: Uebersicht mit swipebarer Kinderleiste, Familienlage mit Kinderprofilen statt nur Kinder-Logins, Shop-Untertabs fuer Shop/Belohnungsverwaltung sowie kleinere Shopkarten und Avatar-Vorschau auf iPhone-Breiten.
 - Frontend-Mobile-Polish fuer iPhone-Breiten: scrollbare Auth-/Dashboard-Tabs, swipebare Kategorie- und Avatar-Slot-Leisten, kompaktere Dialoge, vollbreite mobile Formular-/Kartenaktionen und globaler horizontaler Overflow-Schutz.
 - Pixelart-Avatar-Renderer eingefuehrt: DiceBear Pixel Art rendert Kopf/Gesicht/Haar/Hut/Brille, Questory rendert Koerper, Kleidung, Schuhe, Waffen, Gadgets und Tiere als eigene Pixel-SVG-Layer.
 - Avatar-Slots `hat`, `weapon` und `pet` ergaenzt.
@@ -142,6 +143,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
+- Frontend-Build nach Mobile-Nachbesserung erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Portainer-Redeploy nach Mobile-Polish erfolgreich; LXC-Backend-Health OK, Frontend HTTP `200`, alter Testlogin HTTP `401`.
 - LXC-Datenbank-Full-Reset fuer einen frischen Testlauf erfolgreich ausgefuehrt: vorheriges SQL-Backup lokal abgelegt, alle Familien-/Account-/Tenant-Daten geloescht, globale 139 Avatar-Items erhalten, Backend-Health OK, Frontend HTTP `200`, alter Testlogin HTTP `401`.
 - Frontend-Build, Backend-Build und Prisma Validate nach Pixelart-Avatar-Slice erfolgreich.

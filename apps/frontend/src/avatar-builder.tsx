@@ -145,7 +145,7 @@ export function AvatarBuilderPanel({
   }
 
   return (
-    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+    <Paper elevation={0} sx={{ p: { xs: 1.25, sm: 2, md: 2.5 } }}>
       <Stack spacing={2}>
         <Box
           sx={{
@@ -218,7 +218,7 @@ export function AvatarBuilderPanel({
                 display: 'grid',
                 gap: 1.5,
                 justifyItems: 'center',
-                p: 1.5
+                p: { xs: 1, sm: 1.5 }
               }}
             >
               <AvatarPreview childName={avatar.child.displayName} equippedItems={draftLoadout} itemsByKey={itemsByKey} />
@@ -412,7 +412,7 @@ function AvatarPreview({
   ].filter(Boolean);
 
   return (
-    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: 360, width: '100%' }}>
+    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: { xs: 236, sm: 300, md: 360 }, width: '100%' }}>
       <Box
         component="svg"
         aria-label={getAvatarAlt(childName)}
@@ -422,13 +422,14 @@ function AvatarPreview({
         sx={{
           aspectRatio: '2 / 3',
           bgcolor: background?.colorPrimary ?? '#d9f2df',
-          border: '10px solid',
+          borderStyle: 'solid',
+          borderWidth: { xs: 6, sm: 8, md: 10 },
           borderColor: 'rgba(255,255,255,0.46)',
           borderRadius: 4,
           boxShadow: '0 18px 45px rgba(23, 32, 51, 0.18)',
           display: 'block',
           imageRendering: 'pixelated',
-          maxWidth: 360,
+          maxWidth: { xs: 236, sm: 300, md: 360 },
           width: '100%'
         }}
       >

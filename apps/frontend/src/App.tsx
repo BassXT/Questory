@@ -42,6 +42,7 @@ const TOKEN_STORAGE_KEY = 'questory.accessToken';
 
 type AuthMode = 'login' | 'register' | 'child';
 type DashboardTab = 'overview' | 'children' | 'avatar' | 'quests' | 'shop' | 'approvals';
+type ShopTab = 'shop' | 'manage';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
 type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
@@ -1823,6 +1824,7 @@ function DashboardView({
     [canManageChildren]
   );
   const [activeDashboardTab, setActiveDashboardTab] = useState<DashboardTab>('overview');
+  const [activeShopTab, setActiveShopTab] = useState<ShopTab>('shop');
 
   useEffect(() => {
     if (!dashboardTabs.some((tab) => tab.value === activeDashboardTab)) {
@@ -1881,22 +1883,29 @@ function DashboardView({
       </Paper>
 
       {activeDashboardTab === 'overview' ? (
-        <Box
-          sx={{
-            display: 'grid',
-            gap: 2,
-            gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1.35fr) minmax(320px, 0.65fr)' }
-          }}
-        >
-          <ChildStatsPanel
-            loading={childStatsLoading}
-            stats={childStats}
-            onOpenAvatar={() => setActiveDashboardTab('avatar')}
-            onOpenQuests={() => setActiveDashboardTab('quests')}
-            onOpenShop={() => setActiveDashboardTab('shop')}
+        <Stack spacing={2}>
+          <ChildrenOverviewStrip
+            children={children}
+            selectedChildId={assignmentForm.childProfileId}
+            onChildSelect={onAssignmentChildChange}
           />
-          <FamilyStatusPanel dashboard={dashboard} />
-        </Box>
+          <Box
+            sx={{
+              display: 'grid',
+              gap: 2,
+              gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1.35fr) minmax(320px, 0.65fr)' }
+            }}
+          >
+            <ChildStatsPanel
+              loading={childStatsLoading}
+              stats={childStats}
+              onOpenAvatar={() => setActiveDashboardTab('avatar')}
+              onOpenQuests={() => setActiveDashboardTab('quests')}
+              onOpenShop={() => setActiveDashboardTab('shop')}
+            />
+            <FamilyStatusPanel dashboard={dashboard} />
+          </Box>
+        </Stack>
       ) : null}
 
       {activeDashboardTab === 'children' && canManageChildren ? (
@@ -1981,6 +1990,41 @@ function DashboardView({
       {activeDashboardTab === 'shop' ? (
         <Stack spacing={2}>
           {canManageChildren ? (
+            <Paper elevation={0} sx={{ p: 0.5 }}>
+              <Tabs
+                allowScrollButtonsMobile
+                onChange={(_, value: ShopTab) => setActiveShopTab(value)}
+                scrollButtons="auto"
+                sx={{
+                  minHeight: 44,
+                  '& .MuiTab-root': {
+                    minHeight: 44,
+                    minWidth: { xs: 104, sm: 132 },
+                    px: { xs: 1.25, sm: 2 }
+                  }
+                }}
+                value={activeShopTab}
+                variant="scrollable"
+              >
+                <Tab label="Shop" value="shop" />
+                <Tab label="Belohnungen" value="manage" />
+              </Tabs>
+            </Paper>
+          ) : null}
+
+          {!canManageChildren || activeShopTab === 'shop' ? (
+            <RewardShopPanel
+              children={children}
+              redeemingRewardId={redeemingRewardId}
+              onChildChange={onAssignmentChildChange}
+              selectedChildId={assignmentForm.childProfileId}
+              shopLoading={shopLoading}
+              shopRewards={shopRewards}
+              onRedeem={onRewardRedeem}
+            />
+          ) : null}
+
+          {canManageChildren && activeShopTab === 'manage' ? (
             <RewardsPanel
               canManage={canManageChildren}
               form={rewardForm}
@@ -1992,16 +2036,6 @@ function DashboardView({
               onSubmit={onRewardSubmit}
             />
           ) : null}
-
-          <RewardShopPanel
-            children={children}
-            redeemingRewardId={redeemingRewardId}
-            onChildChange={onAssignmentChildChange}
-            selectedChildId={assignmentForm.childProfileId}
-            shopLoading={shopLoading}
-            shopRewards={shopRewards}
-            onRedeem={onRewardRedeem}
-          />
         </Stack>
       ) : null}
 
@@ -2216,7 +2250,8 @@ function FamilyStatusPanel({ dashboard }: FamilyStatusPanelProps) {
       <Stack spacing={2}>
         <SectionTitle icon={<ShieldRoundedIcon />} title="Familienlage" />
         <SummaryRow label="Eltern/Admins" value={dashboard.totals.parents} />
-        <SummaryRow label="Kinderkonten" value={dashboard.totals.childUsers} />
+        <SummaryRow label="Kinderprofile" value={dashboard.totals.children} />
+        <SummaryRow label="Kinder-Logins" value={dashboard.totals.childUsers} />
         <Divider />
         <SummaryRow label="Quest-Abschlüsse" value={dashboard.quests.totalCompletions} />
         <SummaryRow label="Bestätigt" value={dashboard.quests.approved} />
@@ -2225,6 +2260,79 @@ function FamilyStatusPanel({ dashboard }: FamilyStatusPanelProps) {
         <SummaryRow label="Rewards aktiv" value={dashboard.totals.activeRewards} />
         <SummaryRow label="Rewards eingeloest" value={dashboard.rewards.redeemed} />
         <SummaryRow label="Coins gebunden" value={dashboard.rewards.coinsSpent} />
+      </Stack>
+    </Paper>
+  );
+}
+
+interface ChildrenOverviewStripProps {
+  children: ChildProfile[];
+  selectedChildId: string;
+  onChildSelect: (childProfileId: string) => void;
+}
+
+function ChildrenOverviewStrip({ children, selectedChildId, onChildSelect }: ChildrenOverviewStripProps) {
+  if (children.length === 0) {
+    return null;
+  }
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 1.25, md: 1.5 } }}>
+      <Stack spacing={1.25}>
+        <SectionTitle icon={<PeopleAltRoundedIcon />} title="Kinder im Überblick" />
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 1,
+            gridAutoColumns: { xs: 'minmax(172px, 78vw)', sm: 'minmax(188px, 240px)' },
+            gridAutoFlow: 'column',
+            overflowX: 'auto',
+            pb: 0.5,
+            scrollbarWidth: 'none',
+            '&::-webkit-scrollbar': { display: 'none' }
+          }}
+        >
+          {children.map((child) => {
+            const active = child.id === selectedChildId;
+
+            return (
+              <Button
+                key={child.id}
+                onClick={() => onChildSelect(child.id)}
+                sx={{
+                  alignItems: 'stretch',
+                  bgcolor: active ? 'rgba(37, 104, 216, 0.09)' : 'action.hover',
+                  borderColor: active ? 'primary.main' : 'divider',
+                  color: 'text.primary',
+                  display: 'grid',
+                  gap: 1,
+                  justifyContent: 'stretch',
+                  minWidth: 0,
+                  p: 1.25,
+                  textAlign: 'left'
+                }}
+                variant="outlined"
+              >
+                <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
+                  <AvatarBadge avatarKey={child.avatarKey} name={child.displayName} size="small" />
+                  <Box sx={{ minWidth: 0 }}>
+                    <Typography sx={{ fontWeight: 900 }} noWrap>
+                      {child.displayName}
+                    </Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      Level {child.level}
+                    </Typography>
+                  </Box>
+                </Stack>
+                <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+                  <Chip icon={<PaidRoundedIcon />} label={child.coins} size="small" variant="outlined" />
+                  <Chip label={`${child.xp} XP`} size="small" variant="outlined" />
+                  {active ? <Chip color="primary" label="Aktiv" size="small" /> : null}
+                </Stack>
+              </Button>
+            );
+          })}
+        </Box>
       </Stack>
     </Paper>
   );
@@ -3353,7 +3461,7 @@ function SelfServiceQuestRow({ quest, saving, onComplete }: SelfServiceQuestRowP
           </Box>
           <Chip color="success" label="Spontan" size="small" variant="outlined" />
         </Stack>
-        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap', minWidth: 0 }}>
           <Chip label={quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(quest.frequency)} size="small" variant="outlined" />
           <Chip icon={<EmojiEventsRoundedIcon />} label={`${quest.xpReward} XP`} size="small" variant="outlined" />
           <Chip icon={<PaidRoundedIcon />} label={`${quest.coinReward}`} size="small" variant="outlined" />
@@ -4090,7 +4198,7 @@ function RewardRow({ reward }: RewardRowProps) {
           display: 'flex',
           justifyContent: 'center',
           overflow: 'hidden',
-          width: 72
+          width: { xs: 56, sm: 72 }
         }}
       >
         {reward.imageUrl ? (
@@ -4149,10 +4257,10 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
         bgcolor: 'action.hover',
         borderRadius: 2,
         display: 'grid',
-        gap: 1.25,
-        gridTemplateColumns: { xs: '1fr', sm: '72px minmax(0, 1fr)' },
-        minHeight: 190,
-        p: 1.5
+        gap: { xs: 1, sm: 1.25 },
+        gridTemplateColumns: { xs: '56px minmax(0, 1fr)', sm: '72px minmax(0, 1fr)' },
+        minHeight: { xs: 'auto', sm: 190 },
+        p: { xs: 1.25, sm: 1.5 }
       }}
     >
       <Box
@@ -4165,7 +4273,7 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
           display: 'flex',
           justifyContent: 'center',
           overflow: 'hidden',
-          width: 72
+          width: { xs: 56, sm: 72 }
         }}
       >
         {reward.imageUrl ? (
@@ -4195,7 +4303,7 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
             </Typography>
           ) : null}
         </Box>
-        <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap', minWidth: 0 }}>
           <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
           <Chip color={canAfford ? 'success' : 'warning'} label={canAfford ? 'Bezahlbar' : `Noch ${missingCoins} Münzen`} size="small" variant={canAfford ? 'filled' : 'outlined'} />
           <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} size="small" variant="outlined" />
