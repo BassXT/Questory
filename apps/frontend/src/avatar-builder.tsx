@@ -500,10 +500,23 @@ function resolvePixelHair(itemKey: string | undefined) {
       return 'short05';
     case 'hair-pixel-crop-black':
       return 'short02';
+    case 'hair-pixel-sidepart-blond':
+      return 'short06';
+    case 'hair-pixel-sidepart-brown':
+      return 'short07';
+    case 'hair-pixel-bowl-brown':
+      return 'short04';
+    case 'hair-pixel-pixie-black':
+    case 'hair-pixel-pixie-pink':
+      return 'short18';
     case 'hair-pixel-bob-brown':
       return 'long04';
     case 'hair-pixel-bob-red':
       return 'long06';
+    case 'hair-pixel-waves-black':
+      return 'long10';
+    case 'hair-pixel-waves-auburn':
+      return 'long11';
     case 'hair-pixel-ponytail-gold':
       return 'long13';
     case 'hair-pixel-ponytail-black':
@@ -515,23 +528,36 @@ function resolvePixelHair(itemKey: string | undefined) {
     case 'hair-pixel-braids-brown':
       return 'long19';
     case 'hair-pixel-braids-purple':
+    case 'hair-pixel-twin-braids-blue':
       return 'long20';
+    case 'hair-pixel-twin-braids-blond':
+      return 'long17';
     case 'hair-pixel-spikes-black':
       return 'short20';
     case 'hair-pixel-spikes-green':
+    case 'hair-pixel-mohawk-blue':
       return 'short22';
     case 'hair-pixel-long-rose':
       return 'long08';
     case 'hair-pixel-long-silver':
+    case 'hair-pixel-comet-white':
       return 'long09';
+    case 'hair-pixel-long-teal':
+      return 'long12';
     case 'hair-pixel-buns-gold':
+    case 'hair-pixel-space-buns-rose':
       return 'long18';
     case 'hair-pixel-buns-teal':
       return 'long21';
     case 'hair-pixel-afro-dark':
       return 'short23';
     case 'hair-pixel-afro-copper':
+    case 'hair-pixel-fire-red':
       return 'short24';
+    case 'hair-pixel-curly-purple':
+      return 'short17';
+    case 'hair-pixel-undercut-silver':
+      return 'short19';
     case 'hair-pixel-long':
       return 'long05';
     case 'hair-pixel-wild':
@@ -552,20 +578,31 @@ function resolvePixelHair(itemKey: string | undefined) {
 function resolvePixelEyes(itemKey: string | undefined) {
   switch (itemKey) {
     case 'eyes-smile':
+    case 'eyes-happy-arc':
     case 'eyes-blue':
     case 'eyes-green':
     case 'eyes-brown':
     case 'eyes-gray':
     case 'eyes-amber':
-    case 'eyes-violet':
       return 'variant01';
+    case 'eyes-calm':
+      return 'variant02';
+    case 'eyes-round':
+      return 'variant03';
+    case 'eyes-curious':
+      return 'variant04';
     case 'eyes-focus':
+    case 'eyes-determined':
       return 'variant09';
     case 'eyes-wink':
       return 'variant05';
     case 'eyes-sleepy':
       return 'variant10';
+    case 'eyes-violet':
     case 'eyes-star':
+    case 'eyes-magic-blue':
+    case 'eyes-emerald-spark':
+    case 'eyes-night':
       return 'variant12';
     default:
       return 'variant08';
@@ -575,22 +612,34 @@ function resolvePixelEyes(itemKey: string | undefined) {
 function resolvePixelMouth(itemKey: string | undefined) {
   switch (itemKey) {
     case 'mouth-grin':
+    case 'mouth-open-happy':
       return 'happy08';
     case 'mouth-soft':
+    case 'mouth-small-smile':
       return 'happy02';
     case 'mouth-focus':
+    case 'mouth-thinking':
       return 'happy09';
     case 'mouth-laugh':
+    case 'mouth-song':
       return 'happy13';
     case 'mouth-surprise':
+    case 'mouth-silly':
       return 'happy11';
     case 'mouth-brave':
+    case 'mouth-proud':
+    case 'mouth-hero':
       return 'happy10';
     case 'mouth-magic':
+    case 'mouth-legend':
       return 'happy12';
     case 'mouth-smile':
       return 'happy04';
+    case 'mouth-tiny':
+    case 'mouth-cool':
+      return 'happy03';
     case 'eyes-smile':
+    case 'eyes-happy-arc':
     case 'eyes-blue':
     case 'eyes-green':
     case 'eyes-brown':
@@ -599,12 +648,16 @@ function resolvePixelMouth(itemKey: string | undefined) {
     case 'eyes-violet':
       return 'happy04';
     case 'eyes-focus':
+    case 'eyes-determined':
       return 'happy09';
     case 'eyes-wink':
       return 'happy03';
     case 'eyes-sleepy':
       return 'happy10';
     case 'eyes-star':
+    case 'eyes-magic-blue':
+    case 'eyes-emerald-spark':
+    case 'eyes-night':
       return 'happy13';
     default:
       return 'happy01';
@@ -661,10 +714,16 @@ function resolvePixelGlasses(itemKey: string | undefined) {
   switch (itemKey) {
     case 'glasses-pixel-magic':
     case 'glasses-goggles':
+    case 'glasses-rainbow':
       return 'light04';
     case 'glasses-pixel-dark':
     case 'glasses-star':
+    case 'glasses-laser':
       return 'dark05';
+    case 'glasses-heart':
+      return 'light03';
+    case 'glasses-square':
+      return 'dark02';
     default:
       return 'dark01';
   }
@@ -673,24 +732,36 @@ function resolvePixelGlasses(itemKey: string | undefined) {
 function resolvePixelHat(itemKey: string | undefined) {
   switch (itemKey) {
     case 'hat-beanie-teal':
+    case 'hat-cap-blue':
       return 'variant02';
     case 'hat-beanie-yellow':
+    case 'hat-cap-red':
       return 'variant03';
     case 'hat-flower-crown':
+    case 'hat-cat-ears':
+    case 'hat-unicorn':
       return 'variant04';
     case 'hat-explorer':
+    case 'hat-safari':
       return 'variant05';
     case 'hat-headphones':
       return 'variant06';
     case 'hat-crown-gold':
+    case 'hat-crown-silver':
       return 'variant07';
     case 'hat-party':
+    case 'hat-rainbow':
       return 'variant09';
     case 'hat-wizard-blue':
     case 'hat-witch-purple':
+    case 'hat-mage-green':
+    case 'hat-astronaut':
       return 'variant10';
     case 'hat-helmet-iron':
     case 'hat-dragon-hood':
+    case 'hat-pirate':
+    case 'hat-knight':
+    case 'hat-ninja':
       return 'variant08';
     default:
       return 'variant01';

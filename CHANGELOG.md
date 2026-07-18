@@ -8,6 +8,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Katalog um 50 Items fuer Langzeitmotivation erweitert: 16 Haare, 8 Blicke, 10 Muender, 12 Huete und 4 Brillen mit Freischaltungen von Level 1 bis 14.
+- Pixelart-Avatar-Renderer um Mappings fuer die neuen Haar-, Augen-/Blick-, Mund-, Hut- und Brillen-Keys erweitert.
+- Vorschlagsbibliothek um groessere Langzeit-Rewards bis 500 Coins und Projekt-/Wochenquests bis 16 Coins erweitert.
 - Mobile-Nachbesserung fuer den ersten echten Testlauf: Uebersicht mit swipebarer Kinderleiste, Familienlage mit Kinderprofilen statt nur Kinder-Logins, Shop-Untertabs fuer Shop/Belohnungsverwaltung sowie kleinere Shopkarten und Avatar-Vorschau auf iPhone-Breiten.
 - Frontend-Mobile-Polish fuer iPhone-Breiten: scrollbare Auth-/Dashboard-Tabs, swipebare Kategorie- und Avatar-Slot-Leisten, kompaktere Dialoge, vollbreite mobile Formular-/Kartenaktionen und globaler horizontaler Overflow-Schutz.
 - Pixelart-Avatar-Renderer eingefuehrt: DiceBear Pixel Art rendert Kopf/Gesicht/Haar/Hut/Brille, Questory rendert Koerper, Kleidung, Schuhe, Waffen, Gadgets und Tiere als eigene Pixel-SVG-Layer.
@@ -143,6 +146,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.
+- Balance-Pruefung nach Avatar-/Economy-Balance: 50 neue Avatar-Items, Rewards 20-500 Coins, Quest-Coins 1-16 und Quest-XP 8-80.
 - Frontend-Build nach Avatar-Builder-Mobile-Fix erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Portainer-Redeploy nach Avatar-Builder-Mobile-Fix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.

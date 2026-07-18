@@ -419,6 +419,69 @@ const rewardSuggestions: RewardSuggestion[] = [
     price: 110,
     requiresApproval: true,
     maxRedemptions: 1
+  },
+  {
+    id: 'cinema-trip',
+    name: 'Kinobesuch',
+    description: 'Ein geplanter Kinobesuch mit vorher abgesprochenem Film.',
+    category: 'Ausflug',
+    price: 260,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'trampoline-park',
+    name: 'Trampolinhalle',
+    description: 'Ein groesserer Bewegungsausflug, der mehrere Wochen Sparen wert sein soll.',
+    category: 'Ausflug',
+    price: 300,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'adventure-pool',
+    name: 'Erlebnisbad',
+    description: 'Ein besonderer Schwimmbad- oder Erlebnisbad-Ausflug.',
+    category: 'Ausflug',
+    price: 320,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'room-makeover-small',
+    name: 'Zimmer-Upgrade',
+    description: 'Ein kleines Deko- oder Ordnungs-Upgrade fuer das Kinderzimmer.',
+    category: 'Sammeln',
+    price: 280,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'hobby-workshop',
+    name: 'Hobby-Workshop',
+    description: 'Ein Kurs, Workshop oder besonderes Hobby-Erlebnis nach Absprache.',
+    category: 'Lernen',
+    price: 340,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'theme-park-fund',
+    name: 'Freizeitpark-Fonds',
+    description: 'Ein sehr grosses Familienziel, das bewusst lange angespart wird.',
+    category: 'Langzeitziel',
+    price: 500,
+    requiresApproval: true,
+    maxRedemptions: 1
+  },
+  {
+    id: 'special-gear-fund',
+    name: 'Spezial-Ausrustung',
+    description: 'Zuschuss fuer ein groesseres, vorher gemeinsam vereinbartes Hobby-Teil.',
+    category: 'Langzeitziel',
+    price: 420,
+    requiresApproval: true,
+    maxRedemptions: 1
   }
 ];
 
@@ -1059,6 +1122,61 @@ const questSuggestions: QuestSuggestion[] = [
     frequency: QuestFrequency.NONE,
     xpReward: 15,
     coinReward: 2,
+    requiresApproval: true
+  },
+  {
+    id: 'monthly-room-deep-clean',
+    title: 'Zimmer-Projekt gross',
+    description: 'Zimmer gruendlich mit Zonenplan sortieren: Boden, Regal, Schreibtisch und Waesche.',
+    category: 'Projekt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 75,
+    coinReward: 15,
+    requiresApproval: true
+  },
+  {
+    id: 'family-project-helper',
+    title: 'Familienprojekt helfen',
+    description: 'Bei einem groesseren Familienprojekt laenger mithelfen, zum Beispiel Keller, Garten oder Einkauf.',
+    category: 'Projekt',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 80,
+    coinReward: 16,
+    requiresApproval: true
+  },
+  {
+    id: 'learning-presentation',
+    title: 'Lernprojekt vorstellen',
+    description: 'Ein Thema vorbereiten und der Familie kurz zeigen oder erklaeren.',
+    category: 'Lernen',
+    type: QuestType.ONE_TIME,
+    frequency: QuestFrequency.NONE,
+    xpReward: 65,
+    coinReward: 13,
+    requiresApproval: true
+  },
+  {
+    id: 'garden-project-week',
+    title: 'Garten-Wochenprojekt',
+    description: 'Eine Natur- oder Gartenaufgabe ueber mehrere kleine Schritte abschliessen.',
+    category: 'Natur',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.WEEKLY,
+    xpReward: 70,
+    coinReward: 14,
+    requiresApproval: true
+  },
+  {
+    id: 'kindness-week',
+    title: 'Hilfsbereit-Woche',
+    description: 'Mehrere freundliche oder hilfreiche Aktionen in einer Woche bewusst sammeln.',
+    category: 'Sozial',
+    type: QuestType.RECURRING,
+    frequency: QuestFrequency.WEEKLY,
+    xpReward: 60,
+    coinReward: 12,
     requiresApproval: true
   }
 ];
