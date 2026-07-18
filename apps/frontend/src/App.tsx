@@ -41,7 +41,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:3000
 const TOKEN_STORAGE_KEY = 'questory.accessToken';
 
 type AuthMode = 'login' | 'register' | 'child';
-type DashboardTab = 'overview' | 'children' | 'avatar' | 'quests' | 'shop' | 'approvals';
+type DashboardTab = 'overview' | 'childMode' | 'children' | 'avatar' | 'quests' | 'shop' | 'approvals';
+type ChildModeTab = 'status' | 'quests' | 'shop' | 'avatar';
 type ShopTab = 'shop' | 'manage';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
@@ -1809,8 +1810,8 @@ function DashboardView({
       canManageChildren
         ? [
             { label: 'Übersicht', value: 'overview' as DashboardTab },
+            { label: 'Kindmodus', value: 'childMode' as DashboardTab },
             { label: 'Kinder', value: 'children' as DashboardTab },
-            { label: 'Avatar', value: 'avatar' as DashboardTab },
             { label: 'Quests', value: 'quests' as DashboardTab },
             { label: 'Shop', value: 'shop' as DashboardTab },
             { label: 'Freigaben', value: 'approvals' as DashboardTab }
@@ -1824,6 +1825,7 @@ function DashboardView({
     [canManageChildren]
   );
   const [activeDashboardTab, setActiveDashboardTab] = useState<DashboardTab>('overview');
+  const [activeChildModeTab, setActiveChildModeTab] = useState<ChildModeTab>('status');
   const [activeShopTab, setActiveShopTab] = useState<ShopTab>('shop');
 
   useEffect(() => {
@@ -1899,9 +1901,18 @@ function DashboardView({
             <ChildStatsPanel
               loading={childStatsLoading}
               stats={childStats}
-              onOpenAvatar={() => setActiveDashboardTab('avatar')}
-              onOpenQuests={() => setActiveDashboardTab('quests')}
-              onOpenShop={() => setActiveDashboardTab('shop')}
+              onOpenAvatar={() => {
+                setActiveChildModeTab('avatar');
+                setActiveDashboardTab(canManageChildren ? 'childMode' : 'avatar');
+              }}
+              onOpenQuests={() => {
+                setActiveChildModeTab('quests');
+                setActiveDashboardTab(canManageChildren ? 'childMode' : 'quests');
+              }}
+              onOpenShop={() => {
+                setActiveChildModeTab('shop');
+                setActiveDashboardTab(canManageChildren ? 'childMode' : 'shop');
+              }}
             />
             <FamilyStatusPanel dashboard={dashboard} />
           </Box>
@@ -1922,13 +1933,39 @@ function DashboardView({
           selectedPinChildId={selectedPinChildId}
           onChildOpen={(childProfileId) => {
             onAssignmentChildChange(childProfileId);
-            setActiveDashboardTab('overview');
+            setActiveChildModeTab('status');
+            setActiveDashboardTab('childMode');
           }}
           onChildFormChange={onChildFormChange}
           onChildPinDisable={onChildPinDisable}
           onChildPinFormChange={onChildPinFormChange}
           onChildPinSubmit={onChildPinSubmit}
           onChildSubmit={onChildSubmit}
+        />
+      ) : null}
+
+      {activeDashboardTab === 'childMode' && canManageChildren ? (
+        <ChildModePanel
+          activeTab={activeChildModeTab}
+          assignments={assignments}
+          avatar={avatar}
+          avatarLoading={avatarLoading}
+          avatarSaving={avatarSaving}
+          childStats={childStats}
+          childStatsLoading={childStatsLoading}
+          children={children}
+          completionSavingId={completionSavingId}
+          redeemingRewardId={redeemingRewardId}
+          selectedChildId={assignmentForm.childProfileId}
+          shopLoading={shopLoading}
+          shopRewards={shopRewards}
+          quests={quests}
+          onAvatarSave={onAvatarSave}
+          onAssignmentChildChange={onAssignmentChildChange}
+          onAssignmentComplete={onAssignmentComplete}
+          onRewardRedeem={onRewardRedeem}
+          onSelfServiceQuestComplete={onSelfServiceQuestComplete}
+          onTabChange={setActiveChildModeTab}
         />
       ) : null}
 
@@ -2049,6 +2086,165 @@ function DashboardView({
           onCancel={onRewardRedemptionCancel}
           onMarkRedeemed={onRewardRedemptionMarkRedeemed}
           onReject={onRewardRedemptionReject}
+        />
+      ) : null}
+    </Stack>
+  );
+}
+
+interface ChildModePanelProps {
+  activeTab: ChildModeTab;
+  assignments: QuestAssignment[];
+  avatar: AvatarResponse | null;
+  avatarLoading: boolean;
+  avatarSaving: boolean;
+  childStats: ChildStatsResponse | null;
+  childStatsLoading: boolean;
+  children: ChildProfile[];
+  completionSavingId: string | null;
+  quests: QuestTemplate[];
+  redeemingRewardId: string | null;
+  selectedChildId: string;
+  shopLoading: boolean;
+  shopRewards: Reward[];
+  onAssignmentChildChange: (childProfileId: string) => void;
+  onAssignmentComplete: (assignmentId: string) => void;
+  onAvatarSave: (equippedItems: Record<string, string>) => void;
+  onRewardRedeem: (rewardId: string) => void;
+  onSelfServiceQuestComplete: (questId: string) => void;
+  onTabChange: (tab: ChildModeTab) => void;
+}
+
+function ChildModePanel({
+  activeTab,
+  assignments,
+  avatar,
+  avatarLoading,
+  avatarSaving,
+  childStats,
+  childStatsLoading,
+  children,
+  completionSavingId,
+  quests,
+  redeemingRewardId,
+  selectedChildId,
+  shopLoading,
+  shopRewards,
+  onAssignmentChildChange,
+  onAssignmentComplete,
+  onAvatarSave,
+  onRewardRedeem,
+  onSelfServiceQuestComplete,
+  onTabChange
+}: ChildModePanelProps) {
+  const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
+
+  return (
+    <Stack spacing={2}>
+      <Paper elevation={0} sx={{ p: { xs: 1.5, md: 2 } }}>
+        <Stack spacing={1.5}>
+          <Box
+            sx={{
+              alignItems: { xs: 'stretch', sm: 'center' },
+              display: 'flex',
+              flexDirection: { xs: 'column', sm: 'row' },
+              gap: 1.5,
+              justifyContent: 'space-between'
+            }}
+          >
+            <SectionTitle icon={<EmojiEventsRoundedIcon />} title="Kindmodus" />
+            <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+              <Chip icon={<PeopleAltRoundedIcon />} label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
+              <Chip icon={<PaidRoundedIcon />} label={selectedChild ? `${selectedChild.coins} Münzen` : '0 Münzen'} variant="outlined" />
+              <Chip icon={<EmojiEventsRoundedIcon />} label={selectedChild ? `Level ${selectedChild.level}` : 'Level -'} variant="outlined" />
+            </Stack>
+          </Box>
+
+          <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onAssignmentChildChange} />
+
+          <Tabs
+            allowScrollButtonsMobile
+            onChange={(_, value: ChildModeTab) => onTabChange(value)}
+            scrollButtons="auto"
+            sx={{
+              minHeight: 44,
+              '& .MuiTab-root': {
+                minHeight: 44,
+                minWidth: { xs: 92, sm: 118 },
+                px: { xs: 1.25, sm: 2 }
+              }
+            }}
+            value={activeTab}
+            variant="scrollable"
+          >
+            <Tab label="Status" value="status" />
+            <Tab label="Quests" value="quests" />
+            <Tab label="Shop" value="shop" />
+            <Tab label="Avatar" value="avatar" />
+          </Tabs>
+        </Stack>
+      </Paper>
+
+      {activeTab === 'status' ? (
+        <ChildStatsPanel
+          loading={childStatsLoading}
+          stats={childStats}
+          onOpenAvatar={() => onTabChange('avatar')}
+          onOpenQuests={() => onTabChange('quests')}
+          onOpenShop={() => onTabChange('shop')}
+        />
+      ) : null}
+
+      {activeTab === 'quests' ? (
+        <Stack spacing={2}>
+          <QuestAssignmentsPanel
+            assignments={assignments}
+            canManage={false}
+            children={children}
+            completionSavingId={completionSavingId}
+            form={{ ...initialQuestAssignmentForm, childProfileId: selectedChildId }}
+            loading={false}
+            quests={quests}
+            saving={false}
+            selectedChildId={selectedChildId}
+            onApprove={() => undefined}
+            onChildChange={onAssignmentChildChange}
+            onComplete={onAssignmentComplete}
+            onFormChange={() => undefined}
+            onReject={() => undefined}
+            onSubmit={(event) => event.preventDefault()}
+          />
+          <SelfServiceQuestsPanel
+            children={children}
+            completionSavingId={completionSavingId}
+            quests={quests}
+            selectedChildId={selectedChildId}
+            onComplete={onSelfServiceQuestComplete}
+          />
+        </Stack>
+      ) : null}
+
+      {activeTab === 'shop' ? (
+        <RewardShopPanel
+          children={children}
+          redeemingRewardId={redeemingRewardId}
+          selectedChildId={selectedChildId}
+          shopLoading={shopLoading}
+          shopRewards={shopRewards}
+          onChildChange={onAssignmentChildChange}
+          onRedeem={onRewardRedeem}
+        />
+      ) : null}
+
+      {activeTab === 'avatar' ? (
+        <AvatarBuilderPanel
+          avatar={avatar}
+          children={children}
+          loading={avatarLoading}
+          saving={avatarSaving}
+          selectedChildId={selectedChildId}
+          onChildChange={onAssignmentChildChange}
+          onSave={onAvatarSave}
         />
       ) : null}
     </Stack>

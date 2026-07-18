@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Eltern-Dashboard um einen `Kindmodus` erweitert: Status, zugewiesene Quests einreichen, spontane Quests, Shop und Avatar-Werkstatt sind fuer das aktive Kind erreichbar.
 - Avatar-Katalog um 8 Symbol-Shirts erweitert: Smiley, Stern, Mond, Blitz, Controller, Krone, Rakete und Funkelzeichen als freischaltbare Oberteile von Level 1 bis 8.
 - Avatar-Werkstatt trennt Haar-/Augenstil von Haar-/Augenfarbe: Farben sind nun freie Palettenwerte, Styles bleiben Level-Freischaltungen.
 - Avatar-Katalog um 50 Items fuer Langzeitmotivation erweitert: 16 Haare, 8 Blicke, 10 Muender, 12 Huete und 4 Brillen mit Freischaltungen von Level 1 bis 14.
@@ -142,6 +143,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Kinderprofil-Zugriff fuer kleine Kinder verbessert: Klicks aus der Kinderliste oeffnen jetzt den Kindmodus, damit Eltern am eigenen Geraet Kinderaktionen ausfuehren koennen.
 - Mund-Auswahl im Avatar-Builder entdoppelt: alle 18 `mouth-*` Items rendern jetzt eigene DiceBear-Pixel-Art-Mundvarianten.
 - Avatar-Builder blendet reine Haar-/Augen-Farbdubletten als eigene Itemkarten aus und zeigt stattdessen deduplizierte Stil-Karten plus separate Farbswatches.
 - Avatar-Builder-Vorschau auf iPhone-Breiten hart begrenzt: feste CSS-Buehne, geclipptes absolut positioniertes SVG und engerer Mobile-Schatten verhindern horizontales Ausbrechen der Avatar-Grafik.
@@ -151,6 +153,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach Kindmodus-Slice erfolgreich.
 - Quellencheck fuer Symbol-Shirts erfolgreich: 8 neue Top-Keys, keine fehlenden Renderer-Mappings.
 - Prisma Validate, Backend-Build und Frontend-Build nach Symbol-Shirt-Slice erfolgreich.
 - Portainer-Redeploy nach Symbol-Shirt-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
