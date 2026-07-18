@@ -141,6 +141,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Mund-Auswahl im Avatar-Builder entdoppelt: alle 18 `mouth-*` Items rendern jetzt eigene DiceBear-Pixel-Art-Mundvarianten.
 - Avatar-Builder blendet reine Haar-/Augen-Farbdubletten als eigene Itemkarten aus und zeigt stattdessen deduplizierte Stil-Karten plus separate Farbswatches.
 - Avatar-Builder-Vorschau auf iPhone-Breiten hart begrenzt: feste CSS-Buehne, geclipptes absolut positioniertes SVG und engerer Mobile-Schatten verhindern horizontales Ausbrechen der Avatar-Grafik.
 - Sichtbaren hautfarbenen Halsblock in der Pixelart-Avatar-Vorschau entfernt, damit der DiceBear-Pixelkopf sauberer auf dem Shirt sitzt.
@@ -149,6 +150,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Quellencheck fuer Mund-Mappings erfolgreich: 18 Mund-Items, 18 gemappte Varianten, keine Duplicate-Groups.
+- Prisma Validate, Backend-Build und Frontend-Build nach Mund-Dopplungsfix erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach freier Haar-/Augenfarbe erfolgreich.
 - Portainer-Redeploy nach freier Haar-/Augenfarbe erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.

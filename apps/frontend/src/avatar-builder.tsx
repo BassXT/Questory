@@ -740,32 +740,41 @@ function resolvePixelEyes(itemKey: string | undefined) {
 function resolvePixelMouth(itemKey: string | undefined) {
   switch (itemKey) {
     case 'mouth-grin':
-    case 'mouth-open-happy':
       return 'happy08';
     case 'mouth-soft':
-    case 'mouth-small-smile':
       return 'happy02';
     case 'mouth-focus':
-    case 'mouth-thinking':
-      return 'happy09';
+      return 'sad06';
     case 'mouth-laugh':
-    case 'mouth-song':
       return 'happy13';
     case 'mouth-surprise':
-    case 'mouth-silly':
-      return 'happy11';
+      return 'sad01';
     case 'mouth-brave':
-    case 'mouth-proud':
-    case 'mouth-hero':
       return 'happy10';
     case 'mouth-magic':
-    case 'mouth-legend':
       return 'happy12';
     case 'mouth-smile':
       return 'happy04';
     case 'mouth-tiny':
-    case 'mouth-cool':
       return 'happy03';
+    case 'mouth-small-smile':
+      return 'happy07';
+    case 'mouth-open-happy':
+      return 'happy06';
+    case 'mouth-proud':
+      return 'happy09';
+    case 'mouth-silly':
+      return 'happy01';
+    case 'mouth-cool':
+      return 'sad07';
+    case 'mouth-thinking':
+      return 'sad05';
+    case 'mouth-song':
+      return 'happy11';
+    case 'mouth-hero':
+      return 'sad08';
+    case 'mouth-legend':
+      return 'happy05';
     case 'eyes-smile':
     case 'eyes-happy-arc':
     case 'eyes-blue':

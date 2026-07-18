@@ -367,6 +367,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Prisma Validate, Backend-Build und Frontend-Build nach freier Haar-/Augenfarbe erfolgreich.
 - Erster Portainer-Redeploy nach freier Haar-/Augenfarbe scheiterte wegen vollem Docker-Build-Speicher (`No space left on device`); Docker-Build-Cache-Prune gab ca. 8,37 GB frei.
 - Portainer-Redeploy nach freier Haar-/Augenfarbe anschliessend erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Mund-Renderer-Mapping auf Dopplungen geprueft und bereinigt: Alle 18 `mouth-*` Katalog-Items zeigen jetzt eigene DiceBear-Pixel-Art-Mundvarianten; Quellencheck meldet `duplicateGroups: []`.
+- Prisma Validate, Backend-Build und Frontend-Build nach Mund-Dopplungsfix erfolgreich.
 
 ## Offene Aufgaben
 
