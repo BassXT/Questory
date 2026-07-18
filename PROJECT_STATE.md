@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-Letzte Aktualisierung: 2026-07-16
+Letzte Aktualisierung: 2026-07-18
 
 Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den aktuellen Projektstand, offene Aufgaben, Architekturentscheidungen und bekannte Probleme.
 
@@ -354,6 +354,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Mobile-Nachbesserung aus echtem iPhone-Test umgesetzt: Die Uebersicht zeigt nun alle Kinder als swipebare Kinderkarten, Familienlage zaehlt echte Kinderprofile separat von Kinder-Logins, der Shop-Tab trennt Shop und Belohnungsverwaltung in Untertabs, Shopkarten sind auf Mobile schmaler und der Avatar-Builder skaliert die Vorschau auf kleinen Displays herunter.
 - Frontend-Build nach Mobile-Nachbesserung erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Portainer-Redeploy nach Mobile-Nachbesserung per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`, alter Testlogin weiterhin HTTP `401`.
+- Avatar-Builder-Mobile-Fix nach iPhone-Screenshot umgesetzt: Die Avatar-Vorschau nutzt jetzt eine feste, geclippte CSS-Buehne mit absolut positioniertem SVG, damit Safari/iPhone keine ueberbreite SVG-Layoutflaeche mehr erzeugt.
+- Frontend-Build nach Avatar-Builder-Mobile-Fix erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 
 ## Offene Aufgaben
 

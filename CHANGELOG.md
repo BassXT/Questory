@@ -137,11 +137,13 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Avatar-Builder-Vorschau auf iPhone-Breiten hart begrenzt: feste CSS-Buehne, geclipptes absolut positioniertes SVG und engerer Mobile-Schatten verhindern horizontales Ausbrechen der Avatar-Grafik.
 - Sichtbaren hautfarbenen Halsblock in der Pixelart-Avatar-Vorschau entfernt, damit der DiceBear-Pixelkopf sauberer auf dem Shirt sitzt.
 - Pixelart-Koerper-Layer um eine Pixelreihe nach oben gezogen, damit keine helle Trennlinie zwischen Kopf und Shirt stehen bleibt.
 
 ### Verified
 
+- Frontend-Build nach Avatar-Builder-Mobile-Fix erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Frontend-Build nach Mobile-Nachbesserung erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Portainer-Redeploy nach Mobile-Nachbesserung erfolgreich; LXC-Backend-Health OK, Frontend HTTP `200`, alter Testlogin HTTP `401`.

@@ -145,8 +145,8 @@ export function AvatarBuilderPanel({
   }
 
   return (
-    <Paper elevation={0} sx={{ p: { xs: 1.25, sm: 2, md: 2.5 } }}>
-      <Stack spacing={2}>
+    <Paper elevation={0} sx={{ maxWidth: '100%', overflow: 'hidden', p: { xs: 1.25, sm: 2, md: 2.5 } }}>
+      <Stack spacing={2} sx={{ maxWidth: '100%', minWidth: 0, overflow: 'hidden' }}>
         <Box
           sx={{
             alignItems: { xs: 'stretch', sm: 'center' },
@@ -176,6 +176,8 @@ export function AvatarBuilderPanel({
             display: 'grid',
             gap: 1.25,
             gridTemplateColumns: { xs: '1fr', md: 'minmax(220px, 0.6fr) minmax(0, 1fr)' },
+            minWidth: 0,
+            overflow: 'hidden',
             p: 1.25
           }}
         >
@@ -193,7 +195,7 @@ export function AvatarBuilderPanel({
               </MenuItem>
             ))}
           </TextField>
-          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
+          <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', minWidth: 0 }}>
             <Chip label={selectedChild ? `${selectedChild.xp} XP` : '0 XP'} variant="outlined" />
             <Chip label={selectedChild ? `${selectedChild.coins} Münzen` : '0 Münzen'} variant="outlined" />
             <Chip label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
@@ -207,6 +209,8 @@ export function AvatarBuilderPanel({
             sx={{
               display: 'grid',
               gap: 2,
+              minWidth: 0,
+              overflow: 'hidden',
               gridTemplateColumns: { xs: '1fr', lg: 'minmax(280px, 0.8fr) minmax(0, 1.2fr)' }
             }}
           >
@@ -218,6 +222,9 @@ export function AvatarBuilderPanel({
                 display: 'grid',
                 gap: 1.5,
                 justifyItems: 'center',
+                maxWidth: '100%',
+                minWidth: 0,
+                overflow: 'hidden',
                 p: { xs: 1, sm: 1.5 }
               }}
             >
@@ -237,7 +244,7 @@ export function AvatarBuilderPanel({
               </Button>
             </Box>
 
-            <Stack spacing={1.5}>
+            <Stack spacing={1.5} sx={{ minWidth: 0 }}>
               <Stack
                 direction="row"
                 spacing={1}
@@ -412,13 +419,18 @@ function AvatarPreview({
   ].filter(Boolean);
 
   return (
-    <Box sx={{ display: 'grid', gap: 1, justifyItems: 'center', maxWidth: { xs: 236, sm: 300, md: 360 }, width: '100%' }}>
+    <Box
+      sx={{
+        display: 'grid',
+        gap: 1,
+        justifyItems: 'center',
+        maxWidth: '100%',
+        minWidth: 0,
+        overflow: 'hidden',
+        width: '100%'
+      }}
+    >
       <Box
-        component="svg"
-        aria-label={getAvatarAlt(childName)}
-        role="img"
-        shapeRendering="crispEdges"
-        viewBox="0 0 32 48"
         sx={{
           aspectRatio: '2 / 3',
           bgcolor: background?.colorPrimary ?? '#d9f2df',
@@ -426,33 +438,53 @@ function AvatarPreview({
           borderWidth: { xs: 6, sm: 8, md: 10 },
           borderColor: 'rgba(255,255,255,0.46)',
           borderRadius: 4,
-          boxShadow: '0 18px 45px rgba(23, 32, 51, 0.18)',
-          display: 'block',
-          imageRendering: 'pixelated',
-          maxWidth: { xs: 236, sm: 300, md: 360 },
-          width: '100%'
+          boxShadow: { xs: '0 10px 24px rgba(23, 32, 51, 0.14)', sm: '0 18px 45px rgba(23, 32, 51, 0.18)' },
+          contain: 'layout paint',
+          maxWidth: '100%',
+          overflow: 'hidden',
+          position: 'relative',
+          width: { xs: 'min(172px, 52vw)', sm: 236, md: 300 }
         }}
       >
-        <rect width="32" height="48" fill={background?.colorPrimary ?? '#d9f2df'} />
-        <PixelBackground itemKey={background?.key} color={background?.colorSecondary ?? '#8dd3a5'} />
-        <rect x="4" y="42" width="24" height="2" fill="#203047" opacity="0.18" />
-        <PixelPet item={pet} />
-        <g transform="translate(0 -1)">
-          <PixelWeapon item={weapon} />
-          <PixelGadgetBack item={gadget} />
-          <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
-          <PixelArms skin={skin} />
-          <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
-          <PixelDressOverlay itemKey={top?.key} color={topColor} accent={topAccent} skin={skin} />
-          <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
-        </g>
-        <image href={pixelHeadDataUri} x="8" y="2" width="16" height="16" />
-        <g transform="translate(0 -1)">
-          <PixelGadgetFront item={gadget} />
-        </g>
+        <Box
+          component="svg"
+          aria-label={getAvatarAlt(childName)}
+          role="img"
+          shapeRendering="crispEdges"
+          viewBox="0 0 32 48"
+          sx={{
+            display: 'block',
+            height: '100%',
+            imageRendering: 'pixelated',
+            inset: 0,
+            maxWidth: 'none',
+            minWidth: 0,
+            overflow: 'hidden',
+            position: 'absolute',
+            width: '100%'
+          }}
+        >
+          <rect width="32" height="48" fill={background?.colorPrimary ?? '#d9f2df'} />
+          <PixelBackground itemKey={background?.key} color={background?.colorSecondary ?? '#8dd3a5'} />
+          <rect x="4" y="42" width="24" height="2" fill="#203047" opacity="0.18" />
+          <PixelPet item={pet} />
+          <g transform="translate(0 -1)">
+            <PixelWeapon item={weapon} />
+            <PixelGadgetBack item={gadget} />
+            <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
+            <PixelArms skin={skin} />
+            <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
+            <PixelDressOverlay itemKey={top?.key} color={topColor} accent={topAccent} skin={skin} />
+            <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
+          </g>
+          <image href={pixelHeadDataUri} x="8" y="2" width="16" height="16" />
+          <g transform="translate(0 -1)">
+            <PixelGadgetFront item={gadget} />
+          </g>
+        </Box>
       </Box>
       {equipmentChips.length > 0 ? (
-        <Stack direction="row" spacing={0.75} sx={{ justifyContent: 'center', flexWrap: 'wrap' }}>
+        <Stack direction="row" spacing={0.75} sx={{ justifyContent: 'center', flexWrap: 'wrap', maxWidth: '100%', minWidth: 0 }}>
           {equipmentChips.map((label) => (
             <Chip key={label} label={label} size="small" variant="outlined" />
           ))}
