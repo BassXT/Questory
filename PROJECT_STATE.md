@@ -373,6 +373,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Avatar-Katalog um Symbol-Shirts erweitert: Migration `20260718113000_avatar_symbol_shirts` fuegt 8 neue Oberteile mit Smiley, Stern, Mond, Blitz, Controller, Krone, Rakete und Funkelzeichen von Level 1 bis 8 hinzu.
 - Pixelart-Renderer zeichnet die neuen Shirt-Motive als eigene Questory-SVG-Layer; Quellencheck bestaetigt 8 neue Shirt-Keys ohne fehlende Renderer-Mappings.
 - Prisma Validate, Backend-Build und Frontend-Build nach Symbol-Shirt-Slice erfolgreich.
+- Portainer-Redeploy nach Symbol-Shirt-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 

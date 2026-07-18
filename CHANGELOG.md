@@ -153,6 +153,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 - Quellencheck fuer Symbol-Shirts erfolgreich: 8 neue Top-Keys, keine fehlenden Renderer-Mappings.
 - Prisma Validate, Backend-Build und Frontend-Build nach Symbol-Shirt-Slice erfolgreich.
+- Portainer-Redeploy nach Symbol-Shirt-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Quellencheck fuer Mund-Mappings erfolgreich: 18 Mund-Items, 18 gemappte Varianten, keine Duplicate-Groups.
 - Prisma Validate, Backend-Build und Frontend-Build nach Mund-Dopplungsfix erfolgreich.
 - Portainer-Redeploy nach Mund-Dopplungsfix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
