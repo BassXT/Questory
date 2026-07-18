@@ -361,6 +361,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Pixelart-Renderer um Mappings fuer die neuen Haar-, Blick-, Mund-, Hut- und Brillen-Keys erweitert.
 - Shop-/Quest-Balance nachgezogen: Vorschlagsbibliothek enthaelt nun 51 Rewards mit Preisen von 20 bis 500 Coins und 63 Quest-Vorlagen mit Coin-Rewards von 1 bis 16; neue Langzeitziele liegen bewusst bei 260 bis 500 Coins.
 - Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.
+- Portainer-Redeploy nach Avatar-/Economy-Balance per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 

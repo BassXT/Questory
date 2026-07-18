@@ -148,6 +148,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 - Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.
 - Balance-Pruefung nach Avatar-/Economy-Balance: 50 neue Avatar-Items, Rewards 20-500 Coins, Quest-Coins 1-16 und Quest-XP 8-80.
+- Portainer-Redeploy nach Avatar-/Economy-Balance erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Avatar-Builder-Mobile-Fix erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Portainer-Redeploy nach Avatar-Builder-Mobile-Fix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
