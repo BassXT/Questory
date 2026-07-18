@@ -803,6 +803,22 @@ function resolvePixelMouth(itemKey: string | undefined) {
 
 function resolvePixelClothing(itemKey: string | undefined) {
   switch (itemKey) {
+    case 'top-shirt-smiley-yellow':
+      return 'variant07';
+    case 'top-shirt-star-purple':
+      return 'variant11';
+    case 'top-shirt-moon-navy':
+      return 'variant17';
+    case 'top-shirt-bolt-red':
+      return 'variant15';
+    case 'top-shirt-gamepad-green':
+      return 'variant04';
+    case 'top-shirt-crown-blue':
+      return 'variant22';
+    case 'top-shirt-rocket-teal':
+      return 'variant06';
+    case 'top-shirt-spark-black':
+      return 'variant20';
     case 'top-checker-red':
       return 'variant08';
     case 'top-dots-teal':
@@ -990,6 +1006,78 @@ function PixelTop({ itemKey, color, accent }: { itemKey: string | undefined; col
           <rect x="15" y="22" width="2" height="1" fill={accent} />
           <rect x="14" y="23" width="4" height="1" fill={accent} />
           <rect x="15" y="24" width="2" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-smiley-yellow' ? (
+        <g>
+          <rect x="14" y="22" width="4" height="4" fill={accent} />
+          <rect x="15" y="23" width="1" height="1" fill={color} />
+          <rect x="17" y="23" width="1" height="1" fill={color} />
+          <rect x="15" y="25" width="3" height="1" fill={color} />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-star-purple' ? (
+        <g>
+          <rect x="16" y="21" width="1" height="1" fill={accent} />
+          <rect x="15" y="22" width="3" height="1" fill={accent} />
+          <rect x="14" y="23" width="5" height="1" fill={accent} />
+          <rect x="15" y="24" width="3" height="1" fill={accent} />
+          <rect x="15" y="25" width="1" height="1" fill={accent} />
+          <rect x="17" y="25" width="1" height="1" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-moon-navy' ? (
+        <g>
+          <rect x="15" y="22" width="3" height="1" fill={accent} />
+          <rect x="14" y="23" width="4" height="1" fill={accent} />
+          <rect x="14" y="24" width="3" height="1" fill={accent} />
+          <rect x="15" y="25" width="2" height="1" fill={accent} />
+          <rect x="17" y="23" width="1" height="2" fill={color} opacity="0.95" />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-bolt-red' ? (
+        <g>
+          <rect x="16" y="21" width="2" height="2" fill={accent} />
+          <rect x="15" y="23" width="3" height="1" fill={accent} />
+          <rect x="14" y="24" width="3" height="1" fill={accent} />
+          <rect x="14" y="25" width="1" height="2" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-gamepad-green' ? (
+        <g>
+          <rect x="13" y="23" width="6" height="2" fill={accent} />
+          <rect x="12" y="24" width="2" height="1" fill={accent} />
+          <rect x="18" y="24" width="2" height="1" fill={accent} />
+          <rect x="14" y="22" width="1" height="1" fill={accent} />
+          <rect x="17" y="22" width="1" height="1" fill={accent} />
+          <rect x="15" y="24" width="1" height="1" fill={color} />
+          <rect x="18" y="23" width="1" height="1" fill={color} />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-crown-blue' ? (
+        <g>
+          <rect x="14" y="24" width="5" height="2" fill={accent} />
+          <rect x="14" y="22" width="1" height="2" fill={accent} />
+          <rect x="16" y="21" width="1" height="3" fill={accent} />
+          <rect x="18" y="22" width="1" height="2" fill={accent} />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-rocket-teal' ? (
+        <g>
+          <rect x="16" y="21" width="2" height="1" fill={accent} />
+          <rect x="15" y="22" width="4" height="3" fill={accent} />
+          <rect x="16" y="23" width="1" height="1" fill="#29b6f6" />
+          <rect x="14" y="25" width="2" height="1" fill="#d63f61" />
+          <rect x="18" y="25" width="2" height="1" fill="#d63f61" />
+          <rect x="16" y="26" width="2" height="1" fill="#f2c94c" />
+        </g>
+      ) : null}
+      {itemKey === 'top-shirt-spark-black' ? (
+        <g>
+          <rect x="16" y="21" width="1" height="5" fill={accent} />
+          <rect x="14" y="23" width="5" height="1" fill={accent} />
+          <rect x="15" y="22" width="1" height="1" fill={accent} />
+          <rect x="17" y="24" width="1" height="1" fill={accent} />
         </g>
       ) : null}
       {itemKey === 'top-overalls-denim' ? (

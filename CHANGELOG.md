@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Katalog um 8 Symbol-Shirts erweitert: Smiley, Stern, Mond, Blitz, Controller, Krone, Rakete und Funkelzeichen als freischaltbare Oberteile von Level 1 bis 8.
 - Avatar-Werkstatt trennt Haar-/Augenstil von Haar-/Augenfarbe: Farben sind nun freie Palettenwerte, Styles bleiben Level-Freischaltungen.
 - Avatar-Katalog um 50 Items fuer Langzeitmotivation erweitert: 16 Haare, 8 Blicke, 10 Muender, 12 Huete und 4 Brillen mit Freischaltungen von Level 1 bis 14.
 - Pixelart-Avatar-Renderer um Mappings fuer die neuen Haar-, Augen-/Blick-, Mund-, Hut- und Brillen-Keys erweitert.
@@ -150,6 +151,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Quellencheck fuer Symbol-Shirts erfolgreich: 8 neue Top-Keys, keine fehlenden Renderer-Mappings.
+- Prisma Validate, Backend-Build und Frontend-Build nach Symbol-Shirt-Slice erfolgreich.
 - Quellencheck fuer Mund-Mappings erfolgreich: 18 Mund-Items, 18 gemappte Varianten, keine Duplicate-Groups.
 - Prisma Validate, Backend-Build und Frontend-Build nach Mund-Dopplungsfix erfolgreich.
 - Portainer-Redeploy nach Mund-Dopplungsfix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.

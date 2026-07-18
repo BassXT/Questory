@@ -370,6 +370,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Mund-Renderer-Mapping auf Dopplungen geprueft und bereinigt: Alle 18 `mouth-*` Katalog-Items zeigen jetzt eigene DiceBear-Pixel-Art-Mundvarianten; Quellencheck meldet `duplicateGroups: []`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Mund-Dopplungsfix erfolgreich.
 - Portainer-Redeploy nach Mund-Dopplungsfix erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Avatar-Katalog um Symbol-Shirts erweitert: Migration `20260718113000_avatar_symbol_shirts` fuegt 8 neue Oberteile mit Smiley, Stern, Mond, Blitz, Controller, Krone, Rakete und Funkelzeichen von Level 1 bis 8 hinzu.
+- Pixelart-Renderer zeichnet die neuen Shirt-Motive als eigene Questory-SVG-Layer; Quellencheck bestaetigt 8 neue Shirt-Keys ohne fehlende Renderer-Mappings.
+- Prisma Validate, Backend-Build und Frontend-Build nach Symbol-Shirt-Slice erfolgreich.
 
 ## Offene Aufgaben
 
