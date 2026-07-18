@@ -152,6 +152,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 - Quellencheck fuer Mund-Mappings erfolgreich: 18 Mund-Items, 18 gemappte Varianten, keine Duplicate-Groups.
 - Prisma Validate, Backend-Build und Frontend-Build nach Mund-Dopplungsfix erfolgreich.
+- Portainer-Redeploy nach Mund-Dopplungsfix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach freier Haar-/Augenfarbe erfolgreich.
 - Portainer-Redeploy nach freier Haar-/Augenfarbe erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.

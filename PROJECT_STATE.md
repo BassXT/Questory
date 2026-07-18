@@ -369,6 +369,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach freier Haar-/Augenfarbe anschliessend erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Mund-Renderer-Mapping auf Dopplungen geprueft und bereinigt: Alle 18 `mouth-*` Katalog-Items zeigen jetzt eigene DiceBear-Pixel-Art-Mundvarianten; Quellencheck meldet `duplicateGroups: []`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Mund-Dopplungsfix erfolgreich.
+- Portainer-Redeploy nach Mund-Dopplungsfix erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
