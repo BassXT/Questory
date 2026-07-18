@@ -362,6 +362,9 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Shop-/Quest-Balance nachgezogen: Vorschlagsbibliothek enthaelt nun 51 Rewards mit Preisen von 20 bis 500 Coins und 63 Quest-Vorlagen mit Coin-Rewards von 1 bis 16; neue Langzeitziele liegen bewusst bei 260 bis 500 Coins.
 - Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.
 - Portainer-Redeploy nach Avatar-/Economy-Balance per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Avatar-Werkstatt nach Balance-Feedback angepasst: Haar- und Augenfarben sind jetzt freie Appearance-Werte im Loadout, waehrend nur Haar-/Blickstile ueber Level-Fortschritt freigeschaltet werden.
+- Frontend fasst Haar-/Augen-Farbvarianten als Stil-Auswahl zusammen und zeigt je Slot eine eigene frei scrollbare Farbpalette; Backend validiert `hairColor` und `eyesColor` gegen kuratierte Paletten.
+- Prisma Validate, Backend-Build und Frontend-Build nach freier Haar-/Augenfarbe erfolgreich.
 
 ## Offene Aufgaben
 

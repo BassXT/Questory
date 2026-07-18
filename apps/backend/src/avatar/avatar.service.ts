@@ -5,12 +5,30 @@ import { PrismaService } from '../prisma/prisma.service';
 import { UpdateAvatarLoadoutDto } from './dto/update-avatar-loadout.dto';
 
 const avatarSlots = ['background', 'body', 'hair', 'eyes', 'mouth', 'hat', 'bottom', 'top', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'] as const;
+const avatarAppearanceColors = {
+  hairColor: [
+    '#5b3826',
+    '#2f2a28',
+    '#7a4729',
+    '#e8c46a',
+    '#b45a2a',
+    '#d8dce6',
+    '#d96aa8',
+    '#8a5bd8',
+    '#38a6a5',
+    '#3c79d8',
+    '#d63f61'
+  ],
+  eyesColor: ['#28384f', '#2f74d0', '#2f8f6f', '#6f4a2f', '#667085', '#c98b24', '#7a5ccf', '#29b6f6']
+} as const;
 
 const defaultEquippedItems: Record<string, string> = {
   background: 'background-meadow',
   body: 'body-sunrise',
   hair: 'hair-swoop',
   eyes: 'eyes-bright',
+  hairColor: '#5b3826',
+  eyesColor: '#28384f',
   mouth: 'mouth-smile',
   bottom: 'bottom-jeans',
   top: 'top-hoodie-blue',
@@ -85,6 +103,14 @@ export class AvatarService {
     const equippedItems: Record<string, string> = {};
 
     for (const [slot, itemKey] of Object.entries(dto.equippedItems ?? {})) {
+      if (this.isAppearanceColorKey(slot)) {
+        if (this.isAllowedAppearanceColor(slot, itemKey)) {
+          equippedItems[slot] = itemKey;
+        }
+
+        continue;
+      }
+
       if (!avatarSlots.includes(slot as (typeof avatarSlots)[number])) {
         throw new BadRequestException(`Unknown avatar slot: ${slot}`);
       }
@@ -180,6 +206,19 @@ export class AvatarService {
       }
     }
 
+    for (const colorKey of Object.keys(avatarAppearanceColors)) {
+      const value = typeof stored[colorKey] === 'string' ? (stored[colorKey] as string) : undefined;
+      resolved[colorKey] = this.isAllowedAppearanceColor(colorKey, value) ? value : defaultEquippedItems[colorKey];
+    }
+
     return resolved;
+  }
+
+  private isAppearanceColorKey(key: string): key is keyof typeof avatarAppearanceColors {
+    return Object.prototype.hasOwnProperty.call(avatarAppearanceColors, key);
+  }
+
+  private isAllowedAppearanceColor(key: string, color: string | undefined): color is string {
+    return this.isAppearanceColorKey(key) && typeof color === 'string' && (avatarAppearanceColors[key] as readonly string[]).includes(color);
   }
 }

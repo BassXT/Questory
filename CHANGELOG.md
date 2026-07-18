@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Avatar-Werkstatt trennt Haar-/Augenstil von Haar-/Augenfarbe: Farben sind nun freie Palettenwerte, Styles bleiben Level-Freischaltungen.
 - Avatar-Katalog um 50 Items fuer Langzeitmotivation erweitert: 16 Haare, 8 Blicke, 10 Muender, 12 Huete und 4 Brillen mit Freischaltungen von Level 1 bis 14.
 - Pixelart-Avatar-Renderer um Mappings fuer die neuen Haar-, Augen-/Blick-, Mund-, Hut- und Brillen-Keys erweitert.
 - Vorschlagsbibliothek um groessere Langzeit-Rewards bis 500 Coins und Projekt-/Wochenquests bis 16 Coins erweitert.
@@ -140,12 +141,14 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Avatar-Builder blendet reine Haar-/Augen-Farbdubletten als eigene Itemkarten aus und zeigt stattdessen deduplizierte Stil-Karten plus separate Farbswatches.
 - Avatar-Builder-Vorschau auf iPhone-Breiten hart begrenzt: feste CSS-Buehne, geclipptes absolut positioniertes SVG und engerer Mobile-Schatten verhindern horizontales Ausbrechen der Avatar-Grafik.
 - Sichtbaren hautfarbenen Halsblock in der Pixelart-Avatar-Vorschau entfernt, damit der DiceBear-Pixelkopf sauberer auf dem Shirt sitzt.
 - Pixelart-Koerper-Layer um eine Pixelreihe nach oben gezogen, damit keine helle Trennlinie zwischen Kopf und Shirt stehen bleibt.
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach freier Haar-/Augenfarbe erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.
 - Balance-Pruefung nach Avatar-/Economy-Balance: 50 neue Avatar-Items, Rewards 20-500 Coins, Quest-Coins 1-16 und Quest-XP 8-80.
 - Portainer-Redeploy nach Avatar-/Economy-Balance erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.

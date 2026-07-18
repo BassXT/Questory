@@ -97,6 +97,33 @@ const slotLabels: Record<AvatarSlot, string> = {
 
 const slotOrder: AvatarSlot[] = ['background', 'body', 'hair', 'eyes', 'mouth', 'hat', 'top', 'bottom', 'shoes', 'glasses', 'gadget', 'weapon', 'pet'];
 const optionalSlots = new Set<AvatarSlot>(['hat', 'glasses', 'gadget', 'weapon', 'pet']);
+const styleOnlySlots = new Set<AvatarSlot>(['hair', 'eyes']);
+
+const avatarAppearanceColors = {
+  hairColor: [
+    { label: 'Braun', color: '#5b3826' },
+    { label: 'Dunkel', color: '#2f2a28' },
+    { label: 'Kastanie', color: '#7a4729' },
+    { label: 'Blond', color: '#e8c46a' },
+    { label: 'Kupfer', color: '#b45a2a' },
+    { label: 'Silber', color: '#d8dce6' },
+    { label: 'Rosa', color: '#d96aa8' },
+    { label: 'Lila', color: '#8a5bd8' },
+    { label: 'Türkis', color: '#38a6a5' },
+    { label: 'Blau', color: '#3c79d8' },
+    { label: 'Rot', color: '#d63f61' }
+  ],
+  eyesColor: [
+    { label: 'Dunkel', color: '#28384f' },
+    { label: 'Blau', color: '#2f74d0' },
+    { label: 'Grün', color: '#2f8f6f' },
+    { label: 'Braun', color: '#6f4a2f' },
+    { label: 'Grau', color: '#667085' },
+    { label: 'Bernstein', color: '#c98b24' },
+    { label: 'Violett', color: '#7a5ccf' },
+    { label: 'Magieblau', color: '#29b6f6' }
+  ]
+} as const;
 
 export function AvatarBuilderPanel({
   avatar,
@@ -113,7 +140,7 @@ export function AvatarBuilderPanel({
   const itemsByKey = useMemo(() => new Map((avatar?.items ?? []).map((item) => [item.key, item])), [avatar?.items]);
   const visibleSlots = avatar?.slots.length ? orderSlots(avatar.slots) : slotOrder;
   const slotItems = useMemo(
-    () => (avatar?.items ?? []).filter((item) => item.slot === selectedSlot).sort(compareAvatarItems),
+    () => getVisibleSlotItems(avatar?.items ?? [], selectedSlot),
     [avatar?.items, selectedSlot]
   );
   const unlockedCount = avatar?.items.filter((item) => item.isUnlocked).length ?? 0;
@@ -142,6 +169,13 @@ export function AvatarBuilderPanel({
       delete nextLoadout[slot];
       return nextLoadout;
     });
+  }
+
+  function selectAppearanceColor(key: keyof typeof avatarAppearanceColors, color: string) {
+    setDraftLoadout((currentLoadout) => ({
+      ...currentLoadout,
+      [key]: color
+    }));
   }
 
   return (
@@ -267,6 +301,24 @@ export function AvatarBuilderPanel({
                 ))}
               </Stack>
 
+              {selectedSlot === 'hair' ? (
+                <AppearanceColorPicker
+                  label="Haarfarbe"
+                  options={avatarAppearanceColors.hairColor}
+                  selectedColor={getAppearanceColor(draftLoadout, 'hairColor')}
+                  onSelect={(color) => selectAppearanceColor('hairColor', color)}
+                />
+              ) : null}
+
+              {selectedSlot === 'eyes' ? (
+                <AppearanceColorPicker
+                  label="Augenfarbe"
+                  options={avatarAppearanceColors.eyesColor}
+                  selectedColor={getAppearanceColor(draftLoadout, 'eyesColor')}
+                  onSelect={(color) => selectAppearanceColor('eyesColor', color)}
+                />
+              ) : null}
+
               <Box
                 sx={{
                   display: 'grid',
@@ -284,7 +336,7 @@ export function AvatarBuilderPanel({
 
                 {slotItems.map((item) => (
                   <AvatarItemOption
-                    active={draftLoadout[item.slot] === item.key}
+                    active={isAvatarOptionActive(item, draftLoadout, itemsByKey)}
                     item={item}
                     key={item.key}
                     onSelect={() => equipItem(item)}
@@ -346,13 +398,87 @@ function AvatarItemOption({ active, item, onSelect }: AvatarItemOptionProps) {
       <Typography color="text.secondary" sx={{ minHeight: 38 }} variant="body2">
         {item?.description ?? 'Kein Extra für diesen Slot.'}
       </Typography>
-      {item ? (
+      {item && !styleOnlySlots.has(item.slot) ? (
         <Stack direction="row" spacing={0.75}>
           <ColorSwatch color={item.colorPrimary ?? '#7d8da8'} />
           <ColorSwatch color={item.colorSecondary ?? '#f2c078'} />
         </Stack>
       ) : null}
     </Button>
+  );
+}
+
+function AppearanceColorPicker({
+  label,
+  options,
+  selectedColor,
+  onSelect
+}: {
+  label: string;
+  options: ReadonlyArray<{ label: string; color: string }>;
+  selectedColor: string;
+  onSelect: (color: string) => void;
+}) {
+  return (
+    <Box
+      sx={{
+        border: '1px solid',
+        borderColor: 'divider',
+        borderRadius: 2,
+        display: 'grid',
+        gap: 1,
+        minWidth: 0,
+        p: 1
+      }}
+    >
+      <Typography sx={{ fontWeight: 900 }} variant="body2">
+        {label}
+      </Typography>
+      <Stack
+        direction="row"
+        spacing={0.75}
+        sx={{
+          flexWrap: { xs: 'nowrap', sm: 'wrap' },
+          minWidth: 0,
+          overflowX: { xs: 'auto', sm: 'visible' },
+          pb: { xs: 0.25, sm: 0 },
+          scrollbarWidth: 'none',
+          '&::-webkit-scrollbar': { display: 'none' }
+        }}
+      >
+        {options.map((option) => {
+          const active = selectedColor === option.color;
+
+          return (
+            <Button
+              aria-label={option.label}
+              key={option.color}
+              onClick={() => onSelect(option.color)}
+              sx={{
+                borderColor: active ? 'primary.main' : 'divider',
+                borderRadius: 999,
+                flex: '0 0 auto',
+                minWidth: 38,
+                p: 0.35
+              }}
+              variant="outlined"
+            >
+              <Box
+                sx={{
+                  bgcolor: option.color,
+                  border: '1px solid',
+                  borderColor: active ? 'primary.main' : 'divider',
+                  borderRadius: 999,
+                  boxShadow: active ? '0 0 0 3px rgba(47, 116, 208, 0.2)' : 'none',
+                  height: 26,
+                  width: 26
+                }}
+              />
+            </Button>
+          );
+        })}
+      </Stack>
+    </Box>
   );
 }
 
@@ -385,16 +511,18 @@ function AvatarPreview({
   const bottomAccent = bottom?.colorSecondary ?? '#233f6c';
   const shoeColor = shoes?.colorPrimary ?? '#d63f61';
   const shoeAccent = shoes?.colorSecondary ?? '#8f263d';
+  const hairColor = getAppearanceColor(equippedItems, 'hairColor');
+  const eyesColor = getAppearanceColor(equippedItems, 'eyesColor');
   const pixelHeadDataUri = useMemo(
     () =>
       createAvatar(pixelArt, {
         seed: `${childName}:${Object.values(equippedItems).join(':')}`,
         backgroundColor: ['transparent'],
         skinColor: [stripHex(body?.colorPrimary ?? '#f2b28d')],
-        hairColor: [stripHex(hair?.colorPrimary ?? '#5b3826')],
+        hairColor: [stripHex(hairColor)],
         hair: [resolvePixelHair(hair?.key)],
         eyes: [resolvePixelEyes(eyes?.key)],
-        eyesColor: [stripHex(eyes?.colorPrimary ?? '#28384f')],
+        eyesColor: [stripHex(eyesColor)],
         mouth: [resolvePixelMouth(mouth?.key ?? eyes?.key)],
         mouthColor: [stripHex(mouth?.colorPrimary ?? '#9a5a4a')],
         clothing: [resolvePixelClothing(top?.key)],
@@ -408,7 +536,7 @@ function AvatarPreview({
         accessoriesProbability: 0,
         beardProbability: 0
       }).toDataUri(),
-    [body, childName, equippedItems, eyes, glasses, hair, hat, mouth, top]
+    [body, childName, equippedItems, eyes, eyesColor, glasses, hair, hairColor, hat, mouth, top]
   );
   const equipmentChips = [
     hat ? `Hut: ${hat.name}` : null,
@@ -1925,14 +2053,146 @@ function compareAvatarItems(first: AvatarItem, second: AvatarItem) {
   return first.requiredLevel - second.requiredLevel || first.layerOrder - second.layerOrder || first.name.localeCompare(second.name);
 }
 
+function getVisibleSlotItems(items: AvatarItem[], selectedSlot: AvatarSlot) {
+  const slotItems = items.filter((item) => item.slot === selectedSlot).sort(compareAvatarItems);
+
+  if (!styleOnlySlots.has(selectedSlot)) {
+    return slotItems;
+  }
+
+  const itemsByStyle = new Map<string, AvatarItem>();
+
+  for (const item of slotItems) {
+    const styleKey = getAvatarStyleKey(item);
+    const existingItem = itemsByStyle.get(styleKey);
+
+    if (!existingItem || compareAvatarItems(item, existingItem) < 0) {
+      itemsByStyle.set(styleKey, toStyleOnlyItem(item));
+    }
+  }
+
+  return Array.from(itemsByStyle.values()).sort(compareAvatarItems);
+}
+
+function isAvatarOptionActive(item: AvatarItem, loadout: Record<string, string>, itemsByKey: Map<string, AvatarItem>) {
+  const equippedItem = getEquippedItem(loadout, itemsByKey, item.slot);
+
+  if (!equippedItem) {
+    return false;
+  }
+
+  if (styleOnlySlots.has(item.slot)) {
+    return getAvatarStyleKey(equippedItem) === getAvatarStyleKey(item);
+  }
+
+  return equippedItem.key === item.key;
+}
+
+function getAvatarStyleKey(item: AvatarItem) {
+  if (item.slot === 'hair') {
+    return resolvePixelHair(item.key);
+  }
+
+  if (item.slot === 'eyes') {
+    return resolvePixelEyes(item.key);
+  }
+
+  return item.key;
+}
+
+function toStyleOnlyItem(item: AvatarItem): AvatarItem {
+  if (item.slot === 'hair') {
+    return {
+      ...item,
+      name: getHairStyleName(resolvePixelHair(item.key), item.name),
+      description: 'Frisur-Stil. Die Haarfarbe kannst du frei wählen.'
+    };
+  }
+
+  if (item.slot === 'eyes') {
+    return {
+      ...item,
+      name: getEyesStyleName(resolvePixelEyes(item.key), item.name),
+      description: 'Blick-Stil. Die Augenfarbe kannst du frei wählen.'
+    };
+  }
+
+  return item;
+}
+
+function getHairStyleName(styleKey: string, fallbackName: string) {
+  const labels: Record<string, string> = {
+    long04: 'Bob',
+    long05: 'Langhaar',
+    long06: 'Runder Bob',
+    long08: 'Langes Haar',
+    long09: 'Glattes Langhaar',
+    long10: 'Weiche Wellen',
+    long11: 'Wellen',
+    long12: 'Langes Abenteuerhaar',
+    long13: 'Pferdeschwanz',
+    long14: 'Langer Zopf',
+    long17: 'Doppelzöpfe',
+    long18: 'Duttknoten',
+    long19: 'Zöpfe',
+    long20: 'Abenteuerzöpfe',
+    long21: 'Hohe Duttknoten',
+    short01: 'Abenteuer-Schopf',
+    short02: 'Kurzschnitt',
+    short04: 'Pilzkopf',
+    short05: 'Kurzer Schopf',
+    short06: 'Seitenscheitel',
+    short07: 'Klassischer Seitenscheitel',
+    short13: 'Strähnenlook',
+    short15: 'Locken',
+    short16: 'Runde Locken',
+    short17: 'Wilde Locken',
+    short18: 'Pixie',
+    short19: 'Undercut',
+    short20: 'Stachelhaare',
+    short22: 'Iro',
+    short23: 'Wolkenlocken',
+    short24: 'Große Locken'
+  };
+
+  return labels[styleKey] ?? fallbackName;
+}
+
+function getEyesStyleName(styleKey: string, fallbackName: string) {
+  const labels: Record<string, string> = {
+    variant01: 'Freundlicher Blick',
+    variant02: 'Ruhiger Blick',
+    variant03: 'Runde Augen',
+    variant04: 'Neugierblick',
+    variant05: 'Zwinkerblick',
+    variant08: 'Wache Augen',
+    variant09: 'Fokusblick',
+    variant10: 'Träumerblick',
+    variant12: 'Funkelblick'
+  };
+
+  return labels[styleKey] ?? fallbackName;
+}
+
+function getAppearanceColor(loadout: Record<string, string>, key: keyof typeof avatarAppearanceColors) {
+  const colors: string[] = avatarAppearanceColors[key].map((option) => option.color);
+  const selectedColor = loadout[key];
+  return colors.includes(selectedColor) ? selectedColor : colors[0];
+}
+
 function normalizeLoadout(loadout: Record<string, string>, slots: AvatarSlot[]) {
-  return slots.reduce<Record<string, string>>((normalized, slot) => {
+  const normalized = slots.reduce<Record<string, string>>((normalizedSlots, slot) => {
     if (loadout[slot]) {
-      normalized[slot] = loadout[slot];
+      normalizedSlots[slot] = loadout[slot];
     }
 
-    return normalized;
+    return normalizedSlots;
   }, {});
+
+  normalized.hairColor = getAppearanceColor(loadout, 'hairColor');
+  normalized.eyesColor = getAppearanceColor(loadout, 'eyesColor');
+
+  return normalized;
 }
 
 function rarityLabel(rarity: string) {
