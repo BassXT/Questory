@@ -144,6 +144,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Avatar-Builder-Mobile-Fix erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
+- Portainer-Redeploy nach Avatar-Builder-Mobile-Fix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Mobile-Polish erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Frontend-Build nach Mobile-Nachbesserung erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
 - Portainer-Redeploy nach Mobile-Nachbesserung erfolgreich; LXC-Backend-Health OK, Frontend HTTP `200`, alter Testlogin HTTP `401`.

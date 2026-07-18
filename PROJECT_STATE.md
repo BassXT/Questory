@@ -356,6 +356,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Mobile-Nachbesserung per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`, alter Testlogin weiterhin HTTP `401`.
 - Avatar-Builder-Mobile-Fix nach iPhone-Screenshot umgesetzt: Die Avatar-Vorschau nutzt jetzt eine feste, geclippte CSS-Buehne mit absolut positioniertem SVG, damit Safari/iPhone keine ueberbreite SVG-Layoutflaeche mehr erzeugt.
 - Frontend-Build nach Avatar-Builder-Mobile-Fix erfolgreich; lokale Vite-Preview lieferte HTTP `200`.
+- Portainer-Redeploy nach Avatar-Builder-Mobile-Fix per API-Script erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
