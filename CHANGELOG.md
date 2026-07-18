@@ -145,10 +145,12 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Avatar-Builder-Vorschau auf iPhone-Breiten hart begrenzt: feste CSS-Buehne, geclipptes absolut positioniertes SVG und engerer Mobile-Schatten verhindern horizontales Ausbrechen der Avatar-Grafik.
 - Sichtbaren hautfarbenen Halsblock in der Pixelart-Avatar-Vorschau entfernt, damit der DiceBear-Pixelkopf sauberer auf dem Shirt sitzt.
 - Pixelart-Koerper-Layer um eine Pixelreihe nach oben gezogen, damit keine helle Trennlinie zwischen Kopf und Shirt stehen bleibt.
+- Portainer-Redeploy-Blocker durch vollen Docker-Build-Cache behoben; Build-Cache-Prune gab ca. 8,37 GB frei, ohne Volumes zu entfernen.
 
 ### Verified
 
 - Prisma Validate, Backend-Build und Frontend-Build nach freier Haar-/Augenfarbe erfolgreich.
+- Portainer-Redeploy nach freier Haar-/Augenfarbe erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Avatar-/Economy-Balance erfolgreich.
 - Balance-Pruefung nach Avatar-/Economy-Balance: 50 neue Avatar-Items, Rewards 20-500 Coins, Quest-Coins 1-16 und Quest-XP 8-80.
 - Portainer-Redeploy nach Avatar-/Economy-Balance erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.

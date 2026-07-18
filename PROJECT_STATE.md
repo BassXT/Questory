@@ -365,6 +365,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Avatar-Werkstatt nach Balance-Feedback angepasst: Haar- und Augenfarben sind jetzt freie Appearance-Werte im Loadout, waehrend nur Haar-/Blickstile ueber Level-Fortschritt freigeschaltet werden.
 - Frontend fasst Haar-/Augen-Farbvarianten als Stil-Auswahl zusammen und zeigt je Slot eine eigene frei scrollbare Farbpalette; Backend validiert `hairColor` und `eyesColor` gegen kuratierte Paletten.
 - Prisma Validate, Backend-Build und Frontend-Build nach freier Haar-/Augenfarbe erfolgreich.
+- Erster Portainer-Redeploy nach freier Haar-/Augenfarbe scheiterte wegen vollem Docker-Build-Speicher (`No space left on device`); Docker-Build-Cache-Prune gab ca. 8,37 GB frei.
+- Portainer-Redeploy nach freier Haar-/Augenfarbe anschliessend erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
