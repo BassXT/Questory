@@ -154,6 +154,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Prisma Validate, Backend-Build und Frontend-Build nach Kindmodus-Slice erfolgreich.
+- Portainer-Redeploy nach Kindmodus-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Quellencheck fuer Symbol-Shirts erfolgreich: 8 neue Top-Keys, keine fehlenden Renderer-Mappings.
 - Prisma Validate, Backend-Build und Frontend-Build nach Symbol-Shirt-Slice erfolgreich.
 - Portainer-Redeploy nach Symbol-Shirt-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.

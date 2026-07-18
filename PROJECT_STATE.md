@@ -377,6 +377,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Eltern-Dashboard um einen `Kindmodus` erweitert: Eltern/Admins koennen ein aktives Kind auswaehlen und in einem kindgerechten Bereich Status, zugewiesene Quests, spontane Quests, Shop und Avatar-Werkstatt bedienen.
 - Kinderlisten-Klicks oeffnen nun den Kindmodus statt nur die Uebersicht; Quest-Einreichung im Kindmodus zeigt keine Eltern-Freigabe- oder Verwaltungsaktionen.
 - Prisma Validate, Backend-Build und Frontend-Build nach Kindmodus-Slice erfolgreich.
+- Portainer-Redeploy nach Kindmodus-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
