@@ -392,6 +392,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Spontane Quests werden in der normalen Parent-Questseite nicht mehr angezeigt/eingereicht; sie bleiben nur in Kinderansicht oder echtem Kinderlogin sichtbar.
 - Aktuelle fachliche Bedeutung von `isSelfService`: Eine Quest-Vorlage, die ein Kind ohne vorherige konkrete Zuweisung selbst einreichen darf. Das ueberschneidet sich mit situativen Quests und soll im naechsten Struktur-Slice vereinfacht werden.
 - Prisma Validate, Backend-Build und Frontend-Build nach Self-Service-Ausblendung im Parent-Bereich erfolgreich.
+- Portainer-Redeploy nach Self-Service-Ausblendung im Parent-Bereich erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 

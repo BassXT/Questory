@@ -160,6 +160,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Prisma Validate, Backend-Build und Frontend-Build nach Self-Service-Ausblendung im Parent-Bereich erfolgreich.
+- Portainer-Redeploy nach Self-Service-Ausblendung im Parent-Bereich erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Parent-/Kinderaktions-Trennung erfolgreich.
 - Portainer-Redeploy nach Parent-/Kinderaktions-Trennung erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Elternbereich-Gate erfolgreich.
