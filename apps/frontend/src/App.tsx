@@ -48,6 +48,12 @@ type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
 type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
 
+interface ParentGateChallenge {
+  left: number;
+  right: number;
+  answer: number;
+}
+
 interface AuthUser {
   id: string;
   familyId: string;
@@ -1826,6 +1832,9 @@ function DashboardView({
   const [activeDashboardTab, setActiveDashboardTab] = useState<DashboardTab>('overview');
   const [activeChildModeTab, setActiveChildModeTab] = useState<ChildModeTab>('status');
   const [activeShopTab, setActiveShopTab] = useState<ShopTab>('shop');
+  const [parentGateChallenge, setParentGateChallenge] = useState<ParentGateChallenge | null>(null);
+  const [parentGateAnswer, setParentGateAnswer] = useState('');
+  const [parentGateError, setParentGateError] = useState('');
   const selectedChild = children.find((child) => child.id === assignmentForm.childProfileId) ?? null;
   const dashboardTabValue = dashboardTabs.some((tab) => tab.value === activeDashboardTab) ? activeDashboardTab : false;
 
@@ -1838,6 +1847,36 @@ function DashboardView({
       setActiveDashboardTab(dashboardTabs[0].value);
     }
   }, [activeDashboardTab, canManageChildren, dashboardTabs]);
+
+  function openParentGate() {
+    const left = Math.floor(Math.random() * 8) + 3;
+    const right = Math.floor(Math.random() * 8) + 2;
+    setParentGateChallenge({ left, right, answer: left + right });
+    setParentGateAnswer('');
+    setParentGateError('');
+  }
+
+  function closeParentGate() {
+    setParentGateChallenge(null);
+    setParentGateAnswer('');
+    setParentGateError('');
+  }
+
+  function submitParentGate(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!parentGateChallenge) {
+      return;
+    }
+
+    if (Number(parentGateAnswer.trim()) !== parentGateChallenge.answer) {
+      setParentGateError('Das stimmt noch nicht.');
+      return;
+    }
+
+    closeParentGate();
+    setActiveDashboardTab('overview');
+  }
 
   if (!dashboard) {
     return (
@@ -2020,6 +2059,7 @@ function DashboardView({
           onAssignmentComplete={onAssignmentComplete}
           onRewardRedeem={onRewardRedeem}
           onSelfServiceQuestComplete={onSelfServiceQuestComplete}
+          onParentModeRequest={openParentGate}
           onTabChange={setActiveChildModeTab}
         />
       ) : null}
@@ -2143,6 +2183,40 @@ function DashboardView({
           onReject={onRewardRedemptionReject}
         />
       ) : null}
+
+      <Dialog fullWidth maxWidth="xs" onClose={closeParentGate} open={Boolean(parentGateChallenge)}>
+        <Box component="form" onSubmit={submitParentGate}>
+          <DialogTitle>Elternbereich öffnen</DialogTitle>
+          <DialogContent sx={{ display: 'grid', gap: 1.5, pt: 1 }}>
+            <Typography color="text.secondary" variant="body2">
+              Löse kurz die Aufgabe, damit Questory wieder in den Elternbereich wechselt.
+            </Typography>
+            <Typography sx={{ fontWeight: 900 }} variant="h5">
+              {parentGateChallenge ? `${parentGateChallenge.left} + ${parentGateChallenge.right} = ?` : ''}
+            </Typography>
+            <TextField
+              autoFocus
+              error={Boolean(parentGateError)}
+              helperText={parentGateError || ' '}
+              inputMode="numeric"
+              label="Antwort"
+              onChange={(event) => {
+                setParentGateAnswer(event.target.value);
+                setParentGateError('');
+              }}
+              value={parentGateAnswer}
+            />
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ justifyContent: 'flex-end' }}>
+              <Button onClick={closeParentGate} variant="outlined">
+                Abbrechen
+              </Button>
+              <Button type="submit" variant="contained">
+                Elternbereich öffnen
+              </Button>
+            </Stack>
+          </DialogContent>
+        </Box>
+      </Dialog>
     </Stack>
   );
 }
@@ -2165,6 +2239,7 @@ interface ChildModePanelProps {
   onAssignmentChildChange: (childProfileId: string) => void;
   onAssignmentComplete: (assignmentId: string) => void;
   onAvatarSave: (equippedItems: Record<string, string>) => void;
+  onParentModeRequest: () => void;
   onRewardRedeem: (rewardId: string) => void;
   onSelfServiceQuestComplete: (questId: string) => void;
   onTabChange: (tab: ChildModeTab) => void;
@@ -2188,6 +2263,7 @@ function ChildModePanel({
   onAssignmentChildChange,
   onAssignmentComplete,
   onAvatarSave,
+  onParentModeRequest,
   onRewardRedeem,
   onSelfServiceQuestComplete,
   onTabChange
@@ -2212,6 +2288,9 @@ function ChildModePanel({
               <Chip icon={<PeopleAltRoundedIcon />} label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
               <Chip icon={<PaidRoundedIcon />} label={selectedChild ? `${selectedChild.coins} Münzen` : '0 Münzen'} variant="outlined" />
               <Chip icon={<EmojiEventsRoundedIcon />} label={selectedChild ? `Level ${selectedChild.level}` : 'Level -'} variant="outlined" />
+              <Button onClick={onParentModeRequest} size="small" startIcon={<ShieldRoundedIcon />} variant="outlined">
+                Elternbereich
+              </Button>
             </Stack>
           </Box>
 

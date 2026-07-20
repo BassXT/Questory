@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Kinderansicht erhaelt einen `Elternbereich`-Button mit leichter Rechenaufgabe als Rueckkehr-Sperre.
 - Oberer Einstieg `Kinder-Dashboard` fuer Eltern/Admins ergaenzt, um bewusst in die Kinderansicht fuer Avatar, Quests und Shop zu wechseln.
 - Eltern-Dashboard um einen `Kindmodus` erweitert: Status, zugewiesene Quests einreichen, spontane Quests, Shop und Avatar-Werkstatt sind fuer das aktive Kind erreichbar.
 - Avatar-Katalog um 8 Symbol-Shirts erweitert: Smiley, Stern, Mond, Blitz, Controller, Krone, Rakete und Funkelzeichen als freischaltbare Oberteile von Level 1 bis 8.
@@ -156,6 +157,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach Elternbereich-Gate erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich.
 - Portainer-Redeploy nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Kindmodus-Slice erfolgreich.
