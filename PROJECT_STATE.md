@@ -385,6 +385,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Kinderansicht erhaelt einen Button `Elternbereich`, der vor dem Wechsel zur Parent-Uebersicht eine leichte Additionsaufgabe verlangt.
 - Prisma Validate, Backend-Build und Frontend-Build nach Elternbereich-Gate erfolgreich.
+- Portainer-Redeploy nach Elternbereich-Gate erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
