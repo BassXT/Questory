@@ -961,7 +961,7 @@ function App() {
           coinReward: Number(questForm.coinReward),
           requiresApproval: questForm.requiresApproval,
           isAssignable: questForm.isAssignable,
-          isSelfService: questForm.isSelfService,
+          isSelfService: false,
           isActive: questForm.isActive
         }
       });
@@ -2109,16 +2109,6 @@ function DashboardView({
             onReject={onAssignmentReject}
             onSubmit={onAssignmentSubmit}
           />
-
-          {!canManageChildren ? (
-            <SelfServiceQuestsPanel
-              children={children}
-              completionSavingId={completionSavingId}
-              quests={quests}
-              selectedChildId={assignmentForm.childProfileId}
-              onComplete={onSelfServiceQuestComplete}
-            />
-          ) : null}
         </Stack>
       ) : null}
 
@@ -2351,13 +2341,6 @@ function ChildModePanel({
             onFormChange={() => undefined}
             onReject={() => undefined}
             onSubmit={(event) => event.preventDefault()}
-          />
-          <SelfServiceQuestsPanel
-            children={children}
-            completionSavingId={completionSavingId}
-            quests={quests}
-            selectedChildId={selectedChildId}
-            onComplete={onSelfServiceQuestComplete}
           />
         </Stack>
       ) : null}
@@ -3652,16 +3635,6 @@ function QuestTemplatesPanel({
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={form.isSelfService}
-                      onChange={(event) => onFormChange({ ...form, isSelfService: event.target.checked })}
-                      size="small"
-                    />
-                  }
-                  label="Spontan"
-                />
-                <FormControlLabel
-                  control={
-                    <Switch
                       checked={form.isActive}
                       onChange={(event) => onFormChange({ ...form, isActive: event.target.checked })}
                       size="small"
@@ -4391,7 +4364,6 @@ function QuestTemplateRow({ quest }: QuestTemplateRowProps) {
       </Box>
       <Chip label={quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(quest.frequency)} variant="outlined" />
       <Chip color={quest.isAssignable ? 'success' : 'default'} label={quest.isAssignable ? 'Zuweisbar' : 'Nicht zuweisbar'} variant="outlined" />
-      <Chip color={quest.isSelfService ? 'success' : 'default'} label={quest.isSelfService ? 'Spontan' : 'Planbar'} variant="outlined" />
       <Chip icon={<EmojiEventsRoundedIcon />} label={`${quest.xpReward} XP`} variant="outlined" />
       <Chip icon={<PaidRoundedIcon />} label={quest.coinReward} variant="outlined" />
     </Box>

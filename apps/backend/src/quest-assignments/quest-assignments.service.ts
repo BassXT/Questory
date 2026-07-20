@@ -111,6 +111,8 @@ const approvedQuestCompletionSelect = {
   }
 };
 
+const SELF_SERVICE_QUESTS_ENABLED = false;
+
 function calculateLevel(totalXp: number): number {
   return Math.floor(Math.sqrt(totalXp / 100)) + 1;
 }
@@ -277,6 +279,10 @@ export class QuestAssignmentsService {
   }
 
   async completeSelfServiceQuest(user: AuthenticatedUser, questId: string, dto: CompleteSelfServiceQuestDto) {
+    if (!SELF_SERVICE_QUESTS_ENABLED) {
+      throw new BadRequestException('Self-service quests are currently disabled.');
+    }
+
     const [quest, child] = await Promise.all([
       this.prisma.quest.findFirst({
         where: {

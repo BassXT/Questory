@@ -130,8 +130,9 @@ Frequenz:
 Spontane Quests:
 
 - `isAssignable` erlaubt oder verhindert die manuelle Zuweisung durch Eltern.
-- `isSelfService` erlaubt Einreichungen ohne vorherige Zuweisung, zum Beispiel "Ich habe mein Zimmer aufgeraeumt".
-- Spontane Einreichungen nutzen weiterhin `QuestAssignment` und `QuestCompletion`. Existiert noch keine Zuweisung, wird eine interne Zuweisung ohne `dueAt` angelegt.
+- `isSelfService` bleibt im Schema vorhanden, ist im MVP aber voruebergehend deaktiviert.
+- Neue Quests werden serverseitig mit `isSelfService: false` gespeichert.
+- Einreichungen ohne vorherige Zuweisung werden aktuell blockiert. Situative Quests werden stattdessen als normale `QuestAssignment` ohne `dueAt` angelegt und koennen nach Bestaetigung oder Ablehnung erneut eingereicht werden.
 
 ### QuestAssignment
 

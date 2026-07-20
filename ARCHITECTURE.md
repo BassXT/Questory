@@ -144,7 +144,7 @@ Avatar-Items sind ein globaler Katalog in der Datenbank. Level-Freischaltungen w
 
 Eltern/Admin muessen nicht in den Kinderlogin wechseln, um die App vollstaendig zu nutzen. Der Elternbereich verwaltet Kinderprofile, Quests, Shop, Freigaben und Avatare fuer jedes Kind ueber den Familienkontext. Der Kinderlogin ist nur fuer die eingeschraenkte Kinderansicht gedacht.
 
-Quest-Vorlagen trennen planbare Zuweisungen und spontane Einreichungen ueber `isAssignable` und `isSelfService`. Spontane Quests verwenden bewusst dieselben Tabellen `QuestAssignment` und `QuestCompletion` wie geplante Quests, damit Elternfreigabe, XP-/Muenzen-Vergabe und Statistiken ohne paralleles Sondermodell funktionieren.
+Quest-Vorlagen nutzen aktuell `isAssignable` fuer manuelle Zuweisungen. `isSelfService` bleibt als vorhandenes Datenfeld fuer eine spaetere fachliche Entscheidung erhalten, ist im MVP aber voruebergehend deaktiviert: neue Quests werden mit `isSelfService: false` gespeichert, die Self-Service-Completion-API blockiert Einreichungen, und die UI zeigt keine spontanen Quest-Aktionen. Situative Quests werden vorerst als normale Zuweisungen ohne Faelligkeitsdatum abgebildet.
 
 Details stehen in `DATABASE.md`.
 

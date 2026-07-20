@@ -145,6 +145,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Spontane/Self-Service-Quests voruebergehend deaktiviert: UI blendet Self-Service-Panels und `Spontan`-Schalter aus, neue Quests speichern `isSelfService: false`, und die Self-Service-Completion-API blockiert Einreichungen mit `400`.
 - Spontane Quests werden in der normalen Parent-Questseite nicht mehr angezeigt oder eingereicht; Self-Service-Einreichung bleibt Kinderansicht/Kinderlogin vorbehalten.
 - Parent-Questansicht reicht keine Quest-Abschluesse mehr ein; Einreichen ist nur noch in Kinderansicht oder echtem Kinderlogin moeglich.
 - Situative Quest-Wiederholung korrigiert: Zugewiesene und spontane Quests blockieren nur noch offene `SUBMITTED`-Einreichungen; nach `APPROVED` oder `REJECTED` kann erneut eingereicht werden.
@@ -159,6 +160,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach Deaktivierung der spontanen Quests erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach Self-Service-Ausblendung im Parent-Bereich erfolgreich.
 - Portainer-Redeploy nach Self-Service-Ausblendung im Parent-Bereich erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Parent-/Kinderaktions-Trennung erfolgreich.

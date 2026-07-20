@@ -49,7 +49,7 @@ export class QuestsService {
         requiresApproval: dto.requiresApproval ?? true,
         isActive: dto.isActive ?? true,
         isAssignable: dto.isAssignable ?? true,
-        isSelfService: dto.isSelfService ?? false,
+        isSelfService: false,
         createdByUserId: user.sub
       },
       select: questSelect

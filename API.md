@@ -494,7 +494,7 @@ Hinweise:
 - Wiederkehrende Quests muessen `DAILY`, `WEEKLY` oder `CUSTOM` verwenden.
 - `xpReward` und `coinReward` muessen Zahlen zwischen `0` und `10000` sein.
 - `isAssignable` steuert, ob Eltern die Quest manuell einem Kind zuweisen koennen.
-- `isSelfService` steuert, ob Kinder die Quest ohne vorherige Zuweisung spontan einreichen koennen.
+- `isSelfService` ist voruebergehend deaktiviert. Neue Quests werden serverseitig immer mit `isSelfService: false` gespeichert.
 
 Request:
 
@@ -632,7 +632,7 @@ Response: Die erzeugte Completion mit Status `SUBMITTED`.
 
 Kind, Elternteil oder Admin reicht eine spontane Quest fuer ein Kind ein.
 
-Status: implementiert.
+Status: voruebergehend deaktiviert.
 
 Auth: Bearer Token erforderlich.
 
@@ -640,13 +640,9 @@ Rollen: `ADMIN`, `PARENT`, `CHILD`
 
 Hinweise:
 
-- Die Quest muss aktiv sein und `isSelfService: true` besitzen.
-- Das Kinderprofil muss zur aktuellen Familie gehoeren.
-- Kinder mit eigenem Login duerfen nur fuer das eigene Kinderprofil einreichen.
-- Wenn schon eine Zuweisung fuer Quest und Kind existiert, wird sie wiederverwendet.
-- Wenn keine Zuweisung existiert, wird intern eine Zuweisung ohne Faelligkeitsdatum angelegt.
-- Spontane Quests blockieren nur parallele offene Einreichungen mit Status `SUBMITTED`.
-- Nach `APPROVED` oder `REJECTED` darf dieselbe spontane Quest erneut eingereicht werden.
+- Der Endpunkt bleibt fuer eine spaetere fachliche Entscheidung dokumentiert, gibt aktuell aber `400 Bad Request` zurueck.
+- Der MVP-Workflow nutzt stattdessen zugewiesene Quests ohne Faelligkeitsdatum als situative Quests.
+- Zuweisungen koennen erneut eingereicht werden, sobald keine offene `SUBMITTED`-Entscheidung mehr aussteht.
 
 Request:
 
