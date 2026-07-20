@@ -624,7 +624,7 @@ Hinweise:
 - Kinder mit eigenem Login duerfen nur ihre eigenen Zuweisungen abschliessen.
 - Eltern/Admin duerfen bis zum finalen Kinder-Login-Flow stellvertretend einreichen.
 - Eine Zuweisung darf nur eine offene Einreichung mit Status `SUBMITTED` haben.
-- Einmalige Quests koennen nach einer bestaetigten Einreichung nicht erneut eingereicht werden.
+- Nach `APPROVED` oder `REJECTED` darf dieselbe Zuweisung erneut eingereicht werden. Dadurch sind situative Quests wie "Zimmer aufraeumen" mehrfach nutzbar, solange keine Entscheidung offen ist.
 
 Response: Die erzeugte Completion mit Status `SUBMITTED`.
 
@@ -645,8 +645,8 @@ Hinweise:
 - Kinder mit eigenem Login duerfen nur fuer das eigene Kinderprofil einreichen.
 - Wenn schon eine Zuweisung fuer Quest und Kind existiert, wird sie wiederverwendet.
 - Wenn keine Zuweisung existiert, wird intern eine Zuweisung ohne Faelligkeitsdatum angelegt.
-- Einmalige spontane Quests blockieren weitere Einreichungen, sobald eine Einreichung `SUBMITTED` oder `APPROVED` ist.
-- Wiederkehrende spontane Quests blockieren nur parallele offene Einreichungen mit Status `SUBMITTED`.
+- Spontane Quests blockieren nur parallele offene Einreichungen mit Status `SUBMITTED`.
+- Nach `APPROVED` oder `REJECTED` darf dieselbe spontane Quest erneut eingereicht werden.
 
 Request:
 

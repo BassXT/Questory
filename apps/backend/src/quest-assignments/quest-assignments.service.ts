@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
-import { QuestCompletionStatus, QuestType, Role } from '../prisma/client';
+import { QuestCompletionStatus, Role } from '../prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
 import { CompleteSelfServiceQuestDto } from './dto/complete-self-service-quest.dto';
@@ -255,10 +255,7 @@ export class QuestAssignmentsService {
     const blockingCompletion = await this.prisma.questCompletion.findFirst({
       where: {
         questAssignmentId: assignmentId,
-        status:
-          assignment.quest.type === QuestType.ONE_TIME
-            ? { in: [QuestCompletionStatus.SUBMITTED, QuestCompletionStatus.APPROVED] }
-            : QuestCompletionStatus.SUBMITTED
+        status: QuestCompletionStatus.SUBMITTED
       },
       select: {
         id: true,
@@ -267,7 +264,7 @@ export class QuestAssignmentsService {
     });
 
     if (blockingCompletion) {
-      throw new ConflictException('Quest assignment already has a pending or completed submission.');
+      throw new ConflictException('Quest assignment already has a pending submission.');
     }
 
     return this.prisma.questCompletion.create({
@@ -350,10 +347,7 @@ export class QuestAssignmentsService {
       const blockingCompletion = await tx.questCompletion.findFirst({
         where: {
           questAssignmentId: assignment.id,
-          status:
-            quest.type === QuestType.ONE_TIME
-              ? { in: [QuestCompletionStatus.SUBMITTED, QuestCompletionStatus.APPROVED] }
-              : QuestCompletionStatus.SUBMITTED
+          status: QuestCompletionStatus.SUBMITTED
         },
         select: {
           id: true
@@ -361,7 +355,7 @@ export class QuestAssignmentsService {
       });
 
       if (blockingCompletion) {
-        throw new ConflictException('Self-service quest already has a pending or completed submission.');
+        throw new ConflictException('Self-service quest already has a pending submission.');
       }
 
       return tx.questCompletion.create({

@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Oberer Einstieg `Kinder-Dashboard` fuer Eltern/Admins ergaenzt, um bewusst in die Kinderansicht fuer Avatar, Quests und Shop zu wechseln.
 - Eltern-Dashboard um einen `Kindmodus` erweitert: Status, zugewiesene Quests einreichen, spontane Quests, Shop und Avatar-Werkstatt sind fuer das aktive Kind erreichbar.
 - Avatar-Katalog um 8 Symbol-Shirts erweitert: Smiley, Stern, Mond, Blitz, Controller, Krone, Rakete und Funkelzeichen als freischaltbare Oberteile von Level 1 bis 8.
 - Avatar-Werkstatt trennt Haar-/Augenstil von Haar-/Augenfarbe: Farben sind nun freie Palettenwerte, Styles bleiben Level-Freischaltungen.
@@ -143,6 +144,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Situative Quest-Wiederholung korrigiert: Zugewiesene und spontane Quests blockieren nur noch offene `SUBMITTED`-Einreichungen; nach `APPROVED` oder `REJECTED` kann erneut eingereicht werden.
+- Kindmodus aus der normalen Parent-Tab-Leiste entfernt, damit Elternbereich und Kinderansicht klarer getrennt sind.
 - Kinderprofil-Zugriff fuer kleine Kinder verbessert: Klicks aus der Kinderliste oeffnen jetzt den Kindmodus, damit Eltern am eigenen Geraet Kinderaktionen ausfuehren koennen.
 - Mund-Auswahl im Avatar-Builder entdoppelt: alle 18 `mouth-*` Items rendern jetzt eigene DiceBear-Pixel-Art-Mundvarianten.
 - Avatar-Builder blendet reine Haar-/Augen-Farbdubletten als eigene Itemkarten aus und zeigt stattdessen deduplizierte Stil-Karten plus separate Farbswatches.
@@ -153,6 +156,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach Kindmodus-Slice erfolgreich.
 - Portainer-Redeploy nach Kindmodus-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Quellencheck fuer Symbol-Shirts erfolgreich: 8 neue Top-Keys, keine fehlenden Renderer-Mappings.

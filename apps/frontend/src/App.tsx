@@ -1810,7 +1810,6 @@ function DashboardView({
       canManageChildren
         ? [
             { label: 'Übersicht', value: 'overview' as DashboardTab },
-            { label: 'Kindmodus', value: 'childMode' as DashboardTab },
             { label: 'Kinder', value: 'children' as DashboardTab },
             { label: 'Quests', value: 'quests' as DashboardTab },
             { label: 'Shop', value: 'shop' as DashboardTab },
@@ -1827,12 +1826,18 @@ function DashboardView({
   const [activeDashboardTab, setActiveDashboardTab] = useState<DashboardTab>('overview');
   const [activeChildModeTab, setActiveChildModeTab] = useState<ChildModeTab>('status');
   const [activeShopTab, setActiveShopTab] = useState<ShopTab>('shop');
+  const selectedChild = children.find((child) => child.id === assignmentForm.childProfileId) ?? null;
+  const dashboardTabValue = dashboardTabs.some((tab) => tab.value === activeDashboardTab) ? activeDashboardTab : false;
 
   useEffect(() => {
+    if (activeDashboardTab === 'childMode' && canManageChildren) {
+      return;
+    }
+
     if (!dashboardTabs.some((tab) => tab.value === activeDashboardTab)) {
       setActiveDashboardTab(dashboardTabs[0].value);
     }
-  }, [activeDashboardTab, dashboardTabs]);
+  }, [activeDashboardTab, canManageChildren, dashboardTabs]);
 
   if (!dashboard) {
     return (
@@ -1862,6 +1867,56 @@ function DashboardView({
         <MetricCard icon={<StorefrontRoundedIcon />} label="Offene Rewards" value={dashboard.rewards.requested} />
       </Box>
 
+      {canManageChildren ? (
+        <Paper elevation={0} sx={{ p: { xs: 1.5, md: 2 } }}>
+          <Box
+            sx={{
+              alignItems: { xs: 'stretch', md: 'center' },
+              display: 'grid',
+              gap: 1.25,
+              gridTemplateColumns: { xs: '1fr', md: 'minmax(240px, 1fr) auto' }
+            }}
+          >
+            <Stack spacing={0.5} sx={{ minWidth: 0 }}>
+              <Typography sx={{ fontWeight: 900 }} variant="h6">
+                Kinder-Dashboard
+              </Typography>
+              <Typography color="text.secondary" variant="body2">
+                Wechsle in die Ansicht, die ein Kind sieht: Avatar, Quests und Shop fuer das aktive Kind.
+              </Typography>
+            </Stack>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ alignItems: { xs: 'stretch', sm: 'center' } }}>
+              <TextField
+                disabled={children.length === 0}
+                label="Aktives Kind"
+                onChange={(event) => onAssignmentChildChange(event.target.value)}
+                select
+                size="small"
+                sx={{ minWidth: { xs: '100%', sm: 220 } }}
+                value={assignmentForm.childProfileId}
+              >
+                {children.map((child) => (
+                  <MenuItem key={child.id} value={child.id}>
+                    {child.displayName}
+                  </MenuItem>
+                ))}
+              </TextField>
+              <Button
+                disabled={!selectedChild}
+                onClick={() => {
+                  setActiveChildModeTab('status');
+                  setActiveDashboardTab('childMode');
+                }}
+                startIcon={<EmojiEventsRoundedIcon />}
+                variant="contained"
+              >
+                Kinderansicht oeffnen
+              </Button>
+            </Stack>
+          </Box>
+        </Paper>
+      ) : null}
+
       <Paper elevation={0} sx={{ p: 0.5 }}>
         <Tabs
           onChange={(_, value: DashboardTab) => setActiveDashboardTab(value)}
@@ -1875,7 +1930,7 @@ function DashboardView({
               px: { xs: 1.25, sm: 2 }
             }
           }}
-          value={activeDashboardTab}
+          value={dashboardTabValue}
           variant="scrollable"
         >
           {dashboardTabs.map((tab) => (
@@ -4275,10 +4330,11 @@ function QuestAssignmentRow({
   onReject
 }: QuestAssignmentRowProps) {
   const latestCompletion = assignment.completions?.[0] ?? null;
-  const hasBlockingCompletion =
-    latestCompletion?.status === 'SUBMITTED' ||
-    (assignment.quest.type === 'ONE_TIME' && latestCompletion?.status === 'APPROVED');
-  const completionButtonLabel = latestCompletion?.status === 'REJECTED' ? 'Erneut einreichen' : 'Erledigt einreichen';
+  const hasBlockingCompletion = latestCompletion?.status === 'SUBMITTED';
+  const completionButtonLabel =
+    latestCompletion?.status === 'REJECTED' || latestCompletion?.status === 'APPROVED'
+      ? 'Erneut einreichen'
+      : 'Erledigt einreichen';
   const canReview = canManage && latestCompletion?.status === 'SUBMITTED';
   const statusLabel = latestCompletion ? completionStatusLabel(latestCompletion.status) : 'Bereit';
   const statusColor = latestCompletion ? completionStatusColor(latestCompletion.status) : 'default';

@@ -378,13 +378,19 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Kinderlisten-Klicks oeffnen nun den Kindmodus statt nur die Uebersicht; Quest-Einreichung im Kindmodus zeigt keine Eltern-Freigabe- oder Verwaltungsaktionen.
 - Prisma Validate, Backend-Build und Frontend-Build nach Kindmodus-Slice erfolgreich.
 - Portainer-Redeploy nach Kindmodus-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Kindmodus aus der normalen Parent-Tab-Leiste entfernt und als oberer Einstieg `Kinder-Dashboard` platziert; Eltern wechseln dort bewusst in die Kinderansicht fuer Avatar, Quests und Shop.
+- Quest-Abschlussregel korrigiert: Zugewiesene und spontane Quests blockieren nur noch offene Einreichungen mit Status `SUBMITTED`; nach `APPROVED` oder `REJECTED` kann dieselbe Quest erneut eingereicht werden.
+- API-Doku fuer Quest-Abschluesse und Self-Service-Abschluesse auf die neue situative Wiederholungsregel aktualisiert.
+- Prisma Validate, Backend-Build und Frontend-Build nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Naechste UX-Verbesserung priorisieren, zum Beispiel Umlaute in der gesamten UI nachziehen, Freigaben kompakter machen oder die Vorlagenbibliothek serverseitig editierbar machen.
+- Parent-Bereich weiter aufraeumen: Quests primaer als Vorlagenverwaltung mit Zuweisungs-Unterbereich/Drawer gestalten; Shop primaer als Belohnungsverwaltung mit Freigabe-Unterbereich/Drawer gestalten.
+- Quest- und Reward-Bearbeiten sowie Loeschen implementieren: Backend-`PATCH`/`DELETE`, Rollenregeln, Frontend-Dialoge und Dokumentation.
+- Fachliche Trennung `ONE_TIME`, `RECURRING`, `isSelfService` pruefen und Begriffe fuer situative Quests vereinfachen, damit "einmalig" und "spontan" nicht doppelt wirken.
 
 ## Naechster Schritt
 
