@@ -2110,13 +2110,15 @@ function DashboardView({
             onSubmit={onAssignmentSubmit}
           />
 
-          <SelfServiceQuestsPanel
-            children={children}
-            completionSavingId={completionSavingId}
-            quests={quests}
-            selectedChildId={assignmentForm.childProfileId}
-            onComplete={onSelfServiceQuestComplete}
-          />
+          {!canManageChildren ? (
+            <SelfServiceQuestsPanel
+              children={children}
+              completionSavingId={completionSavingId}
+              quests={quests}
+              selectedChildId={assignmentForm.childProfileId}
+              onComplete={onSelfServiceQuestComplete}
+            />
+          ) : null}
         </Stack>
       ) : null}
 
