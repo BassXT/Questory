@@ -386,6 +386,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Kinderansicht erhaelt einen Button `Elternbereich`, der vor dem Wechsel zur Parent-Uebersicht eine leichte Additionsaufgabe verlangt.
 - Prisma Validate, Backend-Build und Frontend-Build nach Elternbereich-Gate erfolgreich.
 - Portainer-Redeploy nach Elternbereich-Gate erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Parent-Questansicht reicht keine Quest-Abschluesse mehr ein; `QuestAssignmentsPanel` besitzt nun `allowCompletion`, das im Elternbereich `false` und in Kinderansicht/Kinderlogin `true` ist.
+- Prisma Validate, Backend-Build und Frontend-Build nach Parent-/Kinderaktions-Trennung erfolgreich.
 
 ## Offene Aufgaben
 

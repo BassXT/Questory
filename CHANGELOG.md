@@ -145,6 +145,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Parent-Questansicht reicht keine Quest-Abschluesse mehr ein; Einreichen ist nur noch in Kinderansicht oder echtem Kinderlogin moeglich.
 - Situative Quest-Wiederholung korrigiert: Zugewiesene und spontane Quests blockieren nur noch offene `SUBMITTED`-Einreichungen; nach `APPROVED` oder `REJECTED` kann erneut eingereicht werden.
 - Kindmodus aus der normalen Parent-Tab-Leiste entfernt, damit Elternbereich und Kinderansicht klarer getrennt sind.
 - Kinderprofil-Zugriff fuer kleine Kinder verbessert: Klicks aus der Kinderliste oeffnen jetzt den Kindmodus, damit Eltern am eigenen Geraet Kinderaktionen ausfuehren koennen.
@@ -157,6 +158,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach Parent-/Kinderaktions-Trennung erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach Elternbereich-Gate erfolgreich.
 - Portainer-Redeploy nach Elternbereich-Gate erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich.

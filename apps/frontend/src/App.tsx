@@ -2092,6 +2092,7 @@ function DashboardView({
           ) : null}
 
           <QuestAssignmentsPanel
+            allowCompletion={!canManageChildren}
             assignments={assignments}
             canManage={canManageChildren}
             children={children}
@@ -2332,6 +2333,7 @@ function ChildModePanel({
       {activeTab === 'quests' ? (
         <Stack spacing={2}>
           <QuestAssignmentsPanel
+            allowCompletion
             assignments={assignments}
             canManage={false}
             children={children}
@@ -3335,6 +3337,7 @@ function RewardsPanel({
 }
 
 interface QuestAssignmentsPanelProps {
+  allowCompletion: boolean;
   assignments: QuestAssignment[];
   canManage: boolean;
   children: ChildProfile[];
@@ -3353,6 +3356,7 @@ interface QuestAssignmentsPanelProps {
 }
 
 function QuestAssignmentsPanel({
+  allowCompletion,
   assignments,
   canManage,
   children,
@@ -3474,6 +3478,7 @@ function QuestAssignmentsPanel({
             assignments.map((assignment) => (
               <QuestAssignmentRow
                 assignment={assignment}
+                allowCompletion={allowCompletion}
                 canManage={canManage}
                 completionSaving={completionSavingId === assignment.id}
                 key={assignment.id}
@@ -4392,6 +4397,7 @@ function QuestTemplateRow({ quest }: QuestTemplateRowProps) {
 }
 
 interface QuestAssignmentRowProps {
+  allowCompletion: boolean;
   assignment: QuestAssignment;
   canManage: boolean;
   completionSaving: boolean;
@@ -4401,6 +4407,7 @@ interface QuestAssignmentRowProps {
 }
 
 function QuestAssignmentRow({
+  allowCompletion,
   assignment,
   canManage,
   completionSaving,
@@ -4463,16 +4470,20 @@ function QuestAssignmentRow({
         spacing={0.75}
         sx={{ alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap', justifyContent: 'space-between' }}
       >
-        <Button
-          disabled={completionSaving || hasBlockingCompletion}
-          onClick={() => onComplete(assignment.id)}
-          size="small"
-          startIcon={<TaskAltRoundedIcon />}
-          sx={{ width: { xs: '100%', sm: 'auto' } }}
-          variant={hasBlockingCompletion ? 'outlined' : 'contained'}
-        >
-          {hasBlockingCompletion ? statusLabel : completionButtonLabel}
-        </Button>
+        {allowCompletion ? (
+          <Button
+            disabled={completionSaving || hasBlockingCompletion}
+            onClick={() => onComplete(assignment.id)}
+            size="small"
+            startIcon={<TaskAltRoundedIcon />}
+            sx={{ width: { xs: '100%', sm: 'auto' } }}
+            variant={hasBlockingCompletion ? 'outlined' : 'contained'}
+          >
+            {hasBlockingCompletion ? statusLabel : completionButtonLabel}
+          </Button>
+        ) : (
+          <Chip label="Einreichen nur in der Kinderansicht" size="small" variant="outlined" />
+        )}
       {canReview && latestCompletion ? (
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={0.75} sx={{ width: { xs: '100%', sm: 'auto' } }}>
           <Button
