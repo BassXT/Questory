@@ -382,6 +382,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Quest-Abschlussregel korrigiert: Zugewiesene und spontane Quests blockieren nur noch offene Einreichungen mit Status `SUBMITTED`; nach `APPROVED` oder `REJECTED` kann dieselbe Quest erneut eingereicht werden.
 - API-Doku fuer Quest-Abschluesse und Self-Service-Abschluesse auf die neue situative Wiederholungsregel aktualisiert.
 - Prisma Validate, Backend-Build und Frontend-Build nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich.
+- Portainer-Redeploy nach Kinder-Dashboard-/Quest-Wiederholungs-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
