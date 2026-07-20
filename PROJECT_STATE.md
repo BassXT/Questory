@@ -395,6 +395,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Self-Service-Ausblendung im Parent-Bereich erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Spontane/Self-Service-Quests voruebergehend deaktiviert: UI zeigt keine Self-Service-Panels und keinen `Spontan`-Schalter mehr, neue Quests werden mit `isSelfService: false` gespeichert und `POST /api/quests/:questId/self-service-completions` antwortet mit `400`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Deaktivierung der spontanen Quests erfolgreich.
+- Portainer-Redeploy nach Deaktivierung der spontanen Quests erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
