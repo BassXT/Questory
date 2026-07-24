@@ -146,6 +146,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Mobile Eltern-Shop-Belohnungen korrigiert: Formular, Motiv-Picker und Reward-Zeilen laufen auf iPhone-Breiten nicht mehr seitlich aus und lange Texte/Bild-URLs umbrechen sauber.
 - Kinderansicht bereinigt: Die Parent-Dashboard-Navigation wird im Kindmodus ausgeblendet, damit Kinder nur die kindbezogenen Tabs `Status`, `Quests`, `Shop` und `Avatar` sehen.
 - Parent-Shop trennt jetzt `Belohnungen` und `Zuweisen`; Beantragen/Einloesen ist aus dem Eltern-Shop entfernt und bleibt der Kinderansicht vorbehalten.
 - Eltern-UI-Struktur aufgeraeumt: Kinderansicht zeigt nur noch das aktive Kind, Parent-Quests trennen `Vorlagen` und `Zuweisen`, und `Freigaben` heissen nun `Bestaetigungen` mit Kind-Reitern fuer Quest- und Shop-Entscheidungen.

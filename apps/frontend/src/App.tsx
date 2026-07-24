@@ -2566,8 +2566,8 @@ function ChildrenProfilesPanel({
   onChildSubmit
 }: ChildrenProfilesPanelProps) {
   return (
-    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
-      <Stack spacing={2}>
+    <Paper elevation={0} sx={{ maxWidth: '100%', overflow: 'hidden', p: { xs: 1.25, sm: 2, md: 2.5 } }}>
+      <Stack spacing={2} sx={{ maxWidth: '100%', minWidth: 0 }}>
         <Box
           sx={{
             alignItems: { xs: 'stretch', sm: 'center' },
@@ -2719,8 +2719,8 @@ interface FamilyStatusPanelProps {
 
 function FamilyStatusPanel({ dashboard }: FamilyStatusPanelProps) {
   return (
-    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
-      <Stack spacing={2}>
+    <Paper elevation={0} sx={{ maxWidth: '100%', overflow: 'hidden', p: { xs: 1.25, sm: 2, md: 2.5 } }}>
+      <Stack spacing={2} sx={{ maxWidth: '100%', minWidth: 0 }}>
         <SectionTitle icon={<ShieldRoundedIcon />} title="Familienlage" />
         <SummaryRow label="Eltern/Admins" value={dashboard.totals.parents} />
         <SummaryRow label="Kinderprofile" value={dashboard.totals.children} />
@@ -3682,7 +3682,9 @@ function RewardsPanel({
                 display: 'grid',
                 gap: 1.25,
                 gridTemplateColumns: { xs: '1fr', md: 'repeat(4, minmax(0, 1fr))' },
-                p: 1.5
+                maxWidth: '100%',
+                minWidth: 0,
+                p: { xs: 1.25, sm: 1.5 }
               }}
             >
               <TextField
@@ -3736,7 +3738,7 @@ function RewardsPanel({
                 type="number"
                 value={form.maxRedemptions}
               />
-              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap' }}>
+              <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap', minWidth: 0 }}>
                 <FormControlLabel
                   control={
                     <Switch
@@ -3771,7 +3773,7 @@ function RewardsPanel({
           </Stack>
         ) : null}
 
-        <Box sx={{ display: 'grid', gap: 1.5 }}>
+        <Box sx={{ display: 'grid', gap: 1.25, minWidth: 0 }}>
           {rewards.length > 0 ? (
             rewards.map((reward) => <RewardRow key={reward.id} reward={reward} />)
           ) : (
@@ -4644,7 +4646,9 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
           borderColor: 'divider',
           borderRadius: 2,
           gridColumn: { md: 'span 2' },
-          p: 1.25
+          maxWidth: '100%',
+          minWidth: 0,
+          p: { xs: 1, sm: 1.25 }
         }}
       >
         <Stack
@@ -4661,6 +4665,7 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
               color: 'secondary.main',
               display: 'flex',
               justifyContent: 'center',
+              flex: '0 0 auto',
               overflow: 'hidden',
               width: 56
             }}
@@ -4681,9 +4686,9 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
               <AutoAwesomeRoundedIcon />
             )}
           </Box>
-          <Box sx={{ flexGrow: 1, minWidth: 0 }}>
+          <Box sx={{ flexGrow: 1, minWidth: 0, overflow: 'hidden' }}>
             <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-              <Typography sx={{ fontWeight: 900 }} noWrap>
+              <Typography sx={{ fontWeight: 900, overflowWrap: 'anywhere' }}>
                 {selectedOption?.label ?? (value ? 'Eigenes Bild' : 'Motiv')}
               </Typography>
               <Chip
@@ -4692,11 +4697,11 @@ function RewardVisualPicker({ value, onChange }: RewardVisualPickerProps) {
                 variant="outlined"
               />
             </Stack>
-            <Typography color="text.secondary" noWrap variant="body2">
+            <Typography color="text.secondary" sx={{ overflowWrap: 'anywhere', wordBreak: 'break-word' }} variant="body2">
               {value || 'Motiv wählen oder unten eigene Bild-URL eintragen'}
             </Typography>
           </Box>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ flexShrink: 0 }}>
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1} sx={{ flexShrink: 0, width: { xs: '100%', sm: 'auto' } }}>
             <Button onClick={() => setOpen(true)} size="small" startIcon={<AutoAwesomeRoundedIcon />} sx={{ width: { xs: '100%', sm: 'auto' } }} variant="outlined">
               Motiv wählen
             </Button>
@@ -5136,9 +5141,11 @@ function RewardRow({ reward }: RewardRowProps) {
         bgcolor: 'action.hover',
         borderRadius: 2,
         display: 'grid',
-        gap: 1.25,
-        gridTemplateColumns: { xs: '1fr', sm: '72px minmax(0, 1fr)', md: '72px minmax(220px, 1fr) auto auto auto auto' },
-        p: 1.5
+        gap: { xs: 1, sm: 1.25 },
+        gridTemplateColumns: { xs: '56px minmax(0, 1fr)', md: '72px minmax(220px, 1fr) auto' },
+        maxWidth: '100%',
+        minWidth: 0,
+        p: { xs: 1.25, sm: 1.5 }
       }}
     >
       <Box
@@ -5172,21 +5179,31 @@ function RewardRow({ reward }: RewardRowProps) {
       </Box>
       <Box sx={{ minWidth: 0 }}>
         <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
-          <Typography sx={{ fontWeight: 900 }} noWrap>
+          <Typography sx={{ fontWeight: 900, overflowWrap: 'anywhere' }}>
             {reward.name}
           </Typography>
           {!reward.isActive ? <Chip color="default" label="Inaktiv" size="small" /> : null}
         </Stack>
         {reward.description ? (
-          <Typography color="text.secondary" noWrap variant="body2">
+          <Typography color="text.secondary" sx={{ overflowWrap: 'anywhere' }} variant="body2">
             {reward.description}
           </Typography>
         ) : null}
       </Box>
-      <Chip icon={<PaidRoundedIcon />} label={reward.price} variant="outlined" />
-      <Chip label={reward.category || 'Allgemein'} variant="outlined" />
-      <Chip label={reward.requiresApproval ? 'Mit Bestätigung' : 'Sofort'} variant="outlined" />
-      <Chip label={reward.maxRedemptions ? `Max. ${reward.maxRedemptions}` : 'Unbegrenzt'} variant="outlined" />
+      <Stack
+        direction="row"
+        spacing={0.75}
+        sx={{ flexWrap: 'wrap', gridColumn: { xs: '1 / -1', md: 'auto' }, minWidth: 0 }}
+      >
+        <Chip icon={<PaidRoundedIcon />} label={reward.price} size="small" variant="outlined" />
+        <Chip label={reward.category || 'Allgemein'} size="small" variant="outlined" />
+        <Chip label={reward.requiresApproval ? 'Mit Bestätigung' : 'Sofort'} size="small" variant="outlined" />
+        <Chip
+          label={reward.maxRedemptions ? `Max. ${reward.maxRedemptions}` : 'Unbegrenzt'}
+          size="small"
+          variant="outlined"
+        />
+      </Stack>
     </Box>
   );
 }
