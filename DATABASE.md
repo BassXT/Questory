@@ -191,6 +191,10 @@ Felder:
 - `createdAt`
 - `updatedAt`
 
+Hinweis:
+
+- Shop-Belohnungen sind fachlich immer anfragepflichtig. `requiresApproval` bleibt fuer Rueckwaertskompatibilitaet im Modell, wird aber fuer neue und migrierte Rewards auf `true` gesetzt.
+
 ### RewardAssignment
 
 Verknuepft eine Belohnung mit einem Kind. Nur zugewiesene aktive Belohnungen erscheinen im Kindershop.
@@ -238,6 +242,7 @@ Muenzlogik:
 
 - `coinCost` speichert den zum Beantragungszeitpunkt reservierten Preis.
 - Beim Erstellen einer Einloesung werden Muenzen sofort vom Kinderprofil abgezogen.
+- Neue Einloesungen starten immer mit `REQUESTED`; `APPROVED` entsteht nur durch Eltern-/Admin-Bestaetigung.
 - `REJECTED` und `CANCELLED` schreiben diese Muenzen wieder gut.
 - `REDEEMED` ist final und kann nicht mehr storniert werden.
 

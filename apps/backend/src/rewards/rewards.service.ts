@@ -88,7 +88,7 @@ export class RewardsService {
         category: dto.category?.trim() || null,
         price: dto.price,
         isActive: dto.isActive ?? true,
-        requiresApproval: dto.requiresApproval ?? true,
+        requiresApproval: true,
         maxRedemptions: dto.maxRedemptions ?? null
       },
       select: rewardSelect
@@ -317,9 +317,9 @@ export class RewardsService {
         data: {
           rewardId,
           childProfileId: dto.childProfileId,
-          status: reward.requiresApproval ? RewardRedemptionStatus.REQUESTED : RewardRedemptionStatus.APPROVED,
-          approvedAt: reward.requiresApproval ? null : new Date(),
-          approvedByUserId: reward.requiresApproval || user.role === Role.CHILD ? null : user.sub,
+          status: RewardRedemptionStatus.REQUESTED,
+          approvedAt: null,
+          approvedByUserId: null,
           coinCost: reward.price
         },
         select: rewardRedemptionSelect

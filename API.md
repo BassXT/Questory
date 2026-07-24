@@ -725,7 +725,8 @@ Hinweise:
 - `price` ist der Preis in Muenzen.
 - `imageUrl`, `category` und `maxRedemptions` sind optional.
 - `imageUrl` kann eine eigene Bild-URL oder eine vom Frontend-Motiv-Picker gesetzte MDI/Iconify-HTTPS-URL sein.
-- `isActive` und `requiresApproval` sind optional und standardmaessig `true`.
+- `isActive` ist optional und standardmaessig `true`.
+- `requiresApproval` bleibt aus Kompatibilitaetsgruenden im Datenmodell, wird fuer Shop-Belohnungen aber serverseitig immer auf `true` gesetzt.
 - `maxRedemptions` begrenzt spaeter die maximale Anzahl von Einloesungen.
 
 Request:
@@ -817,7 +818,7 @@ Hinweise:
 
 ### `POST /api/rewards/{rewardId}/redeem`
 
-Kind beantragt oder kauft eine Belohnung.
+Kind beantragt eine Belohnung.
 
 Status: implementiert.
 
@@ -832,9 +833,8 @@ Hinweise:
 - Inaktive Belohnungen koennen nicht eingeloest werden.
 - Die Belohnung muss dem Kind zugewiesen sein.
 - Das Kind muss genug Muenzen fuer den aktuellen Preis besitzen.
-- Die Muenzen werden beim Beantragen oder direkten Einloesen sofort reserviert und vom Kinderprofil abgezogen.
-- Bei `requiresApproval: true` wird eine Anfrage mit Status `REQUESTED` erstellt.
-- Bei `requiresApproval: false` wird direkt eine Einloesung mit Status `APPROVED` erstellt.
+- Die Muenzen werden beim Beantragen sofort reserviert und vom Kinderprofil abgezogen.
+- Jede Shop-Belohnung erstellt eine Anfrage mit Status `REQUESTED`; direkte `APPROVED`-Einloesungen sind nicht mehr erlaubt.
 - Bei Ablehnung oder Storno werden reservierte Muenzen wieder gutgeschrieben.
 - `maxRedemptions` zaehlt bestehende Einloesungen mit Status `REQUESTED`, `APPROVED` und `REDEEMED` fuer dasselbe Kind.
 

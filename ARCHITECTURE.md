@@ -134,9 +134,9 @@ Prisma 7 nutzt `prisma.config.ts` fuer CLI-Konfiguration und Datenbank-URL. Desh
 
 Der Prisma Client Generator schreibt nach `apps/backend/src/generated/prisma`. Backend-Code importiert Prisma-Typen und `PrismaClient` ueber den stabilen Wrapper `apps/backend/src/prisma/client.ts`; Nest kopiert den generierten Client beim Build nach `dist/generated/prisma`. Dadurch haengt der Docker-Build nicht vom internen `@prisma/client/.prisma` Layout ab.
 
-Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. Status `REQUESTED` und `APPROVED` halten die Muenzen gebunden, `REDEEMED` ist final. Status `REJECTED` und `CANCELLED` geben die Muenzen wieder frei. Dadurch kann ein Kind denselben Muenzenstand nicht mehrfach parallel im Shop ausgeben.
+Reward-Einloesungen reservieren Muenzen sofort beim Beantragen. Jede Shop-Belohnung startet als `REQUESTED`; direkte Sofortfreigaben sind fachlich deaktiviert. Status `REQUESTED` und `APPROVED` halten die Muenzen gebunden, `REDEEMED` ist final. Status `REJECTED` und `CANCELLED` geben die Muenzen wieder frei. Dadurch kann ein Kind denselben Muenzenstand nicht mehrfach parallel im Shop ausgeben.
 
-Reward-Vorlagen sind nicht mehr automatisch fuer alle Kinder im Shop sichtbar. Eltern/Admins erstellen Belohnungen im Elternbereich und weisen sie ueber `RewardAssignment` gezielt Kindern zu. `GET /api/children/:childId/shop` liefert nur aktive, zugewiesene Rewards. Beantragen oder Einloesen bleibt im Frontend der Kinderansicht vorbehalten; Eltern nutzen den Shopbereich zum Erstellen und Zuweisen sowie den Bestaetigungsbereich zur Entscheidung offener Anfragen.
+Reward-Vorlagen sind nicht mehr automatisch fuer alle Kinder im Shop sichtbar. Eltern/Admins erstellen Belohnungen im Elternbereich und weisen sie ueber `RewardAssignment` gezielt Kindern zu. `GET /api/children/:childId/shop` liefert nur aktive, zugewiesene Rewards. Beantragen bleibt im Frontend der Kinderansicht vorbehalten; Eltern nutzen den Shopbereich zum Erstellen und Zuweisen sowie den Bestaetigungsbereich zur Entscheidung offener Anfragen.
 
 Die erste Vorschlagsbibliothek ist statischer, versionierter Backend-Inhalt ohne eigene Datenbanktabelle. Familien kopieren Vorschlaege bewusst in eigene Quest- oder Reward-Daten, indem sie das vorausgefuellte Formular speichern.
 

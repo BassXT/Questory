@@ -75,7 +75,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     description: 'Das Kind bestimmt das naechste gemeinsame Spiel.',
     category: 'Familienzeit',
     price: 25,
-    requiresApproval: false,
+    requiresApproval: true,
     maxRedemptions: null
   },
   {
@@ -129,7 +129,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     description: 'Eine zusaetzliche Hoergeschichte vor dem Schlafen.',
     category: 'Abend',
     price: 25,
-    requiresApproval: false,
+    requiresApproval: true,
     maxRedemptions: null
   },
   {
@@ -138,7 +138,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     description: 'Das Kind waehlt das Buch fuer die gemeinsame Vorlesezeit.',
     category: 'Abend',
     price: 20,
-    requiresApproval: false,
+    requiresApproval: true,
     maxRedemptions: null
   },
   {
@@ -219,7 +219,7 @@ const rewardSuggestions: RewardSuggestion[] = [
     description: 'Das Kind waehlt fuer eine passende Fahrt die Musik aus.',
     category: 'Bonuszeit',
     price: 20,
-    requiresApproval: false,
+    requiresApproval: true,
     maxRedemptions: null
   },
   {

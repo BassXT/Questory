@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Migration `20260724191000_rewards_always_require_approval` setzt bestehende Shop-Belohnungen auf anfragepflichtig.
 - Reward-Zuweisungen eingefuehrt: neue `RewardAssignment`-Tabelle, `GET/POST /api/reward-assignments`, Kindershop zeigt nur zugewiesene aktive Rewards.
 - Kinderansicht erhaelt einen `Elternbereich`-Button mit leichter Rechenaufgabe als Rueckkehr-Sperre.
 - Oberer Einstieg `Kinder-Dashboard` fuer Eltern/Admins ergaenzt, um bewusst in die Kinderansicht fuer Avatar, Quests und Shop zu wechseln.
@@ -116,7 +117,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Root-Script `npm run prisma:validate` fuer lokale und CI-Prisma-Validierung erstellt.
 - Wartungs-Script `deploy/portainer/cleanup-test-families.sh` fuer sichere Testfamilien-Aufraeumlaeufe auf dem Docker-LXC erstellt.
 - Testdaten-Aufraeumstrategie mit Dry-Run, Pattern, Altersgrenze, Limit, Pflicht-Bestaetigung und Backup-Hinweis in `DEPLOYMENT.md` dokumentiert.
-- Reward-Einloesungen reservieren Muenzen beim Beantragen oder direkten Einloesen transaktional.
+- Reward-Einloesungen reservieren Muenzen beim Beantragen transaktional.
 - Reward-Storno mit Status `CANCELLED`, `cancelledAt` und API-Endpunkt `POST /api/reward-redemptions/{redemptionId}/cancel` erstellt.
 - Frontend-Stornoaktion fuer noch nicht ausgegebene Reward-Einloesungen erstellt.
 - Suggestions-Modul mit `GET /api/suggestions`, `GET /api/suggestions/rewards` und `GET /api/suggestions/quests` erstellt.
@@ -146,6 +147,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Shop-Belohnungen sind jetzt immer Anfragen: Backend erzeugt keine direkten `APPROVED`-Einloesungen mehr, Reward-Vorlagen sind anfragepflichtig, und die UI zeigt keine Sofortfreigabe mehr an.
 - Mobile Eltern-Shop-Belohnungen korrigiert: Formular, Motiv-Picker und Reward-Zeilen laufen auf iPhone-Breiten nicht mehr seitlich aus und lange Texte/Bild-URLs umbrechen sauber.
 - Kinderansicht bereinigt: Die Parent-Dashboard-Navigation wird im Kindmodus ausgeblendet, damit Kinder nur die kindbezogenen Tabs `Status`, `Quests`, `Shop` und `Avatar` sehen.
 - Parent-Shop trennt jetzt `Belohnungen` und `Zuweisen`; Beantragen/Einloesen ist aus dem Eltern-Shop entfernt und bleibt der Kinderansicht vorbehalten.
@@ -165,6 +167,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma Validate, Backend-Build und Frontend-Build nach Shop-Anfragepflicht erfolgreich.
 - Frontend-Build nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich.
 - Portainer-Redeploy nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Kinderansicht-Navigationsfix erfolgreich.

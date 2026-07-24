@@ -1193,7 +1193,7 @@ function App() {
           category: rewardForm.category || undefined,
           price: Number(rewardForm.price),
           isActive: rewardForm.isActive,
-          requiresApproval: rewardForm.requiresApproval,
+          requiresApproval: true,
           maxRedemptions: rewardForm.maxRedemptions ? Number(rewardForm.maxRedemptions) : undefined
         }
       });
@@ -1241,7 +1241,7 @@ function App() {
       category: suggestion.category,
       price: String(suggestion.price),
       isActive: true,
-      requiresApproval: suggestion.requiresApproval,
+      requiresApproval: true,
       maxRedemptions: suggestion.maxRedemptions ? String(suggestion.maxRedemptions) : ''
     });
   }
@@ -3577,7 +3577,7 @@ function RewardAssignmentBoardPanel({
                     <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
                       <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
                       <Chip label={reward.category || 'Allgemein'} size="small" variant="outlined" />
-                      <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} size="small" variant="outlined" />
+                      <Chip label="Anfrage" size="small" variant="outlined" />
                       {assignedToDraftChild ? <Chip color="success" label="Zugewiesen" size="small" /> : null}
                     </Stack>
                   </Stack>
@@ -3739,16 +3739,7 @@ function RewardsPanel({
                 value={form.maxRedemptions}
               />
               <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.25} sx={{ alignItems: { xs: 'stretch', sm: 'center' }, flexWrap: 'wrap', minWidth: 0 }}>
-                <FormControlLabel
-                  control={
-                    <Switch
-                      checked={form.requiresApproval}
-                      onChange={(event) => onFormChange({ ...form, requiresApproval: event.target.checked })}
-                      size="small"
-                    />
-                  }
-                  label="Bestätigung"
-                />
+                <Chip label="Immer Anfrage" size="small" variant="outlined" />
                 <FormControlLabel
                   control={
                     <Switch
@@ -5197,7 +5188,7 @@ function RewardRow({ reward }: RewardRowProps) {
       >
         <Chip icon={<PaidRoundedIcon />} label={reward.price} size="small" variant="outlined" />
         <Chip label={reward.category || 'Allgemein'} size="small" variant="outlined" />
-        <Chip label={reward.requiresApproval ? 'Mit Bestätigung' : 'Sofort'} size="small" variant="outlined" />
+        <Chip label="Mit Bestätigung" size="small" variant="outlined" />
         <Chip
           label={reward.maxRedemptions ? `Max. ${reward.maxRedemptions}` : 'Unbegrenzt'}
           size="small"
@@ -5217,7 +5208,7 @@ interface RewardShopRowProps {
 
 function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProps) {
   const canAfford = child.coins >= reward.price;
-  const actionLabel = reward.requiresApproval ? 'Beantragen' : 'Einlösen';
+  const actionLabel = 'Beantragen';
   const missingCoins = Math.max(reward.price - child.coins, 0);
 
   return (
@@ -5276,7 +5267,7 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
         <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap', minWidth: 0 }}>
           <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
           <Chip color={canAfford ? 'success' : 'warning'} label={canAfford ? 'Bezahlbar' : `Noch ${missingCoins} Münzen`} size="small" variant={canAfford ? 'filled' : 'outlined'} />
-          <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} size="small" variant="outlined" />
+          <Chip label="Anfrage" size="small" variant="outlined" />
         </Stack>
         <Button
           disabled={!canAfford || redeeming}
