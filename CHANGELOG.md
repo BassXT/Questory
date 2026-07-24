@@ -190,6 +190,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Portainer-Redeploy des SVG/WebP-Avatar-Slices erfolgreich; LXC-Backend-Health `ok`, Frontend HTTP `200`, WebP-Asset HTTP `200` und produktives Bundle enthaelt die neue Art-Zuordnung.
 - Lokaler Frontend-Build und isolierter Browser-Test der SVG/WebP-Komposition mit vier stark unterschiedlichen Ganzkoerper-Loadouts erfolgreich; WebP-Layer laden, sind transparent und bleiben innerhalb der Avatar-Buehne.
 - Frontend-Build nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich.
 - Isolierter Browser-Test mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: alle `360x520`-SVGs sichtbar, `scrollWidth` entspricht `innerWidth`, keine horizontale Ueberbreite.
