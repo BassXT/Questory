@@ -86,6 +86,7 @@ model ChildProfile {
   xp                Int                @default(0)
   coins             Int                @default(0)
   questAssignments  QuestAssignment[]
+  rewardAssignments RewardAssignment[]
   rewardRedemptions RewardRedemption[]
   avatarItems       ChildAvatarItem[]
   avatarLoadout     ChildAvatarLoadout?
@@ -203,11 +204,26 @@ model Reward {
   isActive         Boolean            @default(true)
   requiresApproval Boolean            @default(true)
   maxRedemptions   Int?
+  assignments      RewardAssignment[]
   redemptions      RewardRedemption[]
   createdAt        DateTime           @default(now())
   updatedAt        DateTime           @updatedAt
 
   @@index([familyId])
+}
+
+model RewardAssignment {
+  id             String       @id @default(uuid())
+  rewardId       String
+  reward         Reward       @relation(fields: [rewardId], references: [id], onDelete: Cascade)
+  childProfileId String
+  childProfile   ChildProfile @relation(fields: [childProfileId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([rewardId, childProfileId])
+  @@index([rewardId])
+  @@index([childProfileId])
 }
 
 model RewardRedemption {

@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, ForbiddenException, Injectable,
 import { RewardRedemptionStatus, Role } from '../prisma/client';
 import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PrismaService } from '../prisma/prisma.service';
+import { CreateRewardAssignmentDto } from './dto/create-reward-assignment.dto';
 import { CreateRewardDto } from './dto/create-reward.dto';
 import { ListRewardRedemptionsQueryDto } from './dto/list-reward-redemptions-query.dto';
 import { RedeemRewardDto } from './dto/redeem-reward.dto';
@@ -45,6 +46,24 @@ const rewardRedemptionSelect = {
       price: true,
       requiresApproval: true
     }
+  },
+  childProfile: {
+    select: {
+      id: true,
+      displayName: true,
+      coins: true
+    }
+  }
+};
+
+const rewardAssignmentSelect = {
+  id: true,
+  rewardId: true,
+  childProfileId: true,
+  createdAt: true,
+  updatedAt: true,
+  reward: {
+    select: rewardSelect
   },
   childProfile: {
     select: {
@@ -123,10 +142,79 @@ export class RewardsService {
     return this.prisma.reward.findMany({
       where: {
         familyId: user.familyId,
-        isActive: true
+        isActive: true,
+        assignments: {
+          some: {
+            childProfileId: childId
+          }
+        }
       },
       orderBy: [{ price: 'asc' }, { name: 'asc' }],
       select: rewardSelect
+    });
+  }
+
+  async createRewardAssignment(user: AuthenticatedUser, dto: CreateRewardAssignmentDto) {
+    const [reward, child] = await Promise.all([
+      this.prisma.reward.findFirst({
+        where: {
+          id: dto.rewardId,
+          familyId: user.familyId
+        },
+        select: {
+          id: true,
+          isActive: true
+        }
+      }),
+      this.prisma.childProfile.findFirst({
+        where: {
+          id: dto.childProfileId,
+          familyId: user.familyId
+        },
+        select: {
+          id: true
+        }
+      })
+    ]);
+
+    if (!reward) {
+      throw new NotFoundException('Reward not found.');
+    }
+
+    if (!child) {
+      throw new NotFoundException('Child profile not found.');
+    }
+
+    if (!reward.isActive) {
+      throw new BadRequestException('Inactive rewards cannot be assigned.');
+    }
+
+    try {
+      return await this.prisma.rewardAssignment.create({
+        data: {
+          rewardId: dto.rewardId,
+          childProfileId: dto.childProfileId
+        },
+        select: rewardAssignmentSelect
+      });
+    } catch (error) {
+      if (this.isUniqueConstraintError(error)) {
+        throw new ConflictException('Reward is already assigned to this child.');
+      }
+
+      throw error;
+    }
+  }
+
+  listRewardAssignments(user: AuthenticatedUser) {
+    return this.prisma.rewardAssignment.findMany({
+      where: {
+        childProfile: {
+          familyId: user.familyId
+        }
+      },
+      orderBy: [{ createdAt: 'desc' }],
+      select: rewardAssignmentSelect
     });
   }
 
@@ -172,6 +260,22 @@ export class RewardsService {
 
     if (!reward.isActive) {
       throw new BadRequestException('Inactive rewards cannot be redeemed.');
+    }
+
+    const rewardAssignment = await this.prisma.rewardAssignment.findUnique({
+      where: {
+        rewardId_childProfileId: {
+          rewardId,
+          childProfileId: dto.childProfileId
+        }
+      },
+      select: {
+        id: true
+      }
+    });
+
+    if (!rewardAssignment) {
+      throw new BadRequestException('Reward is not assigned to this child.');
     }
 
     return this.prisma.$transaction(async (tx) => {
@@ -463,5 +567,9 @@ export class RewardsService {
     }
 
     return child.userId === user.sub;
+  }
+
+  private isUniqueConstraintError(error: unknown): boolean {
+    return typeof error === 'object' && error !== null && 'code' in error && error.code === 'P2002';
   }
 }

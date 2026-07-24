@@ -44,7 +44,7 @@ type AuthMode = 'login' | 'register' | 'child';
 type DashboardTab = 'overview' | 'childMode' | 'children' | 'avatar' | 'quests' | 'shop' | 'approvals';
 type ChildModeTab = 'status' | 'quests' | 'shop' | 'avatar';
 type QuestParentTab = 'templates' | 'assign';
-type ShopTab = 'shop' | 'manage';
+type ShopTab = 'manage' | 'assign';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
 type QuestCompletionStatus = 'SUBMITTED' | 'APPROVED' | 'REJECTED';
@@ -234,6 +234,20 @@ interface Reward {
   maxRedemptions: number | null;
   createdAt: string;
   updatedAt: string;
+}
+
+interface RewardAssignment {
+  id: string;
+  rewardId: string;
+  childProfileId: string;
+  createdAt: string;
+  updatedAt: string;
+  reward: Reward;
+  childProfile: {
+    id: string;
+    displayName: string;
+    coins: number;
+  };
 }
 
 type RewardRedemptionStatus = 'REQUESTED' | 'APPROVED' | 'REJECTED' | 'CANCELLED' | 'REDEEMED';
@@ -538,6 +552,7 @@ function App() {
   const [quests, setQuests] = useState<QuestTemplate[]>([]);
   const [questAssignments, setQuestAssignments] = useState<QuestAssignment[]>([]);
   const [rewards, setRewards] = useState<Reward[]>([]);
+  const [rewardAssignments, setRewardAssignments] = useState<RewardAssignment[]>([]);
   const [rewardRedemptions, setRewardRedemptions] = useState<RewardRedemption[]>([]);
   const [shopRewards, setShopRewards] = useState<Reward[]>([]);
   const [suggestions, setSuggestions] = useState<SuggestionLibraryResponse>(emptySuggestions);
@@ -575,6 +590,7 @@ function App() {
       setQuestAssignments([]);
       setQuestAssignmentForm(initialQuestAssignmentForm);
       setRewards([]);
+      setRewardAssignments([]);
       setRewardRedemptions([]);
       setRewardForm(initialRewardForm);
       setShopRewards([]);
@@ -601,6 +617,7 @@ function App() {
       setQuests(questData);
       setRewards(rewardData);
       await loadSuggestions(activeToken, currentUser);
+      await loadRewardAssignments(activeToken, currentUser);
       await loadRewardRedemptions(activeToken, currentUser);
       await loadAssignmentsForChildren(activeToken, childData, questData, questAssignmentForm.childProfileId);
       setError(null);
@@ -724,6 +741,7 @@ function App() {
       setQuests(questData);
       setRewards(rewardData);
       await loadSuggestions(token, user);
+      await loadRewardAssignments(token, user);
       await loadRewardRedemptions(token, user);
       await loadAssignmentsForChildren(token, childData, questData, preferredChildId);
     } catch (requestError) {
@@ -803,6 +821,22 @@ function App() {
       setRewardRedemptions(redemptionData);
     } finally {
       setRedemptionLoading(false);
+    }
+  }
+
+  async function loadRewardAssignments(activeToken: string, activeUser: AuthUser | null) {
+    if (activeUser?.role === 'CHILD') {
+      setRewardAssignments([]);
+      return;
+    }
+
+    try {
+      const assignmentData = await apiRequest<RewardAssignment[]>('/reward-assignments', {
+        token: activeToken
+      });
+      setRewardAssignments(assignmentData);
+    } catch {
+      setRewardAssignments([]);
     }
   }
 
@@ -1172,6 +1206,31 @@ function App() {
     }
   }
 
+  async function assignRewardToChild(rewardId: string, childProfileId: string) {
+    if (!token || !childProfileId) {
+      return;
+    }
+
+    setRewardSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<RewardAssignment>('/reward-assignments', {
+        method: 'POST',
+        token,
+        body: {
+          rewardId,
+          childProfileId
+        }
+      });
+      await refreshDashboard(childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setRewardSaving(false);
+    }
+  }
+
   function applyRewardSuggestion(suggestion: RewardSuggestion) {
     const visualOption = findRewardVisualForSuggestion(suggestion);
 
@@ -1380,6 +1439,7 @@ function App() {
               questSaving={questSaving}
               quests={quests}
               rewardForm={rewardForm}
+              rewardAssignments={rewardAssignments}
               redemptionLoading={redemptionLoading}
               redemptionSavingId={redemptionSavingId}
               rewardRedemptions={rewardRedemptions}
@@ -1407,6 +1467,7 @@ function App() {
               onQuestSuggestionSelect={applyQuestSuggestion}
               onQuestSubmit={submitQuest}
               onRewardFormChange={setRewardForm}
+              onRewardAssign={assignRewardToChild}
               onRewardRedemptionApprove={approveRewardRedemption}
               onRewardRedemptionCancel={cancelRewardRedemption}
               onRewardRedemptionMarkRedeemed={markRewardRedemptionRedeemed}
@@ -1745,6 +1806,7 @@ interface DashboardViewProps {
   redemptionLoading: boolean;
   redemptionSavingId: string | null;
   rewardForm: RewardFormState;
+  rewardAssignments: RewardAssignment[];
   rewardRedemptions: RewardRedemption[];
   rewardSaving: boolean;
   rewards: Reward[];
@@ -1770,6 +1832,7 @@ interface DashboardViewProps {
   onQuestSuggestionSelect: (suggestion: QuestSuggestion) => void;
   onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onRewardFormChange: (form: RewardFormState) => void;
+  onRewardAssign: (rewardId: string, childProfileId: string) => void;
   onRewardRedemptionApprove: (redemptionId: string) => void;
   onRewardRedemptionCancel: (redemptionId: string) => void;
   onRewardRedemptionMarkRedeemed: (redemptionId: string) => void;
@@ -1804,6 +1867,7 @@ function DashboardView({
   redemptionLoading,
   redemptionSavingId,
   rewardForm,
+  rewardAssignments,
   rewardRedemptions,
   rewardSaving,
   rewards,
@@ -1829,6 +1893,7 @@ function DashboardView({
   onQuestSuggestionSelect,
   onQuestSubmit,
   onRewardFormChange,
+  onRewardAssign,
   onRewardRedemptionApprove,
   onRewardRedemptionCancel,
   onRewardRedemptionMarkRedeemed,
@@ -2201,12 +2266,12 @@ function DashboardView({
                 variant="scrollable"
               >
                 <Tab label="Belohnungen" value="manage" />
-                <Tab label="Kindershop" value="shop" />
+                <Tab label="Zuweisen" value="assign" />
               </Tabs>
             </Paper>
           ) : null}
 
-          {!canManageChildren || activeShopTab === 'shop' ? (
+          {!canManageChildren ? (
             <RewardShopPanel
               children={children}
               redeemingRewardId={redeemingRewardId}
@@ -2228,6 +2293,18 @@ function DashboardView({
               onFormChange={onRewardFormChange}
               onSuggestionSelect={onRewardSuggestionSelect}
               onSubmit={onRewardSubmit}
+            />
+          ) : null}
+
+          {canManageChildren && activeShopTab === 'assign' ? (
+            <RewardAssignmentBoardPanel
+              assignments={rewardAssignments}
+              children={children}
+              rewards={rewards}
+              saving={rewardSaving}
+              selectedChildId={assignmentForm.childProfileId}
+              onAssign={onRewardAssign}
+              onChildChange={onAssignmentChildChange}
             />
           ) : null}
         </Stack>
@@ -3405,6 +3482,153 @@ interface RewardsPanelProps {
   onFormChange: (form: RewardFormState) => void;
   onSuggestionSelect: (suggestion: RewardSuggestion) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+interface RewardAssignmentBoardPanelProps {
+  assignments: RewardAssignment[];
+  children: ChildProfile[];
+  rewards: Reward[];
+  saving: boolean;
+  selectedChildId: string;
+  onAssign: (rewardId: string, childProfileId: string) => void;
+  onChildChange: (childProfileId: string) => void;
+}
+
+function RewardAssignmentBoardPanel({
+  assignments,
+  children,
+  rewards,
+  saving,
+  selectedChildId,
+  onAssign,
+  onChildChange
+}: RewardAssignmentBoardPanelProps) {
+  const activeRewards = rewards.filter((reward) => reward.isActive);
+  const fallbackChildId = resolveSelectedChildId(children, selectedChildId);
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
+  const selectedChild = children.find((child) => child.id === fallbackChildId) ?? null;
+
+  function getDraftChildId(rewardId: string): string {
+    return drafts[rewardId] ?? fallbackChildId;
+  }
+
+  function updateDraft(rewardId: string, childProfileId: string) {
+    setDrafts((currentDrafts) => ({
+      ...currentDrafts,
+      [rewardId]: childProfileId
+    }));
+  }
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<StorefrontRoundedIcon />} title="Belohnungen zuweisen" />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            <Chip icon={<StorefrontRoundedIcon />} label={`${activeRewards.length} aktiv`} variant="outlined" />
+            <Chip icon={<PeopleAltRoundedIcon />} label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
+          </Stack>
+        </Box>
+
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 1.25,
+            gridTemplateColumns: { xs: '1fr', xl: activeRewards.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr' }
+          }}
+        >
+          {activeRewards.length > 0 ? (
+            activeRewards.map((reward) => {
+              const draftChildId = getDraftChildId(reward.id);
+              const assignedToDraftChild = assignments.some(
+                (assignment) => assignment.rewardId === reward.id && assignment.childProfileId === draftChildId
+              );
+
+              return (
+                <Box
+                  key={reward.id}
+                  sx={{
+                    bgcolor: 'action.hover',
+                    borderRadius: 2,
+                    display: 'grid',
+                    gap: 1.25,
+                    p: 1.5
+                  }}
+                >
+                  <Stack spacing={0.75}>
+                    <Typography sx={{ fontWeight: 900 }} noWrap>
+                      {reward.name}
+                    </Typography>
+                    {reward.description ? (
+                      <Typography color="text.secondary" sx={{ display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }} variant="body2">
+                        {reward.description}
+                      </Typography>
+                    ) : null}
+                    <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+                      <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
+                      <Chip label={reward.category || 'Allgemein'} size="small" variant="outlined" />
+                      <Chip label={reward.requiresApproval ? 'Anfrage' : 'Sofort'} size="small" variant="outlined" />
+                      {assignedToDraftChild ? <Chip color="success" label="Zugewiesen" size="small" /> : null}
+                    </Stack>
+                  </Stack>
+
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gap: 1,
+                      gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) auto' }
+                    }}
+                  >
+                    <TextField
+                      disabled={children.length === 0}
+                      label="Kind"
+                      onChange={(event) => {
+                        const childProfileId = event.target.value;
+                        updateDraft(reward.id, childProfileId);
+                        onChildChange(childProfileId);
+                      }}
+                      required
+                      select
+                      size="small"
+                      value={draftChildId}
+                    >
+                      {children.map((child) => (
+                        <MenuItem key={child.id} value={child.id}>
+                          {child.displayName}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <Button
+                      disabled={!draftChildId || assignedToDraftChild || saving}
+                      onClick={() => onAssign(reward.id, draftChildId)}
+                      size="small"
+                      startIcon={<StorefrontRoundedIcon />}
+                      sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
+                      variant="contained"
+                    >
+                      {assignedToDraftChild ? 'Zugewiesen' : 'Zuweisen'}
+                    </Button>
+                  </Box>
+                </Box>
+              );
+            })
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">Noch keine aktiven Belohnungen zum Zuweisen</Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
+  );
 }
 
 function RewardsPanel({

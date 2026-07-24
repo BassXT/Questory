@@ -759,6 +759,44 @@ Aktualisiert eine Belohnung.
 
 Deaktiviert oder loescht eine Belohnung. Das genaue Verhalten wird vor Implementierung entschieden.
 
+## Reward Assignments
+
+### `GET /api/reward-assignments`
+
+Listet Belohnungs-Zuweisungen der Familie.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+### `POST /api/reward-assignments`
+
+Weist eine aktive Belohnung einem Kind zu.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Hinweise:
+
+- Reward und Kinderprofil muessen zur aktuellen Familie gehoeren.
+- Inaktive Rewards koennen nicht zugewiesen werden.
+- Dieselbe Belohnung kann demselben Kind nur einmal zugewiesen werden.
+- Erst zugewiesene Rewards erscheinen im Kindershop.
+
+Request:
+
+```json
+{
+  "rewardId": "<reward-id>",
+  "childProfileId": "<child-profile-id>"
+}
+```
+
 ## Reward Shop
 
 ### `GET /api/children/{childId}/shop`
@@ -774,7 +812,7 @@ Hinweise:
 - Das Kinderprofil muss zur aktuellen Familie gehoeren.
 - Eltern/Admin koennen den Shop jedes Kindes der Familie abrufen.
 - Kinder mit eigenem Login koennen nur den eigenen Shop abrufen.
-- Es werden aktuell alle aktiven Belohnungen der Familie angezeigt.
+- Es werden nur aktive Belohnungen angezeigt, die dem Kind ueber `RewardAssignment` zugewiesen wurden.
 - Sortierung: guenstigste Belohnungen zuerst, danach Name.
 
 ### `POST /api/rewards/{rewardId}/redeem`
@@ -792,6 +830,7 @@ Hinweise:
 - Die Belohnung und das Kinderprofil muessen zur aktuellen Familie gehoeren.
 - Kinder mit eigenem Login koennen nur fuer ihr eigenes Kinderprofil einloesen.
 - Inaktive Belohnungen koennen nicht eingeloest werden.
+- Die Belohnung muss dem Kind zugewiesen sein.
 - Das Kind muss genug Muenzen fuer den aktuellen Preis besitzen.
 - Die Muenzen werden beim Beantragen oder direkten Einloesen sofort reserviert und vom Kinderprofil abgezogen.
 - Bei `requiresApproval: true` wird eine Anfrage mit Status `REQUESTED` erstellt.

@@ -14,6 +14,8 @@ ChildProfile 1--n QuestAssignment
 Quest 1--n QuestAssignment
 QuestAssignment 1--n QuestCompletion
 Family 1--n Reward
+Reward 1--n RewardAssignment
+ChildProfile 1--n RewardAssignment
 ChildProfile 1--n RewardRedemption
 Reward 1--n RewardRedemption
 ChildProfile 1--n ChildAvatarItem
@@ -189,6 +191,22 @@ Felder:
 - `createdAt`
 - `updatedAt`
 
+### RewardAssignment
+
+Verknuepft eine Belohnung mit einem Kind. Nur zugewiesene aktive Belohnungen erscheinen im Kindershop.
+
+Felder:
+
+- `id`
+- `rewardId`
+- `childProfileId`
+- `createdAt`
+- `updatedAt`
+
+Einschraenkung:
+
+- `rewardId` und `childProfileId` sind gemeinsam eindeutig.
+
 ### RewardRedemption
 
 Repraesentiert eine beantragte oder eingeloeste Belohnung.
@@ -301,6 +319,7 @@ apps/backend/prisma/migrations/20260712143000_child_login_model/migration.sql
 apps/backend/prisma/migrations/20260712162000_spontaneous_quests/migration.sql
 apps/backend/prisma/migrations/20260716103000_avatar_builder/migration.sql
 apps/backend/prisma/migrations/20260716193000_child_profile_details_and_avatar_extras/migration.sql
+apps/backend/prisma/migrations/20260724183000_reward_assignments/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:

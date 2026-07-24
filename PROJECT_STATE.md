@@ -396,16 +396,19 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Spontane/Self-Service-Quests voruebergehend deaktiviert: UI zeigt keine Self-Service-Panels und keinen `Spontan`-Schalter mehr, neue Quests werden mit `isSelfService: false` gespeichert und `POST /api/quests/:questId/self-service-completions` antwortet mit `400`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Deaktivierung der spontanen Quests erfolgreich.
 - Portainer-Redeploy nach Deaktivierung der spontanen Quests erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
-- Eltern-UI-Struktur weiter aufgeraeumt: Kinderansicht ist nun strikt auf das aktive Kind begrenzt und zeigt keine Kind-Wechsel-Leisten mehr; Parent-Quests sind in `Vorlagen` und `Zuweisen` getrennt; der Zuweisen-Bereich bietet je Quest eine eigene Kind-Auswahl; Shop startet fuer Eltern bei `Belohnungen` und bietet `Kindershop` als Vorschau; `Freigaben` wurden in `Bestaetigungen` umbenannt und zeigen pro Kind Quest- und Shop-Entscheidungen nebeneinander.
+- Eltern-UI-Struktur weiter aufgeraeumt: Kinderansicht ist nun strikt auf das aktive Kind begrenzt und zeigt keine Kind-Wechsel-Leisten mehr; Parent-Quests sind in `Vorlagen` und `Zuweisen` getrennt; der Zuweisen-Bereich bietet je Quest eine eigene Kind-Auswahl; `Freigaben` wurden in `Bestaetigungen` umbenannt und zeigen pro Kind Quest- und Shop-Entscheidungen nebeneinander.
 - Frontend-Build nach Eltern-UI-Struktur-Slice erfolgreich.
 - Portainer-Redeploy nach Eltern-UI-Struktur-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Reward-Zuweisungen eingefuehrt: Prisma-Migration `20260724183000_reward_assignments`, `RewardAssignment`-Tabelle, `GET/POST /api/reward-assignments`, Kindershop filtert auf aktive zugewiesene Rewards und Reward-Einloesung verlangt eine bestehende Zuweisung.
+- Parent-Shop auf `Belohnungen` und `Zuweisen` umgestellt; Einloesen/Beantragen ist im Eltern-Shop entfernt und bleibt der Kinderansicht vorbehalten.
+- Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Zuweisungs-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Parent-Bereich weiter aufraeumen: Quests und Shop sind grob getrennt, brauchen aber noch Bearbeiten/Loeschen und spaeter ggf. Drawer fuer sehr lange Listen.
+- Parent-Bereich weiter aufraeumen: Quests und Shop sind grob getrennt, brauchen aber noch Bearbeiten/Loeschen, Entfernen von Zuweisungen und spaeter ggf. Drawer fuer sehr lange Listen.
 - Quest- und Reward-Bearbeiten sowie Loeschen implementieren: Backend-`PATCH`/`DELETE`, Rollenregeln, Frontend-Dialoge und Dokumentation.
 - Fachliche Trennung `ONE_TIME`, `RECURRING` und situativen Quests pruefen; `isSelfService` ist voruebergehend deaktiviert und sollte erst nach einer klaren Produktentscheidung wieder aktiviert oder entfernt werden.
 

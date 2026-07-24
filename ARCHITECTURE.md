@@ -136,6 +136,8 @@ Der Prisma Client Generator schreibt nach `apps/backend/src/generated/prisma`. B
 
 Reward-Einloesungen reservieren Muenzen sofort beim Beantragen oder direkten Einloesen. Status `REQUESTED` und `APPROVED` halten die Muenzen gebunden, `REDEEMED` ist final. Status `REJECTED` und `CANCELLED` geben die Muenzen wieder frei. Dadurch kann ein Kind denselben Muenzenstand nicht mehrfach parallel im Shop ausgeben.
 
+Reward-Vorlagen sind nicht mehr automatisch fuer alle Kinder im Shop sichtbar. Eltern/Admins erstellen Belohnungen im Elternbereich und weisen sie ueber `RewardAssignment` gezielt Kindern zu. `GET /api/children/:childId/shop` liefert nur aktive, zugewiesene Rewards. Beantragen oder Einloesen bleibt im Frontend der Kinderansicht vorbehalten; Eltern nutzen den Shopbereich zum Erstellen und Zuweisen sowie den Bestaetigungsbereich zur Entscheidung offener Anfragen.
+
 Die erste Vorschlagsbibliothek ist statischer, versionierter Backend-Inhalt ohne eigene Datenbanktabelle. Familien kopieren Vorschlaege bewusst in eigene Quest- oder Reward-Daten, indem sie das vorausgefuellte Formular speichern.
 
 XP und Coins haben bewusst getrennte Rollen: XP dient der langfristigen Progression mit Leveln und Avatar-/Gadget-Unlocks; Coins sind die kurzfristige Shop-Waehrung. Die kuratierten Vorschlaege halten Alltagsroutinen niedrig und groessere Rewards teuer, damit sich Familienbelohnungen ueber mehrere Quests verdient anfuehlen.
