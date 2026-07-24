@@ -147,6 +147,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Rueckkehr-Button aus dem Kindmodus neu platziert: `Zurueck in den Elternbereich` sitzt nun zentral oberhalb der Kindmodus-Karte statt in der engen Statuszeile.
 - Shop-Belohnungen sind jetzt immer Anfragen: Backend erzeugt keine direkten `APPROVED`-Einloesungen mehr, Reward-Vorlagen sind anfragepflichtig, und die UI zeigt keine Sofortfreigabe mehr an.
 - Mobile Eltern-Shop-Belohnungen korrigiert: Formular, Motiv-Picker und Reward-Zeilen laufen auf iPhone-Breiten nicht mehr seitlich aus und lange Texte/Bild-URLs umbrechen sauber.
 - Kinderansicht bereinigt: Die Parent-Dashboard-Navigation wird im Kindmodus ausgeblendet, damit Kinder nur die kindbezogenen Tabs `Status`, `Quests`, `Shop` und `Avatar` sehen.
@@ -167,6 +168,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Platzierung des Elternbereich-Buttons im Kindmodus erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach Shop-Anfragepflicht erfolgreich.
 - Portainer-Redeploy nach Shop-Anfragepflicht erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich.

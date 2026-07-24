@@ -146,6 +146,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Mobile-Polish fuer Eltern-Shop-Belohnungen erfolgreich; Backend-Health und Frontend HTTP `200` geprueft.
 - Shop-Regel auf "immer Anfrage" umgestellt: neue Rewards speichern serverseitig `requiresApproval: true`, Reward-Vorlagen sind anfragepflichtig, Redemption erstellt immer `REQUESTED`, und Migration `20260724191000_rewards_always_require_approval` hebt Altbestand an.
 - Portainer-Redeploy nach Shop-Anfragepflicht erfolgreich; Backend-Health und Frontend HTTP `200` geprueft.
+- Rueckkehr-Aktion aus dem Kindmodus optisch verschoben: `Zurueck in den Elternbereich` steht jetzt zentriert oberhalb der Kindmodus-Karte statt gequetscht in der Status-Chip-Leiste.
 - Frontend-Quest-Abschluss-Workflow angelegt: Zuweisung als erledigt einreichen, Status-Chip anzeigen und blockierende Einreichungen gegen doppelte Submit-Klicks sperren.
 - Portainer-Redeploy nach Frontend-Quest-Abschluss-Slice per API-Script erfolgreich.
 - LXC-Frontend-Test des Quest-Abschluss-Workflows unter `http://192.168.1.98:5173` erfolgreich: offene Zuweisung einreichen, Status `Eingereicht`, Button gesperrt, Status nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.

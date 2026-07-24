@@ -2421,6 +2421,17 @@ function ChildModePanel({
 
   return (
     <Stack spacing={2}>
+      <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+        <Button
+          onClick={onParentModeRequest}
+          startIcon={<ShieldRoundedIcon />}
+          sx={{ minHeight: 42, px: { xs: 2, sm: 3 }, width: { xs: '100%', sm: 'auto' } }}
+          variant="outlined"
+        >
+          Zurück in den Elternbereich
+        </Button>
+      </Box>
+
       <Paper elevation={0} sx={{ p: { xs: 1.5, md: 2 } }}>
         <Stack spacing={1.5}>
           <Box
@@ -2437,9 +2448,6 @@ function ChildModePanel({
               <Chip icon={<PeopleAltRoundedIcon />} label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
               <Chip icon={<PaidRoundedIcon />} label={selectedChild ? `${selectedChild.coins} Münzen` : '0 Münzen'} variant="outlined" />
               <Chip icon={<EmojiEventsRoundedIcon />} label={selectedChild ? `Level ${selectedChild.level}` : 'Level -'} variant="outlined" />
-              <Button onClick={onParentModeRequest} size="small" startIcon={<ShieldRoundedIcon />} variant="outlined">
-                Elternbereich
-              </Button>
             </Stack>
           </Box>
           <Tabs
