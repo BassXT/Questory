@@ -145,6 +145,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Eltern-UI-Struktur aufgeraeumt: Kinderansicht zeigt nur noch das aktive Kind, Parent-Quests trennen `Vorlagen` und `Zuweisen`, der Shop startet bei `Belohnungen` mit separatem `Kindershop`, und `Freigaben` heissen nun `Bestaetigungen` mit Kind-Reitern fuer Quest- und Shop-Entscheidungen.
 - Spontane/Self-Service-Quests voruebergehend deaktiviert: UI blendet Self-Service-Panels und `Spontan`-Schalter aus, neue Quests speichern `isSelfService: false`, und die Self-Service-Completion-API blockiert Einreichungen mit `400`.
 - Spontane Quests werden in der normalen Parent-Questseite nicht mehr angezeigt oder eingereicht; Self-Service-Einreichung bleibt Kinderansicht/Kinderlogin vorbehalten.
 - Parent-Questansicht reicht keine Quest-Abschluesse mehr ein; Einreichen ist nur noch in Kinderansicht oder echtem Kinderlogin moeglich.
@@ -160,6 +161,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Eltern-UI-Struktur-Slice erfolgreich.
 - Prisma Validate, Backend-Build und Frontend-Build nach Deaktivierung der spontanen Quests erfolgreich.
 - Portainer-Redeploy nach Deaktivierung der spontanen Quests erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Self-Service-Ausblendung im Parent-Bereich erfolgreich.

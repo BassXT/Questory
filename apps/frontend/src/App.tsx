@@ -43,6 +43,7 @@ const TOKEN_STORAGE_KEY = 'questory.accessToken';
 type AuthMode = 'login' | 'register' | 'child';
 type DashboardTab = 'overview' | 'childMode' | 'children' | 'avatar' | 'quests' | 'shop' | 'approvals';
 type ChildModeTab = 'status' | 'quests' | 'shop' | 'avatar';
+type QuestParentTab = 'templates' | 'assign';
 type ShopTab = 'shop' | 'manage';
 type QuestType = 'ONE_TIME' | 'RECURRING';
 type QuestFrequency = 'NONE' | 'DAILY' | 'WEEKLY' | 'CUSTOM';
@@ -1022,6 +1023,33 @@ function App() {
     }
   }
 
+  async function assignQuestToChild(questId: string, childProfileId: string, dueAt: string) {
+    if (!token || !childProfileId) {
+      return;
+    }
+
+    setAssignmentSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<QuestAssignment>('/quest-assignments', {
+        method: 'POST',
+        token,
+        body: {
+          childProfileId,
+          questId,
+          dueAt: dueAt ? `${dueAt}T12:00:00.000Z` : undefined
+        }
+      });
+      setQuestAssignmentForm((currentForm) => ({ ...currentForm, childProfileId, questId, dueAt: '' }));
+      await refreshDashboard(childProfileId);
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+    } finally {
+      setAssignmentSaving(false);
+    }
+  }
+
   async function submitQuestCompletion(assignmentId: string) {
     if (!token) {
       return;
@@ -1369,6 +1397,7 @@ function App() {
               onChildSubmit={submitChild}
               onAssignmentChildChange={changeAssignmentChild}
               onAssignmentFormChange={setQuestAssignmentForm}
+              onQuestAssign={assignQuestToChild}
               onAssignmentSubmit={submitQuestAssignment}
               onAssignmentComplete={submitQuestCompletion}
               onAssignmentApprove={approveQuestCompletion}
@@ -1730,6 +1759,7 @@ interface DashboardViewProps {
   onAssignmentReject: (assignmentId: string, completionId: string) => void;
   onAssignmentSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onAvatarSave: (equippedItems: Record<string, string>) => void;
+  onQuestAssign: (questId: string, childProfileId: string, dueAt: string) => void;
   onSelfServiceQuestComplete: (questId: string) => void;
   onChildFormChange: (form: ChildFormState) => void;
   onChildPinDisable: (childProfileId: string) => void;
@@ -1788,6 +1818,7 @@ function DashboardView({
   onAssignmentReject,
   onAssignmentSubmit,
   onAvatarSave,
+  onQuestAssign,
   onSelfServiceQuestComplete,
   onChildFormChange,
   onChildPinDisable,
@@ -1819,7 +1850,7 @@ function DashboardView({
             { label: 'Kinder', value: 'children' as DashboardTab },
             { label: 'Quests', value: 'quests' as DashboardTab },
             { label: 'Shop', value: 'shop' as DashboardTab },
-            { label: 'Freigaben', value: 'approvals' as DashboardTab }
+            { label: 'Bestätigungen', value: 'approvals' as DashboardTab }
           ]
         : [
             { label: 'Übersicht', value: 'overview' as DashboardTab },
@@ -1831,7 +1862,8 @@ function DashboardView({
   );
   const [activeDashboardTab, setActiveDashboardTab] = useState<DashboardTab>('overview');
   const [activeChildModeTab, setActiveChildModeTab] = useState<ChildModeTab>('status');
-  const [activeShopTab, setActiveShopTab] = useState<ShopTab>('shop');
+  const [activeQuestParentTab, setActiveQuestParentTab] = useState<QuestParentTab>('templates');
+  const [activeShopTab, setActiveShopTab] = useState<ShopTab>('manage');
   const [parentGateChallenge, setParentGateChallenge] = useState<ParentGateChallenge | null>(null);
   const [parentGateAnswer, setParentGateAnswer] = useState('');
   const [parentGateError, setParentGateError] = useState('');
@@ -2079,36 +2111,73 @@ function DashboardView({
       {activeDashboardTab === 'quests' ? (
         <Stack spacing={2}>
           {canManageChildren ? (
-            <QuestTemplatesPanel
-              canManage={canManageChildren}
-              form={questForm}
-              quests={quests}
-              saving={questSaving}
-              suggestions={suggestions.quests}
-              onFormChange={onQuestFormChange}
-              onSuggestionSelect={onQuestSuggestionSelect}
-              onSubmit={onQuestSubmit}
-            />
-          ) : null}
+            <>
+              <Paper elevation={0} sx={{ p: 0.5 }}>
+                <Tabs
+                  allowScrollButtonsMobile
+                  onChange={(_, value: QuestParentTab) => setActiveQuestParentTab(value)}
+                  scrollButtons="auto"
+                  sx={{
+                    minHeight: 44,
+                    '& .MuiTab-root': {
+                      minHeight: 44,
+                      minWidth: { xs: 116, sm: 144 },
+                      px: { xs: 1.25, sm: 2 }
+                    }
+                  }}
+                  value={activeQuestParentTab}
+                  variant="scrollable"
+                >
+                  <Tab label="Vorlagen" value="templates" />
+                  <Tab label="Zuweisen" value="assign" />
+                </Tabs>
+              </Paper>
 
-          <QuestAssignmentsPanel
-            allowCompletion={!canManageChildren}
-            assignments={assignments}
-            canManage={canManageChildren}
-            children={children}
-            completionSavingId={completionSavingId}
-            form={assignmentForm}
-            loading={assignmentLoading}
-            quests={quests}
-            saving={assignmentSaving}
-            selectedChildId={assignmentForm.childProfileId}
-            onApprove={onAssignmentApprove}
-            onChildChange={onAssignmentChildChange}
-            onComplete={onAssignmentComplete}
-            onFormChange={onAssignmentFormChange}
-            onReject={onAssignmentReject}
-            onSubmit={onAssignmentSubmit}
-          />
+              {activeQuestParentTab === 'templates' ? (
+                <QuestTemplatesPanel
+                  canManage={canManageChildren}
+                  form={questForm}
+                  quests={quests}
+                  saving={questSaving}
+                  suggestions={suggestions.quests}
+                  onFormChange={onQuestFormChange}
+                  onSuggestionSelect={onQuestSuggestionSelect}
+                  onSubmit={onQuestSubmit}
+                />
+              ) : (
+                <QuestAssignmentBoardPanel
+                  assignments={assignments}
+                  children={children}
+                  loading={assignmentLoading}
+                  quests={quests}
+                  saving={assignmentSaving}
+                  selectedChildId={assignmentForm.childProfileId}
+                  onAssign={onQuestAssign}
+                  onChildChange={onAssignmentChildChange}
+                />
+              )}
+            </>
+          ) : (
+            <QuestAssignmentsPanel
+              allowCompletion
+              assignments={assignments}
+              canManage={false}
+              children={children}
+              completionSavingId={completionSavingId}
+              form={assignmentForm}
+              loading={assignmentLoading}
+              quests={quests}
+              saving={assignmentSaving}
+              selectedChildId={assignmentForm.childProfileId}
+              showChildFocus
+              onApprove={onAssignmentApprove}
+              onChildChange={onAssignmentChildChange}
+              onComplete={onAssignmentComplete}
+              onFormChange={onAssignmentFormChange}
+              onReject={onAssignmentReject}
+              onSubmit={onAssignmentSubmit}
+            />
+          )}
         </Stack>
       ) : null}
 
@@ -2131,8 +2200,8 @@ function DashboardView({
                 value={activeShopTab}
                 variant="scrollable"
               >
-                <Tab label="Shop" value="shop" />
                 <Tab label="Belohnungen" value="manage" />
+                <Tab label="Kindershop" value="shop" />
               </Tabs>
             </Paper>
           ) : null}
@@ -2165,15 +2234,22 @@ function DashboardView({
       ) : null}
 
       {activeDashboardTab === 'approvals' && canManageChildren ? (
-        <RewardRedemptionsPanel
-          canManage={canManageChildren}
-          loading={redemptionLoading}
+        <ApprovalsPanel
+          assignmentLoading={assignmentLoading}
+          assignments={assignments}
+          children={children}
+          completionSavingId={completionSavingId}
+          redemptionLoading={redemptionLoading}
+          redemptionSavingId={redemptionSavingId}
           redemptions={rewardRedemptions}
-          savingId={redemptionSavingId}
-          onApprove={onRewardRedemptionApprove}
-          onCancel={onRewardRedemptionCancel}
-          onMarkRedeemed={onRewardRedemptionMarkRedeemed}
-          onReject={onRewardRedemptionReject}
+          selectedChildId={assignmentForm.childProfileId}
+          onAssignmentApprove={onAssignmentApprove}
+          onAssignmentReject={onAssignmentReject}
+          onChildChange={onAssignmentChildChange}
+          onRewardApprove={onRewardRedemptionApprove}
+          onRewardCancel={onRewardRedemptionCancel}
+          onRewardMarkRedeemed={onRewardRedemptionMarkRedeemed}
+          onRewardReject={onRewardRedemptionReject}
         />
       ) : null}
 
@@ -2262,6 +2338,7 @@ function ChildModePanel({
   onTabChange
 }: ChildModePanelProps) {
   const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
+  const childScope = selectedChild ? [selectedChild] : [];
 
   return (
     <Stack spacing={2}>
@@ -2286,9 +2363,6 @@ function ChildModePanel({
               </Button>
             </Stack>
           </Box>
-
-          <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onAssignmentChildChange} />
-
           <Tabs
             allowScrollButtonsMobile
             onChange={(_, value: ChildModeTab) => onTabChange(value)}
@@ -2328,13 +2402,14 @@ function ChildModePanel({
             allowCompletion
             assignments={assignments}
             canManage={false}
-            children={children}
+            children={childScope}
             completionSavingId={completionSavingId}
             form={{ ...initialQuestAssignmentForm, childProfileId: selectedChildId }}
             loading={false}
             quests={quests}
             saving={false}
             selectedChildId={selectedChildId}
+            showChildFocus={false}
             onApprove={() => undefined}
             onChildChange={onAssignmentChildChange}
             onComplete={onAssignmentComplete}
@@ -2347,8 +2422,9 @@ function ChildModePanel({
 
       {activeTab === 'shop' ? (
         <RewardShopPanel
-          children={children}
+          children={childScope}
           redeemingRewardId={redeemingRewardId}
+          showChildFocus={false}
           selectedChildId={selectedChildId}
           shopLoading={shopLoading}
           shopRewards={shopRewards}
@@ -2359,8 +2435,9 @@ function ChildModePanel({
 
       {activeTab === 'avatar' ? (
         <AvatarBuilderPanel
+          allowChildChange={false}
           avatar={avatar}
-          children={children}
+          children={childScope}
           loading={avatarLoading}
           saving={avatarSaving}
           selectedChildId={selectedChildId}
@@ -2664,6 +2741,163 @@ interface RewardRedemptionsPanelProps {
   onCancel: (redemptionId: string) => void;
   onMarkRedeemed: (redemptionId: string) => void;
   onReject: (redemptionId: string) => void;
+}
+
+interface ApprovalsPanelProps {
+  assignmentLoading: boolean;
+  assignments: QuestAssignment[];
+  children: ChildProfile[];
+  completionSavingId: string | null;
+  redemptionLoading: boolean;
+  redemptionSavingId: string | null;
+  redemptions: RewardRedemption[];
+  selectedChildId: string;
+  onAssignmentApprove: (assignmentId: string, completionId: string) => void;
+  onAssignmentReject: (assignmentId: string, completionId: string) => void;
+  onChildChange: (childProfileId: string) => void;
+  onRewardApprove: (redemptionId: string) => void;
+  onRewardCancel: (redemptionId: string) => void;
+  onRewardMarkRedeemed: (redemptionId: string) => void;
+  onRewardReject: (redemptionId: string) => void;
+}
+
+function ApprovalsPanel({
+  assignmentLoading,
+  assignments,
+  children,
+  completionSavingId,
+  redemptionLoading,
+  redemptionSavingId,
+  redemptions,
+  selectedChildId,
+  onAssignmentApprove,
+  onAssignmentReject,
+  onChildChange,
+  onRewardApprove,
+  onRewardCancel,
+  onRewardMarkRedeemed,
+  onRewardReject
+}: ApprovalsPanelProps) {
+  const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
+  const pendingQuestAssignments = assignments.filter((assignment) => assignment.completions?.[0]?.status === 'SUBMITTED');
+  const openRewardRedemptions = redemptions.filter(
+    (redemption) =>
+      redemption.childProfileId === selectedChildId &&
+      (redemption.status === 'REQUESTED' || redemption.status === 'APPROVED')
+  );
+  const openCount = pendingQuestAssignments.length + openRewardRedemptions.length;
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<ShieldRoundedIcon />} title="Bestätigungen" />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            <Chip icon={<PeopleAltRoundedIcon />} label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
+            <Chip color={openCount > 0 ? 'warning' : 'default'} label={`${openCount} offen`} variant="outlined" />
+          </Stack>
+        </Box>
+
+        {children.length > 0 ? (
+          <Tabs
+            allowScrollButtonsMobile
+            onChange={(_, value: string) => onChildChange(value)}
+            scrollButtons="auto"
+            sx={{
+              minHeight: 42,
+              '& .MuiTab-root': {
+                minHeight: 42,
+                minWidth: { xs: 104, sm: 132 },
+                px: { xs: 1.25, sm: 2 }
+              }
+            }}
+            value={selectedChildId}
+            variant="scrollable"
+          >
+            {children.map((child) => (
+              <Tab key={child.id} label={child.displayName} value={child.id} />
+            ))}
+          </Tabs>
+        ) : null}
+
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 2,
+            gridTemplateColumns: { xs: '1fr', xl: 'minmax(0, 1fr) minmax(0, 1fr)' }
+          }}
+        >
+          <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: { xs: 1.25, md: 1.5 } }}>
+            <Stack spacing={1.5}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 900 }}>Eingereichte Quests</Typography>
+                <Chip icon={<TaskAltRoundedIcon />} label={`${pendingQuestAssignments.length} offen`} size="small" variant="outlined" />
+              </Stack>
+              {assignmentLoading ? <LinearProgress /> : null}
+              <Box sx={{ display: 'grid', gap: 1.25 }}>
+                {pendingQuestAssignments.length > 0 ? (
+                  pendingQuestAssignments.map((assignment) => (
+                    <QuestAssignmentRow
+                      allowCompletion={false}
+                      assignment={assignment}
+                      canManage
+                      completionSaving={completionSavingId === assignment.id}
+                      key={assignment.id}
+                      onApprove={onAssignmentApprove}
+                      onComplete={() => undefined}
+                      onReject={onAssignmentReject}
+                    />
+                  ))
+                ) : (
+                  <Box sx={{ bgcolor: 'background.paper', borderRadius: 2, p: 1.5 }}>
+                    <Typography color="text.secondary">Keine eingereichten Quests für dieses Kind</Typography>
+                  </Box>
+                )}
+              </Box>
+            </Stack>
+          </Box>
+
+          <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: { xs: 1.25, md: 1.5 } }}>
+            <Stack spacing={1.5}>
+              <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
+                <Typography sx={{ fontWeight: 900 }}>Shop-Anfragen</Typography>
+                <Chip icon={<StorefrontRoundedIcon />} label={`${openRewardRedemptions.length} offen`} size="small" variant="outlined" />
+              </Stack>
+              {redemptionLoading ? <LinearProgress /> : null}
+              <Box sx={{ display: 'grid', gap: 1.25 }}>
+                {openRewardRedemptions.length > 0 ? (
+                  openRewardRedemptions.map((redemption) => (
+                    <RewardRedemptionRow
+                      canManage
+                      key={redemption.id}
+                      redemption={redemption}
+                      saving={redemptionSavingId === redemption.id}
+                      onApprove={onRewardApprove}
+                      onCancel={onRewardCancel}
+                      onMarkRedeemed={onRewardMarkRedeemed}
+                      onReject={onRewardReject}
+                    />
+                  ))
+                ) : (
+                  <Box sx={{ bgcolor: 'background.paper', borderRadius: 2, p: 1.5 }}>
+                    <Typography color="text.secondary">Keine offenen Shop-Anfragen für dieses Kind</Typography>
+                  </Box>
+                )}
+              </Box>
+            </Stack>
+          </Box>
+        </Box>
+      </Stack>
+    </Paper>
+  );
 }
 
 function RewardRedemptionsPanel({
@@ -3083,6 +3317,7 @@ function ChildFocusBar({ children, selectedChildId, onChildChange }: ChildFocusB
 interface RewardShopPanelProps {
   children: ChildProfile[];
   redeemingRewardId: string | null;
+  showChildFocus?: boolean;
   selectedChildId: string;
   shopLoading: boolean;
   shopRewards: Reward[];
@@ -3093,6 +3328,7 @@ interface RewardShopPanelProps {
 function RewardShopPanel({
   children,
   redeemingRewardId,
+  showChildFocus = true,
   selectedChildId,
   shopLoading,
   shopRewards,
@@ -3124,7 +3360,9 @@ function RewardShopPanel({
           </Stack>
         </Box>
 
-        <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onChildChange} />
+        {showChildFocus ? (
+          <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onChildChange} />
+        ) : null}
 
         {shopLoading ? <LinearProgress /> : null}
 
@@ -3332,12 +3570,181 @@ interface QuestAssignmentsPanelProps {
   quests: QuestTemplate[];
   saving: boolean;
   selectedChildId: string;
+  showAssignmentForm?: boolean;
+  showChildFocus?: boolean;
   onApprove: (assignmentId: string, completionId: string) => void;
   onChildChange: (childProfileId: string) => void;
   onComplete: (assignmentId: string) => void;
   onFormChange: (form: QuestAssignmentFormState) => void;
   onReject: (assignmentId: string, completionId: string) => void;
   onSubmit: (event: FormEvent<HTMLFormElement>) => void;
+}
+
+interface QuestAssignmentBoardPanelProps {
+  assignments: QuestAssignment[];
+  children: ChildProfile[];
+  loading: boolean;
+  quests: QuestTemplate[];
+  saving: boolean;
+  selectedChildId: string;
+  onAssign: (questId: string, childProfileId: string, dueAt: string) => void;
+  onChildChange: (childProfileId: string) => void;
+}
+
+interface QuestAssignmentDraft {
+  childProfileId: string;
+  dueAt: string;
+}
+
+function QuestAssignmentBoardPanel({
+  assignments,
+  children,
+  loading,
+  quests,
+  saving,
+  selectedChildId,
+  onAssign,
+  onChildChange
+}: QuestAssignmentBoardPanelProps) {
+  const assignableQuests = quests.filter((quest) => quest.isActive && quest.isAssignable);
+  const fallbackChildId = resolveSelectedChildId(children, selectedChildId);
+  const [drafts, setDrafts] = useState<Record<string, QuestAssignmentDraft>>({});
+  const selectedChild = children.find((child) => child.id === fallbackChildId) ?? null;
+
+  function getDraft(questId: string): QuestAssignmentDraft {
+    return drafts[questId] ?? { childProfileId: fallbackChildId, dueAt: '' };
+  }
+
+  function updateDraft(questId: string, draft: QuestAssignmentDraft) {
+    setDrafts((currentDrafts) => ({
+      ...currentDrafts,
+      [questId]: draft
+    }));
+  }
+
+  function assignQuest(questId: string) {
+    const draft = getDraft(questId);
+    onAssign(questId, draft.childProfileId, draft.dueAt);
+  }
+
+  return (
+    <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
+      <Stack spacing={2}>
+        <Box
+          sx={{
+            alignItems: { xs: 'stretch', sm: 'center' },
+            display: 'flex',
+            flexDirection: { xs: 'column', sm: 'row' },
+            gap: 1.5,
+            justifyContent: 'space-between'
+          }}
+        >
+          <SectionTitle icon={<TaskAltRoundedIcon />} title="Quests zuweisen" />
+          <Stack direction="row" spacing={1} sx={{ flexWrap: 'wrap' }}>
+            <Chip icon={<TaskAltRoundedIcon />} label={`${assignableQuests.length} zuweisbar`} variant="outlined" />
+            <Chip icon={<PeopleAltRoundedIcon />} label={selectedChild ? selectedChild.displayName : 'Kein Kind'} variant="outlined" />
+          </Stack>
+        </Box>
+
+        {loading ? <LinearProgress /> : null}
+
+        <Box
+          sx={{
+            display: 'grid',
+            gap: 1.25,
+            gridTemplateColumns: { xs: '1fr', xl: assignableQuests.length > 1 ? 'repeat(2, minmax(0, 1fr))' : '1fr' }
+          }}
+        >
+          {assignableQuests.length > 0 ? (
+            assignableQuests.map((quest) => {
+              const draft = getDraft(quest.id);
+              const childAssignments = assignments.filter((assignment) => assignment.questId === quest.id);
+
+              return (
+                <Box
+                  key={quest.id}
+                  sx={{
+                    bgcolor: 'action.hover',
+                    borderRadius: 2,
+                    display: 'grid',
+                    gap: 1.25,
+                    p: 1.5
+                  }}
+                >
+                  <Stack spacing={0.75}>
+                    <Typography sx={{ fontWeight: 900 }} noWrap>
+                      {quest.title}
+                    </Typography>
+                    {quest.description ? (
+                      <Typography color="text.secondary" sx={{ display: '-webkit-box', overflow: 'hidden', WebkitBoxOrient: 'vertical', WebkitLineClamp: 2 }} variant="body2">
+                        {quest.description}
+                      </Typography>
+                    ) : null}
+                    <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap' }}>
+                      <Chip label={quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(quest.frequency)} size="small" variant="outlined" />
+                      <Chip icon={<EmojiEventsRoundedIcon />} label={`${quest.xpReward} XP`} size="small" variant="outlined" />
+                      <Chip icon={<PaidRoundedIcon />} label={`${quest.coinReward}`} size="small" variant="outlined" />
+                      {childAssignments.length > 0 ? <Chip color="success" label="Für aktives Kind zugewiesen" size="small" /> : null}
+                    </Stack>
+                  </Stack>
+
+                  <Box
+                    sx={{
+                      display: 'grid',
+                      gap: 1,
+                      gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(150px, 0.8fr) auto' }
+                    }}
+                  >
+                    <TextField
+                      disabled={children.length === 0}
+                      label="Kind"
+                      onChange={(event) => {
+                        const childProfileId = event.target.value;
+                        updateDraft(quest.id, { ...draft, childProfileId });
+                        onChildChange(childProfileId);
+                      }}
+                      required
+                      select
+                      size="small"
+                      value={draft.childProfileId}
+                    >
+                      {children.map((child) => (
+                        <MenuItem key={child.id} value={child.id}>
+                          {child.displayName}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                    <TextField
+                      label="Fällig am"
+                      onChange={(event) => updateDraft(quest.id, { ...draft, dueAt: event.target.value })}
+                      size="small"
+                      slotProps={{ inputLabel: { shrink: true } }}
+                      type="date"
+                      value={draft.dueAt}
+                    />
+                    <Button
+                      disabled={!draft.childProfileId || saving}
+                      onClick={() => assignQuest(quest.id)}
+                      size="small"
+                      startIcon={<TaskAltRoundedIcon />}
+                      sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
+                      variant="contained"
+                    >
+                      Zuweisen
+                    </Button>
+                  </Box>
+                </Box>
+              );
+            })
+          ) : (
+            <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
+              <Typography color="text.secondary">Noch keine aktiven zuweisbaren Quest-Vorlagen</Typography>
+            </Box>
+          )}
+        </Box>
+      </Stack>
+    </Paper>
+  );
 }
 
 function QuestAssignmentsPanel({
@@ -3351,6 +3758,8 @@ function QuestAssignmentsPanel({
   quests,
   saving,
   selectedChildId,
+  showAssignmentForm = true,
+  showChildFocus = true,
   onApprove,
   onChildChange,
   onComplete,
@@ -3381,9 +3790,11 @@ function QuestAssignmentsPanel({
           </Stack>
         </Box>
 
-        <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onChildChange} />
+        {showChildFocus ? (
+          <ChildFocusBar children={children} selectedChildId={selectedChildId} onChildChange={onChildChange} />
+        ) : null}
 
-        {canManage ? (
+        {canManage && showAssignmentForm ? (
           <Box
             component="form"
             onSubmit={onSubmit}
@@ -4455,7 +4866,7 @@ function QuestAssignmentRow({
           >
             {hasBlockingCompletion ? statusLabel : completionButtonLabel}
           </Button>
-        ) : (
+        ) : canReview ? null : (
           <Chip label="Einreichen nur in der Kinderansicht" size="small" variant="outlined" />
         )}
       {canReview && latestCompletion ? (

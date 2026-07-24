@@ -70,6 +70,7 @@ interface AvatarChildOption {
 }
 
 interface AvatarBuilderPanelProps {
+  allowChildChange?: boolean;
   avatar: AvatarResponse | null;
   children: AvatarChildOption[];
   loading: boolean;
@@ -126,6 +127,7 @@ const avatarAppearanceColors = {
 } as const;
 
 export function AvatarBuilderPanel({
+  allowChildChange = true,
   avatar,
   children,
   loading,
@@ -215,20 +217,31 @@ export function AvatarBuilderPanel({
             p: 1.25
           }}
         >
-          <TextField
-            disabled={children.length === 0}
-            label="Aktives Kind"
-            onChange={(event) => onChildChange(event.target.value)}
-            select
-            size="small"
-            value={selectedChildId}
-          >
-            {children.map((child) => (
-              <MenuItem key={child.id} value={child.id}>
-                {child.displayName}
-              </MenuItem>
-            ))}
-          </TextField>
+          {allowChildChange ? (
+            <TextField
+              disabled={children.length === 0}
+              label="Aktives Kind"
+              onChange={(event) => onChildChange(event.target.value)}
+              select
+              size="small"
+              value={selectedChildId}
+            >
+              {children.map((child) => (
+                <MenuItem key={child.id} value={child.id}>
+                  {child.displayName}
+                </MenuItem>
+              ))}
+            </TextField>
+          ) : (
+            <Box sx={{ minWidth: 0 }}>
+              <Typography color="text.secondary" variant="body2">
+                Aktives Kind
+              </Typography>
+              <Typography sx={{ fontWeight: 900 }} noWrap>
+                {selectedChild ? selectedChild.displayName : 'Kein Kind'}
+              </Typography>
+            </Box>
+          )}
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap', minWidth: 0 }}>
             <Chip label={selectedChild ? `${selectedChild.xp} XP` : '0 XP'} variant="outlined" />
             <Chip label={selectedChild ? `${selectedChild.coins} Münzen` : '0 Münzen'} variant="outlined" />

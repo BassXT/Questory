@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-Letzte Aktualisierung: 2026-07-20
+Letzte Aktualisierung: 2026-07-24
 
 Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den aktuellen Projektstand, offene Aufgaben, Architekturentscheidungen und bekannte Probleme.
 
@@ -396,13 +396,15 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Spontane/Self-Service-Quests voruebergehend deaktiviert: UI zeigt keine Self-Service-Panels und keinen `Spontan`-Schalter mehr, neue Quests werden mit `isSelfService: false` gespeichert und `POST /api/quests/:questId/self-service-completions` antwortet mit `400`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Deaktivierung der spontanen Quests erfolgreich.
 - Portainer-Redeploy nach Deaktivierung der spontanen Quests erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Eltern-UI-Struktur weiter aufgeraeumt: Kinderansicht ist nun strikt auf das aktive Kind begrenzt und zeigt keine Kind-Wechsel-Leisten mehr; Parent-Quests sind in `Vorlagen` und `Zuweisen` getrennt; der Zuweisen-Bereich bietet je Quest eine eigene Kind-Auswahl; Shop startet fuer Eltern bei `Belohnungen` und bietet `Kindershop` als Vorschau; `Freigaben` wurden in `Bestaetigungen` umbenannt und zeigen pro Kind Quest- und Shop-Entscheidungen nebeneinander.
+- Frontend-Build nach Eltern-UI-Struktur-Slice erfolgreich.
 
 ## Offene Aufgaben
 
 - Docker installieren oder sicherstellen, dass `docker` im PATH verfuegbar ist.
 - Docker Compose Start pruefen.
 - Nach dem naechsten automatischen Backup-Lauf `/var/log/questory-backup.log` und `/opt/questory/backups` pruefen.
-- Parent-Bereich weiter aufraeumen: Quests primaer als Vorlagenverwaltung mit Zuweisungs-Unterbereich/Drawer gestalten; Shop primaer als Belohnungsverwaltung mit Freigabe-Unterbereich/Drawer gestalten.
+- Parent-Bereich weiter aufraeumen: Quests und Shop sind grob getrennt, brauchen aber noch Bearbeiten/Loeschen und spaeter ggf. Drawer fuer sehr lange Listen.
 - Quest- und Reward-Bearbeiten sowie Loeschen implementieren: Backend-`PATCH`/`DELETE`, Rollenregeln, Frontend-Dialoge und Dokumentation.
 - Fachliche Trennung `ONE_TIME`, `RECURRING` und situativen Quests pruefen; `isSelfService` ist voruebergehend deaktiviert und sollte erst nach einer klaren Produktentscheidung wieder aktiviert oder entfernt werden.
 
