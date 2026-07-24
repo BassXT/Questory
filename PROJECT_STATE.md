@@ -15,6 +15,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Paper-Doll-Attachment-Rig mit benannten Kopf-, Schulter-, Hueft-, Fuss-, Ruecken- und Bodenankern sowie eigener Geometrie fuer alle 38 WebP-Assets eingefuehrt.
 - Sichtbares SVG-Kleidungsgeruest unter den WebP-Layern entfernt; das neutrale Rig zeichnet nur noch notwendige Hautpartien und Haende.
 - Haar-Export um eine reproduzierbare Modellkopf-Maske erweitert, die Gesicht, Ohren und Hals der Katalogvorlage vor dem Rendern entfernt.
+- Attachment-Rig mit Commit `dbb16fb` per Portainer auf den LXC deployed; Backend-Health, Frontend, produktives Haar-WebP und Live-Browser-Konsole danach erfolgreich geprueft.
 - `SoftAdventureAvatarGraphic` auf einen hybriden SVG/WebP-Renderer umgestellt: skalierbare Basis und Szenen, illustrierte Gegenstands-Layer mit gemeinsamen Ganzkoerper-Ankern.
 - Avatar-Auswahlkarten zeigen fuer unterstuetzte Slots eine echte Motivvorschau statt nur zwei Farbpunkte.
 - Portainer-Redeploy des SVG/WebP-Avatar-Slices erfolgreich; Backend `GET /api/health` liefert `ok`, Frontend und produktive WebP-Assets liefern HTTP `200`.
@@ -434,7 +435,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes das neue Attachment-Rig deployen und im echten Familienkonto mit mehreren gespeicherten Kinder-Loadouts auf Desktop und iPhone pruefen. Danach Quest- und Reward-Bearbeiten/Loeschen als naechsten funktionalen Slice umsetzen und ein wiederholbares Playwright-Smoke-Test-Setup fuer iPhone-Breiten, Login/Registrierung, Dashboard-Tabs, Avatar-Tab und Konsolenfehlerfreiheit ergaenzen. Anschliessend den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
+Als naechstes das deployte Attachment-Rig im echten Familienkonto mit mehreren gespeicherten Kinder-Loadouts auf Desktop und iPhone pruefen. Danach Quest- und Reward-Bearbeiten/Loeschen als naechsten funktionalen Slice umsetzen und ein wiederholbares Playwright-Smoke-Test-Setup fuer iPhone-Breiten, Login/Registrierung, Dashboard-Tabs, Avatar-Tab und Konsolenfehlerfreiheit ergaenzen. Anschliessend den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
 
 Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep erfolgen, um sichtbare deutsche Texte wieder mit Umlauten zu schreiben.
 

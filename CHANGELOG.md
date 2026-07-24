@@ -198,6 +198,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Vollstaendiger Workspace-Build nach Attachment-Rig-Umstellung erfolgreich; Frontend-Produktionsbundle liegt bei `641.08 kB` (`189.56 kB` gzip).
 - Reproduzierbarer Export und Alpha-Pruefung erfolgreich: alle 38 WebP-Assets besitzen echte Transparenz, keine Datei ist vollflaechig opak.
 - Isolierte Browserpruefung des Attachment-Rigs mit vier stark unterschiedlichen Ganzkoerper-Loadouts auf Desktop erfolgreich; auf `390x844` entsprechen `scrollWidth` und `innerWidth` jeweils `390`.
+- Portainer-Redeploy des Attachment-Rigs aus Commit `dbb16fb` erfolgreich; LXC-Backend-Health `ok`, Frontend und neues Haar-WebP HTTP `200`, produktive Login-Seite ohne neue Konsolenfehler.
 - Portainer-Redeploy des SVG/WebP-Avatar-Slices erfolgreich; LXC-Backend-Health `ok`, Frontend HTTP `200`, WebP-Asset HTTP `200` und produktives Bundle enthaelt die neue Art-Zuordnung.
 - Lokaler Frontend-Build und isolierter Browser-Test der SVG/WebP-Komposition mit vier stark unterschiedlichen Ganzkoerper-Loadouts erfolgreich; WebP-Layer laden, sind transparent und bleiben innerhalb der Avatar-Buehne.
 - Frontend-Build nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich.
