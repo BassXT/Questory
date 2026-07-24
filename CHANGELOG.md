@@ -169,6 +169,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Platzierung des Elternbereich-Buttons im Kindmodus erfolgreich.
+- Portainer-Redeploy nach Platzierung des Elternbereich-Buttons im Kindmodus erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Shop-Anfragepflicht erfolgreich.
 - Portainer-Redeploy nach Shop-Anfragepflicht erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich.
