@@ -162,6 +162,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Eltern-UI-Struktur-Slice erfolgreich.
+- Portainer-Redeploy nach Eltern-UI-Struktur-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Deaktivierung der spontanen Quests erfolgreich.
 - Portainer-Redeploy nach Deaktivierung der spontanen Quests erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Self-Service-Ausblendung im Parent-Bereich erfolgreich.

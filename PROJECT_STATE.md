@@ -398,6 +398,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Deaktivierung der spontanen Quests erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Eltern-UI-Struktur weiter aufgeraeumt: Kinderansicht ist nun strikt auf das aktive Kind begrenzt und zeigt keine Kind-Wechsel-Leisten mehr; Parent-Quests sind in `Vorlagen` und `Zuweisen` getrennt; der Zuweisen-Bereich bietet je Quest eine eigene Kind-Auswahl; Shop startet fuer Eltern bei `Belohnungen` und bietet `Kindershop` als Vorschau; `Freigaben` wurden in `Bestaetigungen` umbenannt und zeigen pro Kind Quest- und Shop-Entscheidungen nebeneinander.
 - Frontend-Build nach Eltern-UI-Struktur-Slice erfolgreich.
+- Portainer-Redeploy nach Eltern-UI-Struktur-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
