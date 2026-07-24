@@ -185,6 +185,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Frontend-Build nach Soft-Adventure-Umstellung erfolgreich.
 - Prisma Validate und Backend-Build nach Avatar-Label-Migration erfolgreich.
 - Isolierte Browserpruefung mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: kein horizontaler Ueberlauf, alle `360x520`-SVGs sichtbar und keine Browserwarnungen oder Konsolenfehler.
+- Portainer-Redeploy nach Soft-Adventure-Umstellung erfolgreich; Migration `20260724214000_soft_adventure_avatar_labels` angewendet, Backend-Container laeuft, NestJS gestartet, Health OK, Frontend HTTP `200` und neues Bundle ohne `64x96`-Pixelrenderer ausgeliefert.
 - Frontend-Build nach Avatar-Grafikpolitur erfolgreich.
 - Isolierte Browser-Pruefung mit drei unterschiedlichen Avatar-Loadouts auf Desktop und `390x844`: alle `64x96`-SVGs bleiben im Rahmen, keine Browserwarnungen oder Konsolenfehler.
 - Portainer-Redeploy nach Avatar-Grafikpolitur erfolgreich; LXC-Backend-Health OK, Frontend HTTP `200` und neues Avatar-Bundle ausgeliefert.

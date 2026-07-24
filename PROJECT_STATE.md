@@ -10,7 +10,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Bereits umgesetzt
 
-- Avatar-Renderer vollstaendig auf den eigenen `Soft Adventure`-Stil umgestellt: modularer Ganzkoerper, gemeinsame Ankerpunkte, konturierte 2D-Formen und Cel-Shading fuer alle vorhandenen Slots.
+- Avatar-Renderer vollstaendig auf den eigenen `Soft Adventure`-Stil umgestellt und auf dem LXC deployed: modularer Ganzkoerper, gemeinsame Ankerpunkte, konturierte 2D-Formen und Cel-Shading fuer alle vorhandenen Slots.
 - Alter Pixel-/Toon-Renderer mit rund 1.550 Zeilen entfernt; DiceBear-Pakete werden nicht mehr benoetigt.
 - Migration `20260724214000_soft_adventure_avatar_labels` entfernt alte Pixel-Bezeichnungen aus sichtbaren Item-Namen und Beschreibungen, waehrend technische Keys und gespeicherte Loadouts kompatibel bleiben.
 - `README.md` mit Vision, Projektzielen, MVP, Stack, Roadmap und geplantem Docker-Start angelegt.
@@ -426,7 +426,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Naechster Schritt
 
-Als naechstes den Soft-Adventure-Renderer auf dem LXC redeployen und mit echten gespeicherten Kinder-Loadouts pruefen. Danach ein wiederholbares Playwright-Smoke-Test-Setup fuer iPhone-Breiten, Login/Registrierung, Dashboard-Tabs, Vorlagen-/Motiv-Dialoge, Avatar-Tab, Slot-Auswahl und Konsolenfehlerfreiheit ergaenzen. Anschliessend den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
+Als naechstes den Soft-Adventure-Renderer im echten Familienkonto mit mehreren gespeicherten Kinder-Loadouts pruefen und konkretes visuelles Feedback pro Item sammeln. Danach ein wiederholbares Playwright-Smoke-Test-Setup fuer iPhone-Breiten, Login/Registrierung, Dashboard-Tabs, Vorlagen-/Motiv-Dialoge, Avatar-Tab, Slot-Auswahl und Konsolenfehlerfreiheit ergaenzen. Anschliessend den Avatar-Builder per React Lazy Loading bzw. Code-Splitting aus dem Hauptchunk nehmen.
 
 Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep erfolgen, um sichtbare deutsche Texte wieder mit Umlauten zu schreiben.
 
