@@ -144,6 +144,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - LXC-Frontend-Test des Quest-Zuweisungs-Workflows unter `http://192.168.1.98:5173` erfolgreich: Kind anlegen, Quest zuweisen, Faelligkeitsdatum anzeigen, Reload und mobile Ansicht ohne horizontalen Overflow.
 - `GET /api/children/:childId/quest-assignments` liefert nun die neueste Completion pro Zuweisung mit, damit der Frontend-Status nach Reload sichtbar bleibt.
 - Mobile-Polish fuer Eltern-Shop-Belohnungen umgesetzt: Reward-Formular, Motiv-Picker und Reward-Zeilen nutzen feste mobile Breiten, umbrechende Texte und kompakte Chip-Leisten.
+- Portainer-Redeploy nach Mobile-Polish fuer Eltern-Shop-Belohnungen erfolgreich; Backend-Health und Frontend HTTP `200` geprueft.
 - Frontend-Quest-Abschluss-Workflow angelegt: Zuweisung als erledigt einreichen, Status-Chip anzeigen und blockierende Einreichungen gegen doppelte Submit-Klicks sperren.
 - Portainer-Redeploy nach Frontend-Quest-Abschluss-Slice per API-Script erfolgreich.
 - LXC-Frontend-Test des Quest-Abschluss-Workflows unter `http://192.168.1.98:5173` erfolgreich: offene Zuweisung einreichen, Status `Eingereicht`, Button gesperrt, Status nach Reload erhalten und mobile Ansicht ohne horizontalen Overflow.

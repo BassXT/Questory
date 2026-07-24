@@ -165,6 +165,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich.
+- Portainer-Redeploy nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Kinderansicht-Navigationsfix erfolgreich.
 - Portainer-Redeploy nach Kinderansicht-Navigationsfix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Zuweisungs-Slice erfolgreich.
