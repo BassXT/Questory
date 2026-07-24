@@ -168,6 +168,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Prisma Validate, Backend-Build und Frontend-Build nach Shop-Anfragepflicht erfolgreich.
+- Portainer-Redeploy nach Shop-Anfragepflicht erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich.
 - Portainer-Redeploy nach Mobile-Fix fuer Eltern-Shop-Belohnungen erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Kinderansicht-Navigationsfix erfolgreich.
