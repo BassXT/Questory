@@ -19,6 +19,7 @@ Qualitaetskorrektur nach echtem iPhone-Test: Die direkte SVG/WebP-Hybridkomposit
 - Haar-Export um eine reproduzierbare Modellkopf-Maske erweitert, die Gesicht, Ohren und Hals der Katalogvorlage vor dem Rendern entfernt.
 - Attachment-Rig mit Commit `dbb16fb` per Portainer auf den LXC deployed; Backend-Health, Frontend, produktives Haar-WebP und Live-Browser-Konsole danach erfolgreich geprueft.
 - Direkte Komposition der Konzept-WebPs nach iPhone-Qualitaetspruefung deaktiviert; grosse Avatar-Vorschau wieder auf eine gemeinsame Ganzkoerper-Geometrie umgestellt, WebP-Motive bleiben im Picker.
+- Qualitaetskorrektur mit Commit `f3745cf` per Portainer deployed; Backend-Health, Frontend und produktives Bundle liefern HTTP `200`, entfernte Hybrid-Clip-Logik fehlt im Bundle und Picker-WebPs bleiben enthalten.
 - `SoftAdventureAvatarGraphic` auf einen hybriden SVG/WebP-Renderer umgestellt: skalierbare Basis und Szenen, illustrierte Gegenstands-Layer mit gemeinsamen Ganzkoerper-Ankern.
 - Avatar-Auswahlkarten zeigen fuer unterstuetzte Slots eine echte Motivvorschau statt nur zwei Farbpunkte.
 - Portainer-Redeploy des SVG/WebP-Avatar-Slices erfolgreich; Backend `GET /api/health` liefert `ok`, Frontend und produktive WebP-Assets liefern HTTP `200`.

@@ -200,6 +200,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 - Frontend-Build nach Rueckkehr zur gemeinsamen Ganzkoerper-Geometrie erfolgreich.
 - Isolierte Browserpruefung mit vier stark unterschiedlichen Loadouts erfolgreich: vier sichtbare `360x520`-SVGs mit jeweils 65 bis 82 Pfaden, keine Konsolenfehler und bei `390x844` kein horizontaler Ueberlauf.
+- Portainer-Redeploy der Qualitaetskorrektur aus Commit `f3745cf` erfolgreich; LXC-Backend-Health `ok`, Frontend und Bundle HTTP `200`, Hybrid-Clip-Code entfernt und Picker-WebPs weiterhin ausgeliefert.
 - Vollstaendiger Workspace-Build nach Attachment-Rig-Umstellung erfolgreich; Frontend-Produktionsbundle liegt bei `641.08 kB` (`189.56 kB` gzip).
 - Reproduzierbarer Export und Alpha-Pruefung erfolgreich: alle 38 WebP-Assets besitzen echte Transparenz, keine Datei ist vollflaechig opak.
 - Isolierte Browserpruefung des Attachment-Rigs mit vier stark unterschiedlichen Ganzkoerper-Loadouts auf Desktop erfolgreich; auf `390x844` entsprechen `scrollWidth` und `innerWidth` jeweils `390`.
