@@ -19,19 +19,20 @@ class Asset:
     name: str
     box: tuple[int, int, int, int]
     trim_result: bool = True
+    remove_mannequin: bool = False
 
 
 ASSETS = [
-    # Hair keeps the blank mannequin face. The renderer places the image behind
-    # Questory's head and repeats only the upper fringe in front of the forehead.
-    Asset("hair-spiky-black", (1165, 57, 1255, 178), False),
-    Asset("hair-wavy-brown", (1259, 57, 1350, 178), False),
-    Asset("hair-long-blonde", (1354, 57, 1445, 178), False),
-    Asset("hair-short-red", (1449, 57, 1540, 178), False),
-    Asset("hair-curly-black", (1165, 184, 1255, 313), False),
-    Asset("hair-buns-pink", (1259, 184, 1350, 313), False),
-    Asset("hair-cap-red", (1354, 184, 1445, 313), False),
-    Asset("hair-braid-blonde", (1449, 184, 1540, 313), False),
+    # Hair keeps its original catalog canvas so every style shares one head
+    # origin. The blank mannequin face, ears and neck are removed separately.
+    Asset("hair-spiky-black", (1165, 57, 1255, 178), False, True),
+    Asset("hair-wavy-brown", (1259, 57, 1350, 178), False, True),
+    Asset("hair-long-blonde", (1354, 57, 1445, 178), False, True),
+    Asset("hair-short-red", (1449, 57, 1540, 178), False, True),
+    Asset("hair-curly-black", (1165, 184, 1255, 313), False, True),
+    Asset("hair-buns-pink", (1259, 184, 1350, 313), False, True),
+    Asset("hair-cap-red", (1354, 184, 1445, 313), False, True),
+    Asset("hair-braid-blonde", (1449, 184, 1540, 313), False, True),
     Asset("hat-cap-teal", (1165, 316, 1255, 396)),
     Asset("hat-wizard-purple", (1259, 316, 1350, 396)),
     Asset("hat-beanie-gold", (1354, 316, 1445, 396)),
@@ -158,6 +159,51 @@ def remove_edge_fragments(image: Image.Image) -> Image.Image:
     return cleaned
 
 
+def mannequin_mask(image: Image.Image) -> Image.Image:
+    width, height = image.size
+    mask = Image.new("L", image.size, 0)
+    draw = ImageDraw.Draw(mask)
+    draw.rounded_rectangle(
+        (
+            int(width * 0.17),
+            int(height * 0.35),
+            int(width * 0.83),
+            int(height * 0.95),
+        ),
+        radius=max(4, int(width * 0.2)),
+        fill=255,
+    )
+    draw.ellipse(
+        (
+            int(width * 0.05),
+            int(height * 0.45),
+            int(width * 0.36),
+            int(height * 0.87),
+        ),
+        fill=255,
+    )
+    draw.ellipse(
+        (
+            int(width * 0.64),
+            int(height * 0.45),
+            int(width * 0.95),
+            int(height * 0.87),
+        ),
+        fill=255,
+    )
+    draw.rounded_rectangle(
+        (
+            int(width * 0.25),
+            int(height * 0.74),
+            int(width * 0.75),
+            height,
+        ),
+        radius=max(2, int(width * 0.08)),
+        fill=255,
+    )
+    return mask.filter(ImageFilter.MaxFilter(3))
+
+
 def trim(image: Image.Image, padding: int = 4) -> Image.Image:
     box = image.getchannel("A").getbbox()
     if box is None:
@@ -205,6 +251,8 @@ def main() -> None:
     for asset in ASSETS:
         crop = original.crop(asset.box)
         masks = [edge_background_mask(crop)]
+        if asset.remove_mannequin:
+            masks.append(mannequin_mask(crop))
         transparent = remove_edge_fragments(make_transparent(crop, masks))
         result = trim(transparent) if asset.trim_result else transparent
         result.save(output / f"{asset.name}.webp", "WEBP", lossless=True, method=6)

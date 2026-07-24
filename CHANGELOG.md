@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Benanntes Paper-Doll-Attachment-Rig fuer den Avatar-Renderer hinzugefuegt: 38 WebP-Assets besitzen nun eigene Anker-, Ursprungs-, Groessen- und Offset-Metadaten.
 - 38 transparente, verlustfreie WebP-Illustrationslayer fuer Haare, Kleidung, Schuhe, Huete, Brillen, Rucksaecke, Kamera, Waffen und Tiere aus der freigegebenen Questory-Stilreferenz hinzugefuegt.
 - Reproduzierbare Avatar-Art-Exportpipeline `scripts/extract-avatar-art.py` mit Freistellung, Randfragment-Bereinigung und Kontaktbogen fuer visuelle Qualitaetspruefung hinzugefuegt.
 - Avatar-Auswahlkarten um echte Illustrationsvorschauen fuer die unterstuetzten Slots erweitert.
@@ -154,6 +155,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Changed
 
+- Avatar-Komposition von generischer Slot-Skalierung auf feste Attachment-Geometrien und eine explizite Ebenenfolge fuer Haar-Rueckseite, Rueckenobjekte, Koerper-Rig, Kleidung, Haende, Kopf/Gesicht, Haar-Vorderseite, Accessoires und Begleiter umgestellt.
+- Neutrales SVG-Koerper-Rig auf Hals, verdeckte Gliedmassen und Haende reduziert; WebP-Kleidung ist nun die einzige sichtbare Outfit-Ebene.
+- Avatar-Haarexport entfernt den leeren Modellkopf samt Ohren und Hals aus der Stilreferenz, bevor die WebP-Layer im Renderer eingefarbt werden.
 - Avatar-Darstellung von reinem SVG auf eine self-hosted Hybrid-Komposition aus skalierbarer SVG-Basis und transparenten WebP-Illustrationslayern umgestellt; Item-Keys, Unlocks und gespeicherte Loadouts bleiben kompatibel.
 - Avatar-Werkstatt vollstaendig vom Pixel-Look auf den `Soft Adventure`-Stil umgestellt: Ganzkoerper, Haare, Gesicht, Kleidung, Huete, Brillen, Waffen, Gadgets, Tiere und Szenen werden als zusammenpassende SVG-Layer gerendert.
 - Soft-Adventure-Zeichenengine an die freigegebene Abenteuerillustration angeglichen: kleinere kindliche Koepfe, ausdrucksvollere Augen, feinere Haarstraehnen und Lockentexturen, kuerzere Halsuebergaenge, weichere Cel-Shading-Flaechen, Stofffalten, differenzierte Cargo-Hosen und detailliertere Schuhe.
@@ -167,6 +171,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Doppelte Kleidungsumrisse, sichtbare Modellkopf-/Halsfragmente in Frisuren, Luecken an der Taille sowie uneinheitliche Schulter-, Schuh- und Bodenpositionen im Hybrid-Avatar korrigiert.
 - Haar-, Hut-, Brillen-, Kleidungs-, Schuh- und Begleiter-Layer auf gemeinsame Kopf-, Koerper- und Fussanker ausgerichtet; Caps und Zauberhut verdecken die Augen nicht mehr.
 - Avatar-Koerper grafisch ueberarbeitet: Oberteile, Arme, Hosen, Roecke, Kleider und Schuhe besitzen sauberere Silhouetten, feinere Uebergaenge sowie eigene Licht- und Schattenpixel.
 - Rueckkehr-Button aus dem Kindmodus neu platziert: `Zurueck in den Elternbereich` sitzt nun zentral oberhalb der Kindmodus-Karte statt in der engen Statuszeile.
@@ -190,6 +195,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Vollstaendiger Workspace-Build nach Attachment-Rig-Umstellung erfolgreich; Frontend-Produktionsbundle liegt bei `641.08 kB` (`189.56 kB` gzip).
+- Reproduzierbarer Export und Alpha-Pruefung erfolgreich: alle 38 WebP-Assets besitzen echte Transparenz, keine Datei ist vollflaechig opak.
+- Isolierte Browserpruefung des Attachment-Rigs mit vier stark unterschiedlichen Ganzkoerper-Loadouts auf Desktop erfolgreich; auf `390x844` entsprechen `scrollWidth` und `innerWidth` jeweils `390`.
 - Portainer-Redeploy des SVG/WebP-Avatar-Slices erfolgreich; LXC-Backend-Health `ok`, Frontend HTTP `200`, WebP-Asset HTTP `200` und produktives Bundle enthaelt die neue Art-Zuordnung.
 - Lokaler Frontend-Build und isolierter Browser-Test der SVG/WebP-Komposition mit vier stark unterschiedlichen Ganzkoerper-Loadouts erfolgreich; WebP-Layer laden, sind transparent und bleiben innerhalb der Avatar-Buehne.
 - Frontend-Build nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich.
