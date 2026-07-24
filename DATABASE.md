@@ -280,7 +280,7 @@ Slots:
 - `weapon`
 - `pet`
 
-`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` ist fuer spaetere Renderer/Asset-Pipelines vorbereitet.
+`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` ist fuer spaetere Renderer/Asset-Pipelines vorbereitet. Technische Item-Keys bleiben dauerhaft stabil, auch wenn sich der sichtbare Grafikstil aendert. Deshalb koennen einige kompatible Legacy-Keys weiterhin `pixel` enthalten; Migration `20260724214000_soft_adventure_avatar_labels` bereinigt nur sichtbare Namen und Beschreibungen.
 
 ### ChildAvatarItem
 
@@ -325,6 +325,7 @@ apps/backend/prisma/migrations/20260712162000_spontaneous_quests/migration.sql
 apps/backend/prisma/migrations/20260716103000_avatar_builder/migration.sql
 apps/backend/prisma/migrations/20260716193000_child_profile_details_and_avatar_extras/migration.sql
 apps/backend/prisma/migrations/20260724183000_reward_assignments/migration.sql
+apps/backend/prisma/migrations/20260724214000_soft_adventure_avatar_labels/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:

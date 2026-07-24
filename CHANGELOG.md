@@ -8,6 +8,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Questory-eigenen `SoftAdventureAvatarGraphic`-Renderer fuer einen weichen, modernen 2D-Ganzkoerperstil mit gemeinsamen Ankerpunkten fuer alle Avatar-Slots eingefuehrt.
+- Migration `20260724214000_soft_adventure_avatar_labels` bereinigt sichtbare Pixel-Bezeichnungen im Avatar-Katalog, ohne technische Keys oder gespeicherte Loadouts zu veraendern.
 - Pixelart-Avatar-Buehne auf ein feineres `64x96`-Raster erweitert; bestehende Item-Keys, Level-Freischaltungen und gespeicherte Loadouts bleiben unveraendert kompatibel.
 - Avatar-Szenen fuer Wiese, Nacht, Zimmer und Labor um zusaetzliche Pixelmotive und Tiefenebenen erweitert.
 - Migration `20260724191000_rewards_always_require_approval` setzt bestehende Shop-Belohnungen auf anfragepflichtig.
@@ -147,6 +149,15 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - `JwtAuthGuard` Provider-Export fuer Families/Users Module korrigiert.
 - `JwtModule` Export fuer Feature-Module mit JWT Guards ergaenzt.
 
+### Changed
+
+- Avatar-Werkstatt vollstaendig vom Pixel-Look auf den `Soft Adventure`-Stil umgestellt: Ganzkoerper, Haare, Gesicht, Kleidung, Huete, Brillen, Waffen, Gadgets, Tiere und Szenen werden als zusammenpassende SVG-Layer gerendert.
+
+### Removed
+
+- Alten Pixel-/Toon-Renderer mit rund 1.550 Zeilen ungenutztem Zeichen-Code entfernt.
+- `@dicebear/core` und `@dicebear/pixel-art` aus den Frontend-Abhaengigkeiten entfernt.
+
 ### Fixed
 
 - Avatar-Koerper grafisch ueberarbeitet: Oberteile, Arme, Hosen, Roecke, Kleider und Schuhe besitzen sauberere Silhouetten, feinere Uebergaenge sowie eigene Licht- und Schattenpixel.
@@ -171,6 +182,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Soft-Adventure-Umstellung erfolgreich.
+- Prisma Validate und Backend-Build nach Avatar-Label-Migration erfolgreich.
+- Isolierte Browserpruefung mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: kein horizontaler Ueberlauf, alle `360x520`-SVGs sichtbar und keine Browserwarnungen oder Konsolenfehler.
 - Frontend-Build nach Avatar-Grafikpolitur erfolgreich.
 - Isolierte Browser-Pruefung mit drei unterschiedlichen Avatar-Loadouts auf Desktop und `390x844`: alle `64x96`-SVGs bleiben im Rahmen, keine Browserwarnungen oder Konsolenfehler.
 - Portainer-Redeploy nach Avatar-Grafikpolitur erfolgreich; LXC-Backend-Health OK, Frontend HTTP `200` und neues Avatar-Bundle ausgeliefert.

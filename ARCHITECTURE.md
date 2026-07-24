@@ -90,7 +90,7 @@ Technologien:
 - TypeScript
 - Vite
 - Material UI
-- DiceBear Pixel Art fuer Kopf/Gesicht/Haar/Hut/Brille im Avatar-Renderer
+- Questory-eigener Soft-Adventure-SVG-Renderer fuer den modularen Ganzkoerper-Avatar
 
 Ziel:
 
@@ -119,7 +119,7 @@ Aktuell vorhanden:
 - Vorschlagsbibliotheken fuellen bestehende Quest- und Reward-Formulare, legen aber nichts automatisch an
 - Reward-Bilder werden weiterhin als `imageUrl` gespeichert. Das Frontend bietet einen kuratierten MDI/Iconify-Motiv-Picker, der normale HTTPS-URLs eintraegt; freie Bild-URLs bleiben moeglich und eigenes Asset-Hosting wird spaeter separat entschieden.
 - `avatarKey` bleibt als einfache Profilabzeichen-ID fuer kleine Badges erhalten. Der echte Avatar-Builder nutzt nun einen serverseitigen Avatar-Katalog, Level-Unlocks und `ChildAvatarLoadout` fuer ausgeruestete Kleidung, Brillen, Schuhe, Hintergruende, Mund, Waffen, Tiere und Gadgets.
-- Der Avatar-Builder ist in `apps/frontend/src/avatar-builder.tsx` gekapselt. Die visuelle Darstellung nutzt nun einen Pixelart-Renderer: Kopf/Gesicht/Haar/Hut/Brille werden ueber `@dicebear/core` mit dem einzelnen Stil `@dicebear/pixel-art` erzeugt, der Ganzkoerper-Sprite mit Kleidung, Hose, Schuhen, Waffen, Gadgets und Tieren wird im Questory-Frontend als eigenes SVG-Pixelraster gerendert. Die externe DiceBear-HTTP-API wird nicht genutzt; dadurch bleibt der Renderer self-hosted und reproduzierbar, ohne die komplette DiceBear-Collection zu buendeln. Die Zeichenbuehne verwendet intern ein `64x96`-Raster: bestehende Item-Keys und Layer-Vertraege bleiben stabil, waehrend Koerper, Kleidung und Szenen feinere Konturen, Lichtkanten und Schatten erhalten.
+- Der Avatar-Builder ist in `apps/frontend/src/avatar-builder.tsx` gekapselt; die reine Zeichenengine liegt getrennt in `apps/frontend/src/soft-avatar-renderer.tsx`. Der Soft-Adventure-Renderer erzeugt den kompletten Ganzkoerper als modulares SVG mit einem gemeinsamen Koordinatensystem fuer Kopf, Haare, Gesicht, Kleidung, Schuhe, Huete, Brillen, Waffen, Gadgets und Tiere. Dadurch passen Ueberlagerungen und Ankerpunkte ohne externe Avatar-API oder Bitmap-Abhaengigkeit zusammen.
 - Eltern/Admin koennen im Eltern-Dashboard ein Kinderprofil oeffnen und von dort Quests oder Shop fuer dieses Kind bedienen. Der umgekehrte Weg vom Kinderbereich in den Elternbereich bleibt durch getrennte JWT-Rollen geschuetzt und benoetigt Eltern-/Admin-Authentifizierung.
 
 ## Datenbank
@@ -142,7 +142,7 @@ Die erste Vorschlagsbibliothek ist statischer, versionierter Backend-Inhalt ohne
 
 XP und Coins haben bewusst getrennte Rollen: XP dient der langfristigen Progression mit Leveln und Avatar-/Gadget-Unlocks; Coins sind die kurzfristige Shop-Waehrung. Die kuratierten Vorschlaege halten Alltagsroutinen niedrig und groessere Rewards teuer, damit sich Familienbelohnungen ueber mehrere Quests verdient anfuehlen.
 
-Avatar-Items sind ein globaler Katalog in der Datenbank. Level-Freischaltungen werden beim Lesen aus `AvatarItem.requiredLevel` berechnet; `ChildAvatarItem` ist fuer manuelle, Event- oder Spezial-Unlocks vorbereitet. Ausgeruestete Teile liegen pro Kind in `ChildAvatarLoadout.equippedItems` als validiertes JSON. Aktive Slots sind `background`, `body`, `hair`, `eyes`, `mouth`, `hat`, `top`, `bottom`, `shoes`, `glasses`, `gadget`, `weapon` und `pet`. Das Frontend mappt Kopf-Items auf DiceBear/Pixel-Art-Optionen und rendert die zusaetzlichen Ausruestungen als eigene Pixel-SVG-Layer.
+Avatar-Items sind ein globaler Katalog in der Datenbank. Level-Freischaltungen werden beim Lesen aus `AvatarItem.requiredLevel` berechnet; `ChildAvatarItem` ist fuer manuelle, Event- oder Spezial-Unlocks vorbereitet. Ausgeruestete Teile liegen pro Kind in `ChildAvatarLoadout.equippedItems` als validiertes JSON. Aktive Slots sind `background`, `body`, `hair`, `eyes`, `mouth`, `hat`, `top`, `bottom`, `shoes`, `glasses`, `gadget`, `weapon` und `pet`. Der Soft-Adventure-Renderer mappt diese Slots auf eigene SVG-Layer; vorhandene Item-Keys und gespeicherte Loadouts bleiben trotz Stilwechsel kompatibel.
 
 Eltern/Admin muessen nicht in den Kinderlogin wechseln, um die App vollstaendig zu nutzen. Der Elternbereich verwaltet Kinderprofile, Quests, Shop, Freigaben und Avatare fuer jedes Kind ueber den Familienkontext. Der Kinderlogin ist nur fuer die eingeschraenkte Kinderansicht gedacht.
 
