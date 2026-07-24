@@ -152,6 +152,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Changed
 
 - Avatar-Werkstatt vollstaendig vom Pixel-Look auf den `Soft Adventure`-Stil umgestellt: Ganzkoerper, Haare, Gesicht, Kleidung, Huete, Brillen, Waffen, Gadgets, Tiere und Szenen werden als zusammenpassende SVG-Layer gerendert.
+- Soft-Adventure-Zeichenengine an die freigegebene Abenteuerillustration angeglichen: kleinere kindliche Koepfe, ausdrucksvollere Augen, feinere Haarstraehnen und Lockentexturen, kuerzere Halsuebergaenge, weichere Cel-Shading-Flaechen, Stofffalten, differenzierte Cargo-Hosen und detailliertere Schuhe.
+- Avatar-Szenen auf eine helle mint-/himmelblaue Abenteuerkulisse mit geometrischen Tiefenflaechen umgestellt.
+- Kamera, Stab, Zauberstab, Katze und Drache grafisch ausgearbeitet; Haende, Griffpunkte, Fell-/Schuppenflaechen, Pfoten und Gesichtdetails sind nun Teil der modularen Layer.
 
 ### Removed
 
@@ -182,6 +185,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich.
+- Isolierter Browser-Test mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: alle `360x520`-SVGs sichtbar, `scrollWidth` entspricht `innerWidth`, keine horizontale Ueberbreite.
 - Frontend-Build nach Soft-Adventure-Umstellung erfolgreich.
 - Prisma Validate und Backend-Build nach Avatar-Label-Migration erfolgreich.
 - Isolierte Browserpruefung mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: kein horizontaler Ueberlauf, alle `360x520`-SVGs sichtbar und keine Browserwarnungen oder Konsolenfehler.

@@ -27,7 +27,8 @@ interface SoftAdventureAvatarGraphicProps {
   style?: CSSProperties;
 }
 
-const OUTLINE = '#3f342f';
+const OUTLINE = '#3a2923';
+const OUTLINE_SOFT = '#6f4b3d';
 
 export function SoftAdventureAvatarGraphic({
   ariaLabel,
@@ -71,8 +72,8 @@ export function SoftAdventureAvatarGraphic({
           <stop offset="100%" stopColor={background?.colorPrimary ?? '#d9f2df'} />
         </linearGradient>
         <linearGradient id="soft-skin" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor={lightenColor(skin, 0.15)} />
-          <stop offset="72%" stopColor={skin} />
+          <stop offset="0%" stopColor={lightenColor(skin, 0.19)} />
+          <stop offset="58%" stopColor={skin} />
           <stop offset="100%" stopColor={skinShadow} />
         </linearGradient>
         <linearGradient id="soft-top" x1="0" x2="1" y1="0" y2="1">
@@ -87,20 +88,31 @@ export function SoftAdventureAvatarGraphic({
           <stop offset="0%" stopColor={lightenColor(shoeColor, 0.15)} />
           <stop offset="100%" stopColor={shoeColor} />
         </linearGradient>
+        <linearGradient id="soft-hair" x1="0" x2="0.9" y1="0" y2="1">
+          <stop offset="0%" stopColor={lightenColor(hairColor, 0.18)} />
+          <stop offset="55%" stopColor={hairColor} />
+          <stop offset="100%" stopColor={hairAccent} />
+        </linearGradient>
+        <radialGradient id="soft-cheek" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#e87573" stopOpacity="0.32" />
+          <stop offset="100%" stopColor="#e87573" stopOpacity="0" />
+        </radialGradient>
         <filter id="soft-shadow" x="-30%" y="-30%" width="160%" height="170%">
-          <feDropShadow dx="0" dy="8" stdDeviation="7" floodColor="#263447" floodOpacity="0.2" />
+          <feDropShadow dx="0" dy="8" stdDeviation="6" floodColor="#263447" floodOpacity="0.2" />
         </filter>
         <filter id="soft-small-shadow" x="-40%" y="-40%" width="180%" height="190%">
           <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#263447" floodOpacity="0.18" />
         </filter>
       </defs>
 
-      <rect width="360" height="520" fill="url(#soft-bg)" />
+      <rect width="360" height="520" fill="#fffaf0" />
       <SoftBackground item={background} />
-      <ellipse cx="180" cy="460" rx="100" ry="18" fill="#253044" opacity="0.14" />
+      <ellipse cx="180" cy="466" rx="105" ry="17" fill="#253044" opacity="0.16" />
 
       <g filter="url(#soft-shadow)">
-        <SoftHairBack itemKey={hair?.key} color={hairColor} accent={hairAccent} />
+        <g transform="translate(25.2 13) scale(0.86)">
+          <SoftHairBack itemKey={hair?.key} color={hairColor} accent={hairAccent} />
+        </g>
         <SoftBackGadget item={gadget} />
         <SoftWeapon item={weapon} />
         <SoftBody
@@ -114,11 +126,15 @@ export function SoftAdventureAvatarGraphic({
           topAccent={topAccent}
           topColor={topColor}
         />
-        <SoftHead skin={skin} skinShadow={skinShadow} />
-        <SoftFace eyes={eyes} eyesColor={eyesColor} mouth={mouth} skin={skin} />
-        <SoftHairFront itemKey={hair?.key} color={hairColor} accent={hairAccent} />
-        <SoftHat item={hat} hairColor={hairColor} />
-        <SoftGlasses item={glasses} />
+        <g transform="translate(25.2 13) scale(0.86)">
+          <SoftHead skin={skin} skinShadow={skinShadow} />
+          <SoftFace eyes={eyes} eyesColor={eyesColor} mouth={mouth} skin={skin} />
+          <SoftHairFront itemKey={hair?.key} color={hairColor} accent={hairAccent} />
+          <SoftHat item={hat} hairColor={hairColor} />
+          <g transform="translate(18 10.2) scale(0.9)">
+            <SoftGlasses item={glasses} />
+          </g>
+        </g>
         <SoftFrontGadget item={gadget} />
       </g>
       <SoftPet item={pet} />
@@ -184,16 +200,17 @@ function SoftBackground({ item }: { item: SoftAvatarItem | undefined }) {
 
   return (
     <g>
-      <path d="M0 350 C70 298 126 340 180 303 C235 267 292 307 360 252 V520 H0 Z" fill={accent} opacity="0.5" />
-      <path d="M0 403 C66 375 117 407 173 381 C237 351 298 384 360 349 V520 H0 Z" fill={darkenColor(accent, 0.12)} opacity="0.36" />
-      <g fill="#ffffff" opacity="0.34">
-        <circle cx="46" cy="342" r="34" />
-        <circle cx="310" cy="328" r="43" />
-        <circle cx="333" cy="295" r="22" />
+      <path d="M15 24 L232 70 L183 392 L0 358 Z" fill={lightenColor(item?.colorPrimary ?? '#bfe8d6', 0.14)} />
+      <path d="M234 39 L360 0 V382 L191 389 Z" fill="#b8e8f5" opacity="0.86" />
+      <path d="M0 366 C73 350 120 379 180 365 C248 349 302 372 360 350 V520 H0 Z" fill={accent} opacity="0.48" />
+      <path d="M0 430 C72 414 124 438 181 426 C241 414 300 431 360 411 V520 H0 Z" fill={darkenColor(accent, 0.12)} opacity="0.28" />
+      <g fill="#ffffff" opacity="0.26">
+        <circle cx="42" cy="362" r="34" />
+        <circle cx="318" cy="345" r="46" />
       </g>
-      <g fill="#f7d755">
-        <circle cx="48" cy="404" r="5" />
-        <circle cx="315" cy="391" r="4" />
+      <g fill="#f1c83b">
+        <circle cx="46" cy="422" r="4" />
+        <circle cx="316" cy="404" r="4" />
       </g>
     </g>
   );
@@ -226,12 +243,20 @@ function SoftBody({
 
   return (
     <g>
-      <path d="M157 165 H203 L205 207 H155 Z" fill="url(#soft-skin)" stroke={OUTLINE} strokeOpacity="0.18" strokeWidth="2" />
+      <path
+        d="M158 162 C164 176 196 176 202 162 L204 207 H156 Z"
+        fill="url(#soft-skin)"
+        stroke={OUTLINE}
+        strokeLinejoin="round"
+        strokeWidth="3"
+      />
 
       {isDress || isSkirt || isShorts ? (
         <g>
-          <path d="M139 333 L136 421" stroke="url(#soft-skin)" strokeLinecap="round" strokeWidth="25" />
-          <path d="M221 333 L224 421" stroke="url(#soft-skin)" strokeLinecap="round" strokeWidth="25" />
+          <path d="M143 333 L139 423" stroke={OUTLINE} strokeLinecap="round" strokeWidth="31" />
+          <path d="M217 333 L221 423" stroke={OUTLINE} strokeLinecap="round" strokeWidth="31" />
+          <path d="M143 333 L139 423" stroke="url(#soft-skin)" strokeLinecap="round" strokeWidth="25" />
+          <path d="M217 333 L221 423" stroke="url(#soft-skin)" strokeLinecap="round" strokeWidth="25" />
         </g>
       ) : (
         <SoftPants item={bottom} color={bottomColor} accent={bottomAccent} />
@@ -242,18 +267,34 @@ function SoftBody({
 
       <SoftBackCape item={top} />
       <path
-        d="M124 203 C143 184 217 184 236 203 C224 237 221 277 226 319 C210 332 150 332 134 319 C139 276 136 237 124 203 Z"
+        d="M145 199 C150 181 164 176 180 181 C196 176 210 181 215 199 L207 216 C194 210 166 210 153 216 Z"
         fill="url(#soft-top)"
         stroke={OUTLINE}
-        strokeOpacity="0.28"
-        strokeWidth="3"
+        strokeLinejoin="round"
+        strokeWidth="3.5"
       />
-      <path d="M139 203 C147 217 213 217 221 203" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.28" />
+      <path
+        d="M126 205 C139 186 159 183 180 187 C201 183 221 186 234 205 C226 240 224 281 228 319 C210 334 150 334 132 319 C136 281 134 240 126 205 Z"
+        fill="url(#soft-top)"
+        stroke={OUTLINE}
+        strokeLinejoin="round"
+        strokeWidth="4"
+      />
+      <path
+        d="M207 193 C224 199 229 213 227 235 L224 304 C213 316 203 319 195 320 C204 284 205 237 207 193 Z"
+        fill={topAccent}
+        opacity="0.2"
+      />
+      <path d="M137 224 C151 217 164 218 176 222" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="3" opacity="0.22" />
+      <path d="M139 204 C149 216 211 216 221 204" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.32" />
+      <path d="M136 309 C155 319 205 319 224 309" fill="none" stroke={topAccent} strokeLinecap="round" strokeWidth="4" opacity="0.5" />
       <SoftSleeves skin={skin} top={top} topColor={topColor} />
       <SoftTopDetails item={top} color={topColor} accent={topAccent} />
       {isDress ? <SoftDress item={top} color={topColor} accent={topAccent} /> : null}
 
-      <SoftShoes item={shoes} accent={shoeAccent} />
+      <g transform="translate(25.2 0) scale(0.86 1)">
+        <SoftShoes item={shoes} accent={shoeAccent} />
+      </g>
     </g>
   );
 }
@@ -270,21 +311,46 @@ function SoftSleeves({ skin, top, topColor }: { skin: string; top: SoftAvatarIte
 
   return (
     <g>
-      <path d="M133 213 C109 239 108 293 124 326" fill="none" stroke={longSleeve ? topColor : 'url(#soft-skin)'} strokeLinecap="round" strokeWidth="25" />
-      <path d="M227 213 C251 239 252 293 236 326" fill="none" stroke={longSleeve ? topColor : 'url(#soft-skin)'} strokeLinecap="round" strokeWidth="25" />
       {longSleeve ? (
         <g>
-          <circle cx="124" cy="329" r="13" fill="url(#soft-skin)" />
-          <circle cx="236" cy="329" r="13" fill="url(#soft-skin)" />
-          <path d="M124 307 L127 316 M236 307 L233 316" stroke="#ffffff" strokeLinecap="round" strokeWidth="4" opacity="0.25" />
+          <path
+            d="M135 207 C118 211 108 231 107 256 C107 277 112 302 115 321 C117 332 129 338 138 331 C144 326 141 317 137 307 C132 286 130 265 133 247 C135 231 142 222 148 216 Z"
+            fill={topColor}
+            stroke={OUTLINE}
+            strokeLinejoin="round"
+            strokeWidth="4"
+          />
+          <path
+            d="M225 207 C242 211 252 231 253 256 C253 277 248 302 245 321 C243 332 231 338 222 331 C216 326 219 317 223 307 C228 286 230 265 227 247 C225 231 218 222 212 216 Z"
+            fill={topColor}
+            stroke={OUTLINE}
+            strokeLinejoin="round"
+            strokeWidth="4"
+          />
+          <path d="M119 312 C123 319 132 321 139 315 M241 312 C237 319 228 321 221 315" fill="none" stroke={lightenColor(topColor, 0.22)} strokeLinecap="round" strokeWidth="4" opacity="0.58" />
+          <path d="M117 326 C116 338 126 346 136 340 C142 336 141 328 137 322 C132 327 124 329 117 326 Z" fill="url(#soft-skin)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+          <path d="M243 326 C244 338 234 346 224 340 C218 336 219 328 223 322 C228 327 236 329 243 326 Z" fill="url(#soft-skin)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+          <path d="M121 332 C125 336 130 337 134 334 M239 332 C235 336 230 337 226 334" fill="none" stroke={OUTLINE_SOFT} strokeLinecap="round" strokeWidth="2" opacity="0.55" />
         </g>
       ) : (
         <g>
-          <circle cx="124" cy="329" r="13" fill="url(#soft-skin)" />
-          <circle cx="236" cy="329" r="13" fill="url(#soft-skin)" />
-          <path d="M119 213 C126 204 135 202 143 209 L139 239 C130 232 122 228 114 229 Z" fill={topColor} />
-          <path d="M241 213 C234 204 225 202 217 209 L221 239 C230 232 238 228 246 229 Z" fill={topColor} />
-          <path d="M118 228 C126 225 134 229 140 236 M242 228 C234 225 226 229 220 236" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="4" opacity="0.25" />
+          <path d="M137 207 C120 209 112 218 109 232 C118 239 129 242 140 240 L148 216 Z" fill={topColor} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+          <path d="M223 207 C240 209 248 218 251 232 C242 239 231 242 220 240 L212 216 Z" fill={topColor} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+          <path
+            d="M111 231 C106 254 108 285 115 321 C117 333 129 340 138 333 C144 327 140 318 137 307 C132 283 131 258 140 239 C130 241 120 238 111 231 Z"
+            fill="url(#soft-skin)"
+            stroke={OUTLINE}
+            strokeLinejoin="round"
+            strokeWidth="4"
+          />
+          <path
+            d="M249 231 C254 254 252 285 245 321 C243 333 231 340 222 333 C216 327 220 318 223 307 C228 283 229 258 220 239 C230 241 240 238 249 231 Z"
+            fill="url(#soft-skin)"
+            stroke={OUTLINE}
+            strokeLinejoin="round"
+            strokeWidth="4"
+          />
+          <path d="M118 325 C119 338 128 343 138 334 M242 325 C241 338 232 343 222 334" fill="none" stroke={OUTLINE_SOFT} strokeLinecap="round" strokeWidth="2" opacity="0.5" />
         </g>
       )}
     </g>
@@ -292,21 +358,32 @@ function SoftSleeves({ skin, top, topColor }: { skin: string; top: SoftAvatarIte
 }
 
 function SoftPants({ item, color, accent }: { item: SoftAvatarItem | undefined; color: string; accent: string }) {
+  const cargo = Boolean(item?.key.includes('cargo'));
+  const pantsPath = cargo
+    ? 'M129 307 C150 321 210 321 231 307 L229 363 C225 381 225 406 221 426 C212 432 199 432 188 425 L180 337 L172 425 C161 432 148 432 139 426 C135 406 135 381 131 363 Z'
+    : 'M132 309 C151 321 209 321 228 309 L220 426 C211 431 198 431 188 425 L180 337 L172 425 C162 431 149 431 140 426 Z';
+
   return (
     <g>
       <path
-        d="M132 309 C151 321 209 321 228 309 L218 424 H187 L180 334 L173 424 H142 Z"
+        d={pantsPath}
         fill="url(#soft-bottom)"
         stroke={OUTLINE}
-        strokeOpacity="0.26"
-        strokeWidth="3"
+        strokeLinejoin="round"
+        strokeWidth="4"
       />
-      <path d="M180 334 V420" stroke={darkenColor(color, 0.2)} strokeLinecap="round" strokeWidth="4" opacity="0.4" />
-      {item?.key.includes('cargo') ? (
+      <path d="M205 321 C215 322 220 320 226 316 L220 422 C211 428 204 428 198 426 L190 340 C197 335 201 328 205 321 Z" fill={accent} opacity="0.22" />
+      <path d="M180 334 V422" stroke={darkenColor(color, 0.24)} strokeLinecap="round" strokeWidth="4" opacity="0.58" />
+      <path d="M145 326 C158 334 202 334 215 326" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="4" opacity="0.52" />
+      <path d="M148 345 C152 351 161 353 168 350 M212 345 C208 351 199 353 192 350" fill="none" stroke={lightenColor(color, 0.24)} strokeLinecap="round" strokeWidth="3" opacity="0.5" />
+      <path d="M146 397 C152 402 160 403 168 399 M214 397 C208 402 200 403 192 399" fill="none" stroke={darkenColor(color, 0.24)} strokeLinecap="round" strokeWidth="3" opacity="0.38" />
+      {cargo ? (
         <g fill={accent}>
-          <rect x="139" y="353" width="27" height="22" rx="6" />
-          <rect x="194" y="353" width="27" height="22" rx="6" />
-          <path d="M143 358 H162 M198 358 H217" stroke="#ffffff" strokeWidth="3" opacity="0.32" />
+          <path d="M132 347 C142 343 155 344 166 350 L164 378 C154 382 142 380 134 374 Z" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+          <path d="M228 347 C218 343 205 344 194 350 L196 378 C206 382 218 380 226 374 Z" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+          <path d="M138 353 H160 M200 353 H222" stroke="#ffffff" strokeLinecap="round" strokeWidth="3" opacity="0.38" />
+          <circle cx="153" cy="362" r="2.5" fill={lightenColor(accent, 0.42)} />
+          <circle cx="207" cy="362" r="2.5" fill={lightenColor(accent, 0.42)} />
         </g>
       ) : null}
       {item?.key.includes('checker') ? (
@@ -356,10 +433,11 @@ function SoftSkirt({ item, color, accent }: { item: SoftAvatarItem | undefined; 
         d="M137 305 H223 L240 362 C215 377 145 377 120 362 Z"
         fill={color}
         stroke={OUTLINE}
-        strokeOpacity="0.24"
-        strokeWidth="3"
+        strokeLinejoin="round"
+        strokeWidth="4"
       />
       <path d="M138 316 H222" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.7" />
+      <path d="M151 319 L146 365 M180 319 V371 M209 319 L214 365" fill="none" stroke={darkenColor(color, 0.22)} strokeLinecap="round" strokeWidth="3" opacity="0.48" />
       {item?.key.includes('striped') || item?.key.includes('rainbow') ? (
         <path d="M128 343 C151 353 209 353 232 343" fill="none" stroke={item.key.includes('rainbow') ? '#49bfa8' : accent} strokeWidth="7" />
       ) : null}
@@ -382,11 +460,12 @@ function SoftDress({ item, color, accent }: { item: SoftAvatarItem | undefined; 
         d="M137 284 H223 L247 377 C216 394 144 394 113 377 Z"
         fill={color}
         stroke={OUTLINE}
-        strokeOpacity="0.25"
-        strokeWidth="3"
+        strokeLinejoin="round"
+        strokeWidth="4"
       />
       <path d="M134 303 C158 316 202 316 226 303" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.72" />
       <path d="M125 365 C154 378 206 378 235 365" fill="none" stroke={lightenColor(accent, 0.12)} strokeLinecap="round" strokeWidth="6" opacity="0.6" />
+      <path d="M151 313 L142 373 M180 313 V383 M209 313 L218 373" fill="none" stroke={darkenColor(color, 0.2)} strokeLinecap="round" strokeWidth="3" opacity="0.42" />
       {item?.key.includes('flower') ? (
         <g fill={accent}>
           <circle cx="155" cy="333" r="7" />
@@ -421,9 +500,13 @@ function SoftTopDetails({ item, color, accent }: { item: SoftAvatarItem | undefi
   if (key.includes('hoodie')) {
     return (
       <g>
-        <path d="M145 194 C151 177 209 177 215 194 L207 218 C194 210 166 210 153 218 Z" fill={darkenColor(color, 0.08)} />
-        <path d="M160 207 L156 247 M200 207 L204 247" stroke="#f7f2e9" strokeLinecap="round" strokeWidth="4" />
-        <path d="M151 285 H209" stroke={accent} strokeLinecap="round" strokeWidth="8" opacity="0.7" />
+        <path d="M143 198 C146 176 162 167 180 174 C198 167 214 176 217 198 L207 220 C196 211 164 211 153 220 Z" fill={darkenColor(color, 0.12)} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3.5" />
+        <path d="M158 206 L156 246 M202 206 L204 246" stroke="#f7f2e9" strokeLinecap="round" strokeWidth="4" />
+        <circle cx="156" cy="247" r="4.5" fill="#f7f2e9" stroke={OUTLINE} strokeWidth="1.5" />
+        <circle cx="204" cy="247" r="4.5" fill="#f7f2e9" stroke={OUTLINE} strokeWidth="1.5" />
+        <path d="M146 274 C156 264 204 264 214 274 L210 301 C193 309 167 309 150 301 Z" fill={darkenColor(color, 0.08)} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" opacity="0.92" />
+        <path d="M158 282 C170 288 190 288 202 282" fill="none" stroke={lightenColor(color, 0.28)} strokeLinecap="round" strokeWidth="3" opacity="0.54" />
+        <path d="M139 309 C159 318 201 318 221 309" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.72" />
       </g>
     );
   }
@@ -464,7 +547,8 @@ function SoftTopDetails({ item, color, accent }: { item: SoftAvatarItem | undefi
 
   return (
     <g>
-      <path d="M148 198 L180 224 L212 198" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.78" />
+      <path d="M148 198 L180 219 L212 198" fill="none" stroke={accent} strokeLinecap="round" strokeLinejoin="round" strokeWidth="7" opacity="0.78" />
+      <path d="M145 306 C160 314 200 314 215 306" fill="none" stroke={darkenColor(color, 0.18)} strokeLinecap="round" strokeWidth="3" opacity="0.42" />
       <SoftShirtMotif itemKey={key} color={color} accent={accent} />
     </g>
   );
@@ -566,16 +650,21 @@ function SoftShoes({ item, accent }: { item: SoftAvatarItem | undefined; accent:
     <g>
       {isBoot ? (
         <g>
-          <path d="M116 385 H164 V445 C153 457 119 457 105 446 L116 426 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeOpacity="0.28" strokeWidth="3" />
-          <path d="M196 385 H244 L255 446 C241 457 207 457 196 445 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeOpacity="0.28" strokeWidth="3" />
-          <path d="M119 406 H158 M202 406 H241" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.7" />
+          <path d="M116 384 H164 V444 C152 458 118 459 102 447 L113 425 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+          <path d="M196 384 H244 L258 447 C242 459 208 458 196 444 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+          <path d="M147 388 H163 V439 C153 448 145 449 137 448 C147 431 149 408 147 388 Z M213 388 H243 L252 443 C244 449 235 450 226 447 C236 429 232 405 213 388 Z" fill={accent} opacity="0.2" />
+          <path d="M119 406 H158 M202 406 H241" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.78" />
+          <path d="M111 444 C127 449 149 449 162 443 M198 443 C211 449 233 449 249 444" fill="none" stroke={darkenColor(accent, 0.18)} strokeLinecap="round" strokeWidth="5" />
+          <path d="M126 414 l25 20 M151 414 l-25 20 M209 414 l25 20 M234 414 l-25 20" fill="none" stroke="#f8f2e7" strokeLinecap="round" strokeWidth="3" opacity="0.74" />
         </g>
       ) : (
         <g>
-          <path d="M111 418 C128 407 153 408 165 423 L164 448 C145 458 112 456 99 445 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeOpacity="0.28" strokeWidth="3" />
-          <path d="M249 418 C232 407 207 408 195 423 L196 448 C215 458 248 456 261 445 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeOpacity="0.28" strokeWidth="3" />
-          <path d="M115 430 H153 M207 430 H245" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.75" />
-          <path d="M105 446 H162 M198 446 H255" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.78" />
+          <path d="M111 416 C128 405 153 407 166 423 L164 449 C145 460 111 458 97 446 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+          <path d="M249 416 C232 405 207 407 194 423 L196 449 C215 460 249 458 263 446 Z" fill="url(#soft-shoes)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+          <path d="M146 413 C156 415 163 420 166 426 L164 447 C154 453 145 454 136 454 C150 442 153 426 146 413 Z M214 413 C204 415 197 420 194 426 L196 447 C206 453 215 454 224 454 C210 442 207 426 214 413 Z" fill={accent} opacity="0.18" />
+          <path d="M119 425 l30 18 M149 425 l-30 18 M211 425 l30 18 M241 425 l-30 18" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="3.5" opacity="0.88" />
+          <path d="M105 447 H162 M198 447 H255" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.9" />
+          <path d="M107 453 C125 458 146 458 161 452 M199 452 C214 458 235 458 253 453" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="3" opacity="0.78" />
         </g>
       )}
       {item?.key.includes('glow') || item?.key.includes('gold') ? (
@@ -591,18 +680,22 @@ function SoftShoes({ item, accent }: { item: SoftAvatarItem | undefined; accent:
 function SoftHead({ skin, skinShadow }: { skin: string; skinShadow: string }) {
   return (
     <g>
-      <ellipse cx="117" cy="116" rx="15" ry="23" fill={skinShadow} opacity="0.9" />
-      <ellipse cx="243" cy="116" rx="15" ry="23" fill={skinShadow} opacity="0.9" />
+      <path d="M123 99 C106 94 101 108 106 124 C110 137 120 141 130 134" fill="url(#soft-skin)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3.5" />
+      <path d="M237 99 C254 94 259 108 254 124 C250 137 240 141 230 134" fill="url(#soft-skin)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3.5" />
+      <path d="M113 112 C119 107 124 111 125 120 M247 112 C241 107 236 111 235 120" fill="none" stroke={skinShadow} strokeLinecap="round" strokeWidth="3" opacity="0.65" />
       <path
-        d="M180 33 C140 33 117 62 117 106 C117 149 141 176 180 181 C219 176 243 149 243 106 C243 62 220 33 180 33 Z"
+        d="M180 31 C140 31 119 59 119 102 C119 146 140 174 180 183 C220 174 241 146 241 102 C241 59 220 31 180 31 Z"
         fill="url(#soft-skin)"
         stroke={OUTLINE}
-        strokeOpacity="0.28"
-        strokeWidth="3"
+        strokeLinejoin="round"
+        strokeWidth="4"
       />
-      <path d="M137 140 C150 165 210 165 223 140 C210 174 150 174 137 140 Z" fill={skinShadow} opacity="0.18" />
-      <ellipse cx="143" cy="132" rx="16" ry="7" fill="#e77878" opacity="0.13" />
-      <ellipse cx="217" cy="132" rx="16" ry="7" fill="#e77878" opacity="0.13" />
+      <path d="M210 42 C230 56 239 76 239 103 C239 143 219 168 180 180 C201 162 208 141 209 110 C210 82 205 60 210 42 Z" fill={skinShadow} opacity="0.14" />
+      <path d="M137 70 C144 51 160 41 178 39" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.2" />
+      <path d="M133 137 C147 166 211 166 227 137 C215 170 199 179 180 183 C161 179 145 170 133 137 Z" fill={skinShadow} opacity="0.16" />
+      <ellipse cx="143" cy="132" rx="21" ry="12" fill="url(#soft-cheek)" />
+      <ellipse cx="217" cy="132" rx="21" ry="12" fill="url(#soft-cheek)" />
+      <path d="M131 61 C146 40 171 34 192 36" fill="none" stroke="#ffffff" strokeLinecap="round" strokeWidth="7" opacity="0.12" />
     </g>
   );
 }
@@ -625,12 +718,13 @@ function SoftFace({
     <g>
       <SoftEyes itemKey={eyeKey} color={eyesColor} />
       <SoftEyebrows itemKey={eyeKey} color={browColor} />
-      <path d="M180 106 C174 115 174 123 182 126" fill="none" stroke={darkenColor(skin, 0.22)} strokeLinecap="round" strokeWidth="3" opacity="0.55" />
+      <path d="M178 106 C174 116 174 124 182 127" fill="none" stroke={darkenColor(skin, 0.25)} strokeLinecap="round" strokeWidth="2.5" opacity="0.62" />
+      <path d="M174 129 C178 132 183 132 187 129" fill="none" stroke={darkenColor(skin, 0.2)} strokeLinecap="round" strokeWidth="1.7" opacity="0.38" />
+      <circle cx="165" cy="128" r="1.7" fill={darkenColor(skin, 0.2)} opacity="0.42" />
+      <circle cx="157" cy="125" r="1.4" fill={darkenColor(skin, 0.2)} opacity="0.38" />
+      <circle cx="195" cy="128" r="1.7" fill={darkenColor(skin, 0.2)} opacity="0.42" />
+      <circle cx="203" cy="125" r="1.4" fill={darkenColor(skin, 0.2)} opacity="0.38" />
       <SoftMouth item={mouth} />
-      <g fill="#ffffff" opacity="0.76">
-        <circle cx="125" cy="83" r="2.5" />
-        <circle cx="235" cy="86" r="2" />
-      </g>
     </g>
   );
 }
@@ -638,9 +732,9 @@ function SoftFace({
 function SoftEyes({ itemKey, color }: { itemKey: string; color: string }) {
   if (itemKey.includes('smile') || itemKey.includes('happy-arc')) {
     return (
-      <g fill="none" stroke={darkenColor(color, 0.25)} strokeLinecap="round" strokeWidth="5">
-        <path d="M137 103 C144 95 154 95 161 103" />
-        <path d="M199 103 C206 95 216 95 223 103" />
+      <g fill="none" stroke={OUTLINE} strokeLinecap="round" strokeWidth="4">
+        <path d="M136 103 C144 94 155 94 163 103" />
+        <path d="M197 103 C205 94 216 94 224 103" />
       </g>
     );
   }
@@ -656,7 +750,7 @@ function SoftEyes({ itemKey, color }: { itemKey: string; color: string }) {
 
   if (itemKey.includes('sleepy') || itemKey.includes('calm')) {
     return (
-      <g fill="none" stroke={darkenColor(color, 0.25)} strokeLinecap="round" strokeWidth="5">
+      <g fill="none" stroke={OUTLINE} strokeLinecap="round" strokeWidth="4">
         <path d="M136 101 C145 107 154 107 162 101" />
         <path d="M198 101 C206 107 215 107 224 101" />
       </g>
@@ -684,10 +778,14 @@ function SoftEyes({ itemKey, color }: { itemKey: string; color: string }) {
 function SoftOpenEye({ cx, color, round = false }: { cx: number; color: string; round?: boolean }) {
   return (
     <g>
-      <ellipse cx={cx} cy="103" rx={round ? 14 : 13} ry={round ? 16 : 13} fill="#ffffff" />
-      <circle cx={cx} cy="104" r={round ? 8 : 7} fill={color} />
-      <circle cx={cx} cy="104" r="3.5" fill={darkenColor(color, 0.55)} />
-      <circle cx={cx - 2.5} cy="100" r="2.5" fill="#ffffff" />
+      <ellipse cx={cx} cy="103" rx={round ? 14.5 : 13.5} ry={round ? 16 : 14.5} fill="#fffdf8" stroke={OUTLINE} strokeWidth="2.7" />
+      <ellipse cx={cx} cy="104" rx={round ? 9.5 : 8.7} ry={round ? 11.5 : 10.3} fill={darkenColor(color, 0.25)} />
+      <ellipse cx={cx} cy="103" rx={round ? 7.2 : 6.5} ry={round ? 8.8 : 7.8} fill={color} />
+      <ellipse cx={cx} cy="106" rx="3.5" ry="4.8" fill={darkenColor(color, 0.72)} />
+      <circle cx={cx - 3.2} cy="97.5" r="3.3" fill="#ffffff" />
+      <circle cx={cx + 3.7} cy="108.5" r="1.5" fill="#ffffff" opacity="0.9" />
+      <path d={`M${cx - 13} 97 C${cx - 6} 88 ${cx + 7} 88 ${cx + 13} 97`} fill="none" stroke={OUTLINE} strokeLinecap="round" strokeWidth="3.4" />
+      <path d={`M${cx - 13} 96 l-5 -3 M${cx + 13} 96 l5 -3`} stroke={OUTLINE} strokeLinecap="round" strokeWidth="2.2" />
     </g>
   );
 }
@@ -695,9 +793,9 @@ function SoftOpenEye({ cx, color, round = false }: { cx: number; color: string; 
 function SoftEyebrows({ itemKey, color }: { itemKey: string; color: string }) {
   const determined = itemKey.includes('focus') || itemKey.includes('determined') || itemKey.includes('night');
   return (
-    <g fill="none" stroke={color} strokeLinecap="round" strokeWidth="5">
-      <path d={determined ? 'M134 81 L162 88' : 'M135 85 C145 79 154 79 163 85'} />
-      <path d={determined ? 'M226 81 L198 88' : 'M197 85 C206 79 215 79 225 85'} />
+    <g fill="none" stroke={color} strokeLinecap="round" strokeWidth="4.5">
+      <path d={determined ? 'M134 77 L163 84' : 'M134 81 C145 74 155 75 164 81'} />
+      <path d={determined ? 'M226 77 L197 84' : 'M196 81 C205 75 215 74 226 81'} />
     </g>
   );
 }
@@ -713,8 +811,9 @@ function SoftMouth({ item }: { item: SoftAvatarItem | undefined }) {
   if (key.includes('laugh') || key.includes('open-happy') || key.includes('grin')) {
     return (
       <g>
-        <path d="M157 139 C168 153 192 153 203 139 C202 164 158 164 157 139 Z" fill={color} />
-        <path d="M164 145 C173 149 187 149 196 145" stroke="#ffffff" strokeLinecap="round" strokeWidth="5" opacity="0.88" />
+        <path d="M157 140 C168 151 192 151 203 140 C202 166 158 166 157 140 Z" fill={darkenColor(color, 0.2)} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="2.5" />
+        <path d="M162 144 C173 149 187 149 198 144" stroke="#ffffff" strokeLinecap="round" strokeWidth="6" opacity="0.95" />
+        <path d="M169 158 C177 153 186 153 193 158" fill="none" stroke="#e97982" strokeLinecap="round" strokeWidth="5" />
       </g>
     );
   }
@@ -740,7 +839,12 @@ function SoftMouth({ item }: { item: SoftAvatarItem | undefined }) {
     return <path d="M174 146 H186" stroke={color} strokeLinecap="round" strokeWidth="4" />;
   }
 
-  return <path d="M160 141 C171 157 190 157 201 141" fill="none" stroke={color} strokeLinecap="round" strokeWidth={key.includes('small') || key.includes('soft') ? 4 : 5} />;
+  return (
+    <g>
+      <path d="M159 141 C171 156 189 156 201 141" fill="none" stroke={OUTLINE} strokeLinecap="round" strokeWidth={key.includes('small') || key.includes('soft') ? 3.5 : 4.5} />
+      <path d="M169 151 C176 154 184 154 191 151" fill="none" stroke="#e37b7e" strokeLinecap="round" strokeWidth="2.5" opacity="0.8" />
+    </g>
+  );
 }
 
 function SoftHairBack({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
@@ -749,11 +853,10 @@ function SoftHairBack({ itemKey, color, accent }: { itemKey: string | undefined;
   if (style === 'buns') {
     return (
       <g>
-        <circle cx="126" cy="49" r="30" fill={accent} />
-        <circle cx="234" cy="49" r="30" fill={accent} />
-        <circle cx="126" cy="47" r="25" fill={color} />
-        <circle cx="234" cy="47" r="25" fill={color} />
-        <path d="M112 103 C115 26 245 26 248 103 L232 161 C217 177 143 177 128 161 Z" fill={accent} />
+        <circle cx="126" cy="47" r="29" fill="url(#soft-hair)" stroke={OUTLINE} strokeWidth="4" />
+        <circle cx="234" cy="47" r="29" fill="url(#soft-hair)" stroke={OUTLINE} strokeWidth="4" />
+        <path d="M112 105 C115 24 245 24 248 105 L233 163 C216 181 144 181 127 163 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M109 48 C120 36 131 35 143 48 M217 48 C229 35 240 36 251 48" fill="none" stroke={lightenColor(color, 0.24)} strokeLinecap="round" strokeWidth="5" opacity="0.46" />
       </g>
     );
   }
@@ -765,8 +868,28 @@ function SoftHairBack({ itemKey, color, accent }: { itemKey: string | undefined;
     ];
     return (
       <g>
-        {curls.map(([cx, cy], index) => <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r={index < 6 ? 24 : 22} fill={index % 2 ? color : accent} />)}
-        <path d="M117 107 C121 41 239 40 245 107 L231 173 C209 194 151 194 129 173 Z" fill={color} />
+        <path d="M101 101 C99 45 132 20 179 21 C230 20 262 51 258 111 L245 173 C225 198 137 198 116 172 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="5" />
+        {curls.map(([cx, cy], index) => (
+          <g key={`${cx}-${cy}`}>
+            <circle
+              cx={cx}
+              cy={cy}
+              r={index < 6 ? 23 : 21}
+              fill={index % 3 ? 'url(#soft-hair)' : color}
+              stroke={OUTLINE}
+              strokeWidth="3"
+            />
+            <path
+              d={`M${cx - 10} ${cy - 2} C${cx - 7} ${cy - 13} ${cx + 8} ${cy - 13} ${cx + 11} ${cy - 2} C${cx + 6} ${cy + 7} ${cx - 4} ${cy + 8} ${cx - 10} ${cy + 1}`}
+              fill="none"
+              stroke={lightenColor(color, 0.28)}
+              strokeLinecap="round"
+              strokeWidth="2.5"
+              opacity="0.42"
+            />
+          </g>
+        ))}
+        <path d="M112 70 C128 49 143 45 157 47 M202 42 C219 48 234 60 242 76 M111 124 C121 135 130 139 140 137 M220 146 C231 141 240 132 245 121" fill="none" stroke={lightenColor(color, 0.28)} strokeLinecap="round" strokeWidth="4" opacity="0.45" />
       </g>
     );
   }
@@ -774,13 +897,15 @@ function SoftHairBack({ itemKey, color, accent }: { itemKey: string | undefined;
   if (style === 'braids') {
     return (
       <g>
-        <path d="M112 103 C115 35 245 35 248 103 L235 151 C216 169 144 169 125 151 Z" fill={accent} />
+        <path d="M112 103 C115 31 245 31 248 103 L235 154 C216 172 144 172 125 154 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
         {[168, 188, 208, 228].map((cy) => (
           <g key={cy}>
-            <ellipse cx="116" cy={cy} rx="15" ry="18" fill={color} />
-            <ellipse cx="244" cy={cy} rx="15" ry="18" fill={color} />
+            <ellipse cx="116" cy={cy} rx="14" ry="17" fill="url(#soft-hair)" stroke={OUTLINE} strokeWidth="3" />
+            <ellipse cx="244" cy={cy} rx="14" ry="17" fill="url(#soft-hair)" stroke={OUTLINE} strokeWidth="3" />
           </g>
         ))}
+        <circle cx="116" cy="247" r="9" fill={lightenColor(color, 0.2)} stroke={OUTLINE} strokeWidth="3" />
+        <circle cx="244" cy="247" r="9" fill={lightenColor(color, 0.2)} stroke={OUTLINE} strokeWidth="3" />
       </g>
     );
   }
@@ -788,8 +913,9 @@ function SoftHairBack({ itemKey, color, accent }: { itemKey: string | undefined;
   if (style === 'ponytail') {
     return (
       <g>
-        <path d="M111 104 C114 35 244 35 248 104 L232 166 C213 187 147 187 128 166 Z" fill={accent} />
-        <path d="M233 74 C284 82 284 164 247 191 C263 151 250 117 224 104 Z" fill={color} />
+        <path d="M111 104 C114 31 244 31 248 104 L232 168 C213 190 147 190 128 168 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M232 69 C288 72 291 158 247 197 C264 153 251 118 224 103 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M242 91 C266 111 268 146 253 172" fill="none" stroke={lightenColor(color, 0.24)} strokeLinecap="round" strokeWidth="5" opacity="0.48" />
       </g>
     );
   }
@@ -797,14 +923,18 @@ function SoftHairBack({ itemKey, color, accent }: { itemKey: string | undefined;
   if (style === 'long') {
     return (
       <g>
-        <path d="M108 103 C112 30 247 29 251 104 L242 210 C218 230 142 230 118 210 Z" fill={accent} />
-        <path d="M118 103 C122 43 238 42 242 104 L232 202 C212 217 148 217 128 202 Z" fill={color} />
-        <path d="M137 57 C158 43 202 43 224 61" fill="none" stroke={lightenColor(color, 0.2)} strokeLinecap="round" strokeWidth="8" opacity="0.45" />
+        <path d="M108 103 C112 26 247 25 251 104 C248 130 244 151 248 172 C252 193 244 217 227 231 C213 241 197 235 180 230 C163 235 147 241 133 231 C116 217 108 193 112 172 C116 151 112 130 108 103 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M118 103 C122 39 238 38 242 104 C239 132 238 154 241 177 C242 195 236 211 226 221 C212 215 197 214 180 220 C163 214 148 215 134 221 C124 211 118 195 119 177 C122 154 121 132 118 103 Z" fill="url(#soft-hair)" />
+        <path d="M133 58 C158 39 202 39 227 60 M128 110 C135 142 129 178 121 207 M232 110 C225 142 231 178 239 207 M148 89 C144 127 147 168 153 203 M212 89 C216 127 213 168 207 203" fill="none" stroke={lightenColor(color, 0.22)} strokeLinecap="round" strokeWidth="5" opacity="0.42" />
       </g>
     );
   }
 
-  return <path d="M112 105 C114 32 246 32 248 105 L234 158 C214 177 146 177 126 158 Z" fill={accent} />;
+  if (style === 'bob') {
+    return <path d="M108 103 C111 27 247 25 251 103 L244 164 C226 185 204 190 180 187 C156 190 134 185 116 164 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />;
+  }
+
+  return <path d="M112 105 C114 28 246 28 248 105 L234 160 C214 180 146 180 126 160 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />;
 }
 
 function SoftHairFront({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
@@ -812,14 +942,25 @@ function SoftHairFront({ itemKey, color, accent }: { itemKey: string | undefined
 
   if (style === 'curls') {
     const curls = [[126, 63], [148, 48], [174, 44], [199, 47], [222, 62], [238, 84], [116, 91]];
-    return <g>{curls.map(([cx, cy]) => <circle key={`${cx}-${cy}`} cx={cx} cy={cy} r="20" fill={color} />)}</g>;
+    return (
+      <g>
+        {curls.map(([cx, cy], index) => (
+          <g key={`${cx}-${cy}`}>
+            <circle cx={cx} cy={cy} r="20" fill={index % 2 ? 'url(#soft-hair)' : color} stroke={OUTLINE} strokeWidth="3" />
+            <path d={`M${cx - 9} ${cy} C${cx - 6} ${cy - 10} ${cx + 7} ${cy - 10} ${cx + 10} ${cy}`} fill="none" stroke={lightenColor(color, 0.3)} strokeLinecap="round" strokeWidth="2.5" opacity="0.46" />
+          </g>
+        ))}
+        <path d="M132 56 C140 49 149 47 158 49 M181 43 C189 40 198 43 204 50 M220 59 C228 64 232 72 233 80" fill="none" stroke={lightenColor(color, 0.28)} strokeLinecap="round" strokeWidth="4" opacity="0.55" />
+      </g>
+    );
   }
 
   if (style === 'spikes') {
     return (
       <g>
-        <path d="M115 91 L121 49 L139 61 L151 24 L169 53 L185 17 L199 51 L225 27 L226 61 L254 53 L241 102 C218 84 143 81 115 91 Z" fill={color} />
-        <path d="M134 66 C159 47 208 48 231 69" fill="none" stroke={lightenColor(color, 0.18)} strokeLinecap="round" strokeWidth="7" opacity="0.42" />
+        <path d="M112 93 L119 47 L139 60 L150 20 L169 51 L185 13 L201 49 L227 23 L227 59 L258 49 L242 104 C218 83 142 80 112 93 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M135 64 C158 46 205 46 231 68 M151 39 L160 55 M186 31 L190 51 M224 42 L217 60" fill="none" stroke={lightenColor(color, 0.25)} strokeLinecap="round" strokeWidth="5" opacity="0.5" />
+        <path d="M124 72 C137 60 147 55 158 53 M169 44 L176 60 M201 45 L198 60 M231 57 L223 72" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="2.5" opacity="0.48" />
       </g>
     );
   }
@@ -827,18 +968,31 @@ function SoftHairFront({ itemKey, color, accent }: { itemKey: string | undefined
   if (style === 'buns') {
     return (
       <g>
-        <path d="M113 91 C126 39 234 39 247 91 C224 72 201 70 180 82 C159 70 136 72 113 91 Z" fill={color} />
-        <path d="M132 65 C154 50 204 50 226 66" fill="none" stroke={lightenColor(color, 0.18)} strokeLinecap="round" strokeWidth="7" opacity="0.4" />
+        <path d="M112 92 C126 35 234 35 248 92 C225 70 202 68 180 82 C158 68 135 70 112 92 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M132 62 C154 47 204 47 227 64" fill="none" stroke={lightenColor(color, 0.25)} strokeLinecap="round" strokeWidth="6" opacity="0.48" />
       </g>
     );
   }
 
-  if (style === 'braids' || style === 'ponytail' || style === 'long') {
+  if (style === 'long') {
     return (
       <g>
-        <path d="M113 91 C121 34 233 31 248 84 C225 75 211 73 193 79 C176 69 149 67 113 91 Z" fill={color} />
-        <path d="M196 46 C183 63 177 78 178 96" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="8" opacity="0.7" />
-        <path d="M132 61 C151 48 171 45 190 47" fill="none" stroke={lightenColor(color, 0.2)} strokeLinecap="round" strokeWidth="7" opacity="0.42" />
+        <path d="M112 92 C120 30 234 27 249 85 C226 73 210 70 193 78 C179 70 164 69 149 75 C137 78 125 84 112 92 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M197 42 C185 59 179 76 179 96" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.72" />
+        <path d="M120 88 C113 119 118 155 130 178 C136 189 138 205 133 222 C147 213 152 195 148 178 C142 154 142 128 143 102 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+        <path d="M240 88 C247 119 242 155 230 178 C224 189 222 205 227 222 C213 213 208 195 212 178 C218 154 218 128 217 102 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+        <path d="M132 58 C151 44 171 41 190 43 M208 46 C220 50 229 58 235 67 M132 106 C128 137 134 166 143 188 M228 106 C232 137 226 166 217 188" fill="none" stroke={lightenColor(color, 0.26)} strokeLinecap="round" strokeWidth="4" opacity="0.5" />
+      </g>
+    );
+  }
+
+  if (style === 'braids' || style === 'ponytail') {
+    return (
+      <g>
+        <path d="M112 92 C120 30 234 27 249 85 C226 73 210 70 193 78 C179 70 164 69 149 75 C137 78 125 84 112 92 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M197 42 C185 59 179 76 179 96" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.72" />
+        <path d="M132 58 C151 44 171 41 190 43 M208 46 C220 50 229 58 235 67" fill="none" stroke={lightenColor(color, 0.26)} strokeLinecap="round" strokeWidth="5" opacity="0.5" />
+        <path d="M127 72 C141 60 153 55 166 53 M212 54 C221 58 228 64 234 72 M132 105 C129 132 129 159 132 185 M226 101 C230 130 230 162 225 192" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="2.5" opacity="0.46" />
       </g>
     );
   }
@@ -846,17 +1000,18 @@ function SoftHairFront({ itemKey, color, accent }: { itemKey: string | undefined
   if (style === 'bob') {
     return (
       <g>
-        <path d="M111 92 C117 35 238 30 249 90 L241 151 C227 168 207 176 193 176 L199 87 C174 69 141 69 114 94 Z" fill={color} />
-        <path d="M128 61 C151 46 199 44 226 63" fill="none" stroke={lightenColor(color, 0.2)} strokeLinecap="round" strokeWidth="7" opacity="0.45" />
+        <path d="M110 93 C116 30 239 25 250 91 L242 151 C232 169 213 178 195 179 L201 88 C176 66 140 67 110 93 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+        <path d="M127 58 C152 42 200 40 229 61 M217 82 C227 104 226 132 217 151" fill="none" stroke={lightenColor(color, 0.25)} strokeLinecap="round" strokeWidth="5" opacity="0.5" />
       </g>
     );
   }
 
   return (
     <g>
-      <path d="M112 92 C117 35 233 30 249 85 C225 74 204 75 189 83 C170 67 142 68 112 92 Z" fill={color} />
-      <path d="M132 61 C154 47 198 45 226 64" fill="none" stroke={lightenColor(color, 0.2)} strokeLinecap="round" strokeWidth="7" opacity="0.42" />
-      <path d="M185 44 C174 59 170 74 173 91" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="7" opacity="0.55" />
+      <path d="M110 94 C113 62 127 38 152 28 L149 51 C162 31 177 23 194 22 L188 47 C201 30 216 29 231 35 L222 53 C238 48 248 56 254 70 L238 68 C247 76 250 87 249 98 C228 80 207 75 190 84 C172 66 141 68 110 94 Z" fill="url(#soft-hair)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="4" />
+      <path d="M127 62 C145 45 165 39 185 41 M202 42 C214 43 224 49 232 57" fill="none" stroke={lightenColor(color, 0.26)} strokeLinecap="round" strokeWidth="5" opacity="0.52" />
+      <path d="M122 77 C136 64 148 58 162 55 M207 52 C220 56 230 64 238 75 M147 41 L154 57 M221 42 L215 57" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="2.5" opacity="0.5" />
+      <path d="M187 41 C177 57 172 75 174 93" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="6" opacity="0.58" />
     </g>
   );
 }
@@ -1112,11 +1267,17 @@ function SoftFrontGadget({ item }: { item: SoftAvatarItem | undefined }) {
 
   if (key.includes('camera')) {
     return (
-      <g transform="translate(151 276) scale(0.72)" filter="url(#soft-small-shadow)">
-        <path d="M18 0 H69 L78 11 H96 C104 11 110 17 110 25 V72 C110 80 104 86 96 86 H14 C6 86 0 80 0 72 V25 C0 17 6 11 14 11 H18 Z" fill={color} stroke={OUTLINE} strokeOpacity="0.32" strokeWidth="3" />
-        <circle cx="57" cy="48" r="24" fill={darkenColor(color, 0.38)} />
-        <circle cx="57" cy="48" r="15" fill={accent} />
-        <circle cx="52" cy="43" r="5" fill="#ffffff" opacity="0.72" />
+      <g filter="url(#soft-small-shadow)">
+        <path d="M155 293 C147 286 139 287 135 295 L131 318 C131 327 143 331 149 323 L160 305 Z" fill="url(#soft-skin)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+        <path d="M226 293 C234 286 242 287 246 295 L250 318 C250 327 238 331 232 323 L221 305 Z" fill="url(#soft-skin)" stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+        <g transform="translate(151 276) scale(0.72)">
+          <path d="M18 0 H69 L78 11 H96 C104 11 110 17 110 25 V72 C110 80 104 86 96 86 H14 C6 86 0 80 0 72 V25 C0 17 6 11 14 11 H18 Z" fill={color} stroke={OUTLINE} strokeWidth="4" />
+          <rect x="8" y="20" width="94" height="12" rx="5" fill={lightenColor(color, 0.18)} opacity="0.45" />
+          <circle cx="57" cy="48" r="24" fill={darkenColor(color, 0.38)} stroke={OUTLINE} strokeWidth="3" />
+          <circle cx="57" cy="48" r="15" fill={accent} />
+          <circle cx="52" cy="43" r="5" fill="#ffffff" opacity="0.78" />
+        </g>
+        <path d="M142 305 C147 309 151 309 155 306 M239 305 C234 309 230 309 226 306" fill="none" stroke={OUTLINE_SOFT} strokeLinecap="round" strokeWidth="2" />
       </g>
     );
   }
@@ -1239,14 +1400,24 @@ function SoftWeapon({ item }: { item: SoftAvatarItem | undefined }) {
     );
   }
 
+  if (key.includes('wand')) {
+    return (
+      <g filter="url(#soft-small-shadow)">
+        <path d="M273 426 L242 281" fill="none" stroke={OUTLINE} strokeLinecap="round" strokeWidth="12" />
+        <path d="M273 426 L242 281" fill="none" stroke={color} strokeLinecap="round" strokeWidth="7" />
+        <path d="M242 245 L251 266 L274 269 L257 284 L262 308 L242 296 L222 308 L227 284 L210 269 L233 266 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3.5" />
+        <circle cx="237" cy="258" r="4" fill="#ffffff" opacity="0.78" />
+      </g>
+    );
+  }
+
   return (
-    <g transform="translate(270 213) rotate(5)" filter="url(#soft-small-shadow)">
-      <rect x="18" y="47" width="12" height="153" rx="6" fill={color} />
-      {key.includes('wand') ? (
-        <path d="M24 0 L33 21 L56 24 L39 39 L44 63 L24 51 L4 63 L9 39 L-8 24 L15 21 Z" fill={accent} />
-      ) : (
-        <path d="M24 2 C5 26 8 44 24 54 C40 44 43 26 24 2 Z" fill={accent} />
-      )}
+    <g filter="url(#soft-small-shadow)">
+      <path d="M94 444 C101 402 105 367 116 329 C122 306 126 284 128 259" fill="none" stroke={OUTLINE} strokeLinecap="round" strokeWidth="13" />
+      <path d="M94 444 C101 402 105 367 116 329 C122 306 126 284 128 259" fill="none" stroke={color} strokeLinecap="round" strokeWidth="8" />
+      <path d="M107 369 C116 365 122 358 126 348 M116 326 C108 320 105 313 106 305 M124 293 C133 288 137 280 138 271" fill="none" stroke={darkenColor(color, 0.28)} strokeLinecap="round" strokeWidth="4" />
+      <path d="M129 229 C109 251 112 271 128 280 C145 270 147 250 129 229 Z" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3.5" />
+      <path d="M129 237 L129 269" stroke="#ffffff" strokeLinecap="round" strokeWidth="4" opacity="0.58" />
     </g>
   );
 }
@@ -1286,16 +1457,22 @@ function SoftPet({ item }: { item: SoftAvatarItem | undefined }) {
   if (key.includes('dragon')) {
     return (
       <g transform="translate(250 360)" filter="url(#soft-small-shadow)">
-        <ellipse cx="43" cy="60" rx="38" ry="33" fill={color} />
+        <ellipse cx="43" cy="60" rx="38" ry="33" fill={color} stroke={OUTLINE} strokeWidth="3" />
+        <ellipse cx="43" cy="65" rx="18" ry="24" fill={lightenColor(color, 0.28)} opacity="0.82" />
         <circle cx="40" cy="26" r="28" fill={color} stroke={OUTLINE} strokeOpacity="0.25" strokeWidth="3" />
-        <path d="M18 17 L14 -4 L32 10 M55 10 L68 -4 L65 19" fill={accent} />
-        <path d="M9 48 C-16 30 -24 56 4 69 M74 47 C102 28 110 61 79 73" fill={accent} opacity="0.85" />
+        <path d="M18 17 L14 -4 L32 10 M55 10 L68 -4 L65 19" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="2.5" />
+        <path d="M9 48 C-16 30 -24 56 4 69 M74 47 C102 28 110 61 79 73" fill={accent} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
+        <path d="M0 54 L-14 48 L-7 65 M82 53 L96 46 L91 64" fill={lightenColor(accent, 0.25)} opacity="0.75" />
         <circle cx="31" cy="24" r="5" fill="#ffffff" />
         <circle cx="50" cy="24" r="5" fill="#ffffff" />
         <circle cx="32" cy="25" r="2.5" fill={OUTLINE} />
         <circle cx="51" cy="25" r="2.5" fill={OUTLINE} />
         <path d="M29 39 C36 45 46 45 53 39" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="4" />
+        <path d="M36 41 L39 47 L42 41" fill="#ffffff" />
+        <path d="M33 59 H53 M35 69 H51 M37 79 H49" fill="none" stroke={darkenColor(color, 0.14)} strokeLinecap="round" strokeWidth="2.5" opacity="0.6" />
         <path d="M24 82 V99 M60 82 V99" stroke={accent} strokeLinecap="round" strokeWidth="9" />
+        <ellipse cx="21" cy="99" rx="11" ry="5" fill={accent} stroke={OUTLINE} strokeWidth="2" />
+        <ellipse cx="63" cy="99" rx="11" ry="5" fill={accent} stroke={OUTLINE} strokeWidth="2" />
       </g>
     );
   }
@@ -1318,13 +1495,15 @@ function SoftPet({ item }: { item: SoftAvatarItem | undefined }) {
   const panda = key.includes('panda');
   return (
     <g transform="translate(251 366)" filter="url(#soft-small-shadow)">
-      <ellipse cx="45" cy="62" rx="39" ry="30" fill={color} stroke={OUTLINE} strokeOpacity="0.22" strokeWidth="3" />
+      <ellipse cx="45" cy="62" rx="39" ry="30" fill={color} stroke={OUTLINE} strokeWidth="3" />
+      <path d="M32 49 C38 45 51 45 58 50 C63 63 60 77 52 87 C43 91 34 87 29 78 C26 68 27 57 32 49 Z" fill={lightenColor(color, 0.34)} opacity="0.9" />
       {key.includes('lion') ? <circle cx="39" cy="28" r="34" fill={accent} opacity="0.9" /> : null}
-      <circle cx="39" cy="29" r="27" fill={panda ? '#f4f1ea' : color} />
+      <circle cx="39" cy="29" r="27" fill={panda ? '#f4f1ea' : color} stroke={OUTLINE} strokeWidth="3" />
       {catLike ? (
-        <g fill={color} stroke={OUTLINE} strokeOpacity="0.18" strokeWidth="2">
+        <g fill={color} stroke={OUTLINE} strokeWidth="2.5">
           <path d="M17 22 L17 0 L32 12 Z" />
           <path d="M55 12 L69 0 L66 24 Z" />
+          <path d="M20 16 L21 7 L28 13 Z M58 13 L66 6 L63 18 Z" fill={lightenColor(color, 0.36)} stroke="none" />
         </g>
       ) : null}
       {bunny ? (
@@ -1343,16 +1522,23 @@ function SoftPet({ item }: { item: SoftAvatarItem | undefined }) {
       ) : null}
       <circle cx="31" cy="28" r="4.5" fill={panda ? '#ffffff' : OUTLINE} />
       <circle cx="49" cy="28" r="4.5" fill={panda ? '#ffffff' : OUTLINE} />
+      <circle cx="29.5" cy="26.5" r="1.4" fill="#ffffff" />
+      <circle cx="47.5" cy="26.5" r="1.4" fill="#ffffff" />
       <circle cx="40" cy="39" r="4" fill={accent} />
       <path d="M31 47 C36 53 44 53 49 47" fill="none" stroke={accent} strokeLinecap="round" strokeWidth="3" />
+      <path d="M27 40 L9 36 M27 44 L7 46 M53 40 L72 36 M53 44 L74 46" fill="none" stroke={OUTLINE_SOFT} strokeLinecap="round" strokeWidth="1.8" opacity="0.72" />
       {key.includes('tiger') ? (
         <g stroke={accent} strokeLinecap="round" strokeWidth="5">
           <path d="M27 5 L31 16 M40 2 V15 M54 5 L50 16" />
           <path d="M16 54 L28 58 M64 54 L52 58" />
         </g>
       ) : null}
-      <path d="M22 81 V99 M60 81 V99" stroke={accent} strokeLinecap="round" strokeWidth="9" />
-      <path d="M76 60 C103 48 99 25 84 33" fill="none" stroke={color} strokeLinecap="round" strokeWidth="11" />
+      <path d="M22 80 V96 M60 80 V96" stroke={OUTLINE} strokeLinecap="round" strokeWidth="13" />
+      <path d="M22 80 V96 M60 80 V96" stroke={color} strokeLinecap="round" strokeWidth="9" />
+      <ellipse cx="19" cy="98" rx="11" ry="5" fill={color} stroke={OUTLINE} strokeWidth="2" />
+      <ellipse cx="63" cy="98" rx="11" ry="5" fill={color} stroke={OUTLINE} strokeWidth="2" />
+      <path d="M76 60 C103 48 99 25 84 33" fill="none" stroke={OUTLINE} strokeLinecap="round" strokeWidth="15" />
+      <path d="M76 60 C103 48 99 25 84 33" fill="none" stroke={color} strokeLinecap="round" strokeWidth="10" />
     </g>
   );
 }
