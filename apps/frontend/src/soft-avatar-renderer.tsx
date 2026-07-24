@@ -1,19 +1,4 @@
 import type { CSSProperties } from 'react';
-import {
-  getIllustratedAttachmentRect,
-  illustratedAssetUrl,
-  resolveIllustratedBackpack,
-  resolveIllustratedBottom,
-  resolveIllustratedGadget,
-  resolveIllustratedGlasses,
-  resolveIllustratedHair,
-  resolveIllustratedHat,
-  resolveIllustratedPet,
-  resolveIllustratedShoes,
-  resolveIllustratedTop,
-  resolveIllustratedWeapon,
-  type IllustratedAvatarAsset
-} from './illustrated-avatar-assets';
 
 export interface SoftAvatarItem {
   key: string;
@@ -67,19 +52,12 @@ export function SoftAdventureAvatarGraphic({
   const skin = body?.colorPrimary ?? '#f2b28d';
   const skinShadow = body?.colorSecondary ?? darkenColor(skin, 0.16);
   const topColor = top?.colorPrimary ?? '#2568d8';
+  const topAccent = top?.colorSecondary ?? '#1d4f9f';
   const bottomColor = bottom?.colorPrimary ?? '#355f9f';
+  const bottomAccent = bottom?.colorSecondary ?? '#233f6c';
   const shoeColor = shoes?.colorPrimary ?? '#d63f61';
+  const shoeAccent = shoes?.colorSecondary ?? '#8f263d';
   const hairAccent = darkenColor(hairColor, 0.24);
-  const illustratedHair = resolveIllustratedHair(hair?.key);
-  const illustratedHat = resolveIllustratedHat(hat?.key);
-  const illustratedGlasses = resolveIllustratedGlasses(glasses?.key);
-  const illustratedTop = resolveIllustratedTop(top?.key);
-  const illustratedBottom = resolveIllustratedBottom(bottom?.key);
-  const illustratedShoes = resolveIllustratedShoes(shoes?.key);
-  const illustratedBackpack = resolveIllustratedBackpack(gadget?.key);
-  const illustratedGadget = resolveIllustratedGadget(gadget?.key);
-  const illustratedWeapon = resolveIllustratedWeapon(weapon?.key);
-  const illustratedPet = resolveIllustratedPet(pet?.key);
 
   return (
     <svg
@@ -125,12 +103,6 @@ export function SoftAdventureAvatarGraphic({
         <filter id="soft-small-shadow" x="-40%" y="-40%" width="180%" height="190%">
           <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#263447" floodOpacity="0.18" />
         </filter>
-        <filter id="illustrated-hair-tint" colorInterpolationFilters="sRGB">
-          <feColorMatrix type="matrix" values={colorizeMatrix(hairColor)} />
-        </filter>
-        <clipPath id="illustrated-hair-fringe">
-          <rect x="78" y="0" width="204" height="91" rx="30" />
-        </clipPath>
       </defs>
 
       <rect width="360" height="520" fill="#fffaf0" />
@@ -138,159 +110,35 @@ export function SoftAdventureAvatarGraphic({
       <ellipse cx="180" cy="466" rx="105" ry="17" fill="#253044" opacity="0.16" />
 
       <g filter="url(#soft-shadow)">
-        <IllustratedHair asset={illustratedHair} front={false} />
-        {illustratedBackpack ? <IllustratedBackpack asset={illustratedBackpack} /> : <SoftBackGadget item={gadget} />}
-        {illustratedWeapon ? <IllustratedWeapon asset={illustratedWeapon} /> : <SoftWeapon item={weapon} />}
-        <AvatarRigBase skin={skin} skinShadow={skinShadow} />
-        <IllustratedClothes
-          bottom={illustratedBottom}
-          shoes={illustratedShoes}
-          top={illustratedTop}
+        <g transform="translate(25.2 13) scale(0.86)">
+          <SoftHairBack itemKey={hair?.key} color={hairColor} accent={hairAccent} />
+        </g>
+        <SoftBackGadget item={gadget} />
+        <SoftWeapon item={weapon} />
+        <SoftBody
+          bottom={bottom}
+          bottomAccent={bottomAccent}
+          bottomColor={bottomColor}
+          shoeAccent={shoeAccent}
+          shoes={shoes}
+          skin={skin}
+          top={top}
+          topAccent={topAccent}
+          topColor={topColor}
         />
-        <AvatarRigHands skin={skin} skinShadow={skinShadow} />
         <g transform="translate(25.2 13) scale(0.86)">
           <SoftHead skin={skin} skinShadow={skinShadow} />
           <SoftFace eyes={eyes} eyesColor={eyesColor} mouth={mouth} skin={skin} />
-        </g>
-        <IllustratedHair asset={illustratedHair} front />
-        {illustratedHat ? <IllustratedHat asset={illustratedHat} /> : <SoftHat item={hat} hairColor={hairColor} />}
-        {illustratedGlasses ? <IllustratedGlasses asset={illustratedGlasses} /> : (
-          <g transform="translate(40.7 21.8) scale(0.774)">
+          <SoftHairFront itemKey={hair?.key} color={hairColor} accent={hairAccent} />
+          <SoftHat item={hat} hairColor={hairColor} />
+          <g transform="translate(18 10.2) scale(0.9)">
             <SoftGlasses item={glasses} />
           </g>
-        )}
-        {illustratedGadget ? <IllustratedGadget asset={illustratedGadget} /> : <SoftFrontGadget item={gadget} />}
+        </g>
+        <SoftFrontGadget item={gadget} />
       </g>
-      {illustratedPet ? <IllustratedPet asset={illustratedPet} /> : <SoftPet item={pet} />}
+      <SoftPet item={pet} />
     </svg>
-  );
-}
-
-function IllustratedImage({
-  asset
-}: {
-  asset: IllustratedAvatarAsset;
-}) {
-  const placement = getIllustratedAttachmentRect(asset);
-
-  return (
-    <image
-      height={placement.height}
-      href={illustratedAssetUrl(asset)}
-      preserveAspectRatio="xMidYMid meet"
-      width={placement.width}
-      x={placement.x}
-      y={placement.y}
-    />
-  );
-}
-
-function IllustratedHair({ asset, front }: { asset: IllustratedAvatarAsset; front: boolean }) {
-  const placement = getIllustratedAttachmentRect(asset);
-
-  return (
-    <image
-      clipPath={front ? 'url(#illustrated-hair-fringe)' : undefined}
-      filter="url(#illustrated-hair-tint)"
-      height={placement.height}
-      href={illustratedAssetUrl(asset)}
-      preserveAspectRatio="xMidYMid meet"
-      width={placement.width}
-      x={placement.x}
-      y={placement.y}
-    />
-  );
-}
-
-function IllustratedClothes({
-  bottom,
-  shoes,
-  top
-}: {
-  bottom: IllustratedAvatarAsset;
-  shoes: IllustratedAvatarAsset;
-  top: IllustratedAvatarAsset;
-}) {
-  return (
-    <g>
-      <IllustratedImage asset={bottom} />
-      <IllustratedImage asset={top} />
-      <IllustratedImage asset={shoes} />
-    </g>
-  );
-}
-
-function IllustratedBackpack({ asset }: { asset: IllustratedAvatarAsset }) {
-  return <IllustratedImage asset={asset} />;
-}
-
-function IllustratedHat({ asset }: { asset: IllustratedAvatarAsset }) {
-  return <IllustratedImage asset={asset} />;
-}
-
-function IllustratedGlasses({ asset }: { asset: IllustratedAvatarAsset }) {
-  return <IllustratedImage asset={asset} />;
-}
-
-function IllustratedGadget({ asset }: { asset: IllustratedAvatarAsset }) {
-  return <IllustratedImage asset={asset} />;
-}
-
-function IllustratedWeapon({ asset }: { asset: IllustratedAvatarAsset }) {
-  return <IllustratedImage asset={asset} />;
-}
-
-function IllustratedPet({ asset }: { asset: IllustratedAvatarAsset }) {
-  return <IllustratedImage asset={asset} />;
-}
-
-function AvatarRigBase({ skin, skinShadow }: { skin: string; skinShadow: string }) {
-  return (
-    <g>
-      <path
-        d="M158 158 C163 178 197 178 202 158 L204 215 H156 Z"
-        fill="url(#soft-skin)"
-      />
-      <path
-        d="M144 303 C153 299 169 301 177 309 L171 431 C163 438 148 438 140 431 Z"
-        fill="url(#soft-skin)"
-        stroke={OUTLINE}
-        strokeLinejoin="round"
-        strokeWidth="3"
-      />
-      <path
-        d="M216 303 C207 299 191 301 183 309 L189 431 C197 438 212 438 220 431 Z"
-        fill="url(#soft-skin)"
-        stroke={OUTLINE}
-        strokeLinejoin="round"
-        strokeWidth="3"
-      />
-      <path
-        d="M132 219 C126 228 125 242 125 258 L116 319 C119 330 133 333 141 324 L138 258 C138 242 137 229 132 219 Z"
-        fill="url(#soft-skin)"
-        stroke={OUTLINE}
-        strokeLinejoin="round"
-        strokeWidth="3"
-      />
-      <path
-        d="M228 219 C234 228 235 242 235 258 L244 319 C241 330 227 333 219 324 L222 258 C222 242 223 229 228 219 Z"
-        fill="url(#soft-skin)"
-        stroke={OUTLINE}
-        strokeLinejoin="round"
-        strokeWidth="3"
-      />
-      <path d="M158 170 C170 179 190 179 202 170" fill="none" stroke={skinShadow} strokeLinecap="round" strokeWidth="2" opacity="0.42" />
-    </g>
-  );
-}
-
-function AvatarRigHands({ skin, skinShadow }: { skin: string; skinShadow: string }) {
-  return (
-    <g>
-      <path d="M116 312 C116 331 124 340 134 335 C143 330 141 317 136 307 C129 311 123 314 116 312 Z" fill={skin} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
-      <path d="M244 312 C244 331 236 340 226 335 C217 330 219 317 224 307 C231 311 237 314 244 312 Z" fill={skin} stroke={OUTLINE} strokeLinejoin="round" strokeWidth="3" />
-      <path d="M121 326 C125 331 130 332 134 328 M239 326 C235 331 230 332 226 328" fill="none" stroke={skinShadow} strokeLinecap="round" strokeWidth="1.8" opacity="0.55" />
-    </g>
   );
 }
 
@@ -1702,17 +1550,6 @@ function lightenColor(color: string, amount: number) {
     Math.round(green + (255 - green) * amount),
     Math.round(blue + (255 - blue) * amount)
   );
-}
-
-function colorizeMatrix(color: string) {
-  const [red, green, blue] = toRgb(color).map((channel) => Math.min(1.35, channel / 190 + 0.18));
-
-  return [
-    0.2126 * red, 0.7152 * red, 0.0722 * red, 0, 0,
-    0.2126 * green, 0.7152 * green, 0.0722 * green, 0, 0,
-    0.2126 * blue, 0.7152 * blue, 0.0722 * blue, 0, 0,
-    0, 0, 0, 1, 0
-  ].join(' ');
 }
 
 function darkenColor(color: string, amount: number) {

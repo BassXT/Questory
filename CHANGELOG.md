@@ -155,6 +155,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Changed
 
+- Grosse Avatar-Vorschau nach echtem iPhone-Qualitaetstest wieder auf die vollstaendig gemeinsame `SoftAdventureAvatarGraphic`-Ganzkoerper-Geometrie umgestellt; die 38 Konzept-WebPs bleiben als Item-Picker-Vorschauen erhalten.
+- Produktionsregel fuer kuenftige Avatar-Art festgelegt: Keine direkt ausgeschnittenen Katalogthumbnails mehr, sondern alle sichtbaren Layer auf einer verbindlichen `360x520`-Masterpose mit identischen Ankern und Zeichenebenen.
 - Avatar-Komposition von generischer Slot-Skalierung auf feste Attachment-Geometrien und eine explizite Ebenenfolge fuer Haar-Rueckseite, Rueckenobjekte, Koerper-Rig, Kleidung, Haende, Kopf/Gesicht, Haar-Vorderseite, Accessoires und Begleiter umgestellt.
 - Neutrales SVG-Koerper-Rig auf Hals, verdeckte Gliedmassen und Haende reduziert; WebP-Kleidung ist nun die einzige sichtbare Outfit-Ebene.
 - Avatar-Haarexport entfernt den leeren Modellkopf samt Ohren und Hals aus der Stilreferenz, bevor die WebP-Layer im Renderer eingefarbt werden.
@@ -171,6 +173,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Sichtbar zerrissene Uebergaenge zwischen Kopf/Haaren, Hals/Oberteil, Taille/Rock und Beinen/Schuhen beseitigt, indem die nicht produktionsfaehigen Konzept-WebPs nicht mehr zur Ganzkoerperfigur kombiniert werden.
 - Doppelte Kleidungsumrisse, sichtbare Modellkopf-/Halsfragmente in Frisuren, Luecken an der Taille sowie uneinheitliche Schulter-, Schuh- und Bodenpositionen im Hybrid-Avatar korrigiert.
 - Haar-, Hut-, Brillen-, Kleidungs-, Schuh- und Begleiter-Layer auf gemeinsame Kopf-, Koerper- und Fussanker ausgerichtet; Caps und Zauberhut verdecken die Augen nicht mehr.
 - Avatar-Koerper grafisch ueberarbeitet: Oberteile, Arme, Hosen, Roecke, Kleider und Schuhe besitzen sauberere Silhouetten, feinere Uebergaenge sowie eigene Licht- und Schattenpixel.
@@ -195,6 +198,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Rueckkehr zur gemeinsamen Ganzkoerper-Geometrie erfolgreich.
+- Isolierte Browserpruefung mit vier stark unterschiedlichen Loadouts erfolgreich: vier sichtbare `360x520`-SVGs mit jeweils 65 bis 82 Pfaden, keine Konsolenfehler und bei `390x844` kein horizontaler Ueberlauf.
 - Vollstaendiger Workspace-Build nach Attachment-Rig-Umstellung erfolgreich; Frontend-Produktionsbundle liegt bei `641.08 kB` (`189.56 kB` gzip).
 - Reproduzierbarer Export und Alpha-Pruefung erfolgreich: alle 38 WebP-Assets besitzen echte Transparenz, keine Datei ist vollflaechig opak.
 - Isolierte Browserpruefung des Attachment-Rigs mit vier stark unterschiedlichen Ganzkoerper-Loadouts auf Desktop erfolgreich; auf `390x844` entsprechen `scrollWidth` und `innerWidth` jeweils `390`.
