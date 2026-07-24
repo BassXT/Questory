@@ -146,6 +146,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Kinderansicht bereinigt: Die Parent-Dashboard-Navigation wird im Kindmodus ausgeblendet, damit Kinder nur die kindbezogenen Tabs `Status`, `Quests`, `Shop` und `Avatar` sehen.
 - Parent-Shop trennt jetzt `Belohnungen` und `Zuweisen`; Beantragen/Einloesen ist aus dem Eltern-Shop entfernt und bleibt der Kinderansicht vorbehalten.
 - Eltern-UI-Struktur aufgeraeumt: Kinderansicht zeigt nur noch das aktive Kind, Parent-Quests trennen `Vorlagen` und `Zuweisen`, und `Freigaben` heissen nun `Bestaetigungen` mit Kind-Reitern fuer Quest- und Shop-Entscheidungen.
 - Spontane/Self-Service-Quests voruebergehend deaktiviert: UI blendet Self-Service-Panels und `Spontan`-Schalter aus, neue Quests speichern `isSelfService: false`, und die Self-Service-Completion-API blockiert Einreichungen mit `400`.
@@ -163,6 +164,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Kinderansicht-Navigationsfix erfolgreich.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Zuweisungs-Slice erfolgreich.
 - Portainer-Redeploy nach Reward-Zuweisungs-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Eltern-UI-Struktur-Slice erfolgreich.

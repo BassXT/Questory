@@ -403,6 +403,8 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Parent-Shop auf `Belohnungen` und `Zuweisen` umgestellt; Einloesen/Beantragen ist im Eltern-Shop entfernt und bleibt der Kinderansicht vorbehalten.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Zuweisungs-Slice erfolgreich.
 - Portainer-Redeploy nach Reward-Zuweisungs-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
+- Kinderansicht-UI nach Screenshot-Feedback bereinigt: Die Parent-Dashboard-Tab-Leiste (`Uebersicht`, `Kinder`, `Quests`, `Shop`, `Bestaetigungen`) wird im `childMode` ausgeblendet; Navigation im Kindmodus bleibt nur `Status`, `Quests`, `Shop`, `Avatar` plus gesicherter `Elternbereich`.
+- Frontend-Build nach Kinderansicht-Navigationsfix erfolgreich.
 
 ## Offene Aufgaben
 

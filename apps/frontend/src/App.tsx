@@ -2053,27 +2053,29 @@ function DashboardView({
         </Paper>
       ) : null}
 
-      <Paper elevation={0} sx={{ p: 0.5 }}>
-        <Tabs
-          onChange={(_, value: DashboardTab) => setActiveDashboardTab(value)}
-          scrollButtons="auto"
-          allowScrollButtonsMobile
-          sx={{
-            minHeight: 44,
-            '& .MuiTab-root': {
+      {activeDashboardTab !== 'childMode' ? (
+        <Paper elevation={0} sx={{ p: 0.5 }}>
+          <Tabs
+            onChange={(_, value: DashboardTab) => setActiveDashboardTab(value)}
+            scrollButtons="auto"
+            allowScrollButtonsMobile
+            sx={{
               minHeight: 44,
-              minWidth: { xs: 88, sm: 110 },
-              px: { xs: 1.25, sm: 2 }
-            }
-          }}
-          value={dashboardTabValue}
-          variant="scrollable"
-        >
-          {dashboardTabs.map((tab) => (
-            <Tab key={tab.value} label={tab.label} value={tab.value} />
-          ))}
-        </Tabs>
-      </Paper>
+              '& .MuiTab-root': {
+                minHeight: 44,
+                minWidth: { xs: 88, sm: 110 },
+                px: { xs: 1.25, sm: 2 }
+              }
+            }}
+            value={dashboardTabValue}
+            variant="scrollable"
+          >
+            {dashboardTabs.map((tab) => (
+              <Tab key={tab.value} label={tab.label} value={tab.value} />
+            ))}
+          </Tabs>
+        </Paper>
+      ) : null}
 
       {activeDashboardTab === 'overview' ? (
         <Stack spacing={2}>
