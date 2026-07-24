@@ -10,7 +10,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 ## Bereits umgesetzt
 
-- Pixelart-Avatar-Grafik auf ein feineres `64x96`-Raster angehoben; Koerper, Oberteile, Hosen, Kleider und Schuhe besitzen konturierte Silhouetten, Lichtkanten und Schatten.
+- Pixelart-Avatar-Grafik auf ein feineres `64x96`-Raster angehoben; Koerper, Oberteile, Hosen, Kleider und Schuhe besitzen konturierte Silhouetten, Lichtkanten und Schatten. Frontend-Build, isolierte Desktop-/Mobile-Browserpruefung und Portainer-Redeploy sind erfolgreich.
 - Avatar-Hintergruende fuer Wiese, Nacht, Zimmer und Labor mit zusaetzlichen Pixelmotiven und besserer Tiefenstaffelung ueberarbeitet.
 - `README.md` mit Vision, Projektzielen, MVP, Stack, Roadmap und geplantem Docker-Start angelegt.
 - `AGENTS.md` mit Arbeitsregeln, Reset-Regel, Coding Style und Definition of Done angelegt.

@@ -173,6 +173,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 - Frontend-Build nach Avatar-Grafikpolitur erfolgreich.
 - Isolierte Browser-Pruefung mit drei unterschiedlichen Avatar-Loadouts auf Desktop und `390x844`: alle `64x96`-SVGs bleiben im Rahmen, keine Browserwarnungen oder Konsolenfehler.
+- Portainer-Redeploy nach Avatar-Grafikpolitur erfolgreich; LXC-Backend-Health OK, Frontend HTTP `200` und neues Avatar-Bundle ausgeliefert.
 - Frontend-Build nach Platzierung des Elternbereich-Buttons im Kindmodus erfolgreich.
 - Portainer-Redeploy nach Platzierung des Elternbereich-Buttons im Kindmodus erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Shop-Anfragepflicht erfolgreich.
