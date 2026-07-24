@@ -8,6 +8,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- 38 transparente, verlustfreie WebP-Illustrationslayer fuer Haare, Kleidung, Schuhe, Huete, Brillen, Rucksaecke, Kamera, Waffen und Tiere aus der freigegebenen Questory-Stilreferenz hinzugefuegt.
+- Reproduzierbare Avatar-Art-Exportpipeline `scripts/extract-avatar-art.py` mit Freistellung, Randfragment-Bereinigung und Kontaktbogen fuer visuelle Qualitaetspruefung hinzugefuegt.
+- Avatar-Auswahlkarten um echte Illustrationsvorschauen fuer die unterstuetzten Slots erweitert.
 - Questory-eigenen `SoftAdventureAvatarGraphic`-Renderer fuer einen weichen, modernen 2D-Ganzkoerperstil mit gemeinsamen Ankerpunkten fuer alle Avatar-Slots eingefuehrt.
 - Migration `20260724214000_soft_adventure_avatar_labels` bereinigt sichtbare Pixel-Bezeichnungen im Avatar-Katalog, ohne technische Keys oder gespeicherte Loadouts zu veraendern.
 - Pixelart-Avatar-Buehne auf ein feineres `64x96`-Raster erweitert; bestehende Item-Keys, Level-Freischaltungen und gespeicherte Loadouts bleiben unveraendert kompatibel.
@@ -151,6 +154,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Changed
 
+- Avatar-Darstellung von reinem SVG auf eine self-hosted Hybrid-Komposition aus skalierbarer SVG-Basis und transparenten WebP-Illustrationslayern umgestellt; Item-Keys, Unlocks und gespeicherte Loadouts bleiben kompatibel.
 - Avatar-Werkstatt vollstaendig vom Pixel-Look auf den `Soft Adventure`-Stil umgestellt: Ganzkoerper, Haare, Gesicht, Kleidung, Huete, Brillen, Waffen, Gadgets, Tiere und Szenen werden als zusammenpassende SVG-Layer gerendert.
 - Soft-Adventure-Zeichenengine an die freigegebene Abenteuerillustration angeglichen: kleinere kindliche Koepfe, ausdrucksvollere Augen, feinere Haarstraehnen und Lockentexturen, kuerzere Halsuebergaenge, weichere Cel-Shading-Flaechen, Stofffalten, differenzierte Cargo-Hosen und detailliertere Schuhe.
 - Avatar-Szenen auf eine helle mint-/himmelblaue Abenteuerkulisse mit geometrischen Tiefenflaechen umgestellt.
@@ -163,6 +167,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Haar-, Hut-, Brillen-, Kleidungs-, Schuh- und Begleiter-Layer auf gemeinsame Kopf-, Koerper- und Fussanker ausgerichtet; Caps und Zauberhut verdecken die Augen nicht mehr.
 - Avatar-Koerper grafisch ueberarbeitet: Oberteile, Arme, Hosen, Roecke, Kleider und Schuhe besitzen sauberere Silhouetten, feinere Uebergaenge sowie eigene Licht- und Schattenpixel.
 - Rueckkehr-Button aus dem Kindmodus neu platziert: `Zurueck in den Elternbereich` sitzt nun zentral oberhalb der Kindmodus-Karte statt in der engen Statuszeile.
 - Shop-Belohnungen sind jetzt immer Anfragen: Backend erzeugt keine direkten `APPROVED`-Einloesungen mehr, Reward-Vorlagen sind anfragepflichtig, und die UI zeigt keine Sofortfreigabe mehr an.
@@ -185,6 +190,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Lokaler Frontend-Build und isolierter Browser-Test der SVG/WebP-Komposition mit vier stark unterschiedlichen Ganzkoerper-Loadouts erfolgreich; WebP-Layer laden, sind transparent und bleiben innerhalb der Avatar-Buehne.
 - Frontend-Build nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich.
 - Isolierter Browser-Test mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: alle `360x520`-SVGs sichtbar, `scrollWidth` entspricht `innerWidth`, keine horizontale Ueberbreite.
 - Portainer-Redeploy nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich; LXC-Backend-Health `ok`, Frontend HTTP `200`, neues Bundle mit `360x520`-Renderer und ohne alten `64x96`-Pixelrenderer ausgeliefert.

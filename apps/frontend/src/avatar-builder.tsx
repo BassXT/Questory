@@ -15,6 +15,7 @@ import {
   Typography
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
+import { illustratedAssetUrl, resolveIllustratedAssetForItem } from './illustrated-avatar-assets';
 import { SoftAdventureAvatarGraphic } from './soft-avatar-renderer';
 
 export type AvatarSlot =
@@ -375,6 +376,7 @@ interface AvatarItemOptionProps {
 
 function AvatarItemOption({ active, item, onSelect }: AvatarItemOptionProps) {
   const locked = item ? !item.isUnlocked : false;
+  const illustratedAsset = item ? resolveIllustratedAssetForItem(item.slot, item.key) : undefined;
 
   return (
     <Button
@@ -396,9 +398,19 @@ function AvatarItemOption({ active, item, onSelect }: AvatarItemOptionProps) {
       variant="outlined"
     >
       <Stack direction="row" spacing={1} sx={{ alignItems: 'center', justifyContent: 'space-between', minWidth: 0 }}>
-        <Typography sx={{ fontWeight: 900 }} noWrap>
-          {item?.name ?? 'Leer'}
-        </Typography>
+        <Stack direction="row" spacing={1} sx={{ alignItems: 'center', minWidth: 0 }}>
+          {illustratedAsset ? (
+            <Box
+              alt=""
+              component="img"
+              src={illustratedAssetUrl(illustratedAsset)}
+              sx={{ flex: '0 0 auto', height: 42, objectFit: 'contain', width: 42 }}
+            />
+          ) : null}
+          <Typography sx={{ fontWeight: 900 }} noWrap>
+            {item?.name ?? 'Leer'}
+          </Typography>
+        </Stack>
         <Chip
           color={active ? 'primary' : locked ? 'default' : 'success'}
           icon={locked ? <LockRoundedIcon /> : undefined}

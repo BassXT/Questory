@@ -1,4 +1,18 @@
 import type { CSSProperties } from 'react';
+import {
+  illustratedAssetUrl,
+  resolveIllustratedBackpack,
+  resolveIllustratedBottom,
+  resolveIllustratedGadget,
+  resolveIllustratedGlasses,
+  resolveIllustratedHair,
+  resolveIllustratedHat,
+  resolveIllustratedPet,
+  resolveIllustratedShoes,
+  resolveIllustratedTop,
+  resolveIllustratedWeapon,
+  type IllustratedAvatarAsset
+} from './illustrated-avatar-assets';
 
 export interface SoftAvatarItem {
   key: string;
@@ -58,6 +72,16 @@ export function SoftAdventureAvatarGraphic({
   const shoeColor = shoes?.colorPrimary ?? '#d63f61';
   const shoeAccent = shoes?.colorSecondary ?? '#8f263d';
   const hairAccent = darkenColor(hairColor, 0.24);
+  const illustratedHair = resolveIllustratedHair(hair?.key);
+  const illustratedHat = resolveIllustratedHat(hat?.key);
+  const illustratedGlasses = resolveIllustratedGlasses(glasses?.key);
+  const illustratedTop = resolveIllustratedTop(top?.key);
+  const illustratedBottom = resolveIllustratedBottom(bottom?.key);
+  const illustratedShoes = resolveIllustratedShoes(shoes?.key);
+  const illustratedBackpack = resolveIllustratedBackpack(gadget?.key);
+  const illustratedGadget = resolveIllustratedGadget(gadget?.key);
+  const illustratedWeapon = resolveIllustratedWeapon(weapon?.key);
+  const illustratedPet = resolveIllustratedPet(pet?.key);
 
   return (
     <svg
@@ -103,6 +127,12 @@ export function SoftAdventureAvatarGraphic({
         <filter id="soft-small-shadow" x="-40%" y="-40%" width="180%" height="190%">
           <feDropShadow dx="0" dy="4" stdDeviation="3" floodColor="#263447" floodOpacity="0.18" />
         </filter>
+        <filter id="illustrated-hair-tint" colorInterpolationFilters="sRGB">
+          <feColorMatrix type="matrix" values={colorizeMatrix(hairColor)} />
+        </filter>
+        <clipPath id="illustrated-hair-fringe">
+          <rect x="82" y="10" width="196" height="82" rx="28" />
+        </clipPath>
       </defs>
 
       <rect width="360" height="520" fill="#fffaf0" />
@@ -110,11 +140,9 @@ export function SoftAdventureAvatarGraphic({
       <ellipse cx="180" cy="466" rx="105" ry="17" fill="#253044" opacity="0.16" />
 
       <g filter="url(#soft-shadow)">
-        <g transform="translate(25.2 13) scale(0.86)">
-          <SoftHairBack itemKey={hair?.key} color={hairColor} accent={hairAccent} />
-        </g>
-        <SoftBackGadget item={gadget} />
-        <SoftWeapon item={weapon} />
+        <IllustratedHair asset={illustratedHair} front={false} />
+        {illustratedBackpack ? <IllustratedBackpack asset={illustratedBackpack} /> : <SoftBackGadget item={gadget} />}
+        {illustratedWeapon ? <IllustratedWeapon asset={illustratedWeapon} /> : <SoftWeapon item={weapon} />}
         <SoftBody
           bottom={bottom}
           bottomAccent={bottomAccent}
@@ -126,20 +154,158 @@ export function SoftAdventureAvatarGraphic({
           topAccent={topAccent}
           topColor={topColor}
         />
+        <IllustratedClothes
+          bottom={illustratedBottom}
+          bottomColor={bottomColor}
+          shoes={illustratedShoes}
+          shoeColor={shoeColor}
+          top={illustratedTop}
+          topColor={topColor}
+        />
         <g transform="translate(25.2 13) scale(0.86)">
           <SoftHead skin={skin} skinShadow={skinShadow} />
           <SoftFace eyes={eyes} eyesColor={eyesColor} mouth={mouth} skin={skin} />
-          <SoftHairFront itemKey={hair?.key} color={hairColor} accent={hairAccent} />
-          <SoftHat item={hat} hairColor={hairColor} />
-          <g transform="translate(18 10.2) scale(0.9)">
+        </g>
+        <IllustratedHair asset={illustratedHair} front />
+        {illustratedHat ? <IllustratedHat asset={illustratedHat} /> : <SoftHat item={hat} hairColor={hairColor} />}
+        {illustratedGlasses ? <IllustratedGlasses asset={illustratedGlasses} /> : (
+          <g transform="translate(40.7 21.8) scale(0.774)">
             <SoftGlasses item={glasses} />
           </g>
-        </g>
-        <SoftFrontGadget item={gadget} />
+        )}
+        {illustratedGadget ? <IllustratedGadget asset={illustratedGadget} /> : <SoftFrontGadget item={gadget} />}
       </g>
-      <SoftPet item={pet} />
+      {illustratedPet ? <IllustratedPet asset={illustratedPet} /> : <SoftPet item={pet} />}
     </svg>
   );
+}
+
+function IllustratedImage({
+  asset,
+  height,
+  tint,
+  width,
+  x,
+  y
+}: {
+  asset: IllustratedAvatarAsset;
+  height: number;
+  tint?: string;
+  width: number;
+  x: number;
+  y: number;
+}) {
+  const maskId = `illustrated-mask-${asset}`;
+
+  return (
+    <g>
+      {tint ? (
+        <defs>
+          <mask id={maskId} maskUnits="userSpaceOnUse" x={x} y={y} width={width} height={height}>
+            <image
+              height={height}
+              href={illustratedAssetUrl(asset)}
+              preserveAspectRatio="xMidYMid meet"
+              width={width}
+              x={x}
+              y={y}
+            />
+          </mask>
+        </defs>
+      ) : null}
+      <image
+        height={height}
+        href={illustratedAssetUrl(asset)}
+        preserveAspectRatio="xMidYMid meet"
+        width={width}
+        x={x}
+        y={y}
+      />
+      {tint ? (
+        <rect
+          fill={tint}
+          height={height}
+          mask={`url(#${maskId})`}
+          opacity="0.14"
+          style={{ mixBlendMode: 'color' }}
+          width={width}
+          x={x}
+          y={y}
+        />
+      ) : null}
+    </g>
+  );
+}
+
+function IllustratedHair({ asset, front }: { asset: IllustratedAvatarAsset; front: boolean }) {
+  return (
+    <image
+      clipPath={front ? 'url(#illustrated-hair-fringe)' : undefined}
+      filter="url(#illustrated-hair-tint)"
+      height="205"
+      href={illustratedAssetUrl(asset)}
+      preserveAspectRatio="xMidYMid meet"
+      width="172"
+      x="94"
+      y="13"
+    />
+  );
+}
+
+function IllustratedClothes({
+  bottom,
+  bottomColor,
+  shoes,
+  shoeColor,
+  top,
+  topColor
+}: {
+  bottom: IllustratedAvatarAsset;
+  bottomColor: string;
+  shoes: IllustratedAvatarAsset;
+  shoeColor: string;
+  top: IllustratedAvatarAsset;
+  topColor: string;
+}) {
+  return (
+    <g filter="url(#soft-small-shadow)">
+      <IllustratedImage asset={top} height={158} tint={topColor} width={150} x={105} y={178} />
+      <IllustratedImage asset={bottom} height={116} tint={bottomColor} width={132} x={114} y={305} />
+      <IllustratedImage asset={shoes} height={80} tint={shoeColor} width={160} x={100} y={404} />
+    </g>
+  );
+}
+
+function IllustratedBackpack({ asset }: { asset: IllustratedAvatarAsset }) {
+  return <IllustratedImage asset={asset} height={188} width={174} x={93} y={181} />;
+}
+
+function IllustratedHat({ asset }: { asset: IllustratedAvatarAsset }) {
+  const wizard = asset === 'hat-wizard-purple';
+  return <IllustratedImage asset={asset} height={wizard ? 126 : 102} width={wizard ? 204 : 162} x={wizard ? 78 : 99} y={wizard ? -24 : -8} />;
+}
+
+function IllustratedGlasses({ asset }: { asset: IllustratedAvatarAsset }) {
+  return <IllustratedImage asset={asset} height={52} width={126} x={117} y={94} />;
+}
+
+function IllustratedGadget({ asset }: { asset: IllustratedAvatarAsset }) {
+  return <IllustratedImage asset={asset} height={91} width={130} x={115} y={251} />;
+}
+
+function IllustratedWeapon({ asset }: { asset: IllustratedAvatarAsset }) {
+  if (asset === 'weapon-staff') {
+    return <IllustratedImage asset={asset} height={326} width={64} x={38} y={133} />;
+  }
+  if (asset === 'weapon-wand') {
+    return <IllustratedImage asset={asset} height={224} width={58} x={267} y={185} />;
+  }
+  return <IllustratedImage asset={asset} height={247} width={74} x={252} y={201} />;
+}
+
+function IllustratedPet({ asset }: { asset: IllustratedAvatarAsset }) {
+  const dragon = asset === 'pet-dragon';
+  return <IllustratedImage asset={asset} height={dragon ? 142 : 134} width={dragon ? 122 : 108} x={dragon ? 229 : 237} y={dragon ? 339 : 347} />;
 }
 
 function SoftBackground({ item }: { item: SoftAvatarItem | undefined }) {
@@ -1550,6 +1716,17 @@ function lightenColor(color: string, amount: number) {
     Math.round(green + (255 - green) * amount),
     Math.round(blue + (255 - blue) * amount)
   );
+}
+
+function colorizeMatrix(color: string) {
+  const [red, green, blue] = toRgb(color).map((channel) => Math.min(1.35, channel / 190 + 0.18));
+
+  return [
+    0.2126 * red, 0.7152 * red, 0.0722 * red, 0, 0,
+    0.2126 * green, 0.7152 * green, 0.0722 * green, 0, 0,
+    0.2126 * blue, 0.7152 * blue, 0.0722 * blue, 0, 0,
+    0, 0, 0, 1, 0
+  ].join(' ');
 }
 
 function darkenColor(color: string, amount: number) {
