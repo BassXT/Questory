@@ -402,6 +402,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Reward-Zuweisungen eingefuehrt: Prisma-Migration `20260724183000_reward_assignments`, `RewardAssignment`-Tabelle, `GET/POST /api/reward-assignments`, Kindershop filtert auf aktive zugewiesene Rewards und Reward-Einloesung verlangt eine bestehende Zuweisung.
 - Parent-Shop auf `Belohnungen` und `Zuweisen` umgestellt; Einloesen/Beantragen ist im Eltern-Shop entfernt und bleibt der Kinderansicht vorbehalten.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Zuweisungs-Slice erfolgreich.
+- Portainer-Redeploy nach Reward-Zuweisungs-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
