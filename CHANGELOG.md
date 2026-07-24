@@ -187,6 +187,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 - Frontend-Build nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich.
 - Isolierter Browser-Test mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: alle `360x520`-SVGs sichtbar, `scrollWidth` entspricht `innerWidth`, keine horizontale Ueberbreite.
+- Portainer-Redeploy nach illustrativer Soft-Adventure-Ueberarbeitung erfolgreich; LXC-Backend-Health `ok`, Frontend HTTP `200`, neues Bundle mit `360x520`-Renderer und ohne alten `64x96`-Pixelrenderer ausgeliefert.
 - Frontend-Build nach Soft-Adventure-Umstellung erfolgreich.
 - Prisma Validate und Backend-Build nach Avatar-Label-Migration erfolgreich.
 - Isolierte Browserpruefung mit vier unterschiedlichen Ganzkoerper-Loadouts auf Desktop und `390x844`: kein horizontaler Ueberlauf, alle `360x520`-SVGs sichtbar und keine Browserwarnungen oder Konsolenfehler.
