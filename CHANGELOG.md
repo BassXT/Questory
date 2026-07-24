@@ -8,6 +8,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Pixelart-Avatar-Buehne auf ein feineres `64x96`-Raster erweitert; bestehende Item-Keys, Level-Freischaltungen und gespeicherte Loadouts bleiben unveraendert kompatibel.
+- Avatar-Szenen fuer Wiese, Nacht, Zimmer und Labor um zusaetzliche Pixelmotive und Tiefenebenen erweitert.
 - Migration `20260724191000_rewards_always_require_approval` setzt bestehende Shop-Belohnungen auf anfragepflichtig.
 - Reward-Zuweisungen eingefuehrt: neue `RewardAssignment`-Tabelle, `GET/POST /api/reward-assignments`, Kindershop zeigt nur zugewiesene aktive Rewards.
 - Kinderansicht erhaelt einen `Elternbereich`-Button mit leichter Rechenaufgabe als Rueckkehr-Sperre.
@@ -147,6 +149,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Avatar-Koerper grafisch ueberarbeitet: Oberteile, Arme, Hosen, Roecke, Kleider und Schuhe besitzen sauberere Silhouetten, feinere Uebergaenge sowie eigene Licht- und Schattenpixel.
 - Rueckkehr-Button aus dem Kindmodus neu platziert: `Zurueck in den Elternbereich` sitzt nun zentral oberhalb der Kindmodus-Karte statt in der engen Statuszeile.
 - Shop-Belohnungen sind jetzt immer Anfragen: Backend erzeugt keine direkten `APPROVED`-Einloesungen mehr, Reward-Vorlagen sind anfragepflichtig, und die UI zeigt keine Sofortfreigabe mehr an.
 - Mobile Eltern-Shop-Belohnungen korrigiert: Formular, Motiv-Picker und Reward-Zeilen laufen auf iPhone-Breiten nicht mehr seitlich aus und lange Texte/Bild-URLs umbrechen sauber.
@@ -168,6 +171,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Build nach Avatar-Grafikpolitur erfolgreich.
+- Isolierte Browser-Pruefung mit drei unterschiedlichen Avatar-Loadouts auf Desktop und `390x844`: alle `64x96`-SVGs bleiben im Rahmen, keine Browserwarnungen oder Konsolenfehler.
 - Frontend-Build nach Platzierung des Elternbereich-Buttons im Kindmodus erfolgreich.
 - Portainer-Redeploy nach Platzierung des Elternbereich-Buttons im Kindmodus erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Validate, Backend-Build und Frontend-Build nach Shop-Anfragepflicht erfolgreich.

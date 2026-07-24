@@ -592,7 +592,7 @@ function AvatarPreview({
           aria-label={getAvatarAlt(childName)}
           role="img"
           shapeRendering="crispEdges"
-          viewBox="0 0 32 48"
+          viewBox="0 0 64 96"
           sx={{
             display: 'block',
             height: '100%',
@@ -605,21 +605,23 @@ function AvatarPreview({
             width: '100%'
           }}
         >
-          <rect width="32" height="48" fill={background?.colorPrimary ?? '#d9f2df'} />
           <PixelBackground itemKey={background?.key} color={background?.colorSecondary ?? '#8dd3a5'} />
-          <rect x="4" y="42" width="24" height="2" fill="#203047" opacity="0.18" />
-          <PixelPet item={pet} />
-          <g transform="translate(0 -1)">
+          <rect x="14" y="84" width="36" height="4" fill="#203047" opacity="0.14" />
+          <rect x="20" y="88" width="24" height="2" fill="#203047" opacity="0.08" />
+          <g transform="scale(2)">
+            <PixelPet item={pet} />
+          </g>
+          <g transform="scale(2) translate(0 -1)">
             <PixelWeapon item={weapon} />
             <PixelGadgetBack item={gadget} />
-            <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
-            <PixelArms skin={skin} />
-            <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
-            <PixelDressOverlay itemKey={top?.key} color={topColor} accent={topAccent} skin={skin} />
-            <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
           </g>
-          <image href={pixelHeadDataUri} x="8" y="2" width="16" height="16" />
-          <g transform="translate(0 -1)">
+          <PixelArms skin={skin} />
+          <PixelTop itemKey={top?.key} color={topColor} accent={topAccent} />
+          <PixelBottom itemKey={bottom?.key} color={bottomColor} accent={bottomAccent} skin={skin} />
+          <PixelDressOverlay itemKey={top?.key} color={topColor} accent={topAccent} skin={skin} />
+          <PixelShoes itemKey={shoes?.key} color={shoeColor} accent={shoeAccent} />
+          <image href={pixelHeadDataUri} x="16" y="4" width="32" height="32" />
+          <g transform="scale(2) translate(0 -1)">
             <PixelGadgetFront item={gadget} />
           </g>
         </Box>
@@ -942,11 +944,22 @@ function PixelBackground({ itemKey, color }: { itemKey: string | undefined; colo
   if (itemKey === 'background-night') {
     return (
       <g>
-        <rect x="0" y="0" width="32" height="48" fill="#25304f" />
-        <rect x="4" y="6" width="1" height="1" fill="#fff9d8" />
-        <rect x="25" y="5" width="1" height="1" fill="#fff9d8" />
-        <rect x="27" y="13" width="1" height="1" fill="#fff9d8" />
-        <rect x="6" y="36" width="20" height="7" fill="#18213d" />
+        <rect width="64" height="96" fill="#25304f" />
+        <rect x="46" y="10" width="8" height="8" fill="#fff3b0" />
+        <rect x="44" y="8" width="6" height="2" fill="#fff3b0" />
+        <rect x="52" y="12" width="4" height="4" fill="#25304f" />
+        <g fill="#fff9d8">
+          <rect x="8" y="12" width="2" height="2" />
+          <rect x="21" y="8" width="1" height="1" />
+          <rect x="53" y="27" width="2" height="2" />
+          <rect x="11" y="34" width="1" height="1" />
+          <rect x="43" y="39" width="1" height="1" />
+        </g>
+        <rect x="0" y="70" width="64" height="26" fill="#1d2947" />
+        <rect x="0" y="76" width="20" height="20" fill="#18213d" />
+        <rect x="44" y="73" width="20" height="23" fill="#18213d" />
+        <rect x="8" y="67" width="10" height="3" fill="#334263" />
+        <rect x="48" y="69" width="8" height="4" fill="#334263" />
       </g>
     );
   }
@@ -954,10 +967,18 @@ function PixelBackground({ itemKey, color }: { itemKey: string | undefined; colo
   if (itemKey === 'background-room') {
     return (
       <g>
-        <rect x="0" y="0" width="32" height="48" fill="#f3e1c8" />
-        <rect x="3" y="31" width="26" height="12" fill="#d9a96d" opacity="0.55" />
-        <rect x="4" y="23" width="6" height="5" fill="#fff7e8" />
-        <rect x="24" y="21" width="4" height="11" fill="#fff7e8" />
+        <rect width="64" height="96" fill="#f3e1c8" />
+        <rect x="0" y="60" width="64" height="4" fill="#d6ad7a" />
+        <rect x="0" y="64" width="64" height="32" fill="#c99158" />
+        <rect x="0" y="68" width="64" height="2" fill="#dfa96f" />
+        <rect x="0" y="82" width="64" height="2" fill="#aa7245" opacity="0.45" />
+        <rect x="7" y="14" width="16" height="20" fill="#fff7e8" />
+        <rect x="9" y="16" width="12" height="16" fill="#bfe1ed" />
+        <rect x="14" y="16" width="2" height="16" fill="#fff7e8" />
+        <rect x="9" y="23" width="12" height="2" fill="#fff7e8" />
+        <rect x="48" y="25" width="8" height="20" fill="#fff7e8" />
+        <rect x="50" y="29" width="4" height="12" fill="#8dd3a5" />
+        <rect x="13" y="85" width="38" height="7" fill="#edb8a9" opacity="0.75" />
       </g>
     );
   }
@@ -965,32 +986,56 @@ function PixelBackground({ itemKey, color }: { itemKey: string | undefined; colo
   if (itemKey === 'background-lab') {
     return (
       <g>
-        <rect x="0" y="0" width="32" height="48" fill="#d7ecf2" />
-        <rect x="4" y="8" width="7" height="1" fill="#ffffff" />
-        <rect x="10" y="4" width="1" height="5" fill="#ffffff" />
-        <rect x="22" y="8" width="1" height="7" fill="#ffffff" />
-        <rect x="22" y="14" width="7" height="1" fill="#ffffff" />
+        <rect width="64" height="96" fill="#d7ecf2" />
+        <rect x="0" y="62" width="64" height="34" fill="#bddbe3" />
+        <rect x="6" y="12" width="18" height="14" fill="#f8fdff" />
+        <rect x="8" y="14" width="14" height="10" fill="#9bd7e5" />
+        <rect x="42" y="10" width="3" height="24" fill="#ffffff" />
+        <rect x="42" y="31" width="16" height="3" fill="#ffffff" />
+        <rect x="49" y="20" width="7" height="2" fill="#5db7cf" />
+        <rect x="52" y="22" width="2" height="8" fill="#5db7cf" />
+        <rect x="4" y="76" width="12" height="9" fill="#eaf7fa" />
+        <rect x="7" y="73" width="6" height="3" fill="#ffffff" />
+        <rect x="8" y="79" width="4" height="3" fill="#72c6d8" />
       </g>
     );
   }
 
   return (
     <g>
-      <rect x="0" y="0" width="32" height="48" fill="#d9f2df" />
-      <rect x="0" y="34" width="32" height="14" fill={color} opacity="0.48" />
-      <rect x="4" y="36" width="5" height="5" fill="#ffffff" opacity="0.35" />
-      <rect x="24" y="35" width="5" height="5" fill="#ffffff" opacity="0.35" />
+      <rect width="64" height="96" fill="#d9f2df" />
+      <rect x="0" y="67" width="64" height="29" fill={color} opacity="0.55" />
+      <rect x="0" y="73" width="64" height="23" fill={darkenColor(color, 0.08)} opacity="0.38" />
+      <rect x="7" y="72" width="12" height="10" fill="#ffffff" opacity="0.36" />
+      <rect x="4" y="77" width="18" height="8" fill="#ffffff" opacity="0.24" />
+      <rect x="48" y="70" width="9" height="11" fill="#ffffff" opacity="0.34" />
+      <rect x="44" y="75" width="17" height="8" fill="#ffffff" opacity="0.22" />
+      <rect x="6" y="66" width="2" height="3" fill="#f5d96b" />
+      <rect x="55" y="65" width="2" height="3" fill="#f5d96b" />
+      <rect x="10" y="64" width="1" height="2" fill="#ffffff" />
+      <rect x="51" y="63" width="1" height="2" fill="#ffffff" />
     </g>
   );
 }
 
 function PixelTop({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
+  const shadow = darkenColor(color, 0.24);
+  const highlight = lightenColor(color, 0.22);
+
   return (
     <g>
-      <rect x="10" y="19" width="12" height="10" fill={color} />
-      <rect x="9" y="20" width="3" height="8" fill={color} />
-      <rect x="20" y="20" width="3" height="8" fill={color} />
-      <rect x="13" y="19" width="6" height="2" fill={accent} opacity="0.75" />
+      <rect x="20" y="36" width="24" height="23" fill={shadow} />
+      <rect x="18" y="40" width="4" height="16" fill={shadow} />
+      <rect x="44" y="40" width="4" height="16" fill={shadow} />
+      <rect x="21" y="37" width="22" height="20" fill={color} />
+      <rect x="19" y="41" width="4" height="14" fill={color} />
+      <rect x="43" y="41" width="4" height="14" fill={color} />
+      <rect x="23" y="37" width="3" height="19" fill={highlight} opacity="0.34" />
+      <rect x="39" y="38" width="3" height="18" fill={shadow} opacity="0.42" />
+      <rect x="27" y="36" width="10" height="4" fill={accent} />
+      <rect x="29" y="36" width="6" height="2" fill={darkenColor(accent, 0.18)} />
+      <rect x="22" y="57" width="20" height="2" fill={shadow} opacity="0.7" />
+      <g transform="scale(2)">
       {itemKey === 'top-pixel-striped' || itemKey === 'top-rainbow' ? (
         <g>
           <rect x="10" y="22" width="12" height="1" fill={accent} />
@@ -1141,6 +1186,7 @@ function PixelTop({ itemKey, color, accent }: { itemKey: string | undefined; col
           <rect x="15" y="22" width="2" height="2" fill="#fff3b0" />
         </g>
       ) : null}
+      </g>
     </g>
   );
 }
@@ -1162,21 +1208,27 @@ function PixelDressOverlay({
 
   return (
     <g>
-      <rect x="10" y="28" width="12" height="4" fill={color} />
-      <rect x="9" y="32" width="14" height="5" fill={color} />
-      <rect x="8" y="35" width="16" height="2" fill={accent} opacity="0.75" />
-      <rect x="11" y="37" width="3" height="4" fill={skin} />
-      <rect x="18" y="37" width="3" height="4" fill={skin} />
+      <rect x="20" y="56" width="24" height="8" fill={darkenColor(color, 0.22)} />
+      <rect x="18" y="64" width="28" height="8" fill={darkenColor(color, 0.22)} />
+      <rect x="16" y="70" width="32" height="5" fill={darkenColor(accent, 0.2)} />
+      <rect x="21" y="56" width="22" height="7" fill={color} />
+      <rect x="19" y="64" width="26" height="7" fill={color} />
+      <rect x="17" y="70" width="30" height="3" fill={accent} />
+      <rect x="22" y="75" width="6" height="7" fill={skin} />
+      <rect x="36" y="75" width="6" height="7" fill={skin} />
+      <rect x="22" y="75" width="2" height="7" fill={darkenColor(skin, 0.12)} opacity="0.55" />
       {itemKey === 'top-dress-flower' ? (
         <g>
-          <rect x="13" y="31" width="1" height="1" fill={accent} />
-          <rect x="19" y="33" width="1" height="1" fill={accent} />
+          <rect x="26" y="62" width="2" height="2" fill={accent} />
+          <rect x="38" y="66" width="2" height="2" fill={accent} />
+          <rect x="31" y="69" width="2" height="2" fill={lightenColor(accent, 0.28)} />
         </g>
       ) : null}
       {itemKey === 'top-dress-night' ? (
         <g>
-          <rect x="13" y="31" width="1" height="1" fill="#fff3b0" />
-          <rect x="18" y="34" width="1" height="1" fill="#fff3b0" />
+          <rect x="26" y="62" width="2" height="2" fill="#fff3b0" />
+          <rect x="36" y="68" width="2" height="2" fill="#fff3b0" />
+          <rect x="42" y="64" width="1" height="1" fill="#ffffff" />
         </g>
       ) : null}
     </g>
@@ -1184,25 +1236,42 @@ function PixelDressOverlay({
 }
 
 function PixelArms({ skin }: { skin: string }) {
+  const skinShadow = darkenColor(skin, 0.14);
+  const skinLight = lightenColor(skin, 0.16);
+
   return (
     <g>
-      <rect x="8" y="22" width="2" height="8" fill={skin} />
-      <rect x="22" y="22" width="2" height="8" fill={skin} />
-      <rect x="7" y="29" width="3" height="2" fill={skin} />
-      <rect x="22" y="29" width="3" height="2" fill={skin} />
+      <rect x="15" y="43" width="6" height="17" fill={skinShadow} />
+      <rect x="43" y="43" width="6" height="17" fill={skinShadow} />
+      <rect x="16" y="44" width="4" height="16" fill={skin} />
+      <rect x="44" y="44" width="4" height="16" fill={skin} />
+      <rect x="14" y="58" width="7" height="5" fill={skinShadow} />
+      <rect x="43" y="58" width="7" height="5" fill={skinShadow} />
+      <rect x="15" y="58" width="6" height="4" fill={skin} />
+      <rect x="43" y="58" width="6" height="4" fill={skin} />
+      <rect x="16" y="45" width="1" height="12" fill={skinLight} opacity="0.55" />
+      <rect x="44" y="59" width="4" height="1" fill={skinLight} opacity="0.45" />
     </g>
   );
 }
 
 function PixelBottom({ itemKey, color, accent, skin }: { itemKey: string | undefined; color: string; accent: string; skin: string }) {
+  const shadow = darkenColor(color, 0.24);
+  const highlight = lightenColor(color, 0.18);
+
   if (itemKey === 'bottom-shorts' || itemKey === 'bottom-yellow-shorts') {
     return (
       <g>
-        <rect x="10" y="29" width="12" height="4" fill={color} />
-        <rect x="10" y="33" width="4" height="3" fill={color} />
-        <rect x="18" y="33" width="4" height="3" fill={color} />
-        <rect x="11" y="36" width="3" height="5" fill={skin} />
-        <rect x="18" y="36" width="3" height="5" fill={skin} />
+        <rect x="20" y="58" width="24" height="9" fill={shadow} />
+        <rect x="20" y="66" width="9" height="7" fill={shadow} />
+        <rect x="35" y="66" width="9" height="7" fill={shadow} />
+        <rect x="21" y="59" width="22" height="7" fill={color} />
+        <rect x="21" y="66" width="8" height="5" fill={color} />
+        <rect x="35" y="66" width="8" height="5" fill={color} />
+        <rect x="22" y="59" width="20" height="2" fill={accent} opacity="0.72" />
+        <rect x="23" y="72" width="6" height="10" fill={skin} />
+        <rect x="35" y="72" width="6" height="10" fill={skin} />
+        <rect x="23" y="72" width="2" height="10" fill={darkenColor(skin, 0.12)} opacity="0.48" />
       </g>
     );
   }
@@ -1210,51 +1279,61 @@ function PixelBottom({ itemKey, color, accent, skin }: { itemKey: string | undef
   if (itemKey === 'bottom-pixel-skirt' || itemKey === 'bottom-striped-skirt' || itemKey === 'bottom-flower-skirt' || itemKey === 'bottom-rainbow-skirt') {
     return (
       <g>
-        <rect x="10" y="29" width="12" height="3" fill={color} />
-        <rect x="9" y="32" width="14" height="4" fill={color} />
+        <rect x="20" y="58" width="24" height="7" fill={shadow} />
+        <rect x="18" y="64" width="28" height="9" fill={shadow} />
+        <rect x="21" y="59" width="22" height="5" fill={color} />
+        <rect x="19" y="64" width="26" height="7" fill={color} />
         {itemKey === 'bottom-striped-skirt' || itemKey === 'bottom-rainbow-skirt' ? (
           <g>
-            <rect x="10" y="33" width="12" height="1" fill={accent} />
-            <rect x="11" y="35" width="10" height="1" fill={itemKey === 'bottom-rainbow-skirt' ? '#38a6a5' : accent} />
+            <rect x="20" y="66" width="24" height="2" fill={accent} />
+            <rect x="22" y="70" width="20" height="2" fill={itemKey === 'bottom-rainbow-skirt' ? '#38a6a5' : accent} />
           </g>
         ) : null}
         {itemKey === 'bottom-flower-skirt' ? (
           <g>
-            <rect x="13" y="33" width="1" height="1" fill={accent} />
-            <rect x="19" y="34" width="1" height="1" fill={accent} />
+            <rect x="26" y="66" width="2" height="2" fill={accent} />
+            <rect x="38" y="68" width="2" height="2" fill={accent} />
           </g>
         ) : null}
-        <rect x="11" y="36" width="3" height="5" fill={skin} />
-        <rect x="18" y="36" width="3" height="5" fill={skin} />
+        <rect x="23" y="72" width="6" height="10" fill={skin} />
+        <rect x="35" y="72" width="6" height="10" fill={skin} />
+        <rect x="23" y="72" width="2" height="10" fill={darkenColor(skin, 0.12)} opacity="0.48" />
       </g>
     );
   }
 
   return (
     <g>
-      <rect x="10" y="29" width="12" height="4" fill={color} />
-      <rect x="10" y="33" width="5" height="8" fill={color} />
-      <rect x="17" y="33" width="5" height="8" fill={color} />
-      <rect x="15" y="33" width="2" height="8" fill="#000000" opacity="0.14" />
-      {itemKey === 'bottom-space' || itemKey === 'bottom-pixel-royal' ? <rect x="11" y="31" width="10" height="1" fill={accent} /> : null}
+      <rect x="20" y="58" width="24" height="9" fill={shadow} />
+      <rect x="20" y="66" width="11" height="17" fill={shadow} />
+      <rect x="33" y="66" width="11" height="17" fill={shadow} />
+      <rect x="21" y="59" width="22" height="7" fill={color} />
+      <rect x="21" y="66" width="9" height="15" fill={color} />
+      <rect x="34" y="66" width="9" height="15" fill={color} />
+      <rect x="22" y="60" width="3" height="19" fill={highlight} opacity="0.3" />
+      <rect x="38" y="66" width="4" height="14" fill={shadow} opacity="0.35" />
+      <rect x="31" y="65" width="2" height="18" fill="#172033" opacity="0.18" />
+      {itemKey === 'bottom-space' || itemKey === 'bottom-pixel-royal' ? <rect x="22" y="62" width="20" height="2" fill={accent} /> : null}
       {itemKey === 'bottom-purple-leggings' ? (
         <g>
-          <rect x="10" y="36" width="5" height="1" fill={accent} />
-          <rect x="17" y="36" width="5" height="1" fill={accent} />
+          <rect x="21" y="72" width="9" height="2" fill={accent} />
+          <rect x="34" y="72" width="9" height="2" fill={accent} />
         </g>
       ) : null}
       {itemKey === 'bottom-checker-pants' ? (
         <g>
-          <rect x="10" y="34" width="3" height="2" fill={accent} />
-          <rect x="18" y="34" width="3" height="2" fill={accent} />
-          <rect x="13" y="38" width="2" height="2" fill={accent} />
-          <rect x="20" y="38" width="2" height="2" fill={accent} />
+          <rect x="21" y="68" width="5" height="4" fill={accent} />
+          <rect x="36" y="68" width="5" height="4" fill={accent} />
+          <rect x="26" y="76" width="4" height="4" fill={accent} />
+          <rect x="39" y="76" width="4" height="4" fill={accent} />
         </g>
       ) : null}
       {itemKey === 'bottom-cargo' ? (
         <g>
-          <rect x="10" y="35" width="3" height="2" fill={accent} />
-          <rect x="19" y="35" width="3" height="2" fill={accent} />
+          <rect x="20" y="70" width="7" height="5" fill={accent} />
+          <rect x="37" y="70" width="7" height="5" fill={accent} />
+          <rect x="22" y="70" width="3" height="1" fill={lightenColor(accent, 0.25)} />
+          <rect x="39" y="70" width="3" height="1" fill={lightenColor(accent, 0.25)} />
         </g>
       ) : null}
     </g>
@@ -1262,16 +1341,27 @@ function PixelBottom({ itemKey, color, accent, skin }: { itemKey: string | undef
 }
 
 function PixelShoes({ itemKey, color, accent }: { itemKey: string | undefined; color: string; accent: string }) {
+  const shadow = darkenColor(color, 0.25);
+  const highlight = lightenColor(color, 0.24);
+
   return (
     <g>
-      <rect x="9" y="41" width="6" height="2" fill={color} />
-      <rect x="17" y="41" width="6" height="2" fill={color} />
-      <rect x="8" y="43" width="7" height="2" fill={color} />
-      <rect x="17" y="43" width="7" height="2" fill={color} />
+      <rect x="18" y="81" width="12" height="5" fill={shadow} />
+      <rect x="34" y="81" width="12" height="5" fill={shadow} />
+      <rect x="16" y="85" width="14" height="6" fill={shadow} />
+      <rect x="34" y="85" width="14" height="6" fill={shadow} />
+      <rect x="19" y="82" width="10" height="3" fill={color} />
+      <rect x="35" y="82" width="10" height="3" fill={color} />
+      <rect x="17" y="85" width="13" height="4" fill={color} />
+      <rect x="34" y="85" width="13" height="4" fill={color} />
+      <rect x="18" y="85" width="6" height="1" fill={highlight} opacity="0.7" />
+      <rect x="35" y="85" width="6" height="1" fill={highlight} opacity="0.7" />
+      <rect x="16" y="89" width="14" height="2" fill={accent} opacity="0.8" />
+      <rect x="34" y="89" width="14" height="2" fill={accent} opacity="0.8" />
       {itemKey === 'shoes-glow' || itemKey === 'shoes-pixel-gold' ? (
         <g>
-          <rect x="8" y="45" width="7" height="1" fill={accent} />
-          <rect x="17" y="45" width="7" height="1" fill={accent} />
+          <rect x="15" y="91" width="16" height="2" fill={lightenColor(accent, 0.28)} opacity="0.72" />
+          <rect x="33" y="91" width="16" height="2" fill={lightenColor(accent, 0.28)} opacity="0.72" />
         </g>
       ) : null}
     </g>
