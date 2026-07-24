@@ -165,6 +165,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 ### Verified
 
 - Frontend-Build nach Kinderansicht-Navigationsfix erfolgreich.
+- Portainer-Redeploy nach Kinderansicht-Navigationsfix erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Prisma Generate, Prisma Validate, Backend-Build und Frontend-Build nach Reward-Zuweisungs-Slice erfolgreich.
 - Portainer-Redeploy nach Reward-Zuweisungs-Slice erfolgreich; LXC-Backend-Health OK und Frontend HTTP `200`.
 - Frontend-Build nach Eltern-UI-Struktur-Slice erfolgreich.

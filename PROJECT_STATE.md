@@ -405,6 +405,7 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 - Portainer-Redeploy nach Reward-Zuweisungs-Slice erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 - Kinderansicht-UI nach Screenshot-Feedback bereinigt: Die Parent-Dashboard-Tab-Leiste (`Uebersicht`, `Kinder`, `Quests`, `Shop`, `Bestaetigungen`) wird im `childMode` ausgeblendet; Navigation im Kindmodus bleibt nur `Status`, `Quests`, `Shop`, `Avatar` plus gesicherter `Elternbereich`.
 - Frontend-Build nach Kinderansicht-Navigationsfix erfolgreich.
+- Portainer-Redeploy nach Kinderansicht-Navigationsfix erfolgreich; LXC-Health danach erfolgreich: Backend `GET /api/health` OK, Frontend HTTP `200`.
 
 ## Offene Aufgaben
 
