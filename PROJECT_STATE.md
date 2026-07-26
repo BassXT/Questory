@@ -18,6 +18,7 @@ Der isolierte 3D-Prototyp wurde auf dem echten Geraet bewertet und als zu aufwen
 - Festes kindliches Kenney-Ganzkoerper-Rig fuer drei Hauttoene, zwei Haarformen, Gesichtsausdruecke, Oberteile, Unterteile und Schuhe eingefuehrt; freie Katalogfarben werden per SVG-Maske angewendet.
 - Avatar-Vorschau auf den neuen `KenneyAvatarGraphic`-Renderer umgestellt und den ungenutzten 72-KB-`SoftAdventureAvatarGraphic`-Renderer entfernt.
 - Vier kontrastreiche Loadouts lokal auf Desktop und iPhone-Breite visuell geprueft; Frontend-Produktionsbuild erfolgreich.
+- Kenney-2D-Rig aus Commit `8ca08df` per Portainer auf den LXC deployed; Backend und Frontend liefern HTTP `200`, das produktive Bundle enthaelt `/avatar-kenney/v1` und die neuen PNG-Einzelteile werden mit korrektem `image/png`-Content-Type ausgeliefert.
 - 3D-Machbarkeitspruefung abgeschlossen und nach echtem Geraetetest wieder entfernt; die Produktionsrichtung ist verbindlich 2D.
 - 2D-Assetvertrag fuer identische Ganzkoerperpose, Layerreihenfolge, mobile Picker-Kategorien, Farben und Level-Unlocks dokumentiert.
 - Kostenlose Avatarquellen geprueft und Kaufpakete verworfen: `Kenney Modular Characters` ist mit 425 PNG-Elementen, sechs Spritesheets, sechs Vektorquellen und CC0-Lizenz die technisch bevorzugte Basis; das CC0-Paket von nemo bleibt eine kindlichere, aber einfachere Alternative.

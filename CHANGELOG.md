@@ -210,6 +210,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Frontend-Produktionsbuild und visuelle Kreuzkombinationspruefung des Kenney-Rigs auf Desktop und iPhone-Breite erfolgreich; Zauberhut, Smiley-Shirt, Hals, Taille und Schuhe bleiben korrekt ausgerichtet.
+- Portainer-Redeploy des Kenney-2D-Rigs aus Commit `8ca08df` erfolgreich; LXC-Backend und Frontend liefern HTTP `200`, produktives Bundle und Kenney-PNG-Assets sind vorhanden.
 - Frontend-Build nach Rueckkehr zur gemeinsamen Ganzkoerper-Geometrie erfolgreich.
 - Isolierte Browserpruefung mit vier stark unterschiedlichen Loadouts erfolgreich: vier sichtbare `360x520`-SVGs mit jeweils 65 bis 82 Pfaden, keine Konsolenfehler und bei `390x844` kein horizontaler Ueberlauf.
 - Portainer-Redeploy der Qualitaetskorrektur aus Commit `f3745cf` erfolgreich; LXC-Backend-Health `ok`, Frontend und Bundle HTTP `200`, Hybrid-Clip-Code entfernt und Picker-WebPs weiterhin ausgeliefert.
