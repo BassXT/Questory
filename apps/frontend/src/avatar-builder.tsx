@@ -16,7 +16,7 @@ import {
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { illustratedAssetUrl, resolveIllustratedAssetForItem } from './illustrated-avatar-assets';
-import { SoftAdventureAvatarGraphic } from './soft-avatar-renderer';
+import { KenneyAvatarGraphic } from './kenney-avatar-renderer';
 
 export type AvatarSlot =
   | 'background'
@@ -566,7 +566,7 @@ function AvatarPreview({
           width: { xs: 'min(190px, 56vw)', sm: 250, md: 310 }
         }}
       >
-        <SoftAdventureAvatarGraphic
+        <KenneyAvatarGraphic
           ariaLabel={getAvatarAlt(childName)}
           background={background}
           body={body}

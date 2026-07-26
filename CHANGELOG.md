@@ -8,6 +8,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Kuratierten CC0-Referenzsatz aus `Kenney Modular Characters` mit Originallizenz, Quellenhinweis, drei Hauttoenen, Gesichtsteilen, Haaren, Oberteilen, Unterteilen und Schuhen hinzugefuegt.
+- Festen kindlichen `KenneyAvatarGraphic`-Ganzkoerperrenderer mit kompatiblen Gelenken, fester Ebenenfolge und SVG-Farbmasken fuer bestehende Katalogfarben hinzugefuegt.
 - Kostenlose Avatarquellen evaluiert und dokumentiert: `Kenney Modular Characters` mit 425 PNG-Elementen und CC0-Lizenz als bevorzugte 2D-Rig-Basis sowie das kindlichere CC0-Paket von nemo als Alternative.
 - Verbindlichen 2D-Paper-Doll-Assetvertrag fuer identische Ganzkoerperpose, Layerreihenfolge, mobile Picker-Kategorien, Farben, Level-Unlocks und Lizenzablage dokumentiert.
 - Isoliertes Three.js-Avatar-Labor mit zwei lokal gespeicherten CC0-Quaternius-glTF-Modellen, gemeinsamem Rig, Idle-Animation, Orbit-Steuerung und austauschbaren Segmenten fuer Kopf, Oberteil, Beine, Schuhe und Rucksack hinzugefuegt.
@@ -159,6 +161,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Changed
 
+- Grosse Avatar-Vorschau vom abstrakten Questory-Renderer auf das kompatible Kenney-2D-Rig umgestellt; bestehende Item-Keys, Unlocks, Farben und Loadouts bleiben erhalten.
+
 - Projektziel auf den aktuellen privaten Familienbetrieb praezisiert; eine oeffentliche Veroeffentlichung ist derzeit kein Ziel.
 - Grosse Avatar-Vorschau nach echtem iPhone-Qualitaetstest wieder auf die vollstaendig gemeinsame `SoftAdventureAvatarGraphic`-Ganzkoerper-Geometrie umgestellt; die 38 Konzept-WebPs bleiben als Item-Picker-Vorschauen erhalten.
 - Produktionsregel fuer kuenftige Avatar-Art festgelegt: Keine direkt ausgeschnittenen Katalogthumbnails mehr, sondern alle sichtbaren Layer auf einer verbindlichen `360x520`-Masterpose mit identischen Ankern und Zeichenebenen.
@@ -173,6 +177,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Removed
 
+- Nicht mehr verwendeten `SoftAdventureAvatarGraphic`-Renderer und die interne Kenney-QA-Referenzseite nach visueller Desktop-/iPhone-Pruefung entfernt.
 - Isoliertes 3D-Avatar-Labor, beide Quaternius-glTF-Modelle sowie die Three.js-Abhaengigkeiten nach echtem Geraetetest wieder entfernt; Questory verfolgt verbindlich den einfacheren 2D-Paper-Doll-Builder.
 - Alten Pixel-/Toon-Renderer mit rund 1.550 Zeilen ungenutztem Zeichen-Code entfernt.
 - `@dicebear/core` und `@dicebear/pixel-art` aus den Frontend-Abhaengigkeiten entfernt.
