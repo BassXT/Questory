@@ -176,6 +176,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Fixed
 
+- Portainer-Redeploy nach vollem Docker-Dateisystem wiederhergestellt: 1,75 GB ausschliesslich aus dem Buildcache entfernt, Questory neu gebaut und alle Live-Endpunkte geprueft.
 - Sichtbar zerrissene Uebergaenge zwischen Kopf/Haaren, Hals/Oberteil, Taille/Rock und Beinen/Schuhen beseitigt, indem die nicht produktionsfaehigen Konzept-WebPs nicht mehr zur Ganzkoerperfigur kombiniert werden.
 - Doppelte Kleidungsumrisse, sichtbare Modellkopf-/Halsfragmente in Frisuren, Luecken an der Taille sowie uneinheitliche Schulter-, Schuh- und Bodenpositionen im Hybrid-Avatar korrigiert.
 - Haar-, Hut-, Brillen-, Kleidungs-, Schuh- und Begleiter-Layer auf gemeinsame Kopf-, Koerper- und Fussanker ausgerichtet; Caps und Zauberhut verdecken die Augen nicht mehr.

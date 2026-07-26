@@ -16,6 +16,8 @@ Als technisch saubere Alternative ist nun ein isoliertes 3D-Avatar-Labor vorhand
 
 - Isoliertes, lazy geladenes Three.js-Avatar-Labor mit lokalem CC0-glTF-Asset, gemeinsamem Rig, Idle-Animation, Orbit-Steuerung und austauschbaren Segmenten fuer Kopf, Oberteil, Beine, Schuhe und Rucksack.
 - Desktop- und Mobile-Canvas-QA fuer das 3D-Labor erfolgreich: `1280x900` und `390x844`, nichtleere Pixelwerte, keine Browserfehler und kein horizontaler Overflow.
+- 3D-Labor mit Commit `73cf625` auf GitHub gepusht und per Portainer deployed; Backend, Frontend und beide glTF-Modell-URLs liefern HTTP `200`, alle drei Questory-Container laufen.
+- Portainer-Buildfehler als Speicherproblem diagnostiziert: Docker-Dateisystem stand bei 100 Prozent. Ausschliesslich 1,75 GB Buildcache wurden entfernt; nach erfolgreichem Neubau meldet der Questory-Container 15 GB frei bei 65 Prozent Belegung.
 - Aktueller Betriebszweck festgehalten: Questory wird ausschliesslich privat fuer die eigene Familie self-hosted betrieben; eine oeffentliche Veroeffentlichung ist derzeit kein Ziel.
 - Transparente Questory-WebP-Art-Library mit 38 illustrierten Layern fuer Haare, Kleidung, Schuhe, Huete, Brillen, Rucksaecke, Kamera, Waffen und Tiere aus der freigegebenen Stilreferenz erzeugt.
 - Reproduzierbare Export-Pipeline `scripts/extract-avatar-art.py` mit Hintergrundfreistellung, Randfragment-Bereinigung und visueller Kontaktbogen-Pruefung angelegt.
@@ -525,6 +527,7 @@ Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep er
 - Der Frontend-Hauptchunk liegt trotz entfernter DiceBear-Pakete weiterhin ueber der Vite-Warngrenze. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
 - Die aktuelle Illustrationsquelle ist ein fertiger Katalogbogen und kein gemeinsamer Master mit identischer Ganzkoerperpose pro Asset. Ihre WebPs sind deshalb nur Picker-Vorschauen und keine Produktionslayer. Fuer die endgueltige Art-Library muessen alle sichtbaren Teile direkt auf derselben `360x520`-Masterpose gestaltet und exportiert werden.
 - Das aktuelle 3D-Labor nutzt ein technisch passendes, aber sichtbar kantiges Low-Poly-CC0-Modell. Es beweist die nahtlose Modularitaet, erreicht jedoch noch nicht den gewuenschten weichen Questory-Illustrationsstil und speichert keine Auswahl.
+- Der Docker-LXC lief vor dem 3D-Labor-Redeploy mit nur 136 MB freiem Speicher bei 100 Prozent Belegung. Ein Buildcache-Prune hat den akuten Fehler geloest und der neue Questory-Container meldet 15 GB frei; die Belegung sollte trotzdem beim naechsten Wartungslauf erneut kontrolliert werden.
 
 ## Ideen fuer spaeter
 
