@@ -3,7 +3,6 @@ import CheckroomRoundedIcon from '@mui/icons-material/CheckroomRounded';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
 import PaletteRoundedIcon from '@mui/icons-material/PaletteRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
-import ViewInArRoundedIcon from '@mui/icons-material/ViewInArRounded';
 import {
   Box,
   Button,
@@ -15,13 +14,9 @@ import {
   TextField,
   Typography
 } from '@mui/material';
-import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { illustratedAssetUrl, resolveIllustratedAssetForItem } from './illustrated-avatar-assets';
 import { SoftAdventureAvatarGraphic } from './soft-avatar-renderer';
-
-const Avatar3dLabDialog = lazy(() =>
-  import('./avatar-3d-lab').then((module) => ({ default: module.Avatar3dLabDialog }))
-);
 
 export type AvatarSlot =
   | 'background'
@@ -143,7 +138,6 @@ export function AvatarBuilderPanel({
 }: AvatarBuilderPanelProps) {
   const [draftLoadout, setDraftLoadout] = useState<Record<string, string>>({});
   const [selectedSlot, setSelectedSlot] = useState<AvatarSlot>('top');
-  const [avatar3dLabOpen, setAvatar3dLabOpen] = useState(false);
   const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
   const itemsByKey = useMemo(() => new Map((avatar?.items ?? []).map((item) => [item.key, item])), [avatar?.items]);
   const visibleSlots = avatar?.slots.length ? orderSlots(avatar.slots) : slotOrder;
@@ -207,14 +201,6 @@ export function AvatarBuilderPanel({
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Chip icon={<AutoAwesomeRoundedIcon />} label={avatar ? `Level ${avatar.child.level}` : 'Kein Level'} variant="outlined" />
             <Chip label={`${unlockedCount}/${avatar?.items.length ?? 0} frei`} variant="outlined" />
-            <Button
-              onClick={() => setAvatar3dLabOpen(true)}
-              size="small"
-              startIcon={<ViewInArRoundedIcon />}
-              variant="outlined"
-            >
-              3D testen
-            </Button>
           </Stack>
         </Box>
 
@@ -378,11 +364,6 @@ export function AvatarBuilderPanel({
           </Box>
         )}
       </Stack>
-      <Suspense fallback={null}>
-        {avatar3dLabOpen ? (
-          <Avatar3dLabDialog open={avatar3dLabOpen} onClose={() => setAvatar3dLabOpen(false)} />
-        ) : null}
-      </Suspense>
     </Paper>
   );
 }

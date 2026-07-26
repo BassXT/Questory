@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Verbindlichen 2D-Paper-Doll-Assetvertrag fuer identische Ganzkoerperpose, Layerreihenfolge, mobile Picker-Kategorien, Farben, Level-Unlocks und Lizenzablage dokumentiert.
 - Isoliertes Three.js-Avatar-Labor mit zwei lokal gespeicherten CC0-Quaternius-glTF-Modellen, gemeinsamem Rig, Idle-Animation, Orbit-Steuerung und austauschbaren Segmenten fuer Kopf, Oberteil, Beine, Schuhe und Rucksack hinzugefuegt.
 - Desktop- und iPhone-Canvas-QA fuer das 3D-Labor mit Pixelpruefung, Browserfehlerkontrolle und Overflow-Messung durchgefuehrt.
 - Benanntes Paper-Doll-Attachment-Rig fuer den Avatar-Renderer hinzugefuegt: 38 WebP-Assets besitzen nun eigene Anker-, Ursprungs-, Groessen- und Offset-Metadaten.
@@ -171,6 +172,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Removed
 
+- Isoliertes 3D-Avatar-Labor, beide Quaternius-glTF-Modelle sowie die Three.js-Abhaengigkeiten nach echtem Geraetetest wieder entfernt; Questory verfolgt verbindlich den einfacheren 2D-Paper-Doll-Builder.
 - Alten Pixel-/Toon-Renderer mit rund 1.550 Zeilen ungenutztem Zeichen-Code entfernt.
 - `@dicebear/core` und `@dicebear/pixel-art` aus den Frontend-Abhaengigkeiten entfernt.
 

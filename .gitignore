@@ -10,6 +10,8 @@ coverage/
 # Environment
 .env
 .env.local
+private-assets/
+apps/frontend/public/avatar-licensed/
 .env.*.local
 
 # Logs
