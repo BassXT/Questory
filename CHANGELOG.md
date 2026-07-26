@@ -8,6 +8,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Kostenlose Avatarquellen evaluiert und dokumentiert: `Kenney Modular Characters` mit 425 PNG-Elementen und CC0-Lizenz als bevorzugte 2D-Rig-Basis sowie das kindlichere CC0-Paket von nemo als Alternative.
 - Verbindlichen 2D-Paper-Doll-Assetvertrag fuer identische Ganzkoerperpose, Layerreihenfolge, mobile Picker-Kategorien, Farben, Level-Unlocks und Lizenzablage dokumentiert.
 - Isoliertes Three.js-Avatar-Labor mit zwei lokal gespeicherten CC0-Quaternius-glTF-Modellen, gemeinsamem Rig, Idle-Animation, Orbit-Steuerung und austauschbaren Segmenten fuer Kopf, Oberteil, Beine, Schuhe und Rucksack hinzugefuegt.
 - Desktop- und iPhone-Canvas-QA fuer das 3D-Labor mit Pixelpruefung, Browserfehlerkontrolle und Overflow-Messung durchgefuehrt.

@@ -16,7 +16,7 @@ Der isolierte 3D-Prototyp wurde auf dem echten Geraet bewertet und als zu aufwen
 
 - 3D-Machbarkeitspruefung abgeschlossen und nach echtem Geraetetest wieder entfernt; die Produktionsrichtung ist verbindlich 2D.
 - 2D-Assetvertrag fuer identische Ganzkoerperpose, Layerreihenfolge, mobile Picker-Kategorien, Farben und Level-Unlocks dokumentiert.
-- School-Boy-/School-Girl-Dress-up-Packs von Igor Galochkin als derzeit passendste Quellassets identifiziert: hunderte transparente `2048x2048`-PNG-Layer mit Gesicht, Haaren, Kleidung, Schuhen und Extras.
+- Kostenlose Avatarquellen geprueft und Kaufpakete verworfen: `Kenney Modular Characters` ist mit 425 PNG-Elementen, sechs Spritesheets, sechs Vektorquellen und CC0-Lizenz die technisch bevorzugte Basis; das CC0-Paket von nemo bleibt eine kindlichere, aber einfachere Alternative.
 - 2D-Rueckbau mit Commit `b8d1169` per Portainer deployed; Backend und Frontend liefern HTTP `200`, der produktive Bundletext enthaelt keinen 3D-Einstieg mehr und die alten glTF-Pfade liefern keine Modelle mehr aus.
 - Portainer-Buildfehler als Speicherproblem diagnostiziert: Docker-Dateisystem stand bei 100 Prozent. Ausschliesslich 1,75 GB Buildcache wurden entfernt; nach erfolgreichem Neubau meldet der Questory-Container 15 GB frei bei 65 Prozent Belegung.
 - Aktueller Betriebszweck festgehalten: Questory wird ausschliesslich privat fuer die eigene Familie self-hosted betrieben; eine oeffentliche Veroeffentlichung ist derzeit kein Ziel.
@@ -447,7 +447,7 @@ Der isolierte 3D-Prototyp wurde auf dem echten Geraet bewertet und als zu aufwen
 
 ## Naechster Schritt
 
-Als naechstes die beiden freigegebenen Kinder-Dress-up-Assetpakete beschaffen und lokal unter `private-assets/avatar/source/` ablegen. Vor dem Import muss das aktuell oeffentliche GitHub-Repository privat geschaltet oder ein getrennter privater Asset-Deploymentweg eingerichtet werden. Danach wird zuerst nur ein kleiner Referenzsatz aus Basisfigur, Gesicht, zwei Haaren, zwei Oberteilen, zwei Unterteilen und zwei Paar Schuhen importiert und in allen Kreuzkombinationen auf Desktop und iPhone geprueft.
+Als naechstes den visuellen Stil von `Kenney Modular Characters` bestaetigen. Danach wird das CC0-Paket mit Lizenzdatei importiert und zuerst nur ein kleiner, kindlich proportionierter Referenzsatz aus Basisfigur, Gesicht, zwei Haaren, zwei Oberteilen, zwei Unterteilen und zwei Paar Schuhen auf einem festen Questory-Rig umgesetzt. Erst nach der Kreuzkombinationspruefung auf Desktop und iPhone wird der restliche Katalog angebunden.
 
 Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep erfolgen, um sichtbare deutsche Texte wieder mit Umlauten zu schreiben.
 
@@ -494,7 +494,8 @@ Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep er
 - Die visuelle Avatar-Darstellung nutzt den Questory-eigenen `SoftAdventureAvatarGraphic`-Renderer. Das gemeinsame `360x520`-SVG-Koordinatensystem ist eine statische Paper-Doll-Kompositionsbuehne mit benannten Ankern und eigener Attachment-Geometrie pro WebP. Eine feste Zeichenreihenfolge kontrolliert Ueberdeckungen. Die SVG-Basis liefert nur Szene, Kopf/Gesicht sowie weitgehend verdeckte Hautpartien und Haende; ein sichtbares zweites Kleidungsgeruest unter den WebP-Layern wird vermieden. Diese Hybridloesung liefert reichere Haare, Kleidung und Sammelobjekte ohne externe Avatar-API und ohne die bestehenden Slot-/Loadout-Vertraege zu veraendern.
 - Der Stilwechsel veraendert weder Slot-Vertraege noch persistierte Item-Keys oder `ChildAvatarLoadout.equippedItems`. Alte Keys mit `pixel` im technischen Namen bleiben aus Datenkompatibilitaet bestehen, sind aber in der UI nicht mehr als Pixelstil beschriftet.
 - Eine 3D-Ansicht ist nicht Teil der Produktarchitektur. Der verworfene Prototyp wird vollstaendig entfernt, damit nur ein klarer Avatarweg gewartet werden muss.
-- Produktionsassets fuer den 2D-Builder muessen aus einem echten Dress-up-/Paper-Doll-System mit identischer Ganzkoerperpose und Leinwand stammen. Geschlechter duerfen getrennte kompatible Kataloge verwenden; die bestehende Loadout-API bleibt der fachliche Vertrag.
+- Produktionsassets fuer den 2D-Builder muessen aus einem echten Dress-up-/Paper-Doll-System stammen. Identische Ganzkoerper-Layer und kompatible Einzelteil-Rigs mit festen Questory-Ankern sind zulaessig. Geschlechter duerfen getrennte kompatible Kataloge verwenden; die bestehende Loadout-API bleibt der fachliche Vertrag.
+- Avatarquellen muessen kostenlos und mit dem oeffentlichen Repository kompatibel sein; bevorzugt wird CC0. `Kenney Modular Characters` wird als Einzelteil-Rig mit festen Questory-Ankern integriert, nicht als frei verschobene Vollbild-Layer.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
@@ -528,7 +529,7 @@ Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep er
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
 - Der Frontend-Hauptchunk liegt trotz entfernter DiceBear-Pakete weiterhin ueber der Vite-Warngrenze. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
 - Die aktuelle Illustrationsquelle ist ein fertiger Katalogbogen und kein gemeinsamer Master mit identischer Ganzkoerperpose pro Asset. Ihre WebPs sind deshalb nur Picker-Vorschauen und keine Produktionslayer. Fuer die endgueltige Art-Library muessen alle sichtbaren Teile direkt auf derselben `360x520`-Masterpose gestaltet und exportiert werden.
-- Das GitHub-Repository ist aktuell oeffentlich. Bezahlte Avatar-Rohassets duerfen dort nicht eingecheckt werden; vor dem Assetimport ist ein privates Repository oder ein getrennter privater Asset-Deploymentweg erforderlich.
+- Der kostenlose Kenney-Katalog deckt Haut, Gesicht, Haare, Oberteile, Hosen und Schuhe ab, aber keine umfangreichen Questory-spezifischen Huete, Tiere, Taschen oder Fantasy-Gadgets. Diese Extras muessen spaeter als eigene kompatible CC0-/Questory-Layer ergaenzt werden.
 - Der Docker-LXC lief vor dem 3D-Labor-Redeploy mit nur 136 MB freiem Speicher bei 100 Prozent Belegung. Ein Buildcache-Prune hat den akuten Fehler geloest und der neue Questory-Container meldet 15 GB frei; die Belegung sollte trotzdem beim naechsten Wartungslauf erneut kontrolliert werden.
 
 ## Ideen fuer spaeter
