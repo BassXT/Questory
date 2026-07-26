@@ -216,6 +216,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Portainer-Redeploy des vereinfachten Ganzkoerper-Builders aus Commit `5064fac` erfolgreich; Katalogmigration angewendet, NestJS gestartet, Backend/Frontend HTTP `200`, neue Figuren- und Tier-PNGs als `image/png` ausgeliefert und alte Kenney-Pfade aus dem Produktionsbundle entfernt.
 - Prisma-Schema validiert, Prisma Client generiert sowie Backend- und Frontend-Produktionsbuild nach der Vereinfachung auf Figur plus Tier erfolgreich.
 - Alle 16 Produktions-PNGs auf Alpha-Kanal, transparente Ecken, normalisierte Leinwand und sichtbaren Inhalt geprueft; Werkstatt auf Desktop und in mobiler Darstellung visuell kontrolliert.
 - Frontend-Produktionsbuild und visuelle Kreuzkombinationspruefung des Kenney-Rigs auf Desktop und iPhone-Breite erfolgreich; Zauberhut, Smiley-Shirt, Hals, Taille und Schuhe bleiben korrekt ausgerichtet.

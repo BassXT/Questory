@@ -21,6 +21,7 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 - Produktionsassets auf gemeinsame transparente Leinwaende normalisiert und unter `apps/frontend/public/avatar-complete/v1` abgelegt.
 - Avatar-API und Werkstatt auf die aktiven Slots `character` und `pet` reduziert; alte Katalogitems bleiben erhalten, werden aber deaktiviert.
 - Mobile Werkstatt auf zwei klare Tabs und horizontal swipebare Auswahlkarten reduziert; Desktop verwendet ein Dreierspaltenraster.
+- Ganzkoerper-Builder aus Commit `5064fac` per Portainer auf den LXC deployed; Migration `20260726234500_complete_avatar_presets` wurde erfolgreich angewendet, NestJS gestartet und Backend, Frontend, Figuren-/Tier-PNGs sowie das produktive Bundle geprueft.
 - Historischer Kenney-Einzelteilversuch abgeschlossen, auf dem LXC geprueft und nach dem Qualitaetsvergleich vollstaendig aus dem aktiven Frontend entfernt.
 - 3D-Machbarkeitspruefung abgeschlossen und nach echtem Geraetetest wieder entfernt; die Produktionsrichtung ist verbindlich 2D.
 - 2D-Assetvertrag fuer identische Ganzkoerperpose, Layerreihenfolge, mobile Picker-Kategorien, Farben und Level-Unlocks dokumentiert.
