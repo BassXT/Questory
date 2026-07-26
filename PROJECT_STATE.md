@@ -17,6 +17,7 @@ Der isolierte 3D-Prototyp wurde auf dem echten Geraet bewertet und als zu aufwen
 - 3D-Machbarkeitspruefung abgeschlossen und nach echtem Geraetetest wieder entfernt; die Produktionsrichtung ist verbindlich 2D.
 - 2D-Assetvertrag fuer identische Ganzkoerperpose, Layerreihenfolge, mobile Picker-Kategorien, Farben und Level-Unlocks dokumentiert.
 - School-Boy-/School-Girl-Dress-up-Packs von Igor Galochkin als derzeit passendste Quellassets identifiziert: hunderte transparente `2048x2048`-PNG-Layer mit Gesicht, Haaren, Kleidung, Schuhen und Extras.
+- 2D-Rueckbau mit Commit `b8d1169` per Portainer deployed; Backend und Frontend liefern HTTP `200`, der produktive Bundletext enthaelt keinen 3D-Einstieg mehr und die alten glTF-Pfade liefern keine Modelle mehr aus.
 - Portainer-Buildfehler als Speicherproblem diagnostiziert: Docker-Dateisystem stand bei 100 Prozent. Ausschliesslich 1,75 GB Buildcache wurden entfernt; nach erfolgreichem Neubau meldet der Questory-Container 15 GB frei bei 65 Prozent Belegung.
 - Aktueller Betriebszweck festgehalten: Questory wird ausschliesslich privat fuer die eigene Familie self-hosted betrieben; eine oeffentliche Veroeffentlichung ist derzeit kein Ziel.
 - Transparente Questory-WebP-Art-Library mit 38 illustrierten Layern fuer Haare, Kleidung, Schuhe, Huete, Brillen, Rucksaecke, Kamera, Waffen und Tiere aus der freigegebenen Stilreferenz erzeugt.
