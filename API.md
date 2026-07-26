@@ -309,7 +309,7 @@ Aktualisiert ein Kinderprofil.
 
 ### `GET /api/children/{childId}/avatar`
 
-Liefert den Avatar-Katalog, freigeschaltete Items und aktuell ausgeruestete Teile fuer ein Kind.
+Liefert den Katalog vollstaendiger Kinderfiguren und Begleittiere sowie die aktuell gewaehlte Kombination fuer ein Kind.
 
 Status: implementiert.
 
@@ -322,8 +322,11 @@ Hinweise:
 - Eltern/Admin koennen Avatare aller Kinder der aktuellen Familie abrufen.
 - Kinder mit eigenem Login koennen nur den eigenen Avatar abrufen.
 - Items werden automatisch ueber das Kinder-Level freigeschaltet; spaetere manuelle Inventar-Freischaltungen sind ueber `ChildAvatarItem` vorbereitet.
-- `equippedItems` ist eine Slot-zu-Item-Key-Map, zum Beispiel `top -> top-hoodie-blue`.
-- Aktive Slots sind `background`, `body`, `hair`, `eyes`, `mouth`, `hat`, `bottom`, `top`, `shoes`, `glasses`, `gadget`, `weapon` und `pet`.
+- `equippedItems` ist eine Slot-zu-Item-Key-Map.
+- Aktive Slots sind `character` und `pet`.
+- `character` ist immer belegt; ohne gespeicherte Auswahl wird `character-hoodie-teal` verwendet.
+- `pet` ist optional und kann entfernt werden.
+- Alte modulare Avatar-Items bleiben aus Datenkompatibilitaet gespeichert, sind jedoch inaktiv und werden nicht ausgeliefert.
 
 Response-Auszug:
 
@@ -336,28 +339,21 @@ Response-Auszug:
     "xp": 260,
     "coins": 42
   },
-  "slots": ["background", "body", "hair", "eyes", "mouth", "hat", "bottom", "top", "shoes", "glasses", "gadget", "weapon", "pet"],
+  "slots": ["character", "pet"],
   "equippedItems": {
-    "background": "background-meadow",
-    "body": "body-sunrise",
-    "hair": "hair-swoop",
-    "eyes": "eyes-bright",
-    "mouth": "mouth-smile",
-    "bottom": "bottom-jeans",
-    "top": "top-hoodie-blue",
-    "shoes": "shoes-sneaker-red",
+    "character": "character-hoodie-teal",
     "pet": "pet-cat"
   },
-  "unlockedItemKeys": ["background-meadow", "body-sunrise"],
+  "unlockedItemKeys": ["character-hoodie-teal", "pet-cat"],
   "items": [
     {
-      "key": "top-hoodie-blue",
-      "slot": "top",
-      "name": "Blauer Hoodie",
+      "key": "character-hoodie-teal",
+      "slot": "character",
+      "name": "Abenteuer-Hoodie",
       "requiredLevel": 1,
       "rarity": "COMMON",
-      "layerOrder": 50,
-      "colorPrimary": "#3978d8",
+      "layerOrder": 10,
+      "colorPrimary": "#0f766e",
       "colorSecondary": "#f4c95d",
       "isUnlocked": true,
       "unlockReason": "LEVEL"
@@ -387,9 +383,8 @@ Request:
 ```json
 {
   "equippedItems": {
-    "top": "top-jacket-orange",
-    "bottom": "bottom-cargo",
-    "glasses": "glasses-round"
+    "character": "character-knight",
+    "pet": "pet-lion"
   }
 }
 ```

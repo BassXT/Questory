@@ -1,7 +1,9 @@
 # Avatar-Art
 
-`questory-avatar-style-reference.png` ist die verbindliche, im Projekt freigegebene Stilreferenz fuer den Questory-Avatar.
+`questory-avatar-style-reference.png` ist die verbindliche, im Projekt
+freigegebene Stilreferenz fuer den Questory-Avatar.
 
-Die produktiven transparenten WebP-Layer liegen unter `apps/frontend/public/avatar-art/v1`. Sie werden reproduzierbar mit `scripts/extract-avatar-art.py` aus dem rechten Teilekatalog der Referenz erzeugt. Das Skript benoetigt lokal Pillow, ist aber keine Runtime-Abhaengigkeit der Anwendung.
-
-`avatar-art-v1-contact-sheet.jpg` dient nur der visuellen Qualitaetskontrolle. Der Browser laedt diese Datei nicht.
+Die produktiven transparenten Ganzkoerperfiguren und Begleittiere liegen unter
+`apps/frontend/public/avatar-complete/v1`. Der Browser kombiniert nur noch
+eine vollstaendige Kinderfigur mit einem optionalen Tier. Der aktuelle
+Assetvertrag steht in `AVATAR_ASSET_CONTRACT.md`.

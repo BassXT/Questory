@@ -1,105 +1,77 @@
-# Questory 2D Avatar Asset Contract
+# Questory Complete Avatar Asset Contract
 
 ## Ziel
 
-Questory verwendet einen einfachen statischen 2D-Paper-Doll-Builder. Alle sichtbaren
-Teile werden als transparente Bild-Layer auf exakt derselben Ganzkoerperpose
-uebereinandergelegt. Eine 3D-Ansicht ist nicht Teil des Zielbilds.
+Questory verwendet einen einfachen 2D-Avatar-Picker aus genau zwei Bausteinen:
 
-## Verbindliche Asset-Regeln
+1. einer vollstaendig gezeichneten Kinderfigur
+2. einem optionalen, separat gezeichneten Begleittier
 
-- Jede Figur ist eine kindliche Ganzkoerperfigur in neutraler Frontpose.
-- Alle zur Laufzeit gerenderten Layer eines Figurensatzes besitzen dieselbe
-  Leinwandgroesse und denselben Ursprung. Einzelteil-Rigs duerfen beim Import
-  ueber feste Anker in diese gemeinsame Questory-Leinwand normalisiert werden.
-- Kein Layer darf seinen eigenen Kopf, Hals, Koerper oder Hintergrund mitbringen.
-- Haare koennen aus einem Rueck- und einem Vorderlayer bestehen.
-- Kleidung darf aus mehreren Ebenen bestehen, wenn Arme oder Haare davor und dahinter liegen.
-- Junge, Maedchen und diverse Figuren duerfen eigene kompatible Layerkataloge verwenden.
-- Farben sind frei waehlbar, soweit das Quellasset passende Varianten oder maskierbare Flaechen liefert.
-- Level sperren besondere Stile und Gegenstaende, nicht grundlegende Haut-, Haar- oder Augenfarben.
+Kopf, Haare, Gesicht und Kleidung werden nicht mehr zur Laufzeit aus einzelnen
+Layern zusammengesetzt. Dadurch bleibt jeder Look grafisch konsistent und kann
+ohne sichtbare Uebergaenge auf Desktop und Mobilgeraeten dargestellt werden.
 
 ## Laufzeit-Slots
 
-Die bestehende API und `ChildAvatarLoadout` bleiben die fachliche Quelle. Der
-Bildrenderer mappt die Slots auf folgende sichtbare Gruppen:
+`ChildAvatarLoadout.equippedItems` kennt fuer die aktive Werkstatt nur:
 
-1. Szene
-2. Begleiter hinten
-3. Haar hinten
-4. Basisfigur und Haut
-5. Augenbrauen, Augen, Nase und Mund
-6. Unterteil
-7. Schuhe und Socken
-8. Oberteil, Jacke oder Kleid
-9. Haar vorne
-10. Brille, Hut und Schmuck
-11. Tasche, Handobjekt oder Gadget
-12. Begleiter vorne
+- `character`: Pflichtslot fuer eine komplette Kinderfigur
+- `pet`: optionaler Slot fuer ein Begleittier
+
+Alte Item-Keys und gespeicherte Loadout-Felder bleiben aus Datenkompatibilitaet
+in PostgreSQL erhalten. Die Migration
+`20260726234500_complete_avatar_presets` deaktiviert die alten Katalogeintraege,
+ohne sie oder historische Kinder-Loadouts zu loeschen.
+
+## Verbindliche Asset-Regeln
+
+- Jede Kinderfigur zeigt genau ein Kind vollstaendig von Kopf bis Fuss.
+- Jede Figur steht in einer neutralen Frontpose mit sichtbaren Haenden und Fuessen.
+- Kinderfiguren liegen als transparente PNGs auf einer Leinwand von `768x1152`.
+- Tiere liegen einzeln als transparente PNGs auf einer Leinwand von `640x640`.
+- Innerhalb einer Assetgruppe sind Bodenlinie, Randabstand und Skalierung normalisiert.
+- Ein Asset darf keinen Hintergrund, Schatten, Text, Schriftzug oder Wasserzeichen enthalten.
+- Figuren und Tiere muessen dieselbe weiche, klar konturierte 2D-Abenteuerbildsprache verwenden.
+- Neue Grafiken werden vor dem Import auf Alpha-Kanal, transparente Ecken,
+  Beschnitt, Farbraender und mobile Lesbarkeit geprueft.
+
+## Freischaltungen
+
+Eine Figur ist immer vollstaendig. Frisur, Haarfarbe, Kleidung und Accessoires
+sind Bestandteil des jeweiligen Presets. Neue Looks werden als Ganzes ueber
+Level oder spaeter ueber besondere Erfolge freigeschaltet.
+
+Der erste Katalog verteilt:
+
+- Alltagslooks auf Level 1 bis 4
+- Sternenritter auf Level 5
+- Sternenforscherin auf Level 7
+- Zauberlehrling auf Level 9
+- Begleittiere auf Level 1 bis 10
+
+Damit bleibt XP langfristig relevant, ohne einen technisch fragilen
+Kleidungs-Layer-Editor zu betreiben.
 
 ## Bedienung
 
-Die mobile Werkstatt verwendet wenige, horizontal erreichbare Kategorien:
+Die Werkstatt zeigt eine gemeinsame Vorschau und zwei Tabs:
 
 - Figur
-- Gesicht
-- Haare
-- Kleidung
-- Schuhe
-- Extras
-- Tiere
+- Tier
 
-Jede Kategorie oeffnet einen kompakten Picker mit grossen Bildvorschauen. Farben
-werden ueber Farbfelder gewaehlt. Die Ganzkoerpervorschau bleibt beim Wechsel der
-Kategorie stabil sichtbar.
+Auf kleinen Displays werden die Auswahlkarten horizontal gewischt. Ab
+Tabletbreite erscheinen sie in einem Raster. Ein Tier kann jederzeit wieder
+abgelegt werden; eine Figur bleibt immer ausgeruestet.
 
-## Kostenlose Quellassets
+## Asset-Herkunft
 
-Questory verwendet fuer den Avatar-Builder keine gekauften Assetpakete. Neue
-Quellgrafiken muessen kostenlos und mit einer Repository-kompatiblen Lizenz
-verfuegbar sein. Bevorzugt wird CC0.
+Die aktiven Produktionsgrafiken liegen unter
+`apps/frontend/public/avatar-complete/v1`. Sie wurden fuer Questory mit dem
+OpenAI-Bildgenerator aus einer projektintern freigegebenen, ebenfalls
+KI-erzeugten Stilreferenz erstellt. Die Anwendung bindet keine externe
+Avatar- oder Bild-API zur Laufzeit ein.
 
-Die technisch passendste gepruefte Quelle ist `Kenney Modular Characters`:
-
-- Original: https://kenney.nl/assets/modular-characters
-- Spiegel und Paketbeschreibung: https://opengameart.org/content/modular-character-pack
-- Lizenz: Creative Commons Zero 1.0
-- Inhalt: 425 getrennte PNG-Elemente, sechs Spritesheets und sechs Vektorquellen
-- Kategorien: Haut, Gesicht, Haare, Oberteile, Hosen und Schuhe
-
-Kenney liefert keine fertigen Ganzkoerper-Layer auf einer gemeinsamen Leinwand,
-sondern ein modulares 2D-Rig aus einzelnen Koerper- und Kleidungsteilen. Questory
-muss deshalb einmal feste Anker fuer Kopf, Hals, Schultern, Haende, Huefte und
-Fuesse definieren. Danach bleiben alle vorgesehenen Kombinationen geometrisch
-kompatibel.
-
-Als kindlichere, aber deutlich einfachere Alternative wurde
-`Free - Character Creation Asset Pack` von nemo geprueft:
-
-- Quelle: https://nonemo.itch.io/character-creation-asset-pack
-- Lizenz: Creative Commons Zero 1.0
-- Inhalt: 45 Frisuren, 15 Augenstile, drei Hauttoene, Brillen und 28 Outfits
-
-DiceBear und die geprueften GraphicRiver-Kits bleiben ungeeignet, weil sie
-ueberwiegend Portrait- statt Ganzkoerper-Generatoren sind. Die zuvor betrachteten
-kostenpflichtigen Dress-up-Packs werden nicht beschafft.
-
-## Lizenz- und Repository-Regel
-
-Das GitHub-Repository `BassXT/Questory` ist aktuell oeffentlich. Nur Assets mit
-einer Lizenz, die Quellweitergabe erlaubt, duerfen eingecheckt werden. CC0-Assets
-koennen zusammen mit ihrer unveraenderten Lizenzdatei im Repository liegen.
-
-Kostenpflichtige Marketplace-Assets oder kostenlose Downloads mit einem
-Weitergabeverbot sind ausgeschlossen.
-
-## Import-Ablauf
-
-1. Lizenz und Originalquelle dokumentieren.
-2. Das unveraenderte Quellpaket in einem temporaeren Arbeitsordner pruefen.
-3. Dateistruktur, Bildgroessen und benoetigte Rig-Anker automatisch inventarisieren.
-4. Einen kleinen Referenzsatz importieren: Basisfigur, zwei Haare, zwei Gesichter,
-   zwei Oberteile, zwei Unterteile und zwei Paar Schuhe.
-5. Alle Kreuzkombinationen auf Desktop und iPhone visuell pruefen.
-6. Erst nach erfolgreicher Referenzpruefung den restlichen Katalog importieren.
-7. Lizenzdatei und Quellenhinweis zusammen mit den uebernommenen Assets einchecken.
+Die Stilreferenz bleibt unter
+`docs/design/questory-avatar-style-reference.png` dokumentiert. Weitere
+Details zum Erstellungs- und Normalisierungsprozess stehen in
+`apps/frontend/public/avatar-complete/v1/SOURCE.md`.

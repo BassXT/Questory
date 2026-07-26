@@ -8,6 +8,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Acht vollstaendige, transparente Kinderfiguren im freigegebenen Questory-Abenteuerstil hinzugefuegt: Hoodie, Sonnenblume, Smiley, Stern, Entdeckerin, Ritter, Astronautin und Zauberin.
+- Acht separat waehlbare Begleittiere hinzugefuegt: Katze, Hund, Hase, Fuchs, Sonnenfell, Tiger, Elefant und Walddrache.
+- Migration `20260726234500_complete_avatar_presets` mit levelbasierten Ganzkoerperfiguren und Begleitern hinzugefuegt.
 - Kuratierten CC0-Referenzsatz aus `Kenney Modular Characters` mit Originallizenz, Quellenhinweis, drei Hauttoenen, Gesichtsteilen, Haaren, Oberteilen, Unterteilen und Schuhen hinzugefuegt.
 - Festen kindlichen `KenneyAvatarGraphic`-Ganzkoerperrenderer mit kompatiblen Gelenken, fester Ebenenfolge und SVG-Farbmasken fuer bestehende Katalogfarben hinzugefuegt.
 - Kostenlose Avatarquellen evaluiert und dokumentiert: `Kenney Modular Characters` mit 425 PNG-Elementen und CC0-Lizenz als bevorzugte 2D-Rig-Basis sowie das kindlichere CC0-Paket von nemo als Alternative.
@@ -161,6 +164,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Changed
 
+- Avatar-Werkstatt und Loadout-Vertrag auf genau zwei aktive Slots vereinfacht: vollstaendige `character`-Figur plus optionales `pet`.
+- Mobile Avatar-Auswahl in zwei klare Tabs mit horizontal swipebaren Bildkarten umgestellt; ab Tabletbreite bleibt ein kompaktes Raster.
 - Grosse Avatar-Vorschau vom abstrakten Questory-Renderer auf das kompatible Kenney-2D-Rig umgestellt; bestehende Item-Keys, Unlocks, Farben und Loadouts bleiben erhalten.
 
 - Projektziel auf den aktuellen privaten Familienbetrieb praezisiert; eine oeffentliche Veroeffentlichung ist derzeit kein Ziel.
@@ -177,6 +182,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Removed
 
+- Kenney-Einzelteilrenderer, Kenney-Referenzassets, alte Konzept-WebPs, Attachment-Zuordnung und nicht mehr benoetigte Exportpipeline aus dem aktiven Projekt entfernt.
 - Nicht mehr verwendeten `SoftAdventureAvatarGraphic`-Renderer und die interne Kenney-QA-Referenzseite nach visueller Desktop-/iPhone-Pruefung entfernt.
 - Isoliertes 3D-Avatar-Labor, beide Quaternius-glTF-Modelle sowie die Three.js-Abhaengigkeiten nach echtem Geraetetest wieder entfernt; Questory verfolgt verbindlich den einfacheren 2D-Paper-Doll-Builder.
 - Alten Pixel-/Toon-Renderer mit rund 1.550 Zeilen ungenutztem Zeichen-Code entfernt.
@@ -210,6 +216,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Prisma-Schema validiert, Prisma Client generiert sowie Backend- und Frontend-Produktionsbuild nach der Vereinfachung auf Figur plus Tier erfolgreich.
+- Alle 16 Produktions-PNGs auf Alpha-Kanal, transparente Ecken, normalisierte Leinwand und sichtbaren Inhalt geprueft; Werkstatt auf Desktop und in mobiler Darstellung visuell kontrolliert.
 - Frontend-Produktionsbuild und visuelle Kreuzkombinationspruefung des Kenney-Rigs auf Desktop und iPhone-Breite erfolgreich; Zauberhut, Smiley-Shirt, Hals, Taille und Schuhe bleiben korrekt ausgerichtet.
 - Portainer-Redeploy des Kenney-2D-Rigs aus Commit `8ca08df` erfolgreich; LXC-Backend und Frontend liefern HTTP `200`, produktives Bundle und Kenney-PNG-Assets sind vorhanden.
 - Frontend-Build nach Rueckkehr zur gemeinsamen Ganzkoerper-Geometrie erfolgreich.

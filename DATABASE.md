@@ -248,7 +248,7 @@ Muenzlogik:
 
 ### AvatarItem
 
-Repraesentiert ein globales Avatar-Bauteil im self-hosted Katalog.
+Repraesentiert ein globales, vollstaendiges Figuren-Preset oder ein Begleittier im self-hosted Katalog.
 
 Felder:
 
@@ -265,22 +265,12 @@ Felder:
 - `createdAt`
 - `updatedAt`
 
-Slots:
+Aktive Slots:
 
-- `background`
-- `body`
-- `hair`
-- `eyes`
-- `hat`
-- `bottom`
-- `top`
-- `shoes`
-- `glasses`
-- `gadget`
-- `weapon`
+- `character`
 - `pet`
 
-`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` ist fuer spaetere Renderer/Asset-Pipelines vorbereitet. Technische Item-Keys bleiben dauerhaft stabil, auch wenn sich der sichtbare Grafikstil aendert. Deshalb koennen einige kompatible Legacy-Keys weiterhin `pixel` enthalten; Migration `20260724214000_soft_adventure_avatar_labels` bereinigt nur sichtbare Namen und Beschreibungen.
+`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` dient innerhalb eines Slots als stabile Sortierhilfe; die Figuren werden nicht mehr aus einzelnen Grafiklayern zusammengesetzt. Technische Item-Keys bleiben dauerhaft stabil. Die Migration `20260726234500_complete_avatar_presets` deaktiviert die bisherigen modularen Items und fuegt die vollstaendigen Figuren sowie Begleittiere ein. Die alten Datensaetze bleiben fuer bestehende Loadouts und eine moegliche Datenmigration erhalten.
 
 ### ChildAvatarItem
 
@@ -306,7 +296,7 @@ Felder:
 - `createdAt`
 - `updatedAt`
 
-`equippedItems` ist JSON, damit Slots ohne Migration erweitert werden koennen. Das Backend validiert beim Speichern, dass Item-Key, Slot und Freischaltung zusammenpassen.
+`equippedItems` ist JSON, damit Slots ohne Migration erweitert werden koennen. Aktuell werden ausschliesslich `character` und optional `pet` verarbeitet. Das Backend validiert beim Speichern, dass Item-Key, Slot und Freischaltung zusammenpassen. Alte Slot-Keys duerfen in bereits gespeicherten JSON-Daten verbleiben, werden von der aktiven Avatar-API aber ignoriert.
 
 ## Migrationen
 
@@ -326,6 +316,7 @@ apps/backend/prisma/migrations/20260716103000_avatar_builder/migration.sql
 apps/backend/prisma/migrations/20260716193000_child_profile_details_and_avatar_extras/migration.sql
 apps/backend/prisma/migrations/20260724183000_reward_assignments/migration.sql
 apps/backend/prisma/migrations/20260724214000_soft_adventure_avatar_labels/migration.sql
+apps/backend/prisma/migrations/20260726234500_complete_avatar_presets/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:
