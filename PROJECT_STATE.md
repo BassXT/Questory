@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-Letzte Aktualisierung: 2026-07-24
+Letzte Aktualisierung: 2026-07-25
 
 Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den aktuellen Projektstand, offene Aufgaben, Architekturentscheidungen und bekannte Probleme.
 
@@ -10,8 +10,13 @@ Das Repository wurde initialisiert, die grundlegende Projektdokumentation wurde 
 
 Qualitaetskorrektur nach echtem iPhone-Test: Die direkte SVG/WebP-Hybridkomposition wurde wieder aus der grossen Avatar-Vorschau entfernt. Das Referenzbild ist ein Konzeptbogen, kein produktionsfaehiger Layer-Satz; seine Thumbnails besitzen unterschiedliche Proportionen, Posen und zu wenig Aufloesung. Die grosse Figur nutzt deshalb wieder den vollstaendig gemeinsamen `SoftAdventureAvatarGraphic`-Ganzkoerper, waehrend die WebPs nur als Picker-Vorschauen dienen. Dadurch bleiben Item-Auswahl, Farben, Unlocks und gespeicherte Loadouts funktionsfaehig, ohne sichtbar zerrissene Haelse, Taillen, Beine oder Schuhe zu erzeugen.
 
+Als technisch saubere Alternative ist nun ein isoliertes 3D-Avatar-Labor vorhanden. Es kombiniert zwei lokal gespeicherte CC0-Quaternius-glTF-Modelle auf demselben Rig und kann Kopf, Oberteil, Beine, Schuhe sowie Rucksack ohne sichtbare Anschlussfehler wechseln. Three.js wird lazy geladen; der bestehende 2D-Editor und gespeicherte Loadouts bleiben unveraendert. Desktop- und iPhone-QA bestaetigen einen nichtleeren Canvas, korrekte Rahmung, Animation und keine horizontale Ueberbreite. Der verwendete Low-Poly-Stil ist nur ein bewertbarer Prototyp und noch keine freigegebene Endgrafik.
+
 ## Bereits umgesetzt
 
+- Isoliertes, lazy geladenes Three.js-Avatar-Labor mit lokalem CC0-glTF-Asset, gemeinsamem Rig, Idle-Animation, Orbit-Steuerung und austauschbaren Segmenten fuer Kopf, Oberteil, Beine, Schuhe und Rucksack.
+- Desktop- und Mobile-Canvas-QA fuer das 3D-Labor erfolgreich: `1280x900` und `390x844`, nichtleere Pixelwerte, keine Browserfehler und kein horizontaler Overflow.
+- Aktueller Betriebszweck festgehalten: Questory wird ausschliesslich privat fuer die eigene Familie self-hosted betrieben; eine oeffentliche Veroeffentlichung ist derzeit kein Ziel.
 - Transparente Questory-WebP-Art-Library mit 38 illustrierten Layern fuer Haare, Kleidung, Schuhe, Huete, Brillen, Rucksaecke, Kamera, Waffen und Tiere aus der freigegebenen Stilreferenz erzeugt.
 - Reproduzierbare Export-Pipeline `scripts/extract-avatar-art.py` mit Hintergrundfreistellung, Randfragment-Bereinigung und visueller Kontaktbogen-Pruefung angelegt.
 - Paper-Doll-Attachment-Rig mit benannten Kopf-, Schulter-, Hueft-, Fuss-, Ruecken- und Bodenankern sowie eigener Geometrie fuer alle 38 WebP-Assets eingefuehrt.
@@ -439,13 +444,14 @@ Qualitaetskorrektur nach echtem iPhone-Test: Die direkte SVG/WebP-Hybridkomposit
 
 ## Naechster Schritt
 
-Als naechstes einen echten Questory-Produktionsmaster fuer den Avatar definieren: eine kindliche Ganzkoerperpose auf fester Leinwand, verbindliche Kopf-/Schulter-/Hueft-/Hand-/Fussanker und erste neu erstellte Layer fuer Basisfigur, zwei Haare, zwei Oberteile, zwei Unterteile und zwei Paar Schuhe. Erst wenn diese kleine Referenzkombination optisch in allen Kreuzkombinationen funktioniert, wird der Katalog erweitert. Danach Quest- und Reward-Bearbeiten/Loeschen als naechsten funktionalen Slice umsetzen und ein wiederholbares Playwright-Smoke-Test-Setup ergaenzen.
+Als naechstes den isolierten 3D-Low-Poly-Prototyp auf dem echten Geraet bewerten. Wird die rig-basierte Richtung freigegeben, folgt ein kleiner Produktionsasset-Slice mit einer deutlich kindlicheren Basisfigur und wenigen hochwertigen, kompatiblen Segmenten; wird der Stil verworfen, bleibt das Labor entfernt und der 2D-Produktionsmaster ist wieder der naechste Grafikschritt. Danach Quest- und Reward-Bearbeiten/Loeschen als naechsten funktionalen Slice umsetzen und ein wiederholbares Playwright-Smoke-Test-Setup ergaenzen.
 
 Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep erfolgen, um sichtbare deutsche Texte wieder mit Umlauten zu schreiben.
 
 ## Architekturentscheidungen
 
 - Questory wird als monorepo-artige Struktur mit getrennten Apps fuer Backend und Frontend aufgebaut.
+- Questory wird aktuell ausschliesslich privat fuer die eigene Familie betrieben. Externe Laufzeitdienste bleiben optional; Familien-, Kinder- und Fortschrittsdaten verbleiben im self-hosted Stack.
 - Backend wird mit NestJS umgesetzt, weil Module, Dependency Injection und klare Schichten gut zur langfristigen Wartbarkeit passen.
 - Frontend wird mit React, TypeScript und Vite umgesetzt, weil die Kombination schnell, modern und gut fuer interaktive Oberflaechen geeignet ist.
 - Material UI wird als UI-Basis genutzt, aber visuell in Richtung hochwertiges Familien-Spiel angepasst.
@@ -484,6 +490,7 @@ Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep er
 - `avatarKey` bleibt als einfache Avatar-Preset-ID fuer kleine Badges erhalten. Der echte Avatar-Builder nutzt `AvatarItem` als globalen Katalog, Level-Freischaltungen ueber `requiredLevel`, optionale Spezial-Unlocks ueber `ChildAvatarItem` und gespeicherte Ausruestung ueber `ChildAvatarLoadout.equippedItems`.
 - Die visuelle Avatar-Darstellung nutzt den Questory-eigenen `SoftAdventureAvatarGraphic`-Renderer. Das gemeinsame `360x520`-SVG-Koordinatensystem ist eine statische Paper-Doll-Kompositionsbuehne mit benannten Ankern und eigener Attachment-Geometrie pro WebP. Eine feste Zeichenreihenfolge kontrolliert Ueberdeckungen. Die SVG-Basis liefert nur Szene, Kopf/Gesicht sowie weitgehend verdeckte Hautpartien und Haende; ein sichtbares zweites Kleidungsgeruest unter den WebP-Layern wird vermieden. Diese Hybridloesung liefert reichere Haare, Kleidung und Sammelobjekte ohne externe Avatar-API und ohne die bestehenden Slot-/Loadout-Vertraege zu veraendern.
 - Der Stilwechsel veraendert weder Slot-Vertraege noch persistierte Item-Keys oder `ChildAvatarLoadout.equippedItems`. Alte Keys mit `pixel` im technischen Namen bleiben aus Datenkompatibilitaet bestehen, sind aber in der UI nicht mehr als Pixelstil beschriftet.
+- Das 3D-Avatar-Labor ist eine isolierte Machbarkeitspruefung und kein zweiter persistierter Avatarvertrag. Es verwendet Three.js in einem dynamisch geladenen Chunk und lokal gespeicherte CC0-Quaternius-Modelle mit gemeinsamem Skelett. Erst nach visueller Freigabe wird entschieden, ob 3D-Auswahlwerte auf die bestehenden Avatar-Slots gemappt oder separat versioniert werden.
 - Abgelehnte Quest-Abschluesse behalten `xpGranted` und `coinsGranted` bei `0`; dieselbe Zuweisung kann danach erneut eingereicht werden.
 - Belohnungen gehoeren immer zu genau einer Familie. `price` ist der Preis in Muenzen.
 - Der Reward-Shop zeigt aktuell alle aktiven Belohnungen der Familie fuer ein Kind, sortiert nach Preis und Name. Filter nach Zielgruppe/Freischaltung kommen spaeter.
@@ -517,6 +524,7 @@ Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep er
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
 - Der Frontend-Hauptchunk liegt trotz entfernter DiceBear-Pakete weiterhin ueber der Vite-Warngrenze. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
 - Die aktuelle Illustrationsquelle ist ein fertiger Katalogbogen und kein gemeinsamer Master mit identischer Ganzkoerperpose pro Asset. Ihre WebPs sind deshalb nur Picker-Vorschauen und keine Produktionslayer. Fuer die endgueltige Art-Library muessen alle sichtbaren Teile direkt auf derselben `360x520`-Masterpose gestaltet und exportiert werden.
+- Das aktuelle 3D-Labor nutzt ein technisch passendes, aber sichtbar kantiges Low-Poly-CC0-Modell. Es beweist die nahtlose Modularitaet, erreicht jedoch noch nicht den gewuenschten weichen Questory-Illustrationsstil und speichert keine Auswahl.
 
 ## Ideen fuer spaeter
 

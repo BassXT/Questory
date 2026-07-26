@@ -8,6 +8,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Isoliertes Three.js-Avatar-Labor mit zwei lokal gespeicherten CC0-Quaternius-glTF-Modellen, gemeinsamem Rig, Idle-Animation, Orbit-Steuerung und austauschbaren Segmenten fuer Kopf, Oberteil, Beine, Schuhe und Rucksack hinzugefuegt.
+- Desktop- und iPhone-Canvas-QA fuer das 3D-Labor mit Pixelpruefung, Browserfehlerkontrolle und Overflow-Messung durchgefuehrt.
 - Benanntes Paper-Doll-Attachment-Rig fuer den Avatar-Renderer hinzugefuegt: 38 WebP-Assets besitzen nun eigene Anker-, Ursprungs-, Groessen- und Offset-Metadaten.
 - 38 transparente, verlustfreie WebP-Illustrationslayer fuer Haare, Kleidung, Schuhe, Huete, Brillen, Rucksaecke, Kamera, Waffen und Tiere aus der freigegebenen Questory-Stilreferenz hinzugefuegt.
 - Reproduzierbare Avatar-Art-Exportpipeline `scripts/extract-avatar-art.py` mit Freistellung, Randfragment-Bereinigung und Kontaktbogen fuer visuelle Qualitaetspruefung hinzugefuegt.
@@ -155,6 +157,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Changed
 
+- Projektziel auf den aktuellen privaten Familienbetrieb praezisiert; eine oeffentliche Veroeffentlichung ist derzeit kein Ziel.
 - Grosse Avatar-Vorschau nach echtem iPhone-Qualitaetstest wieder auf die vollstaendig gemeinsame `SoftAdventureAvatarGraphic`-Ganzkoerper-Geometrie umgestellt; die 38 Konzept-WebPs bleiben als Item-Picker-Vorschauen erhalten.
 - Produktionsregel fuer kuenftige Avatar-Art festgelegt: Keine direkt ausgeschnittenen Katalogthumbnails mehr, sondern alle sichtbaren Layer auf einer verbindlichen `360x520`-Masterpose mit identischen Ankern und Zeichenebenen.
 - Avatar-Komposition von generischer Slot-Skalierung auf feste Attachment-Geometrien und eine explizite Ebenenfolge fuer Haar-Rueckseite, Rueckenobjekte, Koerper-Rig, Kleidung, Haende, Kopf/Gesicht, Haar-Vorderseite, Accessoires und Begleiter umgestellt.

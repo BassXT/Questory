@@ -4,7 +4,7 @@ Dieses Dokument beschreibt das Architekturzielbild von Questory. Details werden 
 
 ## Gesamtuebersicht
 
-Questory wird als self-hosted Webanwendung aufgebaut. Die Anwendung besteht aus einem React-Frontend, einer NestJS REST API und einer PostgreSQL-Datenbank.
+Questory wird als privat betriebene, self-hosted Webanwendung aufgebaut. Die Anwendung besteht aus einem React-Frontend, einer NestJS REST API und einer PostgreSQL-Datenbank. Der aktuelle Zielbetrieb ist die eigene Familie; eine oeffentliche Produkt- oder SaaS-Bereitstellung ist nicht vorgesehen.
 
 Geplante Struktur:
 
@@ -91,6 +91,7 @@ Technologien:
 - Vite
 - Material UI
 - Questory-eigener hybrider SVG/WebP-Renderer fuer den modularen Ganzkoerper-Avatar
+- Three.js fuer ein isoliertes, lazy geladenes 3D-Avatar-Labor
 
 Ziel:
 
@@ -121,6 +122,7 @@ Aktuell vorhanden:
 - `avatarKey` bleibt als einfache Profilabzeichen-ID fuer kleine Badges erhalten. Der echte Avatar-Builder nutzt nun einen serverseitigen Avatar-Katalog, Level-Unlocks und `ChildAvatarLoadout` fuer ausgeruestete Kleidung, Brillen, Schuhe, Hintergruende, Mund, Waffen, Tiere und Gadgets.
 - Der Avatar-Builder ist in `apps/frontend/src/avatar-builder.tsx` gekapselt; die Zeichenengine liegt getrennt in `apps/frontend/src/soft-avatar-renderer.tsx`, die Key-zu-Art-Zuordnung fuer Picker-Vorschauen in `apps/frontend/src/illustrated-avatar-assets.ts`. Die sichtbare Ganzkoerperfigur wird aktuell wieder vollstaendig im gemeinsamen `360x520`-SVG-Koordinatensystem gezeichnet. Kopf, Haare, Hals, Oberteil, Unterteil, Beine, Schuhe, Haende, Accessoires und Begleiter stammen damit aus derselben Geometrie und koennen an Taille, Hals und Fuessen nicht gegeneinander verrutschen.
 - Die 38 transparenten WebPs unter `apps/frontend/public/avatar-art/v1` bleiben als hochwertige Motivvorschauen im Item-Picker erhalten, werden aber nicht mehr direkt zur grossen Figur zusammengesetzt. Die zugrunde liegende Stilreferenz ist ein Konzept- und Katalogbild: Die dargestellten Einzelteile wurden nicht auf einer identischen Masterpose gezeichnet und besitzen nur Thumbnail-Aufloesung. Selbst ein korrektes Attachment-Rig kann daraus keine konsistente Produktionsfigur erzeugen.
+- Das optionale 3D-Avatar-Labor unter `apps/frontend/src/avatar-3d-lab.tsx` prueft als getrennte Alternative echte rig-basierte Modularitaet. Zwei lokal gespeicherte CC0-Quaternius-glTF-Modelle besitzen dasselbe Skelett; Kopf, Oberteil, Beine, Schuhe und Rucksack werden deshalb als vollstaendige Mesh-Segmente ohne manuelle Pixelanker kombiniert. Three.js wird erst beim Oeffnen des Labors geladen. Das Labor speichert noch keine Auswahl und ersetzt den produktiven 2D-Renderer nicht.
 - Fuer die endgueltige hochwertige Darstellung bleibt das Paper-Doll-Prinzip richtig, benoetigt aber neu erstellte Produktionsassets: eine verbindliche Masterpose, identische Leinwandabmessungen, definierte Gelenk-/Koerperanker, feste Zeichenebenen und jeden Gegenstand als vollstaendigen Layer auf genau dieser Pose. Die Zielarchitektur folgt damit weiterhin bewaehrten Mustern aus [Spine Skins](https://eu.esotericsoftware.com/spine-skins), [Spine Basic Concepts](https://en.esotericsoftware.com/spine-basic-concepts), [PixiJS Scene Objects](https://pixijs.com/8.x/guides/components/scene-objects) und [PixiJS Render Layers](https://pixijs.com/8.x/guides/concepts/render-layers), ohne jetzt eine zusaetzliche Runtime einzufuehren.
 - Eltern/Admin koennen im Eltern-Dashboard ein Kinderprofil oeffnen und von dort Quests oder Shop fuer dieses Kind bedienen. Der umgekehrte Weg vom Kinderbereich in den Elternbereich bleibt durch getrennte JWT-Rollen geschuetzt und benoetigt Eltern-/Admin-Authentifizierung.
 

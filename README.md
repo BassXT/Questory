@@ -2,7 +2,10 @@
 
 Questory ist eine self-hosted Familien-Webanwendung, die Kindern alltaegliche Aufgaben spielerisch naeherbringt. Die App soll sich wie ein modernes Spiel anfuehlen, nicht wie eine klassische To-do-Liste.
 
-Das Projekt ist als Open-Source-Anwendung geplant und wird schrittweise, dokumentiert und Docker-first entwickelt.
+Questory wird aktuell ausschliesslich privat fuer die eigene Familie betrieben. Eine
+oeffentliche Veroeffentlichung ist kein aktuelles Projektziel. Die Entwicklung bleibt
+trotzdem nachvollziehbar dokumentiert, Docker-first und ohne verpflichtende externe
+Cloud-Dienste.
 
 ## Projektziele
 
