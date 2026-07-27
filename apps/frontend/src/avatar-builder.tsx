@@ -8,6 +8,7 @@ import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import {
   Box,
   Button,
+  ButtonBase,
   Chip,
   LinearProgress,
   MenuItem,
@@ -16,6 +17,7 @@ import {
   Tab,
   Tabs,
   TextField,
+  Tooltip,
   Typography
 } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
@@ -69,18 +71,66 @@ interface AvatarBuilderPanelProps {
   onSave: (equippedItems: Record<string, string>) => void;
 }
 
-const slotLabels: Record<AvatarSlot, string> = {
-  character: 'Figur',
-  pet: 'Tier'
+type HairColorKey = 'red' | 'pink' | 'blue' | 'brown' | 'blonde' | 'black';
+
+interface CharacterVariant {
+  baseItemKey: string;
+  color: HairColorKey;
+  style: 'smiley' | 'explorer' | 'star';
+}
+
+const hairColors: Array<{ key: HairColorKey; label: string; value: string }> = [
+  { key: 'red', label: 'Rot', value: '#b64b32' },
+  { key: 'pink', label: 'Rosa', value: '#d8589d' },
+  { key: 'blue', label: 'Blau', value: '#2877bd' },
+  { key: 'brown', label: 'Braun', value: '#68422d' },
+  { key: 'blonde', label: 'Blond', value: '#e7bd59' },
+  { key: 'black', label: 'Schwarz', value: '#202531' }
+];
+
+const characterVariants: Record<string, CharacterVariant> = {
+  'character-smiley': { baseItemKey: 'character-smiley', color: 'red', style: 'smiley' },
+  'character-smiley-pink': { baseItemKey: 'character-smiley', color: 'pink', style: 'smiley' },
+  'character-smiley-blue': { baseItemKey: 'character-smiley', color: 'blue', style: 'smiley' },
+  'character-smiley-brown': { baseItemKey: 'character-smiley', color: 'brown', style: 'smiley' },
+  'character-smiley-blonde': { baseItemKey: 'character-smiley', color: 'blonde', style: 'smiley' },
+  'character-smiley-black': { baseItemKey: 'character-smiley', color: 'black', style: 'smiley' },
+  'character-explorer-red': { baseItemKey: 'character-explorer', color: 'red', style: 'explorer' },
+  'character-explorer-pink': { baseItemKey: 'character-explorer', color: 'pink', style: 'explorer' },
+  'character-explorer-blue': { baseItemKey: 'character-explorer', color: 'blue', style: 'explorer' },
+  'character-explorer-brown': { baseItemKey: 'character-explorer', color: 'brown', style: 'explorer' },
+  'character-explorer': { baseItemKey: 'character-explorer', color: 'blonde', style: 'explorer' },
+  'character-explorer-black': { baseItemKey: 'character-explorer', color: 'black', style: 'explorer' },
+  'character-star-red': { baseItemKey: 'character-star', color: 'red', style: 'star' },
+  'character-star': { baseItemKey: 'character-star', color: 'pink', style: 'star' },
+  'character-star-blue': { baseItemKey: 'character-star', color: 'blue', style: 'star' },
+  'character-star-brown': { baseItemKey: 'character-star', color: 'brown', style: 'star' },
+  'character-star-blonde': { baseItemKey: 'character-star', color: 'blonde', style: 'star' },
+  'character-star-black': { baseItemKey: 'character-star', color: 'black', style: 'star' }
 };
 
 const avatarAssetPaths: Record<string, string> = {
   'character-astronaut': '/avatar-complete/v1/characters/astronaut.png',
-  'character-explorer': '/avatar-complete/v1/characters/explorer.png',
+  'character-explorer': '/avatar-complete/v2/characters/explorer/blonde.webp',
+  'character-explorer-black': '/avatar-complete/v2/characters/explorer/black.webp',
+  'character-explorer-blue': '/avatar-complete/v2/characters/explorer/blue.webp',
+  'character-explorer-brown': '/avatar-complete/v2/characters/explorer/brown.webp',
+  'character-explorer-pink': '/avatar-complete/v2/characters/explorer/pink.webp',
+  'character-explorer-red': '/avatar-complete/v2/characters/explorer/red.webp',
   'character-hoodie-teal': '/avatar-complete/v1/characters/hoodie-teal.png',
   'character-knight': '/avatar-complete/v1/characters/knight.png',
-  'character-smiley': '/avatar-complete/v1/characters/smiley.png',
-  'character-star': '/avatar-complete/v1/characters/star.png',
+  'character-smiley': '/avatar-complete/v2/characters/smiley/red.webp',
+  'character-smiley-black': '/avatar-complete/v2/characters/smiley/black.webp',
+  'character-smiley-blonde': '/avatar-complete/v2/characters/smiley/blonde.webp',
+  'character-smiley-blue': '/avatar-complete/v2/characters/smiley/blue.webp',
+  'character-smiley-brown': '/avatar-complete/v2/characters/smiley/brown.webp',
+  'character-smiley-pink': '/avatar-complete/v2/characters/smiley/pink.webp',
+  'character-star': '/avatar-complete/v2/characters/star/pink.webp',
+  'character-star-black': '/avatar-complete/v2/characters/star/black.webp',
+  'character-star-blonde': '/avatar-complete/v2/characters/star/blonde.webp',
+  'character-star-blue': '/avatar-complete/v2/characters/star/blue.webp',
+  'character-star-brown': '/avatar-complete/v2/characters/star/brown.webp',
+  'character-star-red': '/avatar-complete/v2/characters/star/red.webp',
   'character-sunflower': '/avatar-complete/v1/characters/sunflower.png',
   'character-wizard': '/avatar-complete/v1/characters/wizard.png',
   'pet-bunny': '/avatar-complete/v1/pets/bunny.png',
@@ -107,11 +157,15 @@ export function AvatarBuilderPanel({
   const [selectedSlot, setSelectedSlot] = useState<AvatarSlot>('character');
   const selectedChild = children.find((child) => child.id === selectedChildId) ?? null;
   const itemsByKey = useMemo(() => new Map((avatar?.items ?? []).map((item) => [item.key, item])), [avatar?.items]);
+  const visibleItems = useMemo(() => getVisibleAvatarItems(avatar?.items ?? []), [avatar?.items]);
   const slotItems = useMemo(
-    () => (avatar?.items ?? []).filter((item) => item.slot === selectedSlot).sort(compareAvatarItems),
-    [avatar?.items, selectedSlot]
+    () => visibleItems.filter((item) => item.slot === selectedSlot).sort(compareAvatarItems),
+    [selectedSlot, visibleItems]
   );
-  const unlockedCount = avatar?.items.filter((item) => item.isUnlocked).length ?? 0;
+  const unlockedCount = visibleItems.filter((item) => item.isUnlocked).length;
+  const selectedCharacterVariant = draftLoadout.character
+    ? characterVariants[draftLoadout.character]
+    : undefined;
   const normalizedDraft = normalizeLoadout(draftLoadout);
   const normalizedSaved = normalizeLoadout(avatar?.equippedItems ?? {});
   const hasChanges = JSON.stringify(normalizedDraft) !== JSON.stringify(normalizedSaved);
@@ -125,9 +179,37 @@ export function AvatarBuilderPanel({
       return;
     }
 
+    const itemKey =
+      item.slot === 'character'
+        ? resolveCharacterVariantKey(
+            item.key,
+            selectedCharacterVariant?.color,
+            itemsByKey
+          )
+        : item.key;
+
     setDraftLoadout((currentLoadout) => ({
       ...currentLoadout,
-      [item.slot]: item.key
+      [item.slot]: itemKey
+    }));
+  }
+
+  function selectHairColor(color: HairColorKey) {
+    const currentCharacterKey = draftLoadout.character;
+    if (!currentCharacterKey || !characterVariants[currentCharacterKey]) {
+      return;
+    }
+
+    const targetKey = resolveCharacterVariantKey(currentCharacterKey, color, itemsByKey);
+    const targetItem = itemsByKey.get(targetKey);
+
+    if (!targetItem?.isUnlocked) {
+      return;
+    }
+
+    setDraftLoadout((currentLoadout) => ({
+      ...currentLoadout,
+      character: targetKey
     }));
   }
 
@@ -167,7 +249,7 @@ export function AvatarBuilderPanel({
           </Stack>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Chip icon={<AutoAwesomeRoundedIcon />} label={avatar ? `Level ${avatar.child.level}` : 'Kein Level'} variant="outlined" />
-            <Chip label={`${unlockedCount}/${avatar?.items.length ?? 0} frei`} variant="outlined" />
+            <Chip label={`${unlockedCount}/${visibleItems.length} frei`} variant="outlined" />
           </Stack>
         </Box>
 
@@ -270,6 +352,13 @@ export function AvatarBuilderPanel({
                 <Tab icon={<PetsRoundedIcon />} iconPosition="start" label="Tier" value="pet" />
               </Tabs>
 
+              {selectedSlot === 'character' && selectedCharacterVariant ? (
+                <HairColorPicker
+                  onSelect={selectHairColor}
+                  selectedColor={selectedCharacterVariant.color}
+                />
+              ) : null}
+
               <Box
                 sx={{
                   display: 'grid',
@@ -290,14 +379,31 @@ export function AvatarBuilderPanel({
                 {selectedSlot === 'pet' ? (
                   <AvatarItemOption active={!draftLoadout.pet} item={null} onSelect={clearPet} />
                 ) : null}
-                {slotItems.map((item) => (
-                  <AvatarItemOption
-                    active={draftLoadout[item.slot] === item.key}
-                    item={item}
-                    key={item.key}
-                    onSelect={() => equipItem(item)}
-                  />
-                ))}
+                {slotItems.map((item) => {
+                  const previewItemKey =
+                    item.slot === 'character'
+                      ? resolveCharacterVariantKey(
+                          item.key,
+                          selectedCharacterVariant?.color,
+                          itemsByKey
+                        )
+                      : item.key;
+                  const active =
+                    item.slot === 'character'
+                      ? getBaseCharacterKey(draftLoadout.character) ===
+                        getBaseCharacterKey(item.key)
+                      : draftLoadout[item.slot] === item.key;
+
+                  return (
+                    <AvatarItemOption
+                      active={active}
+                      item={item}
+                      key={item.key}
+                      onSelect={() => equipItem(item)}
+                      previewItemKey={previewItemKey}
+                    />
+                  );
+                })}
               </Box>
             </Stack>
           </Box>
@@ -324,6 +430,10 @@ function AvatarPreview({
   const pet = getEquippedItem(equippedItems, itemsByKey, 'pet');
   const characterAsset = character ? avatarAssetPaths[character.key] : undefined;
   const petAsset = pet ? avatarAssetPaths[pet.key] : undefined;
+  const baseCharacterKey = getBaseCharacterKey(character?.key);
+  const characterDisplayName = baseCharacterKey
+    ? (itemsByKey.get(baseCharacterKey)?.name ?? character?.name)
+    : undefined;
 
   return (
     <Stack spacing={1} sx={{ alignItems: 'center', maxWidth: '100%', minWidth: 0, width: '100%' }}>
@@ -368,7 +478,7 @@ function AvatarPreview({
         />
         {characterAsset ? (
           <Box
-            alt={character?.name ?? ''}
+            alt={characterDisplayName ?? ''}
             component="img"
             src={characterAsset}
             sx={{
@@ -399,24 +509,82 @@ function AvatarPreview({
         ) : null}
       </Box>
       <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap', justifyContent: 'center', maxWidth: '100%' }}>
-        <Chip icon={<PersonRoundedIcon />} label={character?.name ?? 'Keine Figur'} size="small" variant="outlined" />
+        <Chip icon={<PersonRoundedIcon />} label={characterDisplayName ?? 'Keine Figur'} size="small" variant="outlined" />
         {pet ? <Chip icon={<PetsRoundedIcon />} label={pet.name} size="small" variant="outlined" /> : null}
       </Stack>
     </Stack>
   );
 }
 
+function HairColorPicker({
+  onSelect,
+  selectedColor
+}: {
+  onSelect: (color: HairColorKey) => void;
+  selectedColor: HairColorKey;
+}) {
+  return (
+    <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.25 }}>
+      <Typography sx={{ fontSize: '0.82rem', fontWeight: 900, mb: 1 }}>
+        Haarfarbe
+      </Typography>
+      <Stack
+        direction="row"
+        spacing={1}
+        sx={{ alignItems: 'center', flexWrap: 'wrap', rowGap: 1 }}
+      >
+        {hairColors.map((color) => {
+          const active = color.key === selectedColor;
+
+          return (
+            <Tooltip key={color.key} title={color.label}>
+              <ButtonBase
+                aria-label={`Haarfarbe ${color.label}`}
+                aria-pressed={active}
+                onClick={() => onSelect(color.key)}
+                sx={{
+                  bgcolor: color.value,
+                  border: '3px solid',
+                  borderColor: active ? 'primary.main' : 'background.paper',
+                  borderRadius: '50%',
+                  boxShadow: active
+                    ? '0 0 0 2px rgba(47, 116, 208, 0.28)'
+                    : '0 1px 4px rgba(23, 32, 51, 0.18)',
+                  flex: '0 0 auto',
+                  height: 38,
+                  width: 38
+                }}
+              >
+                {active ? (
+                  <CheckCircleRoundedIcon
+                    sx={{
+                      color: color.key === 'blonde' ? '#27323d' : '#ffffff',
+                      fontSize: 22
+                    }}
+                  />
+                ) : null}
+              </ButtonBase>
+            </Tooltip>
+          );
+        })}
+      </Stack>
+    </Box>
+  );
+}
+
 function AvatarItemOption({
   active,
   item,
-  onSelect
+  onSelect,
+  previewItemKey
 }: {
   active: boolean;
   item: AvatarItem | null;
   onSelect: () => void;
+  previewItemKey?: string;
 }) {
   const locked = item ? !item.isUnlocked : false;
-  const assetPath = item ? avatarAssetPaths[item.key] : undefined;
+  const assetPath = item ? avatarAssetPaths[previewItemKey ?? item.key] : undefined;
   const isCharacter = item?.slot === 'character';
 
   return (
@@ -510,6 +678,44 @@ function getEquippedItem(
   const itemKey = equippedItems[slot];
   const item = itemKey ? itemsByKey.get(itemKey) : undefined;
   return item?.slot === slot ? item : undefined;
+}
+
+function getVisibleAvatarItems(items: AvatarItem[]) {
+  return items.filter((item) => {
+    if (item.slot !== 'character') {
+      return true;
+    }
+
+    const variant = characterVariants[item.key];
+    return !variant || variant.baseItemKey === item.key;
+  });
+}
+
+function getBaseCharacterKey(itemKey: string | undefined) {
+  if (!itemKey) {
+    return undefined;
+  }
+
+  return characterVariants[itemKey]?.baseItemKey ?? itemKey;
+}
+
+function resolveCharacterVariantKey(
+  itemKey: string,
+  preferredColor: HairColorKey | undefined,
+  itemsByKey: Map<string, AvatarItem>
+) {
+  const currentVariant = characterVariants[itemKey];
+  if (!currentVariant || !preferredColor) {
+    return itemKey;
+  }
+
+  const matchingEntry = Object.entries(characterVariants).find(
+    ([_candidateKey, candidate]) =>
+      candidate.style === currentVariant.style && candidate.color === preferredColor
+  );
+  const matchingKey = matchingEntry?.[0];
+
+  return matchingKey && itemsByKey.has(matchingKey) ? matchingKey : itemKey;
 }
 
 function normalizeLoadout(loadout: Record<string, string>) {

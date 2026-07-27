@@ -27,7 +27,7 @@ ohne sie oder historische Kinder-Loadouts zu loeschen.
 
 - Jede Kinderfigur zeigt genau ein Kind vollstaendig von Kopf bis Fuss.
 - Jede Figur steht in einer neutralen Frontpose mit sichtbaren Haenden und Fuessen.
-- Kinderfiguren liegen als transparente PNGs auf einer Leinwand von `768x1152`.
+- Kinderfiguren liegen als transparente PNGs oder verlustfreie WebPs auf einer Leinwand von `768x1152`.
 - Tiere liegen einzeln als transparente PNGs auf einer Leinwand von `640x640`.
 - Innerhalb einer Assetgruppe sind Bodenlinie, Randabstand und Skalierung normalisiert.
 - Ein Asset darf keinen Hintergrund, Schatten, Text, Schriftzug oder Wasserzeichen enthalten.
@@ -40,6 +40,12 @@ ohne sie oder historische Kinder-Loadouts zu loeschen.
 Eine Figur ist immer vollstaendig. Frisur, Haarfarbe, Kleidung und Accessoires
 sind Bestandteil des jeweiligen Presets. Neue Looks werden als Ganzes ueber
 Level oder spaeter ueber besondere Erfolge freigeschaltet.
+
+Die Pilotstile `Smiley-Entdecker`, `Wald-Entdeckerin` und `Sternen-Heldin`
+besitzen je sechs frei waehlbare Haarfarben. Auch diese Varianten sind
+vollstaendige, flache Ganzkoerperbilder. Die Werkstatt gruppiert ihre
+technischen Item-Keys lediglich als Stilkarte plus Farbfelder; sie legt im
+Browser keine Haarmaske auf die Figur.
 
 Der erste Katalog verteilt:
 
@@ -66,7 +72,8 @@ abgelegt werden; eine Figur bleibt immer ausgeruestet.
 ## Asset-Herkunft
 
 Die aktiven Produktionsgrafiken liegen unter
-`apps/frontend/public/avatar-complete/v1`. Sie wurden fuer Questory mit dem
+`apps/frontend/public/avatar-complete/v1` und
+`apps/frontend/public/avatar-complete/v2`. Sie wurden fuer Questory mit dem
 OpenAI-Bildgenerator aus einer projektintern freigegebenen, ebenfalls
 KI-erzeugten Stilreferenz erstellt. Die Anwendung bindet keine externe
 Avatar- oder Bild-API zur Laufzeit ein.
@@ -74,4 +81,8 @@ Avatar- oder Bild-API zur Laufzeit ein.
 Die Stilreferenz bleibt unter
 `docs/design/questory-avatar-style-reference.png` dokumentiert. Weitere
 Details zum Erstellungs- und Normalisierungsprozess stehen in
-`apps/frontend/public/avatar-complete/v1/SOURCE.md`.
+`apps/frontend/public/avatar-complete/v1/SOURCE.md` und
+`apps/frontend/public/avatar-complete/v2/SOURCE.md`. Die v2-Farbvarianten
+werden reproduzierbar mit `scripts/generate-avatar-hair-variants.py` aus den
+unveraenderten Ganzkoerper-Mastern exportiert. Der Git-Tag
+`avatar-complete-v1` markiert den Rueckkehrpunkt vor diesem Pilot.

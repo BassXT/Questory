@@ -326,6 +326,10 @@ Hinweise:
 - Aktive Slots sind `character` und `pet`.
 - `character` ist immer belegt; ohne gespeicherte Auswahl wird `character-hoodie-teal` verwendet.
 - `pet` ist optional und kann entfernt werden.
+- Bei Figuren mit Haarfarbauswahl speichert `character` den konkreten Key der
+  vollstaendigen Farbvariante, zum Beispiel `character-explorer-blue`.
+- Das Frontend gruppiert diese technischen Varianten als eine Stilkarte mit
+  Farbfeldern; die REST-API liefert weiterhin normale `AvatarItem`-Eintraege.
 - Alte modulare Avatar-Items bleiben aus Datenkompatibilitaet gespeichert, sind jedoch inaktiv und werden nicht ausgeliefert.
 
 Response-Auszug:

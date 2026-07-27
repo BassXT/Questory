@@ -8,6 +8,10 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- 18 vollstaendige, verlustfreie Haarfarb-WebPs fuer Smiley-Entdecker, Wald-Entdeckerin und Sternen-Heldin hinzugefuegt: jeweils Rot, Rosa, Blau, Braun, Blond und Schwarz.
+- Reproduzierbare Exportpipeline `scripts/generate-avatar-hair-variants.py` mit geprueften Haarmasken, flachem Ganzkoerperexport, Kontaktbogen und Schutzpruefung fuer alle Nicht-Haar-Pixel hinzugefuegt.
+- Migration `20260727003000_flattened_hair_variants` mit 15 zusaetzlichen technischen `character`-Keys hinzugefuegt; die drei vorhandenen Master-Keys bilden jeweils die sechste Farbe.
+- Stabilen Rueckkehrpunkt vor dem Haarfarben-Pilot als Git-Tag `avatar-complete-v1` auf GitHub gesichert.
 - Acht vollstaendige, transparente Kinderfiguren im freigegebenen Questory-Abenteuerstil hinzugefuegt: Hoodie, Sonnenblume, Smiley, Stern, Entdeckerin, Ritter, Astronautin und Zauberin.
 - Acht separat waehlbare Begleittiere hinzugefuegt: Katze, Hund, Hase, Fuchs, Sonnenfell, Tiger, Elefant und Walddrache.
 - Migration `20260726234500_complete_avatar_presets` mit levelbasierten Ganzkoerperfiguren und Begleitern hinzugefuegt.
@@ -164,6 +168,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Changed
 
+- Avatar-Werkstatt gruppiert die 18 flachen Komplettbilder als drei Stilkarten plus sechs Haarfarb-Felder; beim Stilwechsel bleibt die gewaehlte Farbe erhalten und im Browser werden weiterhin keine Bildlayer zusammengesetzt.
 - Avatar-Werkstatt und Loadout-Vertrag auf genau zwei aktive Slots vereinfacht: vollstaendige `character`-Figur plus optionales `pet`.
 - Mobile Avatar-Auswahl in zwei klare Tabs mit horizontal swipebaren Bildkarten umgestellt; ab Tabletbreite bleibt ein kompaktes Raster.
 - Grosse Avatar-Vorschau vom abstrakten Questory-Renderer auf das kompatible Kenney-2D-Rig umgestellt; bestehende Item-Keys, Unlocks, Farben und Loadouts bleiben erhalten.
@@ -216,6 +221,8 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Alle 18 Haarfarb-WebPs auf `768x1152`, Alpha-Kanal, transparente Ecken und sichtbaren Inhalt geprueft; Exporter bestaetigt unveraenderte sichtbare Pixel ausserhalb der Haarmaske.
+- Frontend-Produktionsbuild, Prisma-Validierung und echte Playwright-Mobile-QA bei `390x844` erfolgreich: sechs Farbfelder, pinkes Entdecker-Komplettbild geladen und kein horizontaler Seitenueberlauf.
 - Portainer-Redeploy des vereinfachten Ganzkoerper-Builders aus Commit `5064fac` erfolgreich; Katalogmigration angewendet, NestJS gestartet, Backend/Frontend HTTP `200`, neue Figuren- und Tier-PNGs als `image/png` ausgeliefert und alte Kenney-Pfade aus dem Produktionsbundle entfernt.
 - Prisma-Schema validiert, Prisma Client generiert sowie Backend- und Frontend-Produktionsbuild nach der Vereinfachung auf Figur plus Tier erfolgreich.
 - Alle 16 Produktions-PNGs auf Alpha-Kanal, transparente Ecken, normalisierte Leinwand und sichtbaren Inhalt geprueft; Werkstatt auf Desktop und in mobiler Darstellung visuell kontrolliert.

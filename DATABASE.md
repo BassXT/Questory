@@ -270,7 +270,7 @@ Aktive Slots:
 - `character`
 - `pet`
 
-`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` dient innerhalb eines Slots als stabile Sortierhilfe; die Figuren werden nicht mehr aus einzelnen Grafiklayern zusammengesetzt. Technische Item-Keys bleiben dauerhaft stabil. Die Migration `20260726234500_complete_avatar_presets` deaktiviert die bisherigen modularen Items und fuegt die vollstaendigen Figuren sowie Begleittiere ein. Die alten Datensaetze bleiben fuer bestehende Loadouts und eine moegliche Datenmigration erhalten.
+`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` dient innerhalb eines Slots als stabile Sortierhilfe; die Figuren werden nicht mehr aus einzelnen Grafiklayern zusammengesetzt. Technische Item-Keys bleiben dauerhaft stabil. Die Migration `20260726234500_complete_avatar_presets` deaktiviert die bisherigen modularen Items und fuegt die vollstaendigen Figuren sowie Begleittiere ein. Migration `20260727003000_flattened_hair_variants` ergaenzt 15 weitere `character`-Keys fuer die flach exportierten Haarfarbvarianten von Smiley, Entdeckerin und Sternen-Heldin. Alle Farben eines Stils besitzen dasselbe `requiredLevel`; Farben selbst verursachen keine zusaetzliche Level-Sperre. Die alten Datensaetze bleiben fuer bestehende Loadouts und eine moegliche Datenmigration erhalten.
 
 ### ChildAvatarItem
 
@@ -317,6 +317,7 @@ apps/backend/prisma/migrations/20260716193000_child_profile_details_and_avatar_e
 apps/backend/prisma/migrations/20260724183000_reward_assignments/migration.sql
 apps/backend/prisma/migrations/20260724214000_soft_adventure_avatar_labels/migration.sql
 apps/backend/prisma/migrations/20260726234500_complete_avatar_presets/migration.sql
+apps/backend/prisma/migrations/20260727003000_flattened_hair_variants/migration.sql
 ```
 
 `npm run prisma:generate` wurde erfolgreich geprueft. Im Docker-/Portainer-Deployment fuehrt der Backend-Container beim Start automatisch aus:
