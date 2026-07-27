@@ -221,6 +221,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Verified
 
+- Portainer-Redeploy des Haarfarben-Pilots aus Commit `7422ec0` erfolgreich; Katalogmigration angewendet, NestJS gestartet, Backend/Frontend HTTP `200`, v2-Varianten als `image/webp` ausgeliefert und Haarfarbauswahl im Produktionsbundle vorhanden.
 - Alle 18 Haarfarb-WebPs auf `768x1152`, Alpha-Kanal, transparente Ecken und sichtbaren Inhalt geprueft; Exporter bestaetigt unveraenderte sichtbare Pixel ausserhalb der Haarmaske.
 - Frontend-Produktionsbuild, Prisma-Validierung und echte Playwright-Mobile-QA bei `390x844` erfolgreich: sechs Farbfelder, pinkes Entdecker-Komplettbild geladen und kein horizontaler Seitenueberlauf.
 - Portainer-Redeploy des vereinfachten Ganzkoerper-Builders aus Commit `5064fac` erfolgreich; Katalogmigration angewendet, NestJS gestartet, Backend/Frontend HTTP `200`, neue Figuren- und Tier-PNGs als `image/png` ausgeliefert und alte Kenney-Pfade aus dem Produktionsbundle entfernt.

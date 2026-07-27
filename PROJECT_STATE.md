@@ -26,6 +26,7 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 - Reproduzierbare Exportpipeline `scripts/generate-avatar-hair-variants.py` erstellt aus drei unveraenderten Mastern je sechs vollstaendige Haarfarb-WebPs und prueft automatisch, dass ausserhalb der Haarmaske keine sichtbaren Pixel veraendert werden.
 - Avatar-Werkstatt gruppiert die 18 technischen Varianten als drei Stilkarten plus die frei waehlbaren Haarfarben Rot, Rosa, Blau, Braun, Blond und Schwarz.
 - Produktionsstand vor dem Haarfarben-Pilot als Git-Tag `avatar-complete-v1` gesichert.
+- Haarfarben-Pilot aus Commit `7422ec0` per Portainer auf den LXC deployed; Migration `20260727003000_flattened_hair_variants` erfolgreich angewendet, NestJS gestartet und Backend, Frontend, v2-WebPs sowie produktives Bundle geprueft.
 - Ganzkoerper-Builder aus Commit `5064fac` per Portainer auf den LXC deployed; Migration `20260726234500_complete_avatar_presets` wurde erfolgreich angewendet, NestJS gestartet und Backend, Frontend, Figuren-/Tier-PNGs sowie das produktive Bundle geprueft.
 - Historischer Kenney-Einzelteilversuch abgeschlossen, auf dem LXC geprueft und nach dem Qualitaetsvergleich vollstaendig aus dem aktiven Frontend entfernt.
 - 3D-Machbarkeitspruefung abgeschlossen und nach echtem Geraetetest wieder entfernt; die Produktionsrichtung ist verbindlich 2D.
