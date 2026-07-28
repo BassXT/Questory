@@ -139,7 +139,7 @@ export class RewardsService {
       throw new ForbiddenException('Children can only view their own reward shop.');
     }
 
-    return this.prisma.reward.findMany({
+    const rewards = await this.prisma.reward.findMany({
       where: {
         familyId: user.familyId,
         isActive: true,
@@ -150,8 +150,31 @@ export class RewardsService {
         }
       },
       orderBy: [{ price: 'asc' }, { name: 'asc' }],
-      select: rewardSelect
+      select: {
+        ...rewardSelect,
+        redemptions: {
+          where: {
+            childProfileId: childId,
+            status: {
+              in: [
+                RewardRedemptionStatus.REQUESTED,
+                RewardRedemptionStatus.APPROVED
+              ]
+            }
+          },
+          orderBy: { requestedAt: 'desc' },
+          take: 1,
+          select: {
+            status: true
+          }
+        }
+      }
     });
+
+    return rewards.map(({ redemptions, ...reward }) => ({
+      ...reward,
+      activeRedemptionStatus: redemptions[0]?.status ?? null
+    }));
   }
 
   async createRewardAssignment(user: AuthenticatedUser, dto: CreateRewardAssignmentDto) {
@@ -278,53 +301,79 @@ export class RewardsService {
       throw new BadRequestException('Reward is not assigned to this child.');
     }
 
-    return this.prisma.$transaction(async (tx) => {
-      if (reward.maxRedemptions !== null) {
-        const existingRedemptions = await tx.rewardRedemption.count({
+    try {
+      return await this.prisma.$transaction(async (tx) => {
+        const activeRedemption = await tx.rewardRedemption.findFirst({
           where: {
             rewardId,
             childProfileId: dto.childProfileId,
             status: {
               in: [
                 RewardRedemptionStatus.REQUESTED,
-                RewardRedemptionStatus.APPROVED,
-                RewardRedemptionStatus.REDEEMED
+                RewardRedemptionStatus.APPROVED
               ]
             }
+          },
+          select: { id: true }
+        });
+
+        if (activeRedemption) {
+          throw new ConflictException('This reward already has an active request for this child.');
+        }
+
+        if (reward.maxRedemptions !== null) {
+          const existingRedemptions = await tx.rewardRedemption.count({
+            where: {
+              rewardId,
+              childProfileId: dto.childProfileId,
+              status: {
+                in: [
+                  RewardRedemptionStatus.REQUESTED,
+                  RewardRedemptionStatus.APPROVED,
+                  RewardRedemptionStatus.REDEEMED
+                ]
+              }
+            }
+          });
+
+          if (existingRedemptions >= reward.maxRedemptions) {
+            throw new ConflictException('Reward redemption limit reached for this child.');
+          }
+        }
+
+        const updateResult = await tx.childProfile.updateMany({
+          where: {
+            id: dto.childProfileId,
+            coins: { gte: reward.price }
+          },
+          data: {
+            coins: { decrement: reward.price }
           }
         });
 
-        if (existingRedemptions >= reward.maxRedemptions) {
-          throw new ConflictException('Reward redemption limit reached for this child.');
+        if (updateResult.count !== 1) {
+          throw new BadRequestException('Child does not have enough coins for this reward.');
         }
+
+        return tx.rewardRedemption.create({
+          data: {
+            rewardId,
+            childProfileId: dto.childProfileId,
+            status: RewardRedemptionStatus.REQUESTED,
+            approvedAt: null,
+            approvedByUserId: null,
+            coinCost: reward.price
+          },
+          select: rewardRedemptionSelect
+        });
+      });
+    } catch (error) {
+      if (this.isUniqueConstraintError(error)) {
+        throw new ConflictException('This reward already has an active request for this child.');
       }
 
-      const updateResult = await tx.childProfile.updateMany({
-        where: {
-          id: dto.childProfileId,
-          coins: { gte: reward.price }
-        },
-        data: {
-          coins: { decrement: reward.price }
-        }
-      });
-
-      if (updateResult.count !== 1) {
-        throw new BadRequestException('Child does not have enough coins for this reward.');
-      }
-
-      return tx.rewardRedemption.create({
-        data: {
-          rewardId,
-          childProfileId: dto.childProfileId,
-          status: RewardRedemptionStatus.REQUESTED,
-          approvedAt: null,
-          approvedByUserId: null,
-          coinCost: reward.price
-        },
-        select: rewardRedemptionSelect
-      });
-    });
+      throw error;
+    }
   }
 
   listRewardRedemptions(user: AuthenticatedUser, query: ListRewardRedemptionsQueryDto) {

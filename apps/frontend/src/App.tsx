@@ -233,6 +233,7 @@ interface Reward {
   isActive: boolean;
   requiresApproval: boolean;
   maxRedemptions: number | null;
+  activeRedemptionStatus?: 'REQUESTED' | 'APPROVED' | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -3644,19 +3645,7 @@ function RewardAssignmentBoardPanel({
 }: RewardAssignmentBoardPanelProps) {
   const activeRewards = rewards.filter((reward) => reward.isActive);
   const fallbackChildId = resolveSelectedChildId(children, selectedChildId);
-  const [drafts, setDrafts] = useState<Record<string, string>>({});
   const selectedChild = children.find((child) => child.id === fallbackChildId) ?? null;
-
-  function getDraftChildId(rewardId: string): string {
-    return drafts[rewardId] ?? fallbackChildId;
-  }
-
-  function updateDraft(rewardId: string, childProfileId: string) {
-    setDrafts((currentDrafts) => ({
-      ...currentDrafts,
-      [rewardId]: childProfileId
-    }));
-  }
 
   return (
     <Paper elevation={0} sx={{ p: { xs: 2, md: 2.5 } }}>
@@ -3677,6 +3666,12 @@ function RewardAssignmentBoardPanel({
           </Stack>
         </Box>
 
+        <ChildFocusBar
+          children={children}
+          selectedChildId={fallbackChildId}
+          onChildChange={onChildChange}
+        />
+
         <Box
           sx={{
             display: 'grid',
@@ -3686,9 +3681,10 @@ function RewardAssignmentBoardPanel({
         >
           {activeRewards.length > 0 ? (
             activeRewards.map((reward) => {
-              const draftChildId = getDraftChildId(reward.id);
-              const assignedToDraftChild = assignments.some(
-                (assignment) => assignment.rewardId === reward.id && assignment.childProfileId === draftChildId
+              const assignedToSelectedChild = assignments.some(
+                (assignment) =>
+                  assignment.rewardId === reward.id &&
+                  assignment.childProfileId === fallbackChildId
               );
 
               return (
@@ -3715,45 +3711,25 @@ function RewardAssignmentBoardPanel({
                       <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
                       <Chip label={reward.category || 'Allgemein'} size="small" variant="outlined" />
                       <Chip label="Anfrage" size="small" variant="outlined" />
-                      {assignedToDraftChild ? <Chip color="success" label="Zugewiesen" size="small" /> : null}
+                      {assignedToSelectedChild ? <Chip color="success" label="Zugewiesen" size="small" /> : null}
                     </Stack>
                   </Stack>
 
                   <Box
                     sx={{
-                      display: 'grid',
-                      gap: 1,
-                      gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) auto' }
+                      display: 'flex',
+                      justifyContent: { xs: 'stretch', md: 'flex-end' }
                     }}
                   >
-                    <TextField
-                      disabled={children.length === 0}
-                      label="Kind"
-                      onChange={(event) => {
-                        const childProfileId = event.target.value;
-                        updateDraft(reward.id, childProfileId);
-                        onChildChange(childProfileId);
-                      }}
-                      required
-                      select
-                      size="small"
-                      value={draftChildId}
-                    >
-                      {children.map((child) => (
-                        <MenuItem key={child.id} value={child.id}>
-                          {child.displayName}
-                        </MenuItem>
-                      ))}
-                    </TextField>
                     <Button
-                      disabled={!draftChildId || assignedToDraftChild || saving}
-                      onClick={() => onAssign(reward.id, draftChildId)}
+                      disabled={!fallbackChildId || assignedToSelectedChild || saving}
+                      onClick={() => onAssign(reward.id, fallbackChildId)}
                       size="small"
                       startIcon={<StorefrontRoundedIcon />}
                       sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
                       variant="contained"
                     >
-                      {assignedToDraftChild ? 'Zugewiesen' : 'Zuweisen'}
+                      {assignedToSelectedChild ? 'Zugewiesen' : 'Zuweisen'}
                     </Button>
                   </Box>
                 </Box>
@@ -3948,7 +3924,6 @@ interface QuestAssignmentBoardPanelProps {
 }
 
 interface QuestAssignmentDraft {
-  childProfileId: string;
   dueAt: string;
 }
 
@@ -3968,7 +3943,7 @@ function QuestAssignmentBoardPanel({
   const selectedChild = children.find((child) => child.id === fallbackChildId) ?? null;
 
   function getDraft(questId: string): QuestAssignmentDraft {
-    return drafts[questId] ?? { childProfileId: fallbackChildId, dueAt: '' };
+    return drafts[questId] ?? { dueAt: '' };
   }
 
   function updateDraft(questId: string, draft: QuestAssignmentDraft) {
@@ -3980,7 +3955,7 @@ function QuestAssignmentBoardPanel({
 
   function assignQuest(questId: string) {
     const draft = getDraft(questId);
-    onAssign(questId, draft.childProfileId, draft.dueAt);
+    onAssign(questId, fallbackChildId, draft.dueAt);
   }
 
   return (
@@ -4002,6 +3977,12 @@ function QuestAssignmentBoardPanel({
           </Stack>
         </Box>
 
+        <ChildFocusBar
+          children={children}
+          selectedChildId={fallbackChildId}
+          onChildChange={onChildChange}
+        />
+
         {loading ? <LinearProgress /> : null}
 
         <Box
@@ -4014,7 +3995,11 @@ function QuestAssignmentBoardPanel({
           {assignableQuests.length > 0 ? (
             assignableQuests.map((quest) => {
               const draft = getDraft(quest.id);
-              const childAssignments = assignments.filter((assignment) => assignment.questId === quest.id);
+              const assignedToSelectedChild = assignments.some(
+                (assignment) =>
+                  assignment.questId === quest.id &&
+                  assignment.childProfileId === fallbackChildId
+              );
 
               return (
                 <Box
@@ -4040,7 +4025,7 @@ function QuestAssignmentBoardPanel({
                       <Chip label={quest.type === 'ONE_TIME' ? 'Einmalig' : frequencyLabel(quest.frequency)} size="small" variant="outlined" />
                       <Chip icon={<EmojiEventsRoundedIcon />} label={`${quest.xpReward} XP`} size="small" variant="outlined" />
                       <Chip icon={<PaidRoundedIcon />} label={`${quest.coinReward}`} size="small" variant="outlined" />
-                      {childAssignments.length > 0 ? <Chip color="success" label="Für aktives Kind zugewiesen" size="small" /> : null}
+                      {assignedToSelectedChild ? <Chip color="success" label="Zugewiesen" size="small" /> : null}
                     </Stack>
                   </Stack>
 
@@ -4048,28 +4033,9 @@ function QuestAssignmentBoardPanel({
                     sx={{
                       display: 'grid',
                       gap: 1,
-                      gridTemplateColumns: { xs: '1fr', md: 'minmax(180px, 1fr) minmax(150px, 0.8fr) auto' }
+                      gridTemplateColumns: { xs: '1fr', md: 'minmax(150px, 1fr) auto' }
                     }}
                   >
-                    <TextField
-                      disabled={children.length === 0}
-                      label="Kind"
-                      onChange={(event) => {
-                        const childProfileId = event.target.value;
-                        updateDraft(quest.id, { ...draft, childProfileId });
-                        onChildChange(childProfileId);
-                      }}
-                      required
-                      select
-                      size="small"
-                      value={draft.childProfileId}
-                    >
-                      {children.map((child) => (
-                        <MenuItem key={child.id} value={child.id}>
-                          {child.displayName}
-                        </MenuItem>
-                      ))}
-                    </TextField>
                     <TextField
                       label="Fällig am"
                       onChange={(event) => updateDraft(quest.id, { ...draft, dueAt: event.target.value })}
@@ -4079,14 +4045,14 @@ function QuestAssignmentBoardPanel({
                       value={draft.dueAt}
                     />
                     <Button
-                      disabled={!draft.childProfileId || saving}
+                      disabled={!fallbackChildId || assignedToSelectedChild || saving}
                       onClick={() => assignQuest(quest.id)}
                       size="small"
                       startIcon={<TaskAltRoundedIcon />}
                       sx={{ minHeight: 40, width: { xs: '100%', md: 'auto' } }}
                       variant="contained"
                     >
-                      Zuweisen
+                      {assignedToSelectedChild ? 'Zugewiesen' : 'Zuweisen'}
                     </Button>
                   </Box>
                 </Box>
@@ -5345,7 +5311,11 @@ interface RewardShopRowProps {
 
 function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProps) {
   const canAfford = child.coins >= reward.price;
-  const actionLabel = 'Beantragen';
+  const hasActiveRequest =
+    reward.activeRedemptionStatus === 'REQUESTED' ||
+    reward.activeRedemptionStatus === 'APPROVED';
+  const actionLabel =
+    reward.activeRedemptionStatus === 'APPROVED' ? 'Genehmigt' : 'Bereits beantragt';
   const missingCoins = Math.max(reward.price - child.coins, 0);
 
   return (
@@ -5358,6 +5328,7 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
         gap: { xs: 1, sm: 1.25 },
         gridTemplateColumns: { xs: '56px minmax(0, 1fr)', sm: '72px minmax(0, 1fr)' },
         minHeight: { xs: 'auto', sm: 190 },
+        opacity: hasActiveRequest ? 0.62 : 1,
         p: { xs: 1.25, sm: 1.5 }
       }}
     >
@@ -5403,18 +5374,25 @@ function RewardShopRow({ child, redeeming, reward, onRedeem }: RewardShopRowProp
         </Box>
         <Stack direction="row" spacing={0.75} sx={{ flexWrap: 'wrap', minWidth: 0 }}>
           <Chip icon={<PaidRoundedIcon />} label={`${reward.price}`} size="small" variant="outlined" />
-          <Chip color={canAfford ? 'success' : 'warning'} label={canAfford ? 'Bezahlbar' : `Noch ${missingCoins} Münzen`} size="small" variant={canAfford ? 'filled' : 'outlined'} />
-          <Chip label="Anfrage" size="small" variant="outlined" />
+          {!hasActiveRequest ? (
+            <Chip color={canAfford ? 'success' : 'warning'} label={canAfford ? 'Bezahlbar' : `Noch ${missingCoins} Münzen`} size="small" variant={canAfford ? 'filled' : 'outlined'} />
+          ) : null}
+          <Chip
+            color={hasActiveRequest ? 'info' : 'default'}
+            label={hasActiveRequest ? actionLabel : 'Anfrage'}
+            size="small"
+            variant={hasActiveRequest ? 'filled' : 'outlined'}
+          />
         </Stack>
         <Button
-          disabled={!canAfford || redeeming}
+          disabled={!canAfford || hasActiveRequest || redeeming}
           onClick={() => onRedeem(reward.id)}
           size="small"
           startIcon={<StorefrontRoundedIcon />}
           sx={{ width: { xs: '100%', sm: 'auto' } }}
-          variant={canAfford ? 'contained' : 'outlined'}
+          variant={canAfford && !hasActiveRequest ? 'contained' : 'outlined'}
         >
-          {canAfford ? actionLabel : 'Noch sparen'}
+          {hasActiveRequest ? actionLabel : canAfford ? 'Beantragen' : 'Noch sparen'}
         </Button>
       </Stack>
     </Box>

@@ -245,6 +245,11 @@ Muenzlogik:
 - Neue Einloesungen starten immer mit `REQUESTED`; `APPROVED` entsteht nur durch Eltern-/Admin-Bestaetigung.
 - `REJECTED` und `CANCELLED` schreiben diese Muenzen wieder gut.
 - `REDEEMED` ist final und kann nicht mehr storniert werden.
+- Der partielle Unique-Index
+  `RewardRedemption_active_reward_child_key` erlaubt pro Kind und Belohnung
+  hoechstens einen Datensatz mit Status `REQUESTED` oder `APPROVED`.
+- Abgelehnte, stornierte und vollstaendig eingeloeste Datensaetze blockieren
+  einen spaeteren neuen Antrag nicht.
 
 ### AvatarItem
 

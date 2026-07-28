@@ -8,6 +8,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Parallele Doppelantraege derselben Shop-Belohnung fuer ein Kind im Service und mit partiellem PostgreSQL-Unique-Index gesperrt.
+- Kindershop um `activeRedemptionStatus`, ausgegraute bereits beantragte Karten und deaktivierte Antragsschaltflaechen erweitert.
+- Quest- und Belohnungszuweisung auf je eine globale Kind-Auswahl oberhalb der Kartenlisten umgestellt.
 - Geschlechtsspezifischen Avatar-Katalog eingefuehrt: Jungenprofile sehen nur Smiley/Wirbelfrisur, Maedchenprofile nur Sternen-Heldin/Wald-Entdeckerin/Zauberlehrling; neutrale Profile sehen beide Gruppen.
 - 12 neue vollstaendige Haarfarb-WebPs fuer Wirbelfrisur und Zauberlehrling hinzugefuegt, jeweils Rot, Rosa, Blau, Braun, Blond und Schwarz.
 - Migration `20260728113000_gender_scoped_avatar_styles` mit `AvatarItem.audienceGender`, zwei Basisfiguren auf Level 1 und Frisur-Freischaltungen auf Level 3 beziehungsweise 6 hinzugefuegt.

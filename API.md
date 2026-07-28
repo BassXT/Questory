@@ -838,6 +838,9 @@ Hinweise:
 - Kinder mit eigenem Login koennen nur den eigenen Shop abrufen.
 - Es werden nur aktive Belohnungen angezeigt, die dem Kind ueber `RewardAssignment` zugewiesen wurden.
 - Sortierung: guenstigste Belohnungen zuerst, danach Name.
+- Jede Belohnung enthaelt `activeRedemptionStatus` mit `REQUESTED`,
+  `APPROVED` oder `null`. Damit kann der Kindershop bereits beantragte
+  Belohnungen sofort sperren.
 
 ### `POST /api/rewards/{rewardId}/redeem`
 
@@ -858,7 +861,12 @@ Hinweise:
 - Das Kind muss genug Muenzen fuer den aktuellen Preis besitzen.
 - Die Muenzen werden beim Beantragen sofort reserviert und vom Kinderprofil abgezogen.
 - Jede Shop-Belohnung erstellt eine Anfrage mit Status `REQUESTED`; direkte `APPROVED`-Einloesungen sind nicht mehr erlaubt.
+- Fuer dieselbe Belohnung und dasselbe Kind darf gleichzeitig hoechstens eine
+  Anfrage mit Status `REQUESTED` oder `APPROVED` existieren. Weitere Antraege
+  werden mit `409 Conflict` abgelehnt.
 - Bei Ablehnung oder Storno werden reservierte Muenzen wieder gutgeschrieben.
+- Nach `REJECTED`, `CANCELLED` oder `REDEEMED` kann die Belohnung wieder
+  beantragt werden, sofern `maxRedemptions` nicht erreicht ist.
 - `maxRedemptions` zaehlt bestehende Einloesungen mit Status `REQUESTED`, `APPROVED` und `REDEEMED` fuer dasselbe Kind.
 
 Request:

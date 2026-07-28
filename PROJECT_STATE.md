@@ -30,6 +30,8 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 - Prisma-Migration `20260728113000_gender_scoped_avatar_styles` fuegt `AvatarItem.audienceGender` hinzu, deaktiviert vorerst die abweichenden Figurenpresets und ordnet den aktiven Katalog Jungen- beziehungsweise Maedchenprofilen zu.
 - Kinderprofile koennen ueber `PATCH /api/children/{childId}` und einen responsiven Eltern-Dialog bei Name, Geschlecht und Geburtstag bearbeitet werden.
 - Geschlechtsspezifischer Avatar-Slice aus Commit `f52eeb5` per Portainer auf den LXC deployed; Migration erfolgreich angewendet, NestJS gestartet, neuer `PATCH`-Endpunkt registriert, alle 12 neuen WebPs und das produktive Bundle geprueft. PostgreSQL enthaelt exakt 12 aktive Jungenvarianten und 18 aktive Maedchenvarianten in den geplanten Levelgruppen.
+- Doppelte aktive Shop-Antraege derselben Belohnung fuer dasselbe Kind werden im Service und durch den partiellen PostgreSQL-Unique-Index `RewardRedemption_active_reward_child_key` blockiert. Der Shop liefert den aktiven Antragstatus und stellt betroffene Karten bis zur Entscheidung oder Ausgabe ausgegraut dar.
+- Parent-Zuweisungsansichten fuer Quests und Belohnungen verwenden je eine globale Kind-Auswahl oberhalb der Liste; Kind-Auswahlen innerhalb jeder einzelnen Karte wurden entfernt.
 - Produktionsstand vor dem Haarfarben-Pilot als Git-Tag `avatar-complete-v1` gesichert.
 - Haarfarben-Pilot aus Commit `7422ec0` per Portainer auf den LXC deployed; Migration `20260727003000_flattened_hair_variants` erfolgreich angewendet, NestJS gestartet und Backend, Frontend, v2-WebPs sowie produktives Bundle geprueft.
 - Ganzkoerper-Builder aus Commit `5064fac` per Portainer auf den LXC deployed; Migration `20260726234500_complete_avatar_presets` wurde erfolgreich angewendet, NestJS gestartet und Backend, Frontend, Figuren-/Tier-PNGs sowie das produktive Bundle geprueft.
@@ -467,12 +469,15 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 
 ## Naechster Schritt
 
-Den geschlechtsspezifischen Avatar-Slice mit je einem Jungen- und
-Maedchenprofil auf dem echten iPhone pruefen: Profil bearbeiten, sofortiger
-Katalogwechsel, Basisfigur-Fallback, alle fuenf Frisurenkarten und sechs
-Haarfarben. Die automatischen Produktionspruefungen fuer Migration, API-Start,
-Katalogdaten, Bundle und Assets sind bereits erfolgreich. Danach folgt vor
-weiteren Berufen eine Thumbnail-/Lazy-Loading-Strategie, weil jede neue
+Nach dem Deployment zuerst den Kindershop auf dem echten iPhone pruefen:
+Belohnung einmal beantragen, ausgegrauten Status nach Reload kontrollieren und
+nach Ablehnung/Storno wieder beantragen. Danach beide Parent-Zuweisungsansichten
+mit mehreren Kindern pruefen.
+
+Anschliessend den geschlechtsspezifischen Avatar-Slice mit je einem Jungen- und
+Maedchenprofil pruefen: Profil bearbeiten, sofortiger Katalogwechsel,
+Basisfigur-Fallback, alle fuenf Frisurenkarten und sechs Haarfarben. Vor
+weiteren Berufen folgt eine Thumbnail-/Lazy-Loading-Strategie, weil jede neue
 Kombination als vollstaendiges Bild gespeichert wird.
 
 Anschliessend koennen Ritter, Astronaut und Drachenkaempfer als getrennte,
