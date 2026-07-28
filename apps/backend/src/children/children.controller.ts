@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { Role } from '../prisma/client';
 import { CurrentUser } from '../auth/authenticated-user.decorator';
 import { Roles } from '../auth/decorators/roles.decorator';
@@ -8,6 +8,7 @@ import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { ChildrenService } from './children.service';
 import { CreateChildDto } from './dto/create-child.dto';
 import { SetChildPinDto } from './dto/set-child-pin.dto';
+import { UpdateChildDto } from './dto/update-child.dto';
 
 @Controller('children')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -23,6 +24,16 @@ export class ChildrenController {
   @Roles(Role.ADMIN, Role.PARENT)
   createChildProfile(@CurrentUser() user: AuthenticatedUser, @Body() dto: CreateChildDto) {
     return this.childrenService.createChildProfile(user, dto);
+  }
+
+  @Patch(':childId')
+  @Roles(Role.ADMIN, Role.PARENT)
+  updateChildProfile(
+    @CurrentUser() user: AuthenticatedUser,
+    @Param('childId') childId: string,
+    @Body() dto: UpdateChildDto
+  ) {
+    return this.childrenService.updateChildProfile(user, childId, dto);
   }
 
   @Get(':childId')

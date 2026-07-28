@@ -34,6 +34,7 @@ export interface AvatarItem {
   layerOrder: number;
   colorPrimary: string | null;
   colorSecondary: string | null;
+  audienceGender: string | null;
   isUnlocked: boolean;
   unlockReason: 'LEVEL' | 'INVENTORY' | 'LOCKED';
 }
@@ -42,6 +43,7 @@ export interface AvatarResponse {
   child: {
     id: string;
     displayName: string;
+    gender: string | null;
     level: number;
     xp: number;
     coins: number;
@@ -76,7 +78,7 @@ type HairColorKey = 'red' | 'pink' | 'blue' | 'brown' | 'blonde' | 'black';
 interface CharacterVariant {
   baseItemKey: string;
   color: HairColorKey;
-  style: 'smiley' | 'explorer' | 'star';
+  style: 'smiley' | 'boy-side-swept' | 'explorer' | 'star' | 'wizard';
 }
 
 const hairColors: Array<{ key: HairColorKey; label: string; value: string }> = [
@@ -95,6 +97,12 @@ const characterVariants: Record<string, CharacterVariant> = {
   'character-smiley-brown': { baseItemKey: 'character-smiley', color: 'brown', style: 'smiley' },
   'character-smiley-blonde': { baseItemKey: 'character-smiley', color: 'blonde', style: 'smiley' },
   'character-smiley-black': { baseItemKey: 'character-smiley', color: 'black', style: 'smiley' },
+  'character-boy-side': { baseItemKey: 'character-boy-side', color: 'red', style: 'boy-side-swept' },
+  'character-boy-side-pink': { baseItemKey: 'character-boy-side', color: 'pink', style: 'boy-side-swept' },
+  'character-boy-side-blue': { baseItemKey: 'character-boy-side', color: 'blue', style: 'boy-side-swept' },
+  'character-boy-side-brown': { baseItemKey: 'character-boy-side', color: 'brown', style: 'boy-side-swept' },
+  'character-boy-side-blonde': { baseItemKey: 'character-boy-side', color: 'blonde', style: 'boy-side-swept' },
+  'character-boy-side-black': { baseItemKey: 'character-boy-side', color: 'black', style: 'boy-side-swept' },
   'character-explorer-red': { baseItemKey: 'character-explorer', color: 'red', style: 'explorer' },
   'character-explorer-pink': { baseItemKey: 'character-explorer', color: 'pink', style: 'explorer' },
   'character-explorer-blue': { baseItemKey: 'character-explorer', color: 'blue', style: 'explorer' },
@@ -106,11 +114,23 @@ const characterVariants: Record<string, CharacterVariant> = {
   'character-star-blue': { baseItemKey: 'character-star', color: 'blue', style: 'star' },
   'character-star-brown': { baseItemKey: 'character-star', color: 'brown', style: 'star' },
   'character-star-blonde': { baseItemKey: 'character-star', color: 'blonde', style: 'star' },
-  'character-star-black': { baseItemKey: 'character-star', color: 'black', style: 'star' }
+  'character-star-black': { baseItemKey: 'character-star', color: 'black', style: 'star' },
+  'character-wizard-red': { baseItemKey: 'character-wizard', color: 'red', style: 'wizard' },
+  'character-wizard-pink': { baseItemKey: 'character-wizard', color: 'pink', style: 'wizard' },
+  'character-wizard-blue': { baseItemKey: 'character-wizard', color: 'blue', style: 'wizard' },
+  'character-wizard-brown': { baseItemKey: 'character-wizard', color: 'brown', style: 'wizard' },
+  'character-wizard': { baseItemKey: 'character-wizard', color: 'blonde', style: 'wizard' },
+  'character-wizard-black': { baseItemKey: 'character-wizard', color: 'black', style: 'wizard' }
 };
 
 const avatarAssetPaths: Record<string, string> = {
   'character-astronaut': '/avatar-complete/v1/characters/astronaut.png',
+  'character-boy-side': '/avatar-complete/v2/characters/boy-side-swept/red.webp',
+  'character-boy-side-black': '/avatar-complete/v2/characters/boy-side-swept/black.webp',
+  'character-boy-side-blonde': '/avatar-complete/v2/characters/boy-side-swept/blonde.webp',
+  'character-boy-side-blue': '/avatar-complete/v2/characters/boy-side-swept/blue.webp',
+  'character-boy-side-brown': '/avatar-complete/v2/characters/boy-side-swept/brown.webp',
+  'character-boy-side-pink': '/avatar-complete/v2/characters/boy-side-swept/pink.webp',
   'character-explorer': '/avatar-complete/v2/characters/explorer/blonde.webp',
   'character-explorer-black': '/avatar-complete/v2/characters/explorer/black.webp',
   'character-explorer-blue': '/avatar-complete/v2/characters/explorer/blue.webp',
@@ -132,7 +152,12 @@ const avatarAssetPaths: Record<string, string> = {
   'character-star-brown': '/avatar-complete/v2/characters/star/brown.webp',
   'character-star-red': '/avatar-complete/v2/characters/star/red.webp',
   'character-sunflower': '/avatar-complete/v1/characters/sunflower.png',
-  'character-wizard': '/avatar-complete/v1/characters/wizard.png',
+  'character-wizard': '/avatar-complete/v2/characters/wizard/blonde.webp',
+  'character-wizard-black': '/avatar-complete/v2/characters/wizard/black.webp',
+  'character-wizard-blue': '/avatar-complete/v2/characters/wizard/blue.webp',
+  'character-wizard-brown': '/avatar-complete/v2/characters/wizard/brown.webp',
+  'character-wizard-pink': '/avatar-complete/v2/characters/wizard/pink.webp',
+  'character-wizard-red': '/avatar-complete/v2/characters/wizard/red.webp',
   'pet-bunny': '/avatar-complete/v1/pets/bunny.png',
   'pet-cat': '/avatar-complete/v1/pets/cat.png',
   'pet-dog': '/avatar-complete/v1/pets/dog.png',

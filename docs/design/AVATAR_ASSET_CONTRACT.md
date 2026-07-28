@@ -41,18 +41,18 @@ Eine Figur ist immer vollstaendig. Frisur, Haarfarbe, Kleidung und Accessoires
 sind Bestandteil des jeweiligen Presets. Neue Looks werden als Ganzes ueber
 Level oder spaeter ueber besondere Erfolge freigeschaltet.
 
-Die Pilotstile `Smiley-Entdecker`, `Wald-Entdeckerin` und `Sternen-Heldin`
-besitzen je sechs frei waehlbare Haarfarben. Auch diese Varianten sind
+Die Stile `Smiley-Entdecker`, `Wirbelfrisur`, `Wald-Entdeckerin`,
+`Sternen-Heldin` und `Zauberlehrling` besitzen je sechs frei waehlbare
+Haarfarben. Auch diese Varianten sind
 vollstaendige, flache Ganzkoerperbilder. Die Werkstatt gruppiert ihre
 technischen Item-Keys lediglich als Stilkarte plus Farbfelder; sie legt im
 Browser keine Haarmaske auf die Figur.
 
-Der erste Katalog verteilt:
+Der aktive Katalog verteilt:
 
-- Alltagslooks auf Level 1 bis 4
-- Sternenritter auf Level 5
-- Sternenforscherin auf Level 7
-- Zauberlehrling auf Level 9
+- Smiley-Entdecker und Sternen-Heldin als geschlechtsspezifische Basis auf Level 1
+- Wirbelfrisur und Wald-Entdeckerin auf Level 3
+- Zauberlehrling auf Level 6
 - Begleittiere auf Level 1 bis 10
 
 Damit bleibt XP langfristig relevant, ohne einen technisch fragilen

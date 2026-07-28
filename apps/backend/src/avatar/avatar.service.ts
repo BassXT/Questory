@@ -6,9 +6,11 @@ import { UpdateAvatarLoadoutDto } from './dto/update-avatar-loadout.dto';
 
 const avatarSlots = ['character', 'pet'] as const;
 
-const defaultEquippedItems: Record<string, string> = {
-  character: 'character-hoodie-teal'
-};
+const defaultCharacterKeys = {
+  BOY: 'character-smiley',
+  GIRL: 'character-star',
+  DEFAULT: 'character-smiley'
+} as const;
 
 const avatarChildSelect = {
   id: true,
@@ -31,7 +33,17 @@ export class AvatarService {
     const child = await this.getAccessibleChild(user, childId);
     const [items, inventory, loadout] = await Promise.all([
       this.prisma.avatarItem.findMany({
-        where: { isActive: true },
+        where: {
+          isActive: true,
+          ...(child.gender === 'BOY' || child.gender === 'GIRL'
+            ? {
+                OR: [
+                  { slot: { not: 'character' } },
+                  { slot: 'character', audienceGender: child.gender }
+                ]
+              }
+            : {})
+        },
         orderBy: [{ layerOrder: 'asc' }, { requiredLevel: 'asc' }, { name: 'asc' }]
       }),
       this.prisma.childAvatarItem.findMany({
@@ -47,7 +59,12 @@ export class AvatarService {
     const unlockedItemKeys = new Set(
       items.filter((item) => item.requiredLevel <= child.level || inventoryItemKeys.has(item.key)).map((item) => item.key)
     );
-    const equippedItems = this.resolveEquippedItems(loadout?.equippedItems, items, unlockedItemKeys);
+    const equippedItems = this.resolveEquippedItems(
+      loadout?.equippedItems,
+      items,
+      unlockedItemKeys,
+      child.gender
+    );
 
     return {
       child,
@@ -64,6 +81,7 @@ export class AvatarService {
         layerOrder: item.layerOrder,
         colorPrimary: item.colorPrimary,
         colorSecondary: item.colorSecondary,
+        audienceGender: item.audienceGender,
         isUnlocked: unlockedItemKeys.has(item.key),
         unlockReason: item.requiredLevel <= child.level ? 'LEVEL' : inventoryItemKeys.has(item.key) ? 'INVENTORY' : 'LOCKED'
       }))
@@ -103,7 +121,12 @@ export class AvatarService {
       equippedItems[slot] = itemKey;
     }
 
-    const normalizedEquippedItems = this.resolveEquippedItems(equippedItems, avatar.items, unlockedItemKeys);
+    const normalizedEquippedItems = this.resolveEquippedItems(
+      equippedItems,
+      avatar.items,
+      unlockedItemKeys,
+      child.gender
+    );
 
     await this.prisma.childAvatarLoadout.upsert({
       where: { childProfileId: child.id },
@@ -147,7 +170,8 @@ export class AvatarService {
   private resolveEquippedItems(
     storedEquippedItems: Prisma.JsonValue | Record<string, string> | null | undefined,
     items: Array<{ key: string; slot: string; requiredLevel: number }>,
-    unlockedItemKeys: Set<string>
+    unlockedItemKeys: Set<string>,
+    gender: string | null
   ) {
     const stored =
       storedEquippedItems && typeof storedEquippedItems === 'object' && !Array.isArray(storedEquippedItems)
@@ -165,7 +189,10 @@ export class AvatarService {
         continue;
       }
 
-      const defaultItemKey = defaultEquippedItems[slot];
+      const defaultItemKey =
+        slot === 'character'
+          ? defaultCharacterKeys[gender === 'BOY' || gender === 'GIRL' ? gender : 'DEFAULT']
+          : undefined;
       const defaultItem = defaultItemKey ? itemsByKey.get(defaultItemKey) : undefined;
 
       if (defaultItem && defaultItem.slot === slot && unlockedItemKeys.has(defaultItem.key)) {

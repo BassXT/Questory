@@ -93,7 +93,7 @@ Kinderlogin ohne E-Mail:
 
 Der Familiencode ist kein Geheimnis, sondern ein Locator fuer die Familie. Die PIN bleibt der eigentliche Authentifizierungsfaktor.
 
-`avatarKey` ist nur noch ein leichtes Profilabzeichen fuer Listen und kleine Badges. Der eigentliche Avatar wird ueber `AvatarItem` und `ChildAvatarLoadout` gebaut. `gender` ist ein optionaler Stammdatenwert fuer spaetere geschlechterspezifische Avatar-Vorschlaege und Auswertungen; `birthDate` ist optional und wird fuer altersgerechte Vorschlaege vorbereitet.
+`avatarKey` ist nur noch ein leichtes Profilabzeichen fuer Listen und kleine Badges. Der eigentliche Avatar wird ueber `AvatarItem` und `ChildAvatarLoadout` gebaut. `gender` steuert bei `BOY` und `GIRL` bereits den serverseitig sichtbaren Figurenkatalog; `DIVERSE` oder eine fehlende Angabe lassen beide Kataloggruppen sichtbar. `birthDate` ist optional und wird fuer altersgerechte Vorschlaege vorbereitet.
 
 ### Quest
 
@@ -261,6 +261,7 @@ Felder:
 - `layerOrder`
 - `colorPrimary`
 - `colorSecondary`
+- `audienceGender`
 - `isActive`
 - `createdAt`
 - `updatedAt`
@@ -270,7 +271,7 @@ Aktive Slots:
 - `character`
 - `pet`
 
-`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `layerOrder` dient innerhalb eines Slots als stabile Sortierhilfe; die Figuren werden nicht mehr aus einzelnen Grafiklayern zusammengesetzt. Technische Item-Keys bleiben dauerhaft stabil. Die Migration `20260726234500_complete_avatar_presets` deaktiviert die bisherigen modularen Items und fuegt die vollstaendigen Figuren sowie Begleittiere ein. Migration `20260727003000_flattened_hair_variants` ergaenzt 15 weitere `character`-Keys fuer die flach exportierten Haarfarbvarianten von Smiley, Entdeckerin und Sternen-Heldin. Alle Farben eines Stils besitzen dasselbe `requiredLevel`; Farben selbst verursachen keine zusaetzliche Level-Sperre. Die alten Datensaetze bleiben fuer bestehende Loadouts und eine moegliche Datenmigration erhalten.
+`requiredLevel` steuert die automatische Freischaltung durch XP-Level. `audienceGender` begrenzt Figuren auf `BOY` oder `GIRL`; Begleittiere bleiben neutral. `layerOrder` dient innerhalb eines Slots als stabile Sortierhilfe; die Figuren werden nicht mehr aus einzelnen Grafiklayern zusammengesetzt. Technische Item-Keys bleiben dauerhaft stabil. Die Migration `20260726234500_complete_avatar_presets` deaktiviert die bisherigen modularen Items und fuegt die vollstaendigen Figuren sowie Begleittiere ein. Migration `20260727003000_flattened_hair_variants` ergaenzt 15 weitere `character`-Keys fuer die ersten Haarfarbvarianten. Migration `20260728113000_gender_scoped_avatar_styles` reduziert den aktiven Katalog auf die zwei festgelegten Grundtypen, ergaenzt Wirbelfrisur und Zauberlehrling mit je sechs Farben und setzt die Geschlechts-Zielgruppen. Alle Farben eines Stils besitzen dasselbe `requiredLevel`; Farben selbst verursachen keine zusaetzliche Level-Sperre. Die alten Datensaetze bleiben fuer bestehende Loadouts und eine moegliche Datenmigration erhalten.
 
 ### ChildAvatarItem
 

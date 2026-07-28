@@ -5,6 +5,7 @@ import { AuthenticatedUser } from '../auth/types/authenticated-user';
 import { PasswordService } from '../auth/password.service';
 import { CreateChildDto } from './dto/create-child.dto';
 import { SetChildPinDto } from './dto/set-child-pin.dto';
+import { UpdateChildDto } from './dto/update-child.dto';
 
 const childSelect = {
   id: true,
@@ -51,6 +52,24 @@ export class ChildrenService {
     return this.prisma.childProfile.findMany({
       where: this.childWhereForUser(user),
       orderBy: { createdAt: 'asc' },
+      select: childSelect
+    });
+  }
+
+  async updateChildProfile(user: AuthenticatedUser, childId: string, dto: UpdateChildDto) {
+    await this.ensureChildExists(user, childId);
+
+    return this.prisma.childProfile.update({
+      where: { id: childId },
+      data: {
+        ...(dto.displayName !== undefined ? { displayName: dto.displayName.trim() } : {}),
+        ...(dto.gender !== undefined
+          ? { gender: dto.gender === 'UNSPECIFIED' ? null : dto.gender }
+          : {}),
+        ...(dto.birthDate !== undefined
+          ? { birthDate: dto.birthDate ? new Date(dto.birthDate) : null }
+          : {})
+      },
       select: childSelect
     });
   }

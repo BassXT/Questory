@@ -1,6 +1,6 @@
 # PROJECT_STATE.md
 
-Letzte Aktualisierung: 2026-07-26
+Letzte Aktualisierung: 2026-07-28
 
 Diese Datei ist die zentrale Fortsetzungsdatei fuer Questory. Sie beschreibt den aktuellen Projektstand, offene Aufgaben, Architekturentscheidungen und bekannte Probleme.
 
@@ -12,7 +12,9 @@ Das Frontend trennt Eltern- und Kinderansicht klar. Eltern verwalten Kinder, Que
 
 Der Avatar-Builder ist jetzt bewusst auf vollstaendige Kinderfiguren plus optionales Begleittier reduziert. Acht hochwertige Ganzkoerper-Presets und acht separat freigestellte Tiere liegen normalisiert als lokale PNGs vor. Die Werkstatt besitzt nur noch die Tabs `Figur` und `Tier`; alte Koerper-, Haar-, Gesichts- und Kleidungsitems bleiben aus Datenkompatibilitaet gespeichert, werden durch die neue Katalogmigration jedoch deaktiviert. Neue Looks werden als komplette Figuren ueber Level freigeschaltet, wodurch die Bildqualitaet stabil bleibt und XP weiterhin einen langfristigen Zweck erfuellt.
 
-Ein abgegrenzter Haarfarben-Pilot ergaenzt Smiley-Entdecker, Wald-Entdeckerin und Sternen-Heldin um je sechs Farben. Alle 18 Varianten sind fertige, flache Ganzkoerper-WebPs; die App gruppiert sie lediglich als drei Stilkarten mit Farbfeldern und setzt keine Bildlayer zusammen. Der vorherige Produktionsstand ist mit Git-Tag `avatar-complete-v1` als direkter Rueckkehrpunkt gesichert.
+Der aktive Figurenkatalog ist auf zwei festgelegte helle Grundtypen reduziert: Smiley-Entdecker fuer Jungen und Sternen-Heldin fuer Maedchen sind auf Level 1 verfuegbar. Als freischaltbare Frisuren folgen Wirbelfrisur beziehungsweise Wald-Entdeckerin auf Level 3 sowie Zauberlehrling fuer Maedchen auf Level 6. Alle fuenf Stile besitzen je sechs frei waehlbare Haarfarben als fertige, flache Ganzkoerper-WebPs; die App setzt keine Bildlayer zusammen.
+
+`AvatarItem.audienceGender` filtert Figuren serverseitig nach dem Geschlecht des Kinderprofils. Profile mit `BOY` sehen nur Jungenfiguren, `GIRL` nur Maedchenfiguren; `DIVERSE` und Kinder ohne Angabe sehen beide Gruppen. Kinderprofile koennen im Elternbereich jetzt mit Name, Geschlecht und Geburtsdatum bearbeitet werden. Eine Geschlechtsaenderung ersetzt eine nicht mehr passende gespeicherte Figur automatisch durch die richtige Basisfigur.
 
 Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wurden nach Geraetetests verworfen und aus dem aktiven Frontend entfernt. Der verbindliche Vertrag fuer vollstaendige Figuren und Tiere steht in `docs/design/AVATAR_ASSET_CONTRACT.md`.
 
@@ -23,8 +25,10 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 - Produktionsassets auf gemeinsame transparente Leinwaende normalisiert und unter `apps/frontend/public/avatar-complete/v1` abgelegt.
 - Avatar-API und Werkstatt auf die aktiven Slots `character` und `pet` reduziert; alte Katalogitems bleiben erhalten, werden aber deaktiviert.
 - Mobile Werkstatt auf zwei klare Tabs und horizontal swipebare Auswahlkarten reduziert; Desktop verwendet ein Dreierspaltenraster.
-- Reproduzierbare Exportpipeline `scripts/generate-avatar-hair-variants.py` erstellt aus drei unveraenderten Mastern je sechs vollstaendige Haarfarb-WebPs und prueft automatisch, dass ausserhalb der Haarmaske keine sichtbaren Pixel veraendert werden.
-- Avatar-Werkstatt gruppiert die 18 technischen Varianten als drei Stilkarten plus die frei waehlbaren Haarfarben Rot, Rosa, Blau, Braun, Blond und Schwarz.
+- Reproduzierbare Exportpipeline `scripts/generate-avatar-hair-variants.py` erstellt aus vier unveraenderten v1-Mastern und einem neuen normalisierten Master insgesamt 30 vollstaendige Haarfarb-WebPs und prueft automatisch, dass ausserhalb der Haarmaske keine sichtbaren Pixel veraendert werden.
+- Avatar-Werkstatt gruppiert die 30 technischen Varianten als fuenf Stilkarten plus die frei waehlbaren Haarfarben Rot, Rosa, Blau, Braun, Blond und Schwarz.
+- Prisma-Migration `20260728113000_gender_scoped_avatar_styles` fuegt `AvatarItem.audienceGender` hinzu, deaktiviert vorerst die abweichenden Figurenpresets und ordnet den aktiven Katalog Jungen- beziehungsweise Maedchenprofilen zu.
+- Kinderprofile koennen ueber `PATCH /api/children/{childId}` und einen responsiven Eltern-Dialog bei Name, Geschlecht und Geburtstag bearbeitet werden.
 - Produktionsstand vor dem Haarfarben-Pilot als Git-Tag `avatar-complete-v1` gesichert.
 - Haarfarben-Pilot aus Commit `7422ec0` per Portainer auf den LXC deployed; Migration `20260727003000_flattened_hair_variants` erfolgreich angewendet, NestJS gestartet und Backend, Frontend, v2-WebPs sowie produktives Bundle geprueft.
 - Ganzkoerper-Builder aus Commit `5064fac` per Portainer auf den LXC deployed; Migration `20260726234500_complete_avatar_presets` wurde erfolgreich angewendet, NestJS gestartet und Backend, Frontend, Figuren-/Tier-PNGs sowie das produktive Bundle geprueft.
@@ -462,9 +466,15 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 
 ## Naechster Schritt
 
-Den Haarfarben-Pilot auf dem echten iPhone mit vorhandenen Kinderprofilen pruefen. Wenn die drei Grundstile beim Farbwechsel wirklich wie dieselbe Figur wirken, folgt ein eigener kleiner Entscheidungs-Slice fuer Augenfarben und die Lade-/Thumbnail-Strategie. Bei Ablehnung wird auf Git-Tag `avatar-complete-v1` zurueckgegangen.
+Den geschlechtsspezifischen Avatar-Slice auf dem LXC deployen und mit je einem
+Jungen- und Maedchenprofil auf iPhone pruefen: Profil bearbeiten, sofortiger
+Katalogwechsel, Basisfigur-Fallback, alle fuenf Frisurenkarten und sechs
+Haarfarben. Danach folgt vor weiteren Berufen eine Thumbnail-/Lazy-Loading-
+Strategie, weil jede neue Kombination als vollstaendiges Bild gespeichert wird.
 
-Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep erfolgen, um sichtbare deutsche Texte wieder mit Umlauten zu schreiben.
+Anschliessend koennen Ritter, Astronaut und Drachenkaempfer als getrennte,
+geschlechtsspezifische Ganzkoerper-Serien aus genau diesen zwei Grundtypen
+erzeugt werden.
 
 ## Architekturentscheidungen
 
@@ -543,8 +553,8 @@ Vor dem naechsten groesseren Feature-Slice sollte ausserdem ein UI-Text-Sweep er
 - Port `3000` ist auf dem LXC bereits belegt; Questory nutzt fuer das Backend aktuell `3001`.
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
 - Der Frontend-Hauptchunk liegt trotz entfernter DiceBear-Pakete weiterhin ueber der Vite-Warngrenze. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
-- Der Haarfarben-Pilot deckt nur Smiley, Entdeckerin und Sternen-Heldin ab. Weitere Frisuren, Augenfarben und Berufe benoetigen zusaetzliche vollstaendige Exporte.
-- Die v1-PNGs und 18 verlustfreien v2-WebPs belegen zusammen rund 11,23 MB. Vor Augenfarben oder einem deutlich groesseren Berufskatalog sind Vorschaubilder und bedarfsgesteuertes Laden erforderlich, damit die Kombinationszahl nicht alle Mobilgeraete gleichzeitig belastet.
+- Augenfarben und Berufe benoetigen weiterhin zusaetzliche vollstaendige Exporte; Laufzeit-Layer bleiben ausgeschlossen.
+- Die v1-PNGs, 30 verlustfreien v2-WebPs und der neue Master belegen zusammen rund 15,62 MB. Vor einem deutlich groesseren Berufskatalog sind Vorschaubilder und bedarfsgesteuertes Laden erforderlich, damit Mobilgeraete nicht alle Vollbilder gleichzeitig laden.
 - Der Docker-LXC lief vor dem 3D-Labor-Redeploy mit nur 136 MB freiem Speicher bei 100 Prozent Belegung. Ein Buildcache-Prune hat den akuten Fehler geloest und der neue Questory-Container meldet 15 GB frei; die Belegung sollte trotzdem beim naechsten Wartungslauf erneut kontrolliert werden.
 
 ## Ideen fuer spaeter

@@ -106,12 +106,14 @@ model AvatarItem {
   layerOrder    Int
   colorPrimary  String?
   colorSecondary String?
+  audienceGender String?
   isActive      Boolean           @default(true)
   childItems    ChildAvatarItem[]
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 
   @@index([slot])
+  @@index([slot, audienceGender])
   @@index([requiredLevel])
 }
 

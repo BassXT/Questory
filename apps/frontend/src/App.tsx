@@ -1,5 +1,6 @@
 import AutoAwesomeRoundedIcon from '@mui/icons-material/AutoAwesomeRounded';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import EditRoundedIcon from '@mui/icons-material/EditRounded';
 import EmojiEventsRoundedIcon from '@mui/icons-material/EmojiEventsRounded';
 import LibraryBooksRoundedIcon from '@mui/icons-material/LibraryBooksRounded';
 import LoginRoundedIcon from '@mui/icons-material/LoginRounded';
@@ -922,6 +923,34 @@ function App() {
     }
   }
 
+  async function updateChild(childProfileId: string, form: ChildFormState): Promise<boolean> {
+    if (!token) {
+      return false;
+    }
+
+    setChildSaving(true);
+    setError(null);
+
+    try {
+      await apiRequest<ChildProfile>(`/children/${childProfileId}`, {
+        method: 'PATCH',
+        token,
+        body: {
+          displayName: form.displayName,
+          gender: form.gender,
+          birthDate: form.birthDate || null
+        }
+      });
+      await refreshDashboard(questAssignmentForm.childProfileId || childProfileId);
+      return true;
+    } catch (requestError) {
+      setError(toErrorMessage(requestError));
+      return false;
+    } finally {
+      setChildSaving(false);
+    }
+  }
+
   async function submitChildPin(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
@@ -1455,6 +1484,7 @@ function App() {
               onChildPinFormChange={setChildPinForm}
               onChildPinSubmit={submitChildPin}
               onChildSubmit={submitChild}
+              onChildUpdate={updateChild}
               onAssignmentChildChange={changeAssignmentChild}
               onAssignmentFormChange={setQuestAssignmentForm}
               onQuestAssign={assignQuestToChild}
@@ -1828,6 +1858,7 @@ interface DashboardViewProps {
   onChildPinFormChange: (form: ChildPinFormState) => void;
   onChildPinSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onChildUpdate: (childProfileId: string, form: ChildFormState) => Promise<boolean>;
   onQuestFormChange: (form: QuestFormState) => void;
   onQuestSuggestionSelect: (suggestion: QuestSuggestion) => void;
   onQuestSubmit: (event: FormEvent<HTMLFormElement>) => void;
@@ -1889,6 +1920,7 @@ function DashboardView({
   onChildPinFormChange,
   onChildPinSubmit,
   onChildSubmit,
+  onChildUpdate,
   onQuestFormChange,
   onQuestSuggestionSelect,
   onQuestSubmit,
@@ -2134,6 +2166,7 @@ function DashboardView({
           onChildPinFormChange={onChildPinFormChange}
           onChildPinSubmit={onChildPinSubmit}
           onChildSubmit={onChildSubmit}
+          onChildUpdate={onChildUpdate}
         />
       ) : null}
 
@@ -2553,6 +2586,7 @@ interface ChildrenProfilesPanelProps {
   onChildPinFormChange: (form: ChildPinFormState) => void;
   onChildPinSubmit: (event: FormEvent<HTMLFormElement>) => void;
   onChildSubmit: (event: FormEvent<HTMLFormElement>) => void;
+  onChildUpdate: (childProfileId: string, form: ChildFormState) => Promise<boolean>;
 }
 
 function ChildrenProfilesPanel({
@@ -2571,11 +2605,44 @@ function ChildrenProfilesPanel({
   onChildPinDisable,
   onChildPinFormChange,
   onChildPinSubmit,
-  onChildSubmit
+  onChildSubmit,
+  onChildUpdate
 }: ChildrenProfilesPanelProps) {
+  const [editingChild, setEditingChild] = useState<ChildProfile | null>(null);
+  const [editForm, setEditForm] = useState<ChildFormState>(initialChildForm);
+
+  function openEditDialog(child: ChildProfile) {
+    setEditingChild(child);
+    setEditForm({
+      displayName: child.displayName,
+      gender: child.gender ?? 'UNSPECIFIED',
+      birthDate: child.birthDate?.slice(0, 10) ?? ''
+    });
+  }
+
+  function closeEditDialog() {
+    if (!childSaving) {
+      setEditingChild(null);
+    }
+  }
+
+  async function submitEdit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    if (!editingChild) {
+      return;
+    }
+
+    const updated = await onChildUpdate(editingChild.id, editForm);
+    if (updated) {
+      setEditingChild(null);
+    }
+  }
+
   return (
-    <Paper elevation={0} sx={{ maxWidth: '100%', overflow: 'hidden', p: { xs: 1.25, sm: 2, md: 2.5 } }}>
-      <Stack spacing={2} sx={{ maxWidth: '100%', minWidth: 0 }}>
+    <>
+      <Paper elevation={0} sx={{ maxWidth: '100%', overflow: 'hidden', p: { xs: 1.25, sm: 2, md: 2.5 } }}>
+        <Stack spacing={2} sx={{ maxWidth: '100%', minWidth: 0 }}>
         <Box
           sx={{
             alignItems: { xs: 'stretch', sm: 'center' },
@@ -2708,7 +2775,13 @@ function ChildrenProfilesPanel({
         <Box sx={{ display: 'grid', gap: 1.5 }}>
           {childRows.length > 0 ? (
             childRows.map((child) => (
-              <ChildRow child={child} key={child.id} maxXp={maxXp} onOpen={() => onChildOpen(child.id)} />
+              <ChildRow
+                child={child}
+                key={child.id}
+                maxXp={maxXp}
+                onEdit={() => openEditDialog(child)}
+                onOpen={() => onChildOpen(child.id)}
+              />
             ))
           ) : (
             <Box sx={{ bgcolor: 'action.hover', borderRadius: 2, p: 1.5 }}>
@@ -2716,8 +2789,64 @@ function ChildrenProfilesPanel({
             </Box>
           )}
         </Box>
-      </Stack>
-    </Paper>
+        </Stack>
+      </Paper>
+
+      <Dialog fullWidth maxWidth="xs" onClose={closeEditDialog} open={Boolean(editingChild)}>
+        <DialogTitle
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            justifyContent: 'space-between',
+            pr: 1
+          }}
+        >
+          Kinderprofil bearbeiten
+          <Tooltip title="Schließen">
+            <IconButton aria-label="Schließen" disabled={childSaving} onClick={closeEditDialog} size="small">
+              <CloseRoundedIcon />
+            </IconButton>
+          </Tooltip>
+        </DialogTitle>
+        <DialogContent sx={{ pt: 1 }}>
+          <Box component="form" onSubmit={submitEdit} sx={{ display: 'grid', gap: 1.5 }}>
+            <TextField
+              autoComplete="off"
+              label="Kindername"
+              onChange={(event) => setEditForm({ ...editForm, displayName: event.target.value })}
+              required
+              value={editForm.displayName}
+            />
+            <TextField
+              label="Geschlecht"
+              onChange={(event) => setEditForm({ ...editForm, gender: event.target.value })}
+              select
+              value={editForm.gender}
+            >
+              <MenuItem value="UNSPECIFIED">Keine Angabe</MenuItem>
+              <MenuItem value="GIRL">Mädchen</MenuItem>
+              <MenuItem value="BOY">Junge</MenuItem>
+              <MenuItem value="DIVERSE">Divers</MenuItem>
+            </TextField>
+            <TextField
+              label="Geburtsdatum"
+              onChange={(event) => setEditForm({ ...editForm, birthDate: event.target.value })}
+              slotProps={{ inputLabel: { shrink: true } }}
+              type="date"
+              value={editForm.birthDate}
+            />
+            <Stack direction={{ xs: 'column-reverse', sm: 'row' }} spacing={1} sx={{ justifyContent: 'flex-end' }}>
+              <Button disabled={childSaving} onClick={closeEditDialog} variant="text">
+                Abbrechen
+              </Button>
+              <Button disabled={childSaving} startIcon={<EditRoundedIcon />} type="submit" variant="contained">
+                Speichern
+              </Button>
+            </Stack>
+          </Box>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 }
 
@@ -4923,20 +5052,13 @@ function FeatureTile({ icon, label, value }: FeatureTileProps) {
 }
 
 interface ChildRowProps {
-  child: {
-    id: string;
-    displayName: string;
-    avatarKey: string | null;
-    level: number;
-    xp: number;
-    coins: number;
-    pinEnabled: boolean;
-  };
+  child: ChildProfile;
   maxXp: number;
+  onEdit: () => void;
   onOpen: () => void;
 }
 
-function ChildRow({ child, maxXp, onOpen }: ChildRowProps) {
+function ChildRow({ child, maxXp, onEdit, onOpen }: ChildRowProps) {
   const progress = Math.min((child.xp / maxXp) * 100, 100);
 
   return (
@@ -4967,9 +5089,16 @@ function ChildRow({ child, maxXp, onOpen }: ChildRowProps) {
       </Stack>
       <Chip color={child.pinEnabled ? 'success' : 'default'} label={child.pinEnabled ? 'PIN' : 'Keine PIN'} variant="outlined" />
       <Chip icon={<PaidRoundedIcon />} label={child.coins} variant="outlined" />
-      <Button onClick={onOpen} size="small" variant="outlined">
-        Profil
-      </Button>
+      <Stack direction="row" spacing={0.5} sx={{ alignItems: 'center', justifyContent: { xs: 'flex-start', md: 'flex-end' } }}>
+        <Tooltip title="Kinderprofil bearbeiten">
+          <IconButton aria-label={`${child.displayName} bearbeiten`} onClick={onEdit} size="small">
+            <EditRoundedIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
+        <Button onClick={onOpen} size="small" variant="outlined">
+          Profil
+        </Button>
+      </Stack>
     </Box>
   );
 }
@@ -5514,7 +5643,7 @@ function SummaryRow({ label, value }: SummaryRowProps) {
 }
 
 interface ApiRequestOptions {
-  method?: 'GET' | 'POST' | 'PUT';
+  method?: 'GET' | 'POST' | 'PUT' | 'PATCH';
   token?: string;
   body?: unknown;
 }

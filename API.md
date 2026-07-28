@@ -303,7 +303,26 @@ Hinweis: Der gespeicherte PIN-Hash wird entfernt, `pinEnabled` wird auf `false` 
 
 ### `PATCH /api/children/{childId}`
 
-Aktualisiert ein Kinderprofil.
+Aktualisiert Name, Geschlecht und/oder Geburtsdatum eines Kinderprofils.
+
+Status: implementiert.
+
+Auth: Bearer Token erforderlich.
+
+Rollen: `ADMIN`, `PARENT`
+
+Request:
+
+```json
+{
+  "displayName": "Mia",
+  "gender": "GIRL",
+  "birthDate": "2018-05-21"
+}
+```
+
+Alle Felder sind optional. `UNSPECIFIED` entfernt die Geschlechtsangabe; `null`
+entfernt das Geburtsdatum.
 
 ## Avatar
 
@@ -324,7 +343,10 @@ Hinweise:
 - Items werden automatisch ueber das Kinder-Level freigeschaltet; spaetere manuelle Inventar-Freischaltungen sind ueber `ChildAvatarItem` vorbereitet.
 - `equippedItems` ist eine Slot-zu-Item-Key-Map.
 - Aktive Slots sind `character` und `pet`.
-- `character` ist immer belegt; ohne gespeicherte Auswahl wird `character-hoodie-teal` verwendet.
+- `character` ist immer belegt. Ohne passende gespeicherte Auswahl wird bei
+  `BOY` der Smiley-Entdecker und bei `GIRL` die Sternen-Heldin verwendet.
+- Bei `BOY` liefert die API nur Jungenfiguren, bei `GIRL` nur Mädchenfiguren.
+  `DIVERSE` und eine fehlende Angabe erhalten beide Kataloggruppen.
 - `pet` ist optional und kann entfernt werden.
 - Bei Figuren mit Haarfarbauswahl speichert `character` den konkreten Key der
   vollstaendigen Farbvariante, zum Beispiel `character-explorer-blue`.
@@ -339,26 +361,28 @@ Response-Auszug:
   "child": {
     "id": "<child-profile-id>",
     "displayName": "Mika",
+    "gender": "BOY",
     "level": 3,
     "xp": 260,
     "coins": 42
   },
   "slots": ["character", "pet"],
   "equippedItems": {
-    "character": "character-hoodie-teal",
+    "character": "character-smiley",
     "pet": "pet-cat"
   },
-  "unlockedItemKeys": ["character-hoodie-teal", "pet-cat"],
+  "unlockedItemKeys": ["character-smiley", "pet-cat"],
   "items": [
     {
-      "key": "character-hoodie-teal",
+      "key": "character-smiley",
       "slot": "character",
-      "name": "Abenteuer-Hoodie",
+      "name": "Smiley-Entdecker",
       "requiredLevel": 1,
       "rarity": "COMMON",
       "layerOrder": 10,
       "colorPrimary": "#0f766e",
       "colorSecondary": "#f4c95d",
+      "audienceGender": "BOY",
       "isUnlocked": true,
       "unlockReason": "LEVEL"
     }

@@ -10,12 +10,13 @@ from PIL import Image, ImageChops, ImageDraw, ImageOps
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE_DIR = ROOT / "apps/frontend/public/avatar-complete/v1/characters"
+MASTER_DIR = ROOT / "apps/frontend/public/avatar-complete/v2/masters"
 OUTPUT_DIR = ROOT / "apps/frontend/public/avatar-complete/v2/characters"
 
 
 @dataclass(frozen=True)
 class HairMaskConfig:
-    source_name: str
+    source_path: Path
     polygons: tuple[tuple[tuple[int, int], ...], ...]
     hue_ranges: tuple[tuple[float, float], ...]
     min_saturation: float
@@ -24,6 +25,7 @@ class HairMaskConfig:
     min_green_blue_delta: int | None = None
     exclusion_ellipses: tuple[tuple[int, int, int, int], ...] = ()
     protected_hue_ranges: tuple[tuple[float, float], ...] = ()
+    force_polygons: tuple[tuple[tuple[int, int], ...], ...] = ()
 
 
 @dataclass(frozen=True)
@@ -35,7 +37,7 @@ class HairColor:
 
 MASK_CONFIGS = {
     "smiley": HairMaskConfig(
-        source_name="smiley.png",
+        source_path=SOURCE_DIR / "smiley.png",
         polygons=(
             (
                 (250, 45),
@@ -65,7 +67,7 @@ MASK_CONFIGS = {
         min_green_blue_delta=36,
     ),
     "explorer": HairMaskConfig(
-        source_name="explorer.png",
+        source_path=SOURCE_DIR / "explorer.png",
         polygons=(
             (
                 (245, 45),
@@ -109,7 +111,7 @@ MASK_CONFIGS = {
         min_green_blue_delta=78,
     ),
     "star": HairMaskConfig(
-        source_name="star.png",
+        source_path=SOURCE_DIR / "star.png",
         polygons=(
             (
                 (235, 40),
@@ -137,6 +139,108 @@ MASK_CONFIGS = {
         min_value=0.15,
         exclusion_ellipses=((316, 215, 380, 286), (390, 215, 455, 286)),
         protected_hue_ranges=((0.60, 0.88),),
+    ),
+    "boy-side-swept": HairMaskConfig(
+        source_path=MASTER_DIR / "boy-side-swept.png",
+        polygons=(
+            (
+                (285, 45),
+                (495, 45),
+                (505, 185),
+                (480, 210),
+                (455, 190),
+                (454, 162),
+                (430, 146),
+                (400, 137),
+                (370, 143),
+                (345, 158),
+                (330, 180),
+                (314, 195),
+                (298, 188),
+                (275, 185),
+            ),
+        ),
+        hue_ranges=((0.0, 0.16),),
+        min_saturation=0.40,
+        min_value=0.12,
+        min_red_green_delta=42,
+        min_green_blue_delta=30,
+    ),
+    "wizard": HairMaskConfig(
+        source_path=SOURCE_DIR / "wizard.png",
+        polygons=(
+            (
+                (300, 175),
+                (395, 170),
+                (378, 210),
+                (363, 235),
+                (346, 250),
+                (329, 279),
+                (300, 307),
+                (270, 315),
+                (270, 250),
+            ),
+            (
+                (385, 170),
+                (470, 175),
+                (500, 315),
+                (470, 307),
+                (446, 279),
+                (425, 250),
+                (405, 225),
+            ),
+            (
+                (245, 250),
+                (330, 250),
+                (326, 310),
+                (315, 348),
+                (332, 390),
+                (350, 465),
+                (320, 512),
+                (245, 515),
+                (215, 420),
+            ),
+            (
+                (440, 250),
+                (525, 250),
+                (555, 420),
+                (525, 515),
+                (448, 512),
+                (420, 465),
+                (438, 390),
+                (450, 348),
+                (444, 310),
+            ),
+        ),
+        hue_ranges=((0.08, 0.19),),
+        min_saturation=0.24,
+        min_value=0.18,
+        min_green_blue_delta=30,
+        exclusion_ellipses=(
+            (330, 240, 440, 350),
+            (294, 270, 330, 325),
+            (440, 270, 476, 325),
+            (345, 335, 425, 420),
+        ),
+        protected_hue_ranges=((0.0, 1.0),),
+        force_polygons=(
+            (
+                (312, 307),
+                (336, 315),
+                (338, 360),
+                (326, 389),
+                (306, 366),
+                (306, 330),
+            ),
+            (
+                (434, 315),
+                (458, 307),
+                (464, 330),
+                (464, 366),
+                (444, 389),
+                (432, 360),
+            ),
+        ),
     ),
 }
 
@@ -183,16 +287,23 @@ def build_mask(image: Image.Image, config: HairMaskConfig) -> Image.Image:
     for ellipse in config.exclusion_ellipses:
         protected_draw.ellipse(ellipse, fill=255)
 
+    forced = Image.new("L", image.size, 0)
+    forced_draw = ImageDraw.Draw(forced)
+    for polygon in config.force_polygons:
+        forced_draw.polygon(polygon, fill=255)
+    geometry = ImageChops.lighter(geometry, forced)
+
     source = image.convert("RGBA")
     mask = Image.new("L", image.size, 0)
     source_pixels = source.load()
     geometry_pixels = geometry.load()
     protected_pixels = protected.load()
+    forced_pixels = forced.load()
     mask_pixels = mask.load()
     geometry_box = geometry.getbbox()
 
     if geometry_box is None:
-        raise RuntimeError(f"Hair geometry for {config.source_name} is empty.")
+        raise RuntimeError(f"Hair geometry for {config.source_path.name} is empty.")
 
     for y in range(geometry_box[1], geometry_box[3]):
         for x in range(geometry_box[0], geometry_box[2]):
@@ -204,7 +315,11 @@ def build_mask(image: Image.Image, config: HairMaskConfig) -> Image.Image:
                 continue
 
             hue, saturation, value = colorsys.rgb_to_hsv(red / 255, green / 255, blue / 255)
-            if protected_pixels[x, y] and hue_matches(hue, config.protected_hue_ranges):
+            if (
+                protected_pixels[x, y]
+                and not forced_pixels[x, y]
+                and hue_matches(hue, config.protected_hue_ranges)
+            ):
                 continue
             if (
                 hue_matches(hue, config.hue_ranges)
@@ -343,8 +458,7 @@ def main() -> None:
     )
 
     for style_key, config in selected_configs.items():
-        source_path = SOURCE_DIR / config.source_name
-        source = Image.open(source_path).convert("RGBA")
+        source = Image.open(config.source_path).convert("RGBA")
         mask = build_mask(source, config)
 
         if mask.getbbox() is None:
