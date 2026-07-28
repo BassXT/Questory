@@ -12,6 +12,7 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - 12 neue vollstaendige Haarfarb-WebPs fuer Wirbelfrisur und Zauberlehrling hinzugefuegt, jeweils Rot, Rosa, Blau, Braun, Blond und Schwarz.
 - Migration `20260728113000_gender_scoped_avatar_styles` mit `AvatarItem.audienceGender`, zwei Basisfiguren auf Level 1 und Frisur-Freischaltungen auf Level 3 beziehungsweise 6 hinzugefuegt.
 - Bearbeiten-Dialog fuer Kinderprofile sowie `PATCH /api/children/{childId}` fuer Name, Geschlecht und Geburtsdatum hinzugefuegt.
+- Geschlechtsspezifischen Avatar-Slice aus Commit `f52eeb5` erfolgreich per Portainer deployed; Migration, Kataloggruppen, Health-Endpunkt, produktives Bundle und alle 12 neuen WebPs auf dem LXC geprueft.
 - 18 vollstaendige, verlustfreie Haarfarb-WebPs fuer Smiley-Entdecker, Wald-Entdeckerin und Sternen-Heldin hinzugefuegt: jeweils Rot, Rosa, Blau, Braun, Blond und Schwarz.
 - Reproduzierbare Exportpipeline `scripts/generate-avatar-hair-variants.py` mit geprueften Haarmasken, flachem Ganzkoerperexport, Kontaktbogen und Schutzpruefung fuer alle Nicht-Haar-Pixel hinzugefuegt.
 - Migration `20260727003000_flattened_hair_variants` mit 15 zusaetzlichen technischen `character`-Keys hinzugefuegt; die drei vorhandenen Master-Keys bilden jeweils die sechste Farbe.
