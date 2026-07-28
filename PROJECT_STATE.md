@@ -45,6 +45,17 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
   bis 12.
 - Avatar-API und Werkstatt verbergen gesperrte Katalogeintraege vollstaendig;
   sichtbare Auswahlbilder werden lazy geladen.
+- Avatar-Kostuem-/Hidden-Unlock-Slice aus Commit `c24f38e` per Portainer
+  deployed. Migration
+  `20260728170000_avatar_costumes_and_hidden_unlocks` ist abgeschlossen,
+  PostgreSQL enthaelt 24 neue Kostuemvarianten und Tierlevel 3 bis 12.
+- Produktions-API mit temporaeren Jungen- und Maedchenprofilen auf Level 1, 5
+  und 8 geprueft: keine vorzeitigen Figuren/Tiere, korrekte
+  Geschlechtsfilter, erwartete Tierstaffel und erfolgreich gespeichertes
+  Ritter-Loadout. Beide QA-Familien wurden danach entfernt.
+- Mobile Browserpruefung mit `375px` Inhaltsbreite ohne Seiten-Overflow
+  abgeschlossen; Figur-/Tier-Tabs, swipebare Tierkarten und neues
+  Ritter-WebP rendern ohne Konsolenfehler.
 - Kinderprofile koennen ueber `PATCH /api/children/{childId}` und einen responsiven Eltern-Dialog bei Name, Geschlecht und Geburtstag bearbeitet werden.
 - Geschlechtsspezifischer Avatar-Slice aus Commit `f52eeb5` per Portainer auf den LXC deployed; Migration erfolgreich angewendet, NestJS gestartet, neuer `PATCH`-Endpunkt registriert, alle 12 neuen WebPs und das produktive Bundle geprueft. PostgreSQL enthaelt exakt 12 aktive Jungenvarianten und 18 aktive Maedchenvarianten in den geplanten Levelgruppen.
 - Doppelte aktive Shop-Antraege derselben Belohnung fuer dasselbe Kind werden im Service und durch den partiellen PostgreSQL-Unique-Index `RewardRedemption_active_reward_child_key` blockiert. Der Shop liefert den aktiven Antragstatus und stellt betroffene Karten bis zur Entscheidung oder Ausgabe ausgegraut dar.
@@ -487,9 +498,9 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 
 ## Naechster Schritt
 
-Zuerst den neuen Avatar-Katalog per Portainer deployen und mit einem Jungen-
-und Maedchenprofil auf Level 1, 3, 5 und 8 pruefen: verborgene Sperren,
-Haarfarben, Kostuemfreischaltungen, Tierstart auf Level 3 und Loadout-Speichern.
+Zuerst die neuen Ritter- und Astronautenserien auf dem echten iPhone mit einem
+Jungen- und Maedchenprofil visuell pruefen, insbesondere Kartengroesse,
+Haarfarbenwechsel und Speichern.
 
 Danach den Kindershop auf dem echten iPhone pruefen: Belohnung einmal
 beantragen, ausgegrauten Status nach Reload kontrollieren und nach
@@ -578,7 +589,10 @@ visuell bestaetigen.
 - Lokaler Drift-Vergleich `migrate diff --from-migrations` ist ohne Shadow-Datenbank nicht moeglich; fuer lokale Drift-Checks wird spaeter eine lokale PostgreSQL-/Shadow-DB benoetigt.
 - Der Frontend-Hauptchunk liegt trotz entfernter DiceBear-Pakete weiterhin ueber der Vite-Warngrenze. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
 - Augenfarben und Berufe benoetigen weiterhin zusaetzliche vollstaendige Exporte; Laufzeit-Layer bleiben ausgeschlossen.
-- Die v1-PNGs, 30 verlustfreien v2-WebPs und der neue Master belegen zusammen rund 15,62 MB. Vor einem deutlich groesseren Berufskatalog sind Vorschaubilder und bedarfsgesteuertes Laden erforderlich, damit Mobilgeraete nicht alle Vollbilder gleichzeitig laden.
+- Die lokale Avatarbibliothek umfasst aktuell 77 Dateien mit rund 25,77 MiB.
+  Gesperrte Serien werden serverseitig nicht ausgeliefert und sichtbare
+  Kartenbilder lazy geladen. Vor einem deutlich groesseren Berufskatalog
+  bleiben separate Thumbnails oder responsive Bildvarianten sinnvoll.
 - Der Docker-LXC lief vor dem 3D-Labor-Redeploy mit nur 136 MB freiem Speicher bei 100 Prozent Belegung. Ein Buildcache-Prune hat den akuten Fehler geloest und der neue Questory-Container meldet 15 GB frei; die Belegung sollte trotzdem beim naechsten Wartungslauf erneut kontrolliert werden.
 
 ## Ideen fuer spaeter

@@ -19,6 +19,9 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
   bleiben bis zum Levelaufstieg vollstaendig verborgen.
 - Avatar-Vorschaukarten laden ihre Vollbilder bedarfsgesteuert; der Tier-Tab
   zeigt vor Level 3 nur einen neutralen Freischaltungshinweis.
+- Avatar-Kostuem-/Hidden-Unlock-Slice aus Commit `c24f38e` per Portainer
+  deployed; Migration, 24 Kostuemdatensaetze, Tierlevel, Level-1-/5-/8-API,
+  Loadout-Speichern, neue WebPs und mobile Werkstatt auf dem LXC geprueft.
 - Parallele Doppelantraege derselben Shop-Belohnung fuer ein Kind im Service und mit partiellem PostgreSQL-Unique-Index gesperrt.
 - Kindershop um `activeRedemptionStatus`, ausgegraute bereits beantragte Karten und deaktivierte Antragsschaltflaechen erweitert.
 - Quest- und Belohnungszuweisung auf je eine globale Kind-Auswahl oberhalb der Kartenlisten umgestellt.
