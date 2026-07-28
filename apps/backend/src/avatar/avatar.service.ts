@@ -59,6 +59,7 @@ export class AvatarService {
     const unlockedItemKeys = new Set(
       items.filter((item) => item.requiredLevel <= child.level || inventoryItemKeys.has(item.key)).map((item) => item.key)
     );
+    const unlockedItems = items.filter((item) => unlockedItemKeys.has(item.key));
     const equippedItems = this.resolveEquippedItems(
       loadout?.equippedItems,
       items,
@@ -71,7 +72,7 @@ export class AvatarService {
       slots: avatarSlots,
       equippedItems,
       unlockedItemKeys: Array.from(unlockedItemKeys),
-      items: items.map((item) => ({
+      items: unlockedItems.map((item) => ({
         key: item.key,
         slot: item.slot,
         name: item.name,
@@ -82,8 +83,8 @@ export class AvatarService {
         colorPrimary: item.colorPrimary,
         colorSecondary: item.colorSecondary,
         audienceGender: item.audienceGender,
-        isUnlocked: unlockedItemKeys.has(item.key),
-        unlockReason: item.requiredLevel <= child.level ? 'LEVEL' : inventoryItemKeys.has(item.key) ? 'INVENTORY' : 'LOCKED'
+        isUnlocked: true,
+        unlockReason: item.requiredLevel <= child.level ? 'LEVEL' : 'INVENTORY'
       }))
     };
   }

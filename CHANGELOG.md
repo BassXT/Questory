@@ -8,6 +8,17 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 
 ### Added
 
+- Vier neue geschlechtsspezifische Ganzkoerper-Kostuemserien hinzugefuegt:
+  Sternenritter, Sternenritterin, Sternenforscher und Sternenforscherin.
+- 24 verlustfreie Kostuem-WebPs mit je sechs frei waehlbaren Haarfarben
+  erzeugt und die reproduzierbare Haarmasken-Pipeline entsprechend erweitert.
+- Migration `20260728170000_avatar_costumes_and_hidden_unlocks` mit
+  Kostuemfreischaltungen auf Level 5 und 8 sowie Tierprogression von Level 3
+  bis 12 hinzugefuegt.
+- Avatar-API liefert nur freigeschaltete Items; spaetere Figuren und Tiere
+  bleiben bis zum Levelaufstieg vollstaendig verborgen.
+- Avatar-Vorschaukarten laden ihre Vollbilder bedarfsgesteuert; der Tier-Tab
+  zeigt vor Level 3 nur einen neutralen Freischaltungshinweis.
 - Parallele Doppelantraege derselben Shop-Belohnung fuer ein Kind im Service und mit partiellem PostgreSQL-Unique-Index gesperrt.
 - Kindershop um `activeRedemptionStatus`, ausgegraute bereits beantragte Karten und deaktivierte Antragsschaltflaechen erweitert.
 - Quest- und Belohnungszuweisung auf je eine globale Kind-Auswahl oberhalb der Kartenlisten umgestellt.

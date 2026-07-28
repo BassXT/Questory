@@ -12,7 +12,13 @@ Das Frontend trennt Eltern- und Kinderansicht klar. Eltern verwalten Kinder, Que
 
 Der Avatar-Builder ist jetzt bewusst auf vollstaendige Kinderfiguren plus optionales Begleittier reduziert. Acht hochwertige Ganzkoerper-Presets und acht separat freigestellte Tiere liegen normalisiert als lokale PNGs vor. Die Werkstatt besitzt nur noch die Tabs `Figur` und `Tier`; alte Koerper-, Haar-, Gesichts- und Kleidungsitems bleiben aus Datenkompatibilitaet gespeichert, werden durch die neue Katalogmigration jedoch deaktiviert. Neue Looks werden als komplette Figuren ueber Level freigeschaltet, wodurch die Bildqualitaet stabil bleibt und XP weiterhin einen langfristigen Zweck erfuellt.
 
-Der aktive Figurenkatalog ist auf zwei festgelegte helle Grundtypen reduziert: Smiley-Entdecker fuer Jungen und Sternen-Heldin fuer Maedchen sind auf Level 1 verfuegbar. Als freischaltbare Frisuren folgen Wirbelfrisur beziehungsweise Wald-Entdeckerin auf Level 3 sowie Zauberlehrling fuer Maedchen auf Level 6. Alle fuenf Stile besitzen je sechs frei waehlbare Haarfarben als fertige, flache Ganzkoerper-WebPs; die App setzt keine Bildlayer zusammen.
+Der aktive Figurenkatalog ist auf zwei festgelegte helle Grundtypen reduziert: Smiley-Entdecker fuer Jungen und Sternen-Heldin fuer Maedchen sind auf Level 1 verfuegbar. Als freischaltbare Frisuren folgen Wirbelfrisur beziehungsweise Wald-Entdeckerin auf Level 3 sowie Zauberlehrling fuer Maedchen auf Level 6. Sternenritter und Sternenritterin folgen auf Level 5, Sternenforscher und Sternenforscherin auf Level 8. Alle neun Stile besitzen je sechs frei waehlbare Haarfarben als fertige, flache Ganzkoerper-WebPs; die App setzt keine Bildlayer zusammen.
+
+Gesperrte Figuren und Tiere werden von der Avatar-API nicht ausgeliefert und
+bleiben dadurch bis zur Freischaltung auch mit Namen und Grafik verborgen.
+Begleittiere starten mit der Katze auf Level 3 und sind danach bis zum
+Walddrachen auf Level 12 gestaffelt. Der Tier-Tab zeigt vorher nur einen
+neutralen Hinweis ohne konkrete Vorschau.
 
 `AvatarItem.audienceGender` filtert Figuren serverseitig nach dem Geschlecht des Kinderprofils. Profile mit `BOY` sehen nur Jungenfiguren, `GIRL` nur Maedchenfiguren; `DIVERSE` und Kinder ohne Angabe sehen beide Gruppen. Kinderprofile koennen im Elternbereich jetzt mit Name, Geschlecht und Geburtsdatum bearbeitet werden. Eine Geschlechtsaenderung ersetzt eine nicht mehr passende gespeicherte Figur automatisch durch die richtige Basisfigur.
 
@@ -28,6 +34,17 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 - Reproduzierbare Exportpipeline `scripts/generate-avatar-hair-variants.py` erstellt aus vier unveraenderten v1-Mastern und einem neuen normalisierten Master insgesamt 30 vollstaendige Haarfarb-WebPs und prueft automatisch, dass ausserhalb der Haarmaske keine sichtbaren Pixel veraendert werden.
 - Avatar-Werkstatt gruppiert die 30 technischen Varianten als fuenf Stilkarten plus die frei waehlbaren Haarfarben Rot, Rosa, Blau, Braun, Blond und Schwarz.
 - Prisma-Migration `20260728113000_gender_scoped_avatar_styles` fuegt `AvatarItem.audienceGender` hinzu, deaktiviert vorerst die abweichenden Figurenpresets und ordnet den aktiven Katalog Jungen- beziehungsweise Maedchenprofilen zu.
+- Vier neue Kostuem-Master fuer Sternenritter, Sternenritterin,
+  Sternenforscher und Sternenforscherin erzeugt, freigestellt und auf
+  `768x1152` normalisiert.
+- Exportpipeline um vier gepruefte Kostuem-Haarmasken erweitert und 24
+  verlustfreie Ganzkoerper-WebPs mit Rot, Rosa, Blau, Braun, Blond und Schwarz
+  erzeugt.
+- Migration `20260728170000_avatar_costumes_and_hidden_unlocks` ergaenzt die
+  Kostuemserien auf Level 5 und 8 und staffelt acht Begleittiere von Level 3
+  bis 12.
+- Avatar-API und Werkstatt verbergen gesperrte Katalogeintraege vollstaendig;
+  sichtbare Auswahlbilder werden lazy geladen.
 - Kinderprofile koennen ueber `PATCH /api/children/{childId}` und einen responsiven Eltern-Dialog bei Name, Geschlecht und Geburtstag bearbeitet werden.
 - Geschlechtsspezifischer Avatar-Slice aus Commit `f52eeb5` per Portainer auf den LXC deployed; Migration erfolgreich angewendet, NestJS gestartet, neuer `PATCH`-Endpunkt registriert, alle 12 neuen WebPs und das produktive Bundle geprueft. PostgreSQL enthaelt exakt 12 aktive Jungenvarianten und 18 aktive Maedchenvarianten in den geplanten Levelgruppen.
 - Doppelte aktive Shop-Antraege derselben Belohnung fuer dasselbe Kind werden im Service und durch den partiellen PostgreSQL-Unique-Index `RewardRedemption_active_reward_child_key` blockiert. Der Shop liefert den aktiven Antragstatus und stellt betroffene Karten bis zur Entscheidung oder Ausgabe ausgegraut dar.
@@ -470,20 +487,18 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 
 ## Naechster Schritt
 
-Jetzt zuerst den Kindershop auf dem echten iPhone pruefen:
-Belohnung einmal beantragen, ausgegrauten Status nach Reload kontrollieren und
-nach Ablehnung/Storno wieder beantragen. Danach beide Parent-Zuweisungsansichten
-mit mehreren Kindern pruefen.
+Zuerst den neuen Avatar-Katalog per Portainer deployen und mit einem Jungen-
+und Maedchenprofil auf Level 1, 3, 5 und 8 pruefen: verborgene Sperren,
+Haarfarben, Kostuemfreischaltungen, Tierstart auf Level 3 und Loadout-Speichern.
 
-Anschliessend den geschlechtsspezifischen Avatar-Slice mit je einem Jungen- und
-Maedchenprofil pruefen: Profil bearbeiten, sofortiger Katalogwechsel,
-Basisfigur-Fallback, alle fuenf Frisurenkarten und sechs Haarfarben. Vor
-weiteren Berufen folgt eine Thumbnail-/Lazy-Loading-Strategie, weil jede neue
-Kombination als vollstaendiges Bild gespeichert wird.
+Danach den Kindershop auf dem echten iPhone pruefen: Belohnung einmal
+beantragen, ausgegrauten Status nach Reload kontrollieren und nach
+Ablehnung/Storno wieder beantragen. Anschliessend beide
+Parent-Zuweisungsansichten mit mehreren Kindern pruefen.
 
-Anschliessend koennen Ritter, Astronaut und Drachenkaempfer als getrennte,
-geschlechtsspezifische Ganzkoerper-Serien aus genau diesen zwei Grundtypen
-erzeugt werden.
+Als naechste Avatar-Erweiterung bietet sich ein Drachenkaempfer-Paar auf Level
+11 oder 12 an. Vorher die vier neuen Kostuemserien auf dem echten iPhone
+visuell bestaetigen.
 
 ## Architekturentscheidungen
 

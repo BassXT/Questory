@@ -341,6 +341,9 @@ Hinweise:
 - Eltern/Admin koennen Avatare aller Kinder der aktuellen Familie abrufen.
 - Kinder mit eigenem Login koennen nur den eigenen Avatar abrufen.
 - Items werden automatisch ueber das Kinder-Level freigeschaltet; spaetere manuelle Inventar-Freischaltungen sind ueber `ChildAvatarItem` vorbereitet.
+- `items` und `unlockedItemKeys` enthalten ausschliesslich bereits
+  freigeschaltete Eintraege. Namen, Beschreibungen und Grafiken spaeterer
+  Figuren und Tiere werden nicht vorzeitig an das Frontend ausgeliefert.
 - `equippedItems` ist eine Slot-zu-Item-Key-Map.
 - Aktive Slots sind `character` und `pet`.
 - `character` ist immer belegt. Ohne passende gespeicherte Auswahl wird bei
@@ -348,6 +351,7 @@ Hinweise:
 - Bei `BOY` liefert die API nur Jungenfiguren, bei `GIRL` nur Mädchenfiguren.
   `DIVERSE` und eine fehlende Angabe erhalten beide Kataloggruppen.
 - `pet` ist optional und kann entfernt werden.
+- Das erste Begleittier wird auf Level 3 freigeschaltet.
 - Bei Figuren mit Haarfarbauswahl speichert `character` den konkreten Key der
   vollstaendigen Farbvariante, zum Beispiel `character-explorer-blue`.
 - Das Frontend gruppiert diese technischen Varianten als eine Stilkarte mit
@@ -371,7 +375,7 @@ Response-Auszug:
     "character": "character-smiley",
     "pet": "pet-cat"
   },
-  "unlockedItemKeys": ["character-smiley", "pet-cat"],
+  "unlockedItemKeys": ["character-smiley", "character-boy-side", "pet-cat"],
   "items": [
     {
       "key": "character-smiley",

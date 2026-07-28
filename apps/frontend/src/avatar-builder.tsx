@@ -74,11 +74,21 @@ interface AvatarBuilderPanelProps {
 }
 
 type HairColorKey = 'red' | 'pink' | 'blue' | 'brown' | 'blonde' | 'black';
+type CharacterStyle =
+  | 'smiley'
+  | 'boy-side-swept'
+  | 'boy-knight'
+  | 'boy-astronaut'
+  | 'explorer'
+  | 'star'
+  | 'wizard'
+  | 'girl-knight'
+  | 'girl-astronaut';
 
 interface CharacterVariant {
   baseItemKey: string;
   color: HairColorKey;
-  style: 'smiley' | 'boy-side-swept' | 'explorer' | 'star' | 'wizard';
+  style: CharacterStyle;
 }
 
 const hairColors: Array<{ key: HairColorKey; label: string; value: string }> = [
@@ -90,74 +100,44 @@ const hairColors: Array<{ key: HairColorKey; label: string; value: string }> = [
   { key: 'black', label: 'Schwarz', value: '#202531' }
 ];
 
-const characterVariants: Record<string, CharacterVariant> = {
-  'character-smiley': { baseItemKey: 'character-smiley', color: 'red', style: 'smiley' },
-  'character-smiley-pink': { baseItemKey: 'character-smiley', color: 'pink', style: 'smiley' },
-  'character-smiley-blue': { baseItemKey: 'character-smiley', color: 'blue', style: 'smiley' },
-  'character-smiley-brown': { baseItemKey: 'character-smiley', color: 'brown', style: 'smiley' },
-  'character-smiley-blonde': { baseItemKey: 'character-smiley', color: 'blonde', style: 'smiley' },
-  'character-smiley-black': { baseItemKey: 'character-smiley', color: 'black', style: 'smiley' },
-  'character-boy-side': { baseItemKey: 'character-boy-side', color: 'red', style: 'boy-side-swept' },
-  'character-boy-side-pink': { baseItemKey: 'character-boy-side', color: 'pink', style: 'boy-side-swept' },
-  'character-boy-side-blue': { baseItemKey: 'character-boy-side', color: 'blue', style: 'boy-side-swept' },
-  'character-boy-side-brown': { baseItemKey: 'character-boy-side', color: 'brown', style: 'boy-side-swept' },
-  'character-boy-side-blonde': { baseItemKey: 'character-boy-side', color: 'blonde', style: 'boy-side-swept' },
-  'character-boy-side-black': { baseItemKey: 'character-boy-side', color: 'black', style: 'boy-side-swept' },
-  'character-explorer-red': { baseItemKey: 'character-explorer', color: 'red', style: 'explorer' },
-  'character-explorer-pink': { baseItemKey: 'character-explorer', color: 'pink', style: 'explorer' },
-  'character-explorer-blue': { baseItemKey: 'character-explorer', color: 'blue', style: 'explorer' },
-  'character-explorer-brown': { baseItemKey: 'character-explorer', color: 'brown', style: 'explorer' },
-  'character-explorer': { baseItemKey: 'character-explorer', color: 'blonde', style: 'explorer' },
-  'character-explorer-black': { baseItemKey: 'character-explorer', color: 'black', style: 'explorer' },
-  'character-star-red': { baseItemKey: 'character-star', color: 'red', style: 'star' },
-  'character-star': { baseItemKey: 'character-star', color: 'pink', style: 'star' },
-  'character-star-blue': { baseItemKey: 'character-star', color: 'blue', style: 'star' },
-  'character-star-brown': { baseItemKey: 'character-star', color: 'brown', style: 'star' },
-  'character-star-blonde': { baseItemKey: 'character-star', color: 'blonde', style: 'star' },
-  'character-star-black': { baseItemKey: 'character-star', color: 'black', style: 'star' },
-  'character-wizard-red': { baseItemKey: 'character-wizard', color: 'red', style: 'wizard' },
-  'character-wizard-pink': { baseItemKey: 'character-wizard', color: 'pink', style: 'wizard' },
-  'character-wizard-blue': { baseItemKey: 'character-wizard', color: 'blue', style: 'wizard' },
-  'character-wizard-brown': { baseItemKey: 'character-wizard', color: 'brown', style: 'wizard' },
-  'character-wizard': { baseItemKey: 'character-wizard', color: 'blonde', style: 'wizard' },
-  'character-wizard-black': { baseItemKey: 'character-wizard', color: 'black', style: 'wizard' }
-};
+const characterVariantGroups: Array<{
+  baseColor: HairColorKey;
+  baseItemKey: string;
+  style: CharacterStyle;
+}> = [
+  { baseColor: 'red', baseItemKey: 'character-smiley', style: 'smiley' },
+  { baseColor: 'red', baseItemKey: 'character-boy-side', style: 'boy-side-swept' },
+  { baseColor: 'red', baseItemKey: 'character-boy-knight', style: 'boy-knight' },
+  { baseColor: 'red', baseItemKey: 'character-boy-astronaut', style: 'boy-astronaut' },
+  { baseColor: 'blonde', baseItemKey: 'character-explorer', style: 'explorer' },
+  { baseColor: 'pink', baseItemKey: 'character-star', style: 'star' },
+  { baseColor: 'blonde', baseItemKey: 'character-wizard', style: 'wizard' },
+  { baseColor: 'pink', baseItemKey: 'character-girl-knight', style: 'girl-knight' },
+  { baseColor: 'pink', baseItemKey: 'character-girl-astronaut', style: 'girl-astronaut' }
+];
+
+const characterVariants: Record<string, CharacterVariant> = Object.fromEntries(
+  characterVariantGroups.flatMap((group) =>
+    hairColors.map((color) => {
+      const itemKey = color.key === group.baseColor ? group.baseItemKey : `${group.baseItemKey}-${color.key}`;
+
+      return [
+        itemKey,
+        {
+          baseItemKey: group.baseItemKey,
+          color: color.key,
+          style: group.style
+        }
+      ];
+    })
+  )
+);
 
 const avatarAssetPaths: Record<string, string> = {
   'character-astronaut': '/avatar-complete/v1/characters/astronaut.png',
-  'character-boy-side': '/avatar-complete/v2/characters/boy-side-swept/red.webp',
-  'character-boy-side-black': '/avatar-complete/v2/characters/boy-side-swept/black.webp',
-  'character-boy-side-blonde': '/avatar-complete/v2/characters/boy-side-swept/blonde.webp',
-  'character-boy-side-blue': '/avatar-complete/v2/characters/boy-side-swept/blue.webp',
-  'character-boy-side-brown': '/avatar-complete/v2/characters/boy-side-swept/brown.webp',
-  'character-boy-side-pink': '/avatar-complete/v2/characters/boy-side-swept/pink.webp',
-  'character-explorer': '/avatar-complete/v2/characters/explorer/blonde.webp',
-  'character-explorer-black': '/avatar-complete/v2/characters/explorer/black.webp',
-  'character-explorer-blue': '/avatar-complete/v2/characters/explorer/blue.webp',
-  'character-explorer-brown': '/avatar-complete/v2/characters/explorer/brown.webp',
-  'character-explorer-pink': '/avatar-complete/v2/characters/explorer/pink.webp',
-  'character-explorer-red': '/avatar-complete/v2/characters/explorer/red.webp',
   'character-hoodie-teal': '/avatar-complete/v1/characters/hoodie-teal.png',
   'character-knight': '/avatar-complete/v1/characters/knight.png',
-  'character-smiley': '/avatar-complete/v2/characters/smiley/red.webp',
-  'character-smiley-black': '/avatar-complete/v2/characters/smiley/black.webp',
-  'character-smiley-blonde': '/avatar-complete/v2/characters/smiley/blonde.webp',
-  'character-smiley-blue': '/avatar-complete/v2/characters/smiley/blue.webp',
-  'character-smiley-brown': '/avatar-complete/v2/characters/smiley/brown.webp',
-  'character-smiley-pink': '/avatar-complete/v2/characters/smiley/pink.webp',
-  'character-star': '/avatar-complete/v2/characters/star/pink.webp',
-  'character-star-black': '/avatar-complete/v2/characters/star/black.webp',
-  'character-star-blonde': '/avatar-complete/v2/characters/star/blonde.webp',
-  'character-star-blue': '/avatar-complete/v2/characters/star/blue.webp',
-  'character-star-brown': '/avatar-complete/v2/characters/star/brown.webp',
-  'character-star-red': '/avatar-complete/v2/characters/star/red.webp',
   'character-sunflower': '/avatar-complete/v1/characters/sunflower.png',
-  'character-wizard': '/avatar-complete/v2/characters/wizard/blonde.webp',
-  'character-wizard-black': '/avatar-complete/v2/characters/wizard/black.webp',
-  'character-wizard-blue': '/avatar-complete/v2/characters/wizard/blue.webp',
-  'character-wizard-brown': '/avatar-complete/v2/characters/wizard/brown.webp',
-  'character-wizard-pink': '/avatar-complete/v2/characters/wizard/pink.webp',
-  'character-wizard-red': '/avatar-complete/v2/characters/wizard/red.webp',
   'pet-bunny': '/avatar-complete/v1/pets/bunny.png',
   'pet-cat': '/avatar-complete/v1/pets/cat.png',
   'pet-dog': '/avatar-complete/v1/pets/dog.png',
@@ -187,7 +167,7 @@ export function AvatarBuilderPanel({
     () => visibleItems.filter((item) => item.slot === selectedSlot).sort(compareAvatarItems),
     [selectedSlot, visibleItems]
   );
-  const unlockedCount = visibleItems.filter((item) => item.isUnlocked).length;
+  const unlockedCount = visibleItems.length;
   const selectedCharacterVariant = draftLoadout.character
     ? characterVariants[draftLoadout.character]
     : undefined;
@@ -274,7 +254,7 @@ export function AvatarBuilderPanel({
           </Stack>
           <Stack direction="row" spacing={1} sx={{ alignItems: 'center', flexWrap: 'wrap' }}>
             <Chip icon={<AutoAwesomeRoundedIcon />} label={avatar ? `Level ${avatar.child.level}` : 'Kein Level'} variant="outlined" />
-            <Chip label={`${unlockedCount}/${visibleItems.length} frei`} variant="outlined" />
+            <Chip label={`${unlockedCount} freigeschaltet`} variant="outlined" />
           </Stack>
         </Box>
 
@@ -384,52 +364,73 @@ export function AvatarBuilderPanel({
                 />
               ) : null}
 
-              <Box
-                sx={{
-                  display: 'grid',
-                  gap: 1,
-                  gridAutoColumns: { xs: 'minmax(148px, 44vw)', sm: 'auto' },
-                  gridAutoFlow: { xs: 'column', sm: 'row' },
-                  gridTemplateColumns: { xs: 'none', sm: 'repeat(3, minmax(0, 1fr))' },
-                  maxWidth: '100%',
-                  minWidth: 0,
-                  overflowX: { xs: 'auto', sm: 'visible' },
-                  pb: { xs: 0.5, sm: 0 },
-                  scrollSnapType: { xs: 'x proximity', sm: 'none' },
-                  scrollbarWidth: 'none',
-                  width: '100%',
-                  '&::-webkit-scrollbar': { display: 'none' }
-                }}
-              >
-                {selectedSlot === 'pet' ? (
-                  <AvatarItemOption active={!draftLoadout.pet} item={null} onSelect={clearPet} />
-                ) : null}
-                {slotItems.map((item) => {
-                  const previewItemKey =
-                    item.slot === 'character'
-                      ? resolveCharacterVariantKey(
-                          item.key,
-                          selectedCharacterVariant?.color,
-                          itemsByKey
-                        )
-                      : item.key;
-                  const active =
-                    item.slot === 'character'
-                      ? getBaseCharacterKey(draftLoadout.character) ===
-                        getBaseCharacterKey(item.key)
-                      : draftLoadout[item.slot] === item.key;
+              {selectedSlot === 'pet' && avatar.child.level < 3 ? (
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    bgcolor: 'action.hover',
+                    borderRadius: 2,
+                    display: 'flex',
+                    gap: 1,
+                    p: 1.5
+                  }}
+                >
+                  <LockRoundedIcon color="action" />
+                  <Box>
+                    <Typography sx={{ fontWeight: 900 }}>Begleiter ab Level 3</Typography>
+                    <Typography color="text.secondary" variant="body2">
+                      Das erste Tier wartet noch als Überraschung.
+                    </Typography>
+                  </Box>
+                </Box>
+              ) : (
+                <Box
+                  sx={{
+                    display: 'grid',
+                    gap: 1,
+                    gridAutoColumns: { xs: 'minmax(148px, 44vw)', sm: 'auto' },
+                    gridAutoFlow: { xs: 'column', sm: 'row' },
+                    gridTemplateColumns: { xs: 'none', sm: 'repeat(3, minmax(0, 1fr))' },
+                    maxWidth: '100%',
+                    minWidth: 0,
+                    overflowX: { xs: 'auto', sm: 'visible' },
+                    pb: { xs: 0.5, sm: 0 },
+                    scrollSnapType: { xs: 'x proximity', sm: 'none' },
+                    scrollbarWidth: 'none',
+                    width: '100%',
+                    '&::-webkit-scrollbar': { display: 'none' }
+                  }}
+                >
+                  {selectedSlot === 'pet' ? (
+                    <AvatarItemOption active={!draftLoadout.pet} item={null} onSelect={clearPet} />
+                  ) : null}
+                  {slotItems.map((item) => {
+                    const previewItemKey =
+                      item.slot === 'character'
+                        ? resolveCharacterVariantKey(
+                            item.key,
+                            selectedCharacterVariant?.color,
+                            itemsByKey
+                          )
+                        : item.key;
+                    const active =
+                      item.slot === 'character'
+                        ? getBaseCharacterKey(draftLoadout.character) ===
+                          getBaseCharacterKey(item.key)
+                        : draftLoadout[item.slot] === item.key;
 
-                  return (
-                    <AvatarItemOption
-                      active={active}
-                      item={item}
-                      key={item.key}
-                      onSelect={() => equipItem(item)}
-                      previewItemKey={previewItemKey}
-                    />
-                  );
-                })}
-              </Box>
+                    return (
+                      <AvatarItemOption
+                        active={active}
+                        item={item}
+                        key={item.key}
+                        onSelect={() => equipItem(item)}
+                        previewItemKey={previewItemKey}
+                      />
+                    );
+                  })}
+                </Box>
+              )}
             </Stack>
           </Box>
         ) : (
@@ -453,7 +454,7 @@ function AvatarPreview({
 }) {
   const character = getEquippedItem(equippedItems, itemsByKey, 'character');
   const pet = getEquippedItem(equippedItems, itemsByKey, 'pet');
-  const characterAsset = character ? avatarAssetPaths[character.key] : undefined;
+  const characterAsset = character ? getAvatarAssetPath(character.key) : undefined;
   const petAsset = pet ? avatarAssetPaths[pet.key] : undefined;
   const baseCharacterKey = getBaseCharacterKey(character?.key);
   const characterDisplayName = baseCharacterKey
@@ -505,6 +506,7 @@ function AvatarPreview({
           <Box
             alt={characterDisplayName ?? ''}
             component="img"
+            decoding="async"
             src={characterAsset}
             sx={{
               bottom: '2%',
@@ -521,6 +523,7 @@ function AvatarPreview({
           <Box
             alt={pet?.name ?? ''}
             component="img"
+            decoding="async"
             src={petAsset}
             sx={{
               bottom: '2%',
@@ -609,7 +612,7 @@ function AvatarItemOption({
   previewItemKey?: string;
 }) {
   const locked = item ? !item.isUnlocked : false;
-  const assetPath = item ? avatarAssetPaths[previewItemKey ?? item.key] : undefined;
+  const assetPath = item ? getAvatarAssetPath(previewItemKey ?? item.key) : undefined;
   const isCharacter = item?.slot === 'character';
 
   return (
@@ -650,6 +653,8 @@ function AvatarItemOption({
           <Box
             alt=""
             component="img"
+            decoding="async"
+            loading="lazy"
             src={assetPath}
             sx={{ height: '94%', objectFit: 'contain', width: '94%' }}
           />
@@ -707,6 +712,10 @@ function getEquippedItem(
 
 function getVisibleAvatarItems(items: AvatarItem[]) {
   return items.filter((item) => {
+    if (!item.isUnlocked) {
+      return false;
+    }
+
     if (item.slot !== 'character') {
       return true;
     }
@@ -714,6 +723,16 @@ function getVisibleAvatarItems(items: AvatarItem[]) {
     const variant = characterVariants[item.key];
     return !variant || variant.baseItemKey === item.key;
   });
+}
+
+function getAvatarAssetPath(itemKey: string) {
+  const variant = characterVariants[itemKey];
+
+  if (variant) {
+    return `/avatar-complete/v2/characters/${variant.style}/${variant.color}.webp`;
+  }
+
+  return avatarAssetPaths[itemKey];
 }
 
 function getBaseCharacterKey(itemKey: string | undefined) {

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import argparse
 import colorsys
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageOps
@@ -243,6 +243,75 @@ MASK_CONFIGS = {
         ),
     ),
 }
+
+MASK_CONFIGS.update(
+    {
+        "boy-knight": HairMaskConfig(
+            source_path=MASTER_DIR / "boy-knight.png",
+            polygons=MASK_CONFIGS["smiley"].polygons,
+            hue_ranges=((0.0, 0.12),),
+            min_saturation=0.62,
+            min_value=0.1,
+            min_red_green_delta=60,
+        ),
+        "boy-astronaut": HairMaskConfig(
+            source_path=MASTER_DIR / "boy-astronaut.png",
+            polygons=MASK_CONFIGS["smiley"].polygons,
+            hue_ranges=((0.0, 0.12),),
+            min_saturation=0.62,
+            min_value=0.1,
+            min_red_green_delta=60,
+        ),
+        "girl-knight": HairMaskConfig(
+            source_path=MASTER_DIR / "girl-knight.png",
+            polygons=(
+                (
+                    (255, 35),
+                    (535, 35),
+                    (565, 260),
+                    (520, 345),
+                    (275, 345),
+                    (235, 235),
+                ),
+                (
+                    (420, 55),
+                    (565, 95),
+                    (600, 320),
+                    (565, 525),
+                    (460, 525),
+                    (415, 325),
+                ),
+                (
+                    (250, 175),
+                    (330, 175),
+                    (335, 355),
+                    (265, 370),
+                ),
+                (
+                    (318, 192),
+                    (369, 187),
+                    (372, 210),
+                    (319, 214),
+                ),
+                (
+                    (397, 187),
+                    (449, 192),
+                    (448, 214),
+                    (395, 210),
+                ),
+            ),
+            hue_ranges=((0.80, 1.0), (0.0, 0.025)),
+            min_saturation=0.18,
+            min_value=0.15,
+            protected_hue_ranges=((0.60, 0.88),),
+        ),
+    }
+)
+
+MASK_CONFIGS["girl-astronaut"] = replace(
+    MASK_CONFIGS["girl-knight"],
+    source_path=MASTER_DIR / "girl-astronaut.png",
+)
 
 
 HAIR_COLORS = {
