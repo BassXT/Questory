@@ -341,9 +341,11 @@ Hinweise:
 - Eltern/Admin koennen Avatare aller Kinder der aktuellen Familie abrufen.
 - Kinder mit eigenem Login koennen nur den eigenen Avatar abrufen.
 - Items werden automatisch ueber das Kinder-Level freigeschaltet; spaetere manuelle Inventar-Freischaltungen sind ueber `ChildAvatarItem` vorbereitet.
-- `items` und `unlockedItemKeys` enthalten ausschliesslich bereits
-  freigeschaltete Eintraege. Namen, Beschreibungen und Grafiken spaeterer
-  Figuren und Tiere werden nicht vorzeitig an das Frontend ausgeliefert.
+- `items` enthaelt alle aktiven, fuer das Kinderprofil geschlechtlich passenden
+  Eintraege. `isUnlocked: false` und `unlockReason: "LOCKED"` kennzeichnen
+  gesperrte Vorschauen.
+- `unlockedItemKeys` enthaelt ausschliesslich bereits freigeschaltete Keys und
+  bleibt die serverseitige Grundlage fuer die Loadout-Validierung.
 - `equippedItems` ist eine Slot-zu-Item-Key-Map.
 - Aktive Slots sind `character` und `pet`.
 - `character` ist immer belegt. Ohne passende gespeicherte Auswahl wird bei
@@ -389,6 +391,15 @@ Response-Auszug:
       "audienceGender": "BOY",
       "isUnlocked": true,
       "unlockReason": "LEVEL"
+    },
+    {
+      "key": "character-boy-knight",
+      "slot": "character",
+      "name": "Sternenritter",
+      "requiredLevel": 5,
+      "audienceGender": "BOY",
+      "isUnlocked": false,
+      "unlockReason": "LOCKED"
     }
   ]
 }

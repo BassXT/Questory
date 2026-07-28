@@ -15,10 +15,11 @@ Das Format orientiert sich an "Keep a Changelog". Versionen entstehen spaeter, s
 - Migration `20260728170000_avatar_costumes_and_hidden_unlocks` mit
   Kostuemfreischaltungen auf Level 5 und 8 sowie Tierprogression von Level 3
   bis 12 hinzugefuegt.
-- Avatar-API liefert nur freigeschaltete Items; spaetere Figuren und Tiere
-  bleiben bis zum Levelaufstieg vollstaendig verborgen.
+- Avatar-API liefert aktive, geschlechtlich passende Items mit ihrem
+  Freischaltstatus. Gesperrte Figuren und Tiere erscheinen als stark geblurrte,
+  nicht waehlbare Vorschaukarten mit dem benoetigten Level.
 - Avatar-Vorschaukarten laden ihre Vollbilder bedarfsgesteuert; der Tier-Tab
-  zeigt vor Level 3 nur einen neutralen Freischaltungshinweis.
+  zeigt die gestaffelten Begleiter bereits vor Level 3 als geblurrte Vorschau.
 - Avatar-Kostuem-/Hidden-Unlock-Slice aus Commit `c24f38e` per Portainer
   deployed; Migration, 24 Kostuemdatensaetze, Tierlevel, Level-1-/5-/8-API,
   Loadout-Speichern, neue WebPs und mobile Werkstatt auf dem LXC geprueft.

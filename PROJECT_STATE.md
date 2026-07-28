@@ -14,11 +14,11 @@ Der Avatar-Builder ist jetzt bewusst auf vollstaendige Kinderfiguren plus option
 
 Der aktive Figurenkatalog ist auf zwei festgelegte helle Grundtypen reduziert: Smiley-Entdecker fuer Jungen und Sternen-Heldin fuer Maedchen sind auf Level 1 verfuegbar. Als freischaltbare Frisuren folgen Wirbelfrisur beziehungsweise Wald-Entdeckerin auf Level 3 sowie Zauberlehrling fuer Maedchen auf Level 6. Sternenritter und Sternenritterin folgen auf Level 5, Sternenforscher und Sternenforscherin auf Level 8. Alle neun Stile besitzen je sechs frei waehlbare Haarfarben als fertige, flache Ganzkoerper-WebPs; die App setzt keine Bildlayer zusammen.
 
-Gesperrte Figuren und Tiere werden von der Avatar-API nicht ausgeliefert und
-bleiben dadurch bis zur Freischaltung auch mit Namen und Grafik verborgen.
-Begleittiere starten mit der Katze auf Level 3 und sind danach bis zum
-Walddrachen auf Level 12 gestaffelt. Der Tier-Tab zeigt vorher nur einen
-neutralen Hinweis ohne konkrete Vorschau.
+Gesperrte Figuren und Tiere werden als Fortschrittsvorschau ausgeliefert. Die
+Werkstatt zeigt ihre Grafiken stark geblurrt, markiert das benoetigte Level und
+blockiert Auswahl sowie Speicherung bis zur Freischaltung. Begleittiere starten
+mit der Katze auf Level 3 und sind danach bis zum Walddrachen auf Level 12
+gestaffelt.
 
 `AvatarItem.audienceGender` filtert Figuren serverseitig nach dem Geschlecht des Kinderprofils. Profile mit `BOY` sehen nur Jungenfiguren, `GIRL` nur Maedchenfiguren; `DIVERSE` und Kinder ohne Angabe sehen beide Gruppen. Kinderprofile koennen im Elternbereich jetzt mit Name, Geschlecht und Geburtsdatum bearbeitet werden. Eine Geschlechtsaenderung ersetzt eine nicht mehr passende gespeicherte Figur automatisch durch die richtige Basisfigur.
 
@@ -43,8 +43,9 @@ Der isolierte 3D-Prototyp, der SVG/WebP-Hybrid und das Kenney-Einzelteil-Rig wur
 - Migration `20260728170000_avatar_costumes_and_hidden_unlocks` ergaenzt die
   Kostuemserien auf Level 5 und 8 und staffelt acht Begleittiere von Level 3
   bis 12.
-- Avatar-API und Werkstatt verbergen gesperrte Katalogeintraege vollstaendig;
-  sichtbare Auswahlbilder werden lazy geladen.
+- Avatar-API kennzeichnet gesperrte Katalogeintraege mit `isUnlocked: false`;
+  die Werkstatt zeigt sie als geblurrte, nicht waehlbare Level-Vorschau.
+  Auswahlbilder werden weiterhin lazy geladen.
 - Avatar-Kostuem-/Hidden-Unlock-Slice aus Commit `c24f38e` per Portainer
   deployed. Migration
   `20260728170000_avatar_costumes_and_hidden_unlocks` ist abgeschlossen,
@@ -552,6 +553,10 @@ visuell bestaetigen.
 - XP und Coins haben getrennte Rollen: XP dient langfristig Leveln, Avatar-Unlocks, Gadgets und spaeter Gebieten; Coins bleiben die kurzfristige Shop-Waehrung fuer echte Belohnungen.
 - `avatarKey` bleibt als einfache Avatar-Preset-ID fuer kleine Badges erhalten. Der echte Avatar-Builder nutzt `AvatarItem` als globalen Katalog, Level-Freischaltungen ueber `requiredLevel`, optionale Spezial-Unlocks ueber `ChildAvatarItem` und gespeicherte Ausruestung ueber `ChildAvatarLoadout.equippedItems`.
 - Die visuelle Avatar-Darstellung kombiniert genau ein vollstaendiges `character`-PNG mit hoechstens einem `pet`-PNG. Kinderfiguren und Tiere besitzen jeweils eine feste normalisierte Leinwand und werden ohne weitere Koerper- oder Kleidungs-Layer gerendert.
+- Aktive, geschlechtlich passende Avatar-Items werden unabhaengig vom aktuellen
+  Level an das Frontend geliefert. `isUnlocked` und `unlockReason` steuern die
+  geblurrte Vorschau; das Backend validiert beim Speichern weiterhin gegen
+  `unlockedItemKeys`.
 - Der Stilwechsel veraendert weder Slot-Vertraege noch persistierte Item-Keys oder `ChildAvatarLoadout.equippedItems`. Alte Keys mit `pixel` im technischen Namen bleiben aus Datenkompatibilitaet bestehen, sind aber in der UI nicht mehr als Pixelstil beschriftet.
 - Eine 3D-Ansicht ist nicht Teil der Produktarchitektur. Der verworfene Prototyp wird vollstaendig entfernt, damit nur ein klarer Avatarweg gewartet werden muss.
 - Produktionsassets fuer den 2D-Builder sind vollstaendige, transparente Ganzkoerperfiguren oder separat freigestellte Tiere. Der aktive Loadout-Vertrag besteht nur aus `character` und optionalem `pet`.
@@ -590,9 +595,10 @@ visuell bestaetigen.
 - Der Frontend-Hauptchunk liegt trotz entfernter DiceBear-Pakete weiterhin ueber der Vite-Warngrenze. Der Avatar-Builder sollte spaeter per Code-Splitting/lazy loading geladen werden.
 - Augenfarben und Berufe benoetigen weiterhin zusaetzliche vollstaendige Exporte; Laufzeit-Layer bleiben ausgeschlossen.
 - Die lokale Avatarbibliothek umfasst aktuell 77 Dateien mit rund 25,77 MiB.
-  Gesperrte Serien werden serverseitig nicht ausgeliefert und sichtbare
-  Kartenbilder lazy geladen. Vor einem deutlich groesseren Berufskatalog
-  bleiben separate Thumbnails oder responsive Bildvarianten sinnvoll.
+  Kartenbilder werden lazy geladen, geblurrte Vorschauen verwenden aber
+  weiterhin die vollstaendigen Assets. Vor einem deutlich groesseren
+  Berufskatalog bleiben separate Thumbnails oder responsive Bildvarianten
+  sinnvoll.
 - Der Docker-LXC lief vor dem 3D-Labor-Redeploy mit nur 136 MB freiem Speicher bei 100 Prozent Belegung. Ein Buildcache-Prune hat den akuten Fehler geloest und der neue Questory-Container meldet 15 GB frei; die Belegung sollte trotzdem beim naechsten Wartungslauf erneut kontrolliert werden.
 
 ## Ideen fuer spaeter

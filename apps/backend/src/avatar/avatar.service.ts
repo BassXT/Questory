@@ -59,7 +59,6 @@ export class AvatarService {
     const unlockedItemKeys = new Set(
       items.filter((item) => item.requiredLevel <= child.level || inventoryItemKeys.has(item.key)).map((item) => item.key)
     );
-    const unlockedItems = items.filter((item) => unlockedItemKeys.has(item.key));
     const equippedItems = this.resolveEquippedItems(
       loadout?.equippedItems,
       items,
@@ -72,20 +71,28 @@ export class AvatarService {
       slots: avatarSlots,
       equippedItems,
       unlockedItemKeys: Array.from(unlockedItemKeys),
-      items: unlockedItems.map((item) => ({
-        key: item.key,
-        slot: item.slot,
-        name: item.name,
-        description: item.description,
-        requiredLevel: item.requiredLevel,
-        rarity: item.rarity,
-        layerOrder: item.layerOrder,
-        colorPrimary: item.colorPrimary,
-        colorSecondary: item.colorSecondary,
-        audienceGender: item.audienceGender,
-        isUnlocked: true,
-        unlockReason: item.requiredLevel <= child.level ? 'LEVEL' : 'INVENTORY'
-      }))
+      items: items.map((item) => {
+        const isUnlocked = unlockedItemKeys.has(item.key);
+
+        return {
+          key: item.key,
+          slot: item.slot,
+          name: item.name,
+          description: item.description,
+          requiredLevel: item.requiredLevel,
+          rarity: item.rarity,
+          layerOrder: item.layerOrder,
+          colorPrimary: item.colorPrimary,
+          colorSecondary: item.colorSecondary,
+          audienceGender: item.audienceGender,
+          isUnlocked,
+          unlockReason: isUnlocked
+            ? item.requiredLevel <= child.level
+              ? 'LEVEL'
+              : 'INVENTORY'
+            : 'LOCKED'
+        };
+      })
     };
   }
 

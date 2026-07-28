@@ -167,7 +167,7 @@ export function AvatarBuilderPanel({
     () => visibleItems.filter((item) => item.slot === selectedSlot).sort(compareAvatarItems),
     [selectedSlot, visibleItems]
   );
-  const unlockedCount = visibleItems.length;
+  const unlockedCount = visibleItems.filter((item) => item.isUnlocked).length;
   const selectedCharacterVariant = draftLoadout.character
     ? characterVariants[draftLoadout.character]
     : undefined;
@@ -364,73 +364,52 @@ export function AvatarBuilderPanel({
                 />
               ) : null}
 
-              {selectedSlot === 'pet' && avatar.child.level < 3 ? (
-                <Box
-                  sx={{
-                    alignItems: 'center',
-                    bgcolor: 'action.hover',
-                    borderRadius: 2,
-                    display: 'flex',
-                    gap: 1,
-                    p: 1.5
-                  }}
-                >
-                  <LockRoundedIcon color="action" />
-                  <Box>
-                    <Typography sx={{ fontWeight: 900 }}>Begleiter ab Level 3</Typography>
-                    <Typography color="text.secondary" variant="body2">
-                      Das erste Tier wartet noch als Überraschung.
-                    </Typography>
-                  </Box>
-                </Box>
-              ) : (
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gap: 1,
-                    gridAutoColumns: { xs: 'minmax(148px, 44vw)', sm: 'auto' },
-                    gridAutoFlow: { xs: 'column', sm: 'row' },
-                    gridTemplateColumns: { xs: 'none', sm: 'repeat(3, minmax(0, 1fr))' },
-                    maxWidth: '100%',
-                    minWidth: 0,
-                    overflowX: { xs: 'auto', sm: 'visible' },
-                    pb: { xs: 0.5, sm: 0 },
-                    scrollSnapType: { xs: 'x proximity', sm: 'none' },
-                    scrollbarWidth: 'none',
-                    width: '100%',
-                    '&::-webkit-scrollbar': { display: 'none' }
-                  }}
-                >
-                  {selectedSlot === 'pet' ? (
-                    <AvatarItemOption active={!draftLoadout.pet} item={null} onSelect={clearPet} />
-                  ) : null}
-                  {slotItems.map((item) => {
-                    const previewItemKey =
-                      item.slot === 'character'
-                        ? resolveCharacterVariantKey(
-                            item.key,
-                            selectedCharacterVariant?.color,
-                            itemsByKey
-                          )
-                        : item.key;
-                    const active =
-                      item.slot === 'character'
-                        ? getBaseCharacterKey(draftLoadout.character) ===
-                          getBaseCharacterKey(item.key)
-                        : draftLoadout[item.slot] === item.key;
+              <Box
+                sx={{
+                  display: 'grid',
+                  gap: 1,
+                  gridAutoColumns: { xs: 'minmax(148px, 44vw)', sm: 'auto' },
+                  gridAutoFlow: { xs: 'column', sm: 'row' },
+                  gridTemplateColumns: { xs: 'none', sm: 'repeat(3, minmax(0, 1fr))' },
+                  maxWidth: '100%',
+                  minWidth: 0,
+                  overflowX: { xs: 'auto', sm: 'visible' },
+                  pb: { xs: 0.5, sm: 0 },
+                  scrollSnapType: { xs: 'x proximity', sm: 'none' },
+                  scrollbarWidth: 'none',
+                  width: '100%',
+                  '&::-webkit-scrollbar': { display: 'none' }
+                }}
+              >
+                {selectedSlot === 'pet' ? (
+                  <AvatarItemOption active={!draftLoadout.pet} item={null} onSelect={clearPet} />
+                ) : null}
+                {slotItems.map((item) => {
+                  const previewItemKey =
+                    item.slot === 'character'
+                      ? resolveCharacterVariantKey(
+                          item.key,
+                          selectedCharacterVariant?.color,
+                          itemsByKey
+                        )
+                      : item.key;
+                  const active =
+                    item.slot === 'character'
+                      ? getBaseCharacterKey(draftLoadout.character) ===
+                        getBaseCharacterKey(item.key)
+                      : draftLoadout[item.slot] === item.key;
 
-                    return (
-                      <AvatarItemOption
-                        active={active}
-                        item={item}
-                        key={item.key}
-                        onSelect={() => equipItem(item)}
-                        previewItemKey={previewItemKey}
-                      />
-                    );
-                  })}
-                </Box>
-              )}
+                  return (
+                    <AvatarItemOption
+                      active={active}
+                      item={item}
+                      key={item.key}
+                      onSelect={() => equipItem(item)}
+                      previewItemKey={previewItemKey}
+                    />
+                  );
+                })}
+              </Box>
             </Stack>
           </Box>
         ) : (
@@ -656,7 +635,15 @@ function AvatarItemOption({
             decoding="async"
             loading="lazy"
             src={assetPath}
-            sx={{ height: '94%', objectFit: 'contain', width: '94%' }}
+            sx={{
+              filter: locked ? 'blur(10px) saturate(0.45)' : 'none',
+              height: '94%',
+              objectFit: 'contain',
+              opacity: locked ? 0.72 : 1,
+              transform: locked ? 'scale(1.06)' : 'none',
+              transition: 'filter 180ms ease, opacity 180ms ease',
+              width: '94%'
+            }}
           />
         ) : (
           <PetsRoundedIcon color="disabled" sx={{ fontSize: 42 }} />
@@ -712,10 +699,6 @@ function getEquippedItem(
 
 function getVisibleAvatarItems(items: AvatarItem[]) {
   return items.filter((item) => {
-    if (!item.isUnlocked) {
-      return false;
-    }
-
     if (item.slot !== 'character') {
       return true;
     }
